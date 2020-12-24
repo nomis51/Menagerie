@@ -88,12 +88,12 @@
         <ItemsControl ItemsSource="{Binding OutgoingOffers, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="99">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <StackPanel Cursor="Hand" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                    <StackPanel Cursor="Hand" Margin="0,100,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Grid Name="grdOutgoingOffer" Background="#2d2d2f" MinWidth="140" MaxWidth="200" MaxHeight="120" Margin="2" MouseDown="grdOutgoingOffer_MouseDown"  Tag="{Binding Id}">
+                    <Grid Name="grdOutgoingOffer" Background="#2d2d2f" MinWidth="140" MaxWidth="200" MaxHeight="120" Margin="2" Tag="{Binding Id}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="3"></RowDefinition>
                             <RowDefinition Height="25"></RowDefinition>
@@ -126,19 +126,19 @@
 
                         <Image Grid.Row="3" Grid.Column="4" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform"  Source="{Binding CurrencyImageLink}"/>
 
-                        <Button x:Name="btnJoinHideout" Tag="{Binding Id}"  Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Style="{StaticResource TransparentStyleBlue}">
+                        <Button x:Name="btnJoinHideout" Click="btnJoinHideout_Click" Tag="{Binding Id}"  Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Style="{StaticResource TransparentStyleBlue}">
                             <Button.Content>
                                 <fa5:ImageAwesome Width="15" Height="15"  Icon="Solid_Home" Foreground="#a0aec0" HorizontalAlignment="Center"/>
                             </Button.Content>
                         </Button>
 
-                        <Button x:Name="btnTrade" Tag="{Binding Id}"  Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="2" Style="{StaticResource TransparentStyleOrange}">
+                        <Button x:Name="btnTrade" Tag="{Binding Id}" Click="btnTrade_Click"  Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="2" Style="{StaticResource TransparentStyleOrange}">
                             <Button.Content>
                                 <fa5:ImageAwesome Width="15" Height="15"  Icon="Solid_DollarSign" Foreground="#a0aec0" HorizontalAlignment="Center"/>
                             </Button.Content>
                         </Button>
 
-                        <Button x:Name="btnLeave" Tag="{Binding Id}"  Grid.Row="4" Grid.Column="5" Grid.ColumnSpan="2" Style="{StaticResource TransparentStyleRed}">
+                        <Button x:Name="btnLeave" Tag="{Binding Id}" Click="btnLeave_Click" Grid.Row="4" Grid.Column="5" Grid.ColumnSpan="2" Style="{StaticResource TransparentStyleRed}">
                             <Button.Content>
                                 <fa5:ImageAwesome Width="15" Height="15"  Icon="Solid_SignOutAlt" Foreground="#a0aec0" HorizontalAlignment="Center"/>
                             </Button.Content>

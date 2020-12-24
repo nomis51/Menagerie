@@ -82,6 +82,10 @@ namespace Toucan.Core {
             Send(message);
         }
 
+        public void SendHideoutCommand(string playerName) {
+            Send($"/hideout {playerName}");
+        }
+
         public void SendInviteCommand(string playerName) {
             Send($"/invite {playerName}");
         }

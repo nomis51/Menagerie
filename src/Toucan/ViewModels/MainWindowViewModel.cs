@@ -114,7 +114,6 @@ namespace Toucan.ViewModels {
                     var offer = GetActiveOffer();
 
                     if (offer == null) {
-                        offer.State = OfferState.PlayerInvited;
                         return;
                     }
 
@@ -146,7 +145,9 @@ namespace Toucan.ViewModels {
         }
 
         public Offer GetOffer(int id) {
-            return Offers.FirstOrDefault(e => e.Id == id);
+            var offer = Offers.FirstOrDefault(e => e.Id == id);
+
+            return offer == null ? OutgoingOffers.FirstOrDefault(e => e.Id == id) : offer;
         }
 
         private Offer GetActiveOffer() {
@@ -154,9 +155,15 @@ namespace Toucan.ViewModels {
         }
 
         private int GetOfferIndex(int id) {
-            return Offers.Select(g => g.Id)
+            int index = Offers.Select(g => g.Id)
                 .ToList()
                 .IndexOf(id);
+
+            return index == -1 ?
+                OutgoingOffers.Select(g => g.Id)
+                .ToList()
+                .IndexOf(id) :
+                index;
         }
 
         private void UpdateOffers() {
@@ -169,21 +176,45 @@ namespace Toucan.ViewModels {
             }
         }
 
-        public void SendTradeRequest(int id) {
+        public void SendTradeRequest(int id, bool isOutgoing = false) {
             var index = GetOfferIndex(id);
 
             if (index == -1) {
                 return;
             }
 
-            if (!Offers[index].PlayerInvited) {
+            if (isOutgoing) {
+                if (OutgoingOffers[index].State != OfferState.HideoutJoined) {
+                    return;
+                }
+
+                OutgoingOffers[index].State = OfferState.TradeRequestSent;
+                UpdateOffers();
+
+                Chat.SendTradeCommand(OutgoingOffers[index].PlayerName);
+            } else {
+                if (!Offers[index].PlayerInvited) {
+                    return;
+                }
+
+                Offers[index].State = OfferState.TradeRequestSent;
+                UpdateOffers();
+
+                Chat.SendTradeCommand(Offers[index].PlayerName);
+            }
+        }
+
+        public void SendJoinHideoutCommand(int id) {
+            var index = GetOfferIndex(id);
+
+            if (index == -1) {
                 return;
             }
 
-            Offers[index].State = OfferState.TradeRequestSent;
+            OutgoingOffers[index].State = OfferState.HideoutJoined;
             UpdateOffers();
 
-            Chat.SendTradeCommand(Offers[index].PlayerName);
+            Chat.SendHideoutCommand(OutgoingOffers[index].PlayerName);
         }
 
         public void SendBusyWhisper(int id) {
@@ -197,7 +228,7 @@ namespace Toucan.ViewModels {
                 return;
             }
 
-            Chat.SendChatMessage($"I'm busy right now, I'll whisper you for the \"{Offers[index].ItemName}\" when I'm ready");
+            Chat.SendChatMessage($"@{Offers[index].PlayerName} I'm busy right now, I'll whisper you for the \"{Offers[index].ItemName}\" when I'm ready");
         }
 
         public void SendReInvite(int id) {
@@ -259,7 +290,7 @@ namespace Toucan.ViewModels {
 
                 if (sayThanks) {
                     Thread.Sleep(250);
-                    Chat.SendChatMessage("Thank you and have fun!");
+                    Chat.SendChatMessage($"@{playerName} Thank you and have fun!");
                 }
             });
             t.SetApartmentState(ApartmentState.STA);
@@ -268,14 +299,47 @@ namespace Toucan.ViewModels {
             RemoveOffer(id);
         }
 
-        public void RemoveOffer(int id) {
-            int index = Offers.Select(e => e.Id)
+        public void SendLeave(int id, bool sayThanks = true) {
+            var index = GetOfferIndex(id);
+
+            if (index == -1) {
+                return;
+            }
+
+            if (OutgoingOffers[index].State == OfferState.Initial) {
+                return;
+            }
+
+            OutgoingOffers[index].State = OfferState.Done;
+            UpdateOffers();
+
+            string playerName = OutgoingOffers[index].PlayerName;
+
+            Thread t = new Thread(delegate () {
+                // TODO: Kick myself here
+
+                if (sayThanks) {
+                    Thread.Sleep(250);
+                    Chat.SendChatMessage($"@{playerName} Thank you and have fun!");
+                }
+            });
+            t.SetApartmentState(ApartmentState.STA);
+            t.Start();
+
+            RemoveOffer(id, true);
+        }
+
+
+        public void RemoveOffer(int id, bool isOutgoing = false) {
+            int index = isOutgoing ? OutgoingOffers.Select(e => e.Id)
+                .ToList()
+                .IndexOf(id) : Offers.Select(e => e.Id)
                 .ToList()
                 .IndexOf(id);
 
             if (index != -1) {
                 Dispatcher.CurrentDispatcher.Invoke(() => {
-                    Offers.RemoveAt(index);
+                    (isOutgoing ? OutgoingOffers : Offers).RemoveAt(index);
                     UpdateOffers();
                 });
             }
@@ -290,7 +354,7 @@ namespace Toucan.ViewModels {
 
             UpdateOffers();
 
-            Chat.SendChatMessage($"Are you still interested in my \"{Offers[index].ItemName}\" listed for {Offers[index].Price} {Offers[index].Currency}?");
+            Chat.SendChatMessage($"@{Offers[index].PlayerName} Are you still interested in my \"{Offers[index].ItemName}\" listed for {Offers[index].Price} {Offers[index].Currency}?");
         }
 
         public void SendSoldWhisper(int id) {
@@ -303,7 +367,7 @@ namespace Toucan.ViewModels {
             Offers[index].State = OfferState.Done;
             UpdateOffers();
 
-            Chat.SendChatMessage($"I'm sorry, my \"{Offers[index].ItemName}\" has already been sold");
+            Chat.SendChatMessage($"@{Offers[index].PlayerName} I'm sorry, my \"{Offers[index].ItemName}\" has already been sold");
 
             RemoveOffer(id);
         }

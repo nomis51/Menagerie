@@ -81,8 +81,32 @@ namespace Toucan {
             }
         }
 
-        private void grdOutgoingOffer_MouseDown(object sender, MouseButtonEventArgs e) {
+        private void btnJoinHideout_Click(object sender, RoutedEventArgs e) {
+            int id = (int)((Button)sender).Tag;
+            var offer = vm.GetOffer(id);
 
+            if (offer.State != OfferState.Initial) {
+                return;
+            }
+
+            vm.SendJoinHideoutCommand(id);
+        }
+
+        private void btnTrade_Click(object sender, RoutedEventArgs e) {
+            int id = (int)((Button)sender).Tag;
+            var offer = vm.GetOffer(id);
+
+            if (offer.State != OfferState.HideoutJoined) {
+                return;
+            }
+
+            vm.SendTradeRequest(id, true);
+        }
+
+        private void btnLeave_Click(object sender, RoutedEventArgs e) {
+            int id = (int)((Button)sender).Tag;
+
+            vm.SendLeave(id);
         }
     }
 }
