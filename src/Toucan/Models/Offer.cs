@@ -191,11 +191,25 @@ namespace Toucan.Models {
             }
         }
 
-        public string ItemNameText {
+        private int MaxNameLength {
             get {
-                return ItemName.Length > 12 ? ItemName.Substring(0, 12) + "..." : ItemName;
+                return (IsOutgoing ? 16 : 12);
             }
         }
+
+        public string ItemNameText {
+            get {
+                return ItemName.Length > MaxNameLength ? ItemName.Substring(0, MaxNameLength) + "..." : ItemName;
+            }
+        }
+
+        public string PlayerNameText {
+            get {
+                return PlayerName.Length > MaxNameLength ? PlayerName.Substring(0, MaxNameLength) + "..." : PlayerName;
+            }
+        }
+
+        public bool IsOutgoing { get; set; }
 
         public Offer() { }
 
@@ -208,6 +222,7 @@ namespace Toucan.Models {
             this.CurrencyImageLink = offer.CurrencyImageLink;
             this.Price = offer.Price;
             this.League = offer.League;
+            this.IsOutgoing = offer.IsOutgoing;
         }
     }
 

@@ -61,6 +61,7 @@ namespace Toucan.ViewModels {
         private Parser Parser;
 
         public ObservableCollection<Offer> Offers { get; set; } = new ObservableCollection<Offer>();
+        public ObservableCollection<Offer> OutgoingOffers { get; set; } = new ObservableCollection<Offer>();
 
         public MainWindowViewModel() {
             this.Poe = new PoeWindow();
@@ -77,6 +78,14 @@ namespace Toucan.ViewModels {
 
             ClientFile.Test();
             Poe.Focus();
+
+            OutgoingOffers.Add(new Offer() {
+                Id = 99,
+                ItemName = "Saqawal",
+                Price = 9,
+                Currency = "Chaos",
+                PlayerName = "Paul"
+            });
         }
 
         private void ClientFile_OnNewLine(string line) {
@@ -84,7 +93,7 @@ namespace Toucan.ViewModels {
         }
 
         private void Clipboard_OnNewClipboardText(string text) {
-
+            Parser.ParseClipboardLine(text);
         }
 
         private void Parser_OnNewPlayerJoined(string playerName) {
@@ -125,7 +134,11 @@ namespace Toucan.ViewModels {
         }
 
         private void Parser_OnNewOffer(Core.Models.Offer offer) {
-            this.Offers.Add(new Offer(offer));
+            if (!offer.IsOutgoing) {
+                Offers.Add(new Offer(offer));
+            } else {
+                OutgoingOffers.Add(new Offer(offer));
+            }
         }
 
         public void Test() {

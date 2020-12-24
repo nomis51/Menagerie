@@ -80,5 +80,9 @@ namespace Toucan {
                 }
             }
         }
+
+        private void grdOutgoingOffer_MouseDown(object sender, MouseButtonEventArgs e) {
+
+        }
     }
 }

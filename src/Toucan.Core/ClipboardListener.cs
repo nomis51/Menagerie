@@ -9,6 +9,8 @@ namespace Toucan.Core {
         public delegate void NewClipboardText(string text);
         public event NewClipboardText OnNewClipboardText;
 
+        private string LastText = "";
+
         public ClipboardListener() {
             Listen();
         }
@@ -19,7 +21,8 @@ namespace Toucan.Core {
 
                 string text = Clipboard.GetText();
 
-                if (!string.IsNullOrEmpty(text)) {
+                if (!string.IsNullOrEmpty(text) && text != LastText) {
+                    LastText = text;
                     OnNewClipboardText(text);
                 }
             }

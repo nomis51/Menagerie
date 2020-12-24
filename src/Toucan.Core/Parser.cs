@@ -63,11 +63,7 @@ namespace Toucan.Core {
             }
         }
 
-        public void ParseClientLine(string aline) {
-            if (LastOffersLines.Contains(aline)) {
-                return;
-            }
-
+        private Models.ChatEvent ParseLine(string aline, bool isClientFileLine = true) {
             Models.ChatEvent evt = null;
             bool processed = false;
 
@@ -75,9 +71,35 @@ namespace Toucan.Core {
                 Offer offer = new Offer();
 
                 // Time
-                int timeIndex = line.IndexOf(" ");
-                timeIndex = line.IndexOf(" ", timeIndex + 1);
-                offer.Time = DateTime.Parse(line.Substring(0, timeIndex).Replace("/", "-"));
+                if (isClientFileLine) {
+                    int timeIndex = line.IndexOf(" ");
+
+                    if (timeIndex == -1) {
+                        continue;
+                    }
+
+                    timeIndex = line.IndexOf(" ", timeIndex + 1);
+
+                    if (timeIndex == -1) {
+                        continue;
+                    }
+
+                    var strTime = line.Substring(0, timeIndex);
+
+                    if (string.IsNullOrEmpty(strTime) || string.IsNullOrWhiteSpace(strTime)) {
+                        continue;
+                    }
+
+                    DateTime date;
+
+                    if (!DateTime.TryParse(strTime.Replace("/", "-"), out date)) {
+                        continue;
+                    }
+
+                    offer.Time = date;
+                } else {
+                    offer.Time = DateTime.Now;
+                }
 
                 // Player name
                 int playerStartIndex = line.IndexOf("@From ");
@@ -96,7 +118,13 @@ namespace Toucan.Core {
                     playerStartIndex += 6;
                 }
 
-                int playerEndIndex = line.IndexOf(": ", playerStartIndex);
+                int playerEndIndex = -1;
+
+                if (offer.IsOutgoing) {
+                    playerEndIndex = line.IndexOf(" Hi", playerStartIndex);
+                } else {
+                    playerEndIndex = line.IndexOf(": ", playerStartIndex);
+                }
 
                 if (playerEndIndex == -1) {
                     continue;
@@ -194,7 +222,31 @@ namespace Toucan.Core {
                 }
             }
 
-            OnNewChatEventParsed(evt);
+            return evt;
+        }
+
+
+        public void ParseClipboardLine(string line) {
+            var evt = ParseLine(line, false);
+
+            if (evt != null) {
+                if (evt.EvenType == ChatEvent.Offer) {
+                    var offer = (Offer)evt;
+                    OnNewChatEventParsed(offer);
+                }
+            }
+        }
+
+        public void ParseClientLine(string aline) {
+            if (LastOffersLines.Contains(aline)) {
+                return;
+            }
+
+            var evt = ParseLine(aline);
+
+            if (evt != null) {
+                OnNewChatEventParsed(evt);
+            }
         }
 
         private int NextId() {

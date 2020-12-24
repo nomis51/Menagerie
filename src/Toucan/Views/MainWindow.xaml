@@ -14,13 +14,19 @@
     <Window.Resources>
     </Window.Resources>
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="200"></ColumnDefinition>
+            <ColumnDefinition Width="20"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="100"></RowDefinition>
             <RowDefinition Height="20"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <ItemsControl ItemsSource="{Binding Offers, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1">
+        <!-- Incoming offers -->
+        <ItemsControl ItemsSource="{Binding Offers, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="99">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <DockPanel Cursor="Hand" Margin="550,0,0,0" LastChildFill="False" HorizontalAlignment="Left"/>
@@ -30,17 +36,17 @@
                 <DataTemplate>
                     <Grid Name="grdOffer" Background="#2d2d2f" Width="90" Height="80" Margin="2" MouseDown="grdOffer_MouseDown" Tag="{Binding Id}">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="2"></RowDefinition>
+                            <RowDefinition Height="3"></RowDefinition>
                             <RowDefinition Height="15"></RowDefinition>
                             <RowDefinition Height="*"></RowDefinition>
                             <RowDefinition Height="20"></RowDefinition>
-                            <RowDefinition Height="2"></RowDefinition>
+                            <RowDefinition Height="3"></RowDefinition>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2"></ColumnDefinition>
+                            <ColumnDefinition Width="3"></ColumnDefinition>
                             <ColumnDefinition Width="*"></ColumnDefinition>
                             <ColumnDefinition Width="*"></ColumnDefinition>
-                            <ColumnDefinition Width="2"></ColumnDefinition>
+                            <ColumnDefinition Width="3"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
 
                         <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="999" Grid.RowSpan="999" BorderThickness="3" BorderBrush="#1e1e1e"   Visibility="{Binding IsNormalBorderVisible}"></Border>
@@ -74,6 +80,69 @@
                             </Button.Content>
                         </Button>
 
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <ItemsControl ItemsSource="{Binding OutgoingOffers, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="99">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Cursor="Hand" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid Name="grdOutgoingOffer" Background="#2d2d2f" MinWidth="140" MaxWidth="200" MaxHeight="120" Margin="2" MouseDown="grdOutgoingOffer_MouseDown"  Tag="{Binding Id}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="3"></RowDefinition>
+                            <RowDefinition Height="25"></RowDefinition>
+                            <RowDefinition Height="25"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="25"></RowDefinition>
+                            <RowDefinition Height="3"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="3"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="999" Grid.RowSpan="999" BorderThickness="3" BorderBrush="#1e1e1e"></Border>
+
+                        <DockPanel Background="#1e1e1e" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="99">
+                            <TextBlock x:Name="txtOfferTitle" FontWeight="Bold" Foreground="#a0aec0" Background="#1e1e1e" FontSize="12" Text="{Binding ItemNameText}" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                            </TextBlock>
+                        </DockPanel>
+
+                        <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="99" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#a0aec0" FontWeight="Bold" FontSize="12" Text="{Binding PlayerNameText}"></TextBlock>
+
+                        <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#a0aec0" FontWeight="Bold" FontSize="{Binding PriceFontSize}" Text="{Binding PriceText}"></TextBlock>
+
+                        <Image Grid.Row="3" Grid.Column="4" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform"  Source="{Binding CurrencyImageLink}"/>
+
+                        <Button x:Name="btnJoinHideout" Tag="{Binding Id}"  Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Style="{StaticResource TransparentStyleBlue}">
+                            <Button.Content>
+                                <fa5:ImageAwesome Width="15" Height="15"  Icon="Solid_Home" Foreground="#a0aec0" HorizontalAlignment="Center"/>
+                            </Button.Content>
+                        </Button>
+
+                        <Button x:Name="btnTrade" Tag="{Binding Id}"  Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="2" Style="{StaticResource TransparentStyleOrange}">
+                            <Button.Content>
+                                <fa5:ImageAwesome Width="15" Height="15"  Icon="Solid_DollarSign" Foreground="#a0aec0" HorizontalAlignment="Center"/>
+                            </Button.Content>
+                        </Button>
+
+                        <Button x:Name="btnLeave" Tag="{Binding Id}"  Grid.Row="4" Grid.Column="5" Grid.ColumnSpan="2" Style="{StaticResource TransparentStyleRed}">
+                            <Button.Content>
+                                <fa5:ImageAwesome Width="15" Height="15"  Icon="Solid_SignOutAlt" Foreground="#a0aec0" HorizontalAlignment="Center"/>
+                            </Button.Content>
+                        </Button>
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
