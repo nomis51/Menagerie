@@ -57,23 +57,37 @@ namespace Toucan.ViewModels {
         private ClientFileParser ClientFile;
         private PoeWindow Poe;
         private ChatHandler Chat;
+        private ClipboardListener Clipboard;
+        private Parser Parser;
 
         public ObservableCollection<Offer> Offers { get; set; } = new ObservableCollection<Offer>();
 
         public MainWindowViewModel() {
             this.Poe = new PoeWindow();
+            Parser = new Parser();
             this.ClientFile = new ClientFileParser(@"C:\Path of Exile\logs\Client.txt");
             Chat = new ChatHandler(this.Poe);
+            Clipboard = new ClipboardListener();
 
-            this.ClientFile.OnNewOffer += ClientFile_OnNewOffer;
-            ClientFile.OnNewChatEvent += ClientFile_OnNewChatEvent;
-            ClientFile.OnNewPlayerJoined += ClientFile_OnNewPlayerJoined;
+            Clipboard.OnNewClipboardText += Clipboard_OnNewClipboardText;
+            ClientFile.OnNewLine += ClientFile_OnNewLine;
+            Parser.OnNewChatEvent += Parser_OnNewChatEvent;
+            Parser.OnNewOffer += Parser_OnNewOffer;
+            Parser.OnNewPlayerJoined += Parser_OnNewPlayerJoined;
 
             ClientFile.Test();
             Poe.Focus();
         }
 
-        private void ClientFile_OnNewPlayerJoined(string playerName) {
+        private void ClientFile_OnNewLine(string line) {
+            Parser.ParseClientLine(line);
+        }
+
+        private void Clipboard_OnNewClipboardText(string text) {
+
+        }
+
+        private void Parser_OnNewPlayerJoined(string playerName) {
             foreach (var offer in Offers) {
                 if (offer.PlayerName == playerName) {
                     offer.PlayerJoined = true;
@@ -81,7 +95,7 @@ namespace Toucan.ViewModels {
             }
         }
 
-        private void ClientFile_OnNewChatEvent(ChatEvent type) {
+        private void Parser_OnNewChatEvent(ChatEvent type) {
             switch (type) {
                 case ChatEvent.PlayerJoined:
 
@@ -110,7 +124,7 @@ namespace Toucan.ViewModels {
             }
         }
 
-        private void ClientFile_OnNewOffer(Core.Models.Offer offer) {
+        private void Parser_OnNewOffer(Core.Models.Offer offer) {
             this.Offers.Add(new Offer(offer));
         }
 
