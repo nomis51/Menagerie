@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30621.155
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toucan", "Toucan\Toucan.csproj", "{ABFF3A80-0C91-413B-AEE8-E7314C4168ED}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Toucan.Core", "Toucan.Core\Toucan.Core.csproj", "{78E189A9-BA72-48C5-A475-6967A55B65B1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ABFF3A80-0C91-413B-AEE8-E7314C4168ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABFF3A80-0C91-413B-AEE8-E7314C4168ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABFF3A80-0C91-413B-AEE8-E7314C4168ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABFF3A80-0C91-413B-AEE8-E7314C4168ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78E189A9-BA72-48C5-A475-6967A55B65B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78E189A9-BA72-48C5-A475-6967A55B65B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78E189A9-BA72-48C5-A475-6967A55B65B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78E189A9-BA72-48C5-A475-6967A55B65B1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0790EF4E-1F69-4C1F-A43D-DA305F2A18F3}
+	EndGlobalSection
+EndGlobal
