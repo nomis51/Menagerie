@@ -15,6 +15,7 @@
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="500"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="200"></ColumnDefinition>
             <ColumnDefinition Width="20"></ColumnDefinition>
@@ -25,11 +26,17 @@
             <RowDefinition Height="20"></RowDefinition>
         </Grid.RowDefinitions>
 
+        <!--<Button x:Name="btnClearOffers" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0">
+            <Button.Content>
+                <fa5:ImageAwesome Width="15" Height="15"  Icon="Solid_Trash" Foreground="Black" HorizontalAlignment="Center"/>
+            </Button.Content>
+        </Button>-->
+
         <!-- Incoming offers -->
-        <ItemsControl ItemsSource="{Binding Offers, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="99">
+        <ItemsControl ItemsSource="{Binding Offers, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="99">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <DockPanel Cursor="Hand" Margin="550,0,0,0" LastChildFill="False" HorizontalAlignment="Left"/>
+                    <DockPanel Cursor="Hand" LastChildFill="False" HorizontalAlignment="Left"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
@@ -85,7 +92,8 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <ItemsControl ItemsSource="{Binding OutgoingOffers, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="99">
+        <!-- Outgoing offesr -->
+        <ItemsControl ItemsSource="{Binding OutgoingOffers, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="2" Grid.RowSpan="99">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Cursor="Hand" Margin="0,100,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"/>

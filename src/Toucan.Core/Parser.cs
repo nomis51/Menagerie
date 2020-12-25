@@ -232,7 +232,10 @@ namespace Toucan.Core {
             if (evt != null) {
                 if (evt.EvenType == ChatEvent.Offer) {
                     var offer = (Offer)evt;
-                    OnNewChatEventParsed(offer);
+
+                    if (offer.IsOutgoing) {
+                        OnNewChatEventParsed(offer);
+                    }
                 }
             }
         }

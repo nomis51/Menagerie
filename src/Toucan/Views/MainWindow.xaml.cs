@@ -21,6 +21,8 @@ namespace Toucan {
     /// Logique d'interaction pour MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private MainWindowViewModel vm;
 
         public MainWindow() {
@@ -28,6 +30,8 @@ namespace Toucan {
 
             vm = new MainWindowViewModel();
             this.DataContext = vm;
+
+            log.Info("test logging");
         }
 
         private void btnBusy_Click(object sender, RoutedEventArgs e) {

@@ -14,7 +14,7 @@ namespace Toucan.Core {
         #endregion
 
         private string ClientFilePath;
-        private int NbLines = 0;
+        private long EndOfFile = 0;
 
         public ClientFileParser(string clientFilePath) {
             this.ClientFilePath = clientFilePath;
@@ -22,7 +22,7 @@ namespace Toucan.Core {
         }
 
         private void StartWatching() {
-            SetNbLines();
+            SetEndOfFile();
             Watch();
         }
 
@@ -56,42 +56,42 @@ namespace Toucan.Core {
             }
         }
 
-        private void SetNbLines() {
+        private void SetEndOfFile() {
             var file = File.Open(ClientFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-
-            NbLines = 0;
-
-            StreamReader reader = new StreamReader(file);
-
-            while (!reader.EndOfStream) {
-                reader.ReadLine();
-                ++NbLines;
-            }
-
-            reader.Close();
+            EndOfFile = file.Length - 1;
             file.Close();
         }
 
         private List<string> ReadNewLines() {
             List<string> lines = new List<string>();
 
-            int currentLine = NbLines;
+            long currentPosition = EndOfFile;
 
-            SetNbLines();
+            SetEndOfFile();
 
-            while (currentLine < NbLines) {
-                string line = File.ReadLines(ClientFilePath).ElementAtOrDefault(currentLine);
+            if (currentPosition >= EndOfFile) {
+                return lines;
+            }
+
+            var file = File.Open(ClientFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            file.Position = currentPosition;
+            StreamReader reader = new StreamReader(file);
+
+            while (!reader.EndOfStream) {
+                string line = reader.ReadLine();
 
                 if (!string.IsNullOrEmpty(line)) {
                     lines.Add(line);
                 }
-
-                ++currentLine;
             }
+
+            reader.Close();
+            file.Close();
 
             return lines;
         }
     }
+
 
     public enum ChatEvent {
         TradeAccepted,

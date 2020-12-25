@@ -59,11 +59,16 @@ namespace Toucan.Core {
         private void FindPoeProcess() {
             Process[] processes = Process.GetProcesses();
 
-            foreach (var proc in processes) {
-                var g = 0;
+            string raw = "";
+            processes.Select(p => p.ProcessName).ToList().ForEach(l => raw += l + "\n");
 
+            File.AppendAllText("./toucan.log", raw + "\n");
+
+            foreach (var proc in processes) {
                 if (PoeProcesses.Contains(proc.ProcessName)) {
                     this.Process = proc;
+
+                    File.AppendAllText("./toucan.log", "Poe process found\n");
 
                     try {
                         // 64 bits
@@ -72,8 +77,10 @@ namespace Toucan.Core {
                         //32 bits
                         StringBuilder filename = new StringBuilder(1024);
                         GetModuleFileNameEx(proc.Handle, IntPtr.Zero, filename, 2014);
-                        this._clientFilePath = filename.ToString();
+                        _clientFilePath = $"{filename.ToString().Substring(0, filename.ToString().LastIndexOf("\\"))}\\logs\\Client.txt";
                     }
+
+                    File.AppendAllText("./toucan.log", $"Client path: {_clientFilePath}\n");
                     break;
                 }
             }
