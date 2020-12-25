@@ -112,5 +112,13 @@ namespace Toucan {
 
             vm.SendLeave(id);
         }
+
+        private void btnClearOffers_Click(object sender, RoutedEventArgs e) {
+            vm.ClearOffers();
+        }
+
+        private void btnClearOutgoingOffers_Click(object sender, RoutedEventArgs e) {
+            vm.ClearOutgoingOffers();
+        }
     }
 }

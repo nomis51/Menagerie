@@ -6,6 +6,29 @@
              DispatcherUnhandledException="Application_DispatcherUnhandledException"
              StartupUri="Views/MainWindow.xaml">
     <Application.Resources>
+        <Style x:Key="TransparentStyleTransparent" TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border>
+                            <Border.Style>
+                                <Style TargetType="{x:Type Border}">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                            <Grid Background="Transparent">
+                                <ContentPresenter></ContentPresenter>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <Style x:Key="TransparentStyleBlue" TargetType="{x:Type Button}">
             <Setter Property="Template">
                 <Setter.Value>

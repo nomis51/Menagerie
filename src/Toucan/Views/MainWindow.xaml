@@ -15,7 +15,7 @@
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="500"></ColumnDefinition>
+            <ColumnDefinition Width="560"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="200"></ColumnDefinition>
             <ColumnDefinition Width="20"></ColumnDefinition>
@@ -26,11 +26,17 @@
             <RowDefinition Height="20"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <!--<Button x:Name="btnClearOffers" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0">
+        <Button x:Name="btnClearOffers" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,5,0" BorderThickness="0" Background="Transparent" Style="{StaticResource TransparentStyleTransparent}" Cursor="Hand" ToolTip="Clear all offers" Click="btnClearOffers_Click">
             <Button.Content>
-                <fa5:ImageAwesome Width="15" Height="15"  Icon="Solid_Trash" Foreground="Black" HorizontalAlignment="Center"/>
+                <fa5:ImageAwesome Width="15" Height="15"  Icon="Solid_Trash" Foreground="#a0aec0" HorizontalAlignment="Center"/>
             </Button.Content>
-        </Button>-->
+        </Button>
+
+        <Button x:Name="btnClearOutgoingOffers" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,0,0" BorderThickness="0" Background="Transparent" Style="{StaticResource TransparentStyleTransparent}" Cursor="Hand" ToolTip="Clear all outgoing offers" Click="btnClearOutgoingOffers_Click">
+            <Button.Content>
+                <fa5:ImageAwesome Width="15" Height="15"  Icon="Solid_Trash" Foreground="#a0aec0" HorizontalAlignment="Center"/>
+            </Button.Content>
+        </Button>
 
         <!-- Incoming offers -->
         <ItemsControl ItemsSource="{Binding Offers, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="99">
@@ -101,11 +107,11 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Grid Name="grdOutgoingOffer" Background="#2d2d2f" MinWidth="140" MaxWidth="200" MaxHeight="120" Margin="2" Tag="{Binding Id}">
+                    <Grid Name="grdOutgoingOffer" Background="#2d2d2f" MinWidth="140" MaxWidth="200" MaxHeight="90" Margin="2" Tag="{Binding Id}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="3"></RowDefinition>
-                            <RowDefinition Height="25"></RowDefinition>
-                            <RowDefinition Height="25"></RowDefinition>
+                            <RowDefinition Height="15"></RowDefinition>
+                            <RowDefinition Height="15"></RowDefinition>
                             <RowDefinition Height="*"></RowDefinition>
                             <RowDefinition Height="25"></RowDefinition>
                             <RowDefinition Height="3"></RowDefinition>

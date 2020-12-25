@@ -306,10 +306,6 @@ namespace Toucan.ViewModels {
                 return;
             }
 
-            if (OutgoingOffers[index].State == OfferState.Initial) {
-                return;
-            }
-
             OutgoingOffers[index].State = OfferState.Done;
             UpdateOffers();
 
@@ -370,6 +366,14 @@ namespace Toucan.ViewModels {
             Chat.SendChatMessage($"@{Offers[index].PlayerName} I'm sorry, my \"{Offers[index].ItemName}\" has already been sold");
 
             RemoveOffer(id);
+        }
+
+        public void ClearOffers() {
+            Offers.Clear();
+        }
+
+        public void ClearOutgoingOffers() {
+            OutgoingOffers.Clear();
         }
     }
 }
