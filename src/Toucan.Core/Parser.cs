@@ -105,7 +105,7 @@ namespace Toucan.Core {
                 int playerStartIndex = line.IndexOf("@From ");
 
                 if (playerStartIndex == -1) {
-                    playerStartIndex = line.IndexOf("@");
+                    playerStartIndex = line.IndexOf("@To ");
 
                     if (playerStartIndex == -1) {
                         // Not a whisper
@@ -113,18 +113,14 @@ namespace Toucan.Core {
                     }
 
                     offer.IsOutgoing = true;
-                    playerStartIndex += 1;
+                    playerStartIndex += 4;
                 } else {
                     playerStartIndex += 6;
                 }
 
                 int playerEndIndex = -1;
 
-                if (offer.IsOutgoing) {
-                    playerEndIndex = line.IndexOf(" Hi", playerStartIndex);
-                } else {
-                    playerEndIndex = line.IndexOf(": ", playerStartIndex);
-                }
+                playerEndIndex = line.IndexOf(": ", playerStartIndex);
 
                 if (playerEndIndex == -1) {
                     continue;
