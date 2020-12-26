@@ -86,7 +86,8 @@ namespace Toucan.ViewModels {
                 ItemName = "Saqawal",
                 Price = 9,
                 Currency = "Chaos",
-                PlayerName = "Paul"
+                PlayerName = "Paul",
+                IsOutgoing = true
             });
         }
 
@@ -121,7 +122,11 @@ namespace Toucan.ViewModels {
 
                     offer.State = OfferState.Done;
 
-                    SendKick(offer.Id, true);
+                    if (offer.IsOutgoing) {
+                        SendLeave(offer.Id, true);
+                    } else {
+                        SendKick(offer.Id, true);
+                    }
                     break;
 
                 case ChatEvent.TradeCancelled:
@@ -153,7 +158,9 @@ namespace Toucan.ViewModels {
         }
 
         private Offer GetActiveOffer() {
-            return Offers.FirstOrDefault(o => o.TradeRequestSent);
+            var offer = Offers.FirstOrDefault(o => o.TradeRequestSent);
+
+            return offer == null ? OutgoingOffers.FirstOrDefault(o => o.TradeRequestSent) : offer;
         }
 
         private void EnsureNotHighlighted(int index) {
@@ -330,7 +337,7 @@ namespace Toucan.ViewModels {
                 // TODO: Kick myself here
 
                 if (sayThanks) {
-                    Thread.Sleep(250);
+                    Thread.Sleep(100);
                     Chat.SendChatMessage($"@{playerName} Thank you and have fun!");
                 }
             });
