@@ -205,13 +205,16 @@ namespace Toucan.Core {
             }
 
             if (!processed) {
-                if (aline.IndexOf(TRADE_ACCEPTED_MSG) != -1) {
+                var line = aline.ToLower();
+
+                if (line.IndexOf(TRADE_ACCEPTED_MSG) != -1) {
                     evt = new Models.ChatEvent() { EvenType = ChatEvent.TradeAccepted };
-                } else if (aline.IndexOf(TRADE_CANCELLED_MSG) != -1) {
+                } else if (line.IndexOf(TRADE_CANCELLED_MSG) != -1) {
                     evt = new Models.ChatEvent() { EvenType = ChatEvent.TradeCancelled };
-                } else if (aline.IndexOf(PLAYER_JOINED_MSG) != -1) {
+                } else if (line.IndexOf(PLAYER_JOINED_MSG) != -1) {
                     var startIndex = aline.IndexOf("] ");
                     var endIndex = aline.IndexOf(PLAYER_JOINED_MSG);
+
                     if (startIndex != -1 && endIndex != -1) {
                         evt = new JoinEvent(aline.Substring(startIndex + 2, endIndex - startIndex - 2));
                     }
