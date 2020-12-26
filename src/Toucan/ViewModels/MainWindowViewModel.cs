@@ -135,7 +135,7 @@ namespace Toucan.ViewModels {
             if (!offer.IsOutgoing) {
                 Offers.Add(new Offer(offer));
             } else {
-                OutgoingOffers.Add(new Offer(offer));
+                OutgoingOffers.Insert(0, new Offer(offer));
             }
         }
 
@@ -309,7 +309,7 @@ namespace Toucan.ViewModels {
             RemoveOffer(id);
         }
 
-        public void SendLeave(int id, bool sayThanks = true) {
+        public void SendLeave(int id, bool sayThanks = false) {
             var index = GetOfferIndex(id);
 
             if (index == -1) {

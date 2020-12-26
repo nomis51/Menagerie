@@ -100,7 +100,7 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <!-- Outgoing offesr -->
+        <!-- Outgoing offers -->
         <ItemsControl ItemsSource="{Binding OutgoingOffers, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="2" Grid.RowSpan="99">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
