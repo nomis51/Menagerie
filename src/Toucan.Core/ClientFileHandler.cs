@@ -73,7 +73,7 @@ namespace Toucan.Core {
                 while (newLines.Count() == 0);
 
                 foreach (var line in newLines) {
-                    this.OnNewLine(line);
+                    OnNewLine(line);
                 }
             }
         }

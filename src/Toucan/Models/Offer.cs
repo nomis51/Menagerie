@@ -176,6 +176,12 @@ namespace Toucan.Models {
             }
         }
 
+        public Visibility PlayerJoinedIconVisible {
+            get {
+                return PlayerJoined ? Visibility.Visible : Visibility.Hidden;
+            }
+        }
+
         public double PriceFontSize {
             get {
                 double size = 14.0d;

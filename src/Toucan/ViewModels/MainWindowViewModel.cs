@@ -99,14 +99,12 @@ namespace Toucan.ViewModels {
                     offer.PlayerJoined = true;
                 }
             }
+
+            UpdateOffers();
         }
 
         private void Parser_OnNewChatEvent(ChatEvent type) {
             switch (type) {
-                case ChatEvent.PlayerJoined:
-
-                    break;
-
                 case ChatEvent.TradeAccepted:
                     var offer = GetActiveOffer();
 

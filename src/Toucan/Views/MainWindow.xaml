@@ -62,6 +62,8 @@
                             <ColumnDefinition Width="3"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
 
+                        <fa5:ImageAwesome Visibility="{Binding PlayerJoinedIconVisible}" Panel.ZIndex="99" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="15" Height="15"  Icon="Solid_UserCircle" Foreground="Lime"/>
+
                         <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="999" Grid.RowSpan="999" BorderThickness="3" BorderBrush="#1e1e1e"   Visibility="{Binding IsNormalBorderVisible}"></Border>
                         <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="999" Grid.RowSpan="999" BorderThickness="3" BorderBrush="Green" Visibility="{Binding IsInviteBorderVisible}"></Border>
                         <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="999" Grid.RowSpan="999" BorderThickness="3" BorderBrush="Orange" Visibility="{Binding IsTradeBorderVisible}"></Border>
