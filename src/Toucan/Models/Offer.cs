@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Toucan.Core.Extensions;
 
 namespace Toucan.Models {
     public class Offer : INotifyPropertyChanged {
@@ -219,6 +220,12 @@ namespace Toucan.Models {
 
         public bool IsHighlighted { get; set; } = false;
 
+        public string Tooltip {
+            get {
+                return $"Time: {Time} ({ElapsedTime()})\nPlayer: {PlayerName}\nItem: {ItemName}\nPrice: {Price} {Currency}\nLeague: {League}";
+            }
+        }
+
         public Offer() { }
 
         public Offer(Core.Models.Offer offer) {
@@ -231,6 +238,10 @@ namespace Toucan.Models {
             this.Price = offer.Price;
             this.League = offer.League;
             this.IsOutgoing = offer.IsOutgoing;
+        }
+
+        private string ElapsedTime() {
+            return (DateTime.Now - Time).ToReadableString();
         }
     }
 

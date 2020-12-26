@@ -37,7 +37,7 @@
                 <fa5:ImageAwesome Width="15" Height="15"  Icon="Solid_Trash" Foreground="#a0aec0" HorizontalAlignment="Center"/>
             </Button.Content>
         </Button>
-
+        
         <!-- Incoming offers -->
         <ItemsControl ItemsSource="{Binding Offers, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="99">
             <ItemsControl.ItemsPanel>
@@ -47,7 +47,7 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Grid Name="grdOffer" Background="#2d2d2f" Width="90" Height="80" Margin="2" MouseDown="grdOffer_MouseDown" Tag="{Binding Id}">
+                    <Grid Name="grdOffer" Background="#2d2d2f" Width="90" Height="80" Margin="2" MouseDown="grdOffer_MouseDown" Tag="{Binding Id}" ToolTip="{Binding Tooltip}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="3"></RowDefinition>
                             <RowDefinition Height="15"></RowDefinition>
@@ -109,7 +109,7 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Grid Name="grdOutgoingOffer" Background="#2d2d2f" MinWidth="140" MaxWidth="200" MaxHeight="90" Margin="2" Tag="{Binding Id}">
+                    <Grid Name="grdOutgoingOffer" Background="#2d2d2f" MinWidth="140" MaxWidth="200" MaxHeight="90" Margin="2" Tag="{Binding Id}" ToolTip="{Binding Tooltip}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="3"></RowDefinition>
                             <RowDefinition Height="15"></RowDefinition>
