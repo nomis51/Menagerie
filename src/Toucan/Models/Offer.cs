@@ -211,6 +211,8 @@ namespace Toucan.Models {
 
         public bool IsOutgoing { get; set; }
 
+        public bool IsHighlighted { get; set; } = false;
+
         public Offer() { }
 
         public Offer(Core.Models.Offer offer) {

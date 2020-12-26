@@ -65,9 +65,14 @@ namespace Toucan {
             var offer = vm.GetOffer(id);
 
             if (offer != null) {
-                if ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))) {
+                var shiftKeyDown = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
+                var controlKeyDown = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
+
+                if (controlKeyDown && shiftKeyDown) {
                     vm.SendStillInterestedWhisper(id);
-                } else if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)) {
+                } else if (shiftKeyDown) {
+                    vm.HighlightItem(id);
+                } else if (controlKeyDown) {
                     vm.SendSoldWhisper(id);
                 } else {
                     switch (offer.State) {

@@ -59,15 +59,17 @@ namespace Toucan.ViewModels {
         private ChatHandler Chat;
         private ClipboardListener Clipboard;
         private Parser Parser;
+        private GameHandler Game;
 
         public ObservableCollection<Offer> Offers { get; set; } = new ObservableCollection<Offer>();
         public ObservableCollection<Offer> OutgoingOffers { get; set; } = new ObservableCollection<Offer>();
 
         public MainWindowViewModel() {
-            this.Poe = new PoeWindow();
+            Poe = new PoeWindow();
             Parser = new Parser();
-            this.ClientFile = new ClientFileParser(@"C:\Path of Exile\logs\Client.txt");
-            Chat = new ChatHandler(this.Poe);
+            ClientFile = new ClientFileParser(@"C:\Path of Exile\logs\Client.txt");
+            Chat = new ChatHandler(Poe);
+            Game = new GameHandler(Poe);
             Clipboard = new ClipboardListener();
 
             Clipboard.OnNewClipboardText += Clipboard_OnNewClipboardText;
@@ -154,6 +156,13 @@ namespace Toucan.ViewModels {
             return Offers.FirstOrDefault(o => o.TradeRequestSent);
         }
 
+        private void EnsureNotHighlighted(int index) {
+            if (Offers[index].IsHighlighted) {
+                Offers[index].IsHighlighted = false;
+                Game.Input.Keyboard.KeyPress(WindowsInput.Native.VirtualKeyCode.ESCAPE);
+            }
+        }
+
         private int GetOfferIndex(int id) {
             int index = Offers.Select(g => g.Id)
                 .ToList()
@@ -200,6 +209,8 @@ namespace Toucan.ViewModels {
                 Offers[index].State = OfferState.TradeRequestSent;
                 UpdateOffers();
 
+                EnsureNotHighlighted(index);
+
                 Chat.SendTradeCommand(Offers[index].PlayerName);
             }
         }
@@ -243,8 +254,10 @@ namespace Toucan.ViewModels {
             }
 
             Thread t = new Thread(delegate () {
+                EnsureNotHighlighted(index);
+
                 Chat.SendKickCommand(Offers[index].PlayerName);
-                Thread.Sleep(250);
+                Thread.Sleep(100);
                 Chat.SendInviteCommand(Offers[index].PlayerName);
             });
 
@@ -265,6 +278,8 @@ namespace Toucan.ViewModels {
 
             Offers[index].State = OfferState.PlayerInvited;
             UpdateOffers();
+
+            EnsureNotHighlighted(index);
 
             Chat.SendInviteCommand(Offers[index].PlayerName);
         }
@@ -337,6 +352,7 @@ namespace Toucan.ViewModels {
                 Dispatcher.CurrentDispatcher.Invoke(() => {
                     (isOutgoing ? OutgoingOffers : Offers).RemoveAt(index);
                     UpdateOffers();
+                    Poe.Focus();
                 });
             }
         }
@@ -349,6 +365,8 @@ namespace Toucan.ViewModels {
             }
 
             UpdateOffers();
+
+            EnsureNotHighlighted(index);
 
             Chat.SendChatMessage($"@{Offers[index].PlayerName} Are you still interested in my \"{Offers[index].ItemName}\" listed for {Offers[index].Price} {Offers[index].Currency}?");
         }
@@ -363,17 +381,33 @@ namespace Toucan.ViewModels {
             Offers[index].State = OfferState.Done;
             UpdateOffers();
 
+            EnsureNotHighlighted(index);
+
             Chat.SendChatMessage($"@{Offers[index].PlayerName} I'm sorry, my \"{Offers[index].ItemName}\" has already been sold");
 
             RemoveOffer(id);
         }
 
         public void ClearOffers() {
+            Poe.Focus();
             Offers.Clear();
         }
 
         public void ClearOutgoingOffers() {
+            Poe.Focus();
             OutgoingOffers.Clear();
+        }
+
+        public void HighlightItem(int id) {
+            var index = GetOfferIndex(id);
+
+            if (index == -1) {
+                return;
+            }
+
+            Offers[index].IsHighlighted = true;
+
+            Game.HightlightStash(Offers[index].ItemName);
         }
     }
 }
