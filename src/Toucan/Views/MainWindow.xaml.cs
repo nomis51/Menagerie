@@ -125,5 +125,21 @@ namespace Toucan {
         private void btnClearOutgoingOffers_Click(object sender, RoutedEventArgs e) {
             vm.ClearOutgoingOffers();
         }
+
+        private void txtSearchOutgoingOffer_TextChanged(object sender, TextChangedEventArgs e) {
+            if (string.IsNullOrEmpty(txtSearchOutgoingOffer.Text)) {
+                vm.ResetFilter();
+            } else {
+                vm.FilterOffers(txtSearchOutgoingOffer.Text);
+            }
+        }
+
+        private void txtSearchOffer_TextChanged(object sender, TextChangedEventArgs e) {
+            if (string.IsNullOrEmpty(txtSearchOffer.Text)) {
+                vm.ResetFilter(false);
+            } else {
+                vm.FilterOffers(txtSearchOffer.Text, false);
+            }
+        }
     }
 }

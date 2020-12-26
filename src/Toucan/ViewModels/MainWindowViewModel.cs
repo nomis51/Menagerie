@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
 using System.Windows.Controls;
+using System.Windows;
 
 namespace Toucan.ViewModels {
     public class MainWindowViewModel : INotifyPropertyChanged {
@@ -54,8 +55,33 @@ namespace Toucan.ViewModels {
         }
         #endregion
 
+        private Offer[] _offers;
+        private Offer[] _outgoingOffers;
+
         public ObservableCollection<Offer> Offers { get; set; } = new ObservableCollection<Offer>();
         public ObservableCollection<Offer> OutgoingOffers { get; set; } = new ObservableCollection<Offer>();
+
+        private Visibility _isOffersFilterVisible;
+        public Visibility IsOffersFilterVisible {
+            get {
+                return _isOffersFilterVisible;
+            }
+            set {
+                _isOffersFilterVisible = value;
+                OnPropertyChanged("IsOffersFilterVisible");
+            }
+        }
+
+        private Visibility _isOutgoingOffersFilterVisible;
+        public Visibility IsOutgoingOffersFilterVisible {
+            get {
+                return _isOutgoingOffersFilterVisible;
+            }
+            set {
+                _isOutgoingOffersFilterVisible = value;
+                OnPropertyChanged("IsOutgoingOffersFilterVisible");
+            }
+        }
 
         public MainWindowViewModel() {
             Parser.Instance.Start();
@@ -79,6 +105,14 @@ namespace Toucan.ViewModels {
                 Id = 99,
                 ItemName = "Saqawal",
                 Price = 9,
+                Currency = "Chaos",
+                PlayerName = "Paul",
+                IsOutgoing = true
+            });
+            OutgoingOffers.Add(new Offer() {
+                Id = 100,
+                ItemName = "Saqawal",
+                Price = 11,
                 Currency = "Chaos",
                 PlayerName = "Paul",
                 IsOutgoing = true
@@ -134,8 +168,10 @@ namespace Toucan.ViewModels {
         private void Parser_OnNewOffer(Core.Models.Offer offer) {
             if (!offer.IsOutgoing) {
                 Offers.Add(new Offer(offer));
+                IsOffersFilterVisible = Visibility.Visible;
             } else {
                 OutgoingOffers.Insert(0, new Offer(offer));
+                IsOutgoingOffersFilterVisible = Visibility.Visible;
             }
         }
 
@@ -178,6 +214,18 @@ namespace Toucan.ViewModels {
             foreach (var o in buffer) {
                 Offers.Add(o);
             }
+
+            IsOffersFilterVisible = Offers.Count > 0 ? Visibility.Visible : Visibility.Hidden;
+
+            Offer[] buffer2 = new Offer[OutgoingOffers.Count];
+            OutgoingOffers.CopyTo(buffer2, 0);
+            OutgoingOffers.Clear();
+
+            foreach (var o in buffer2) {
+                OutgoingOffers.Add(o);
+            }
+
+            IsOutgoingOffersFilterVisible = OutgoingOffers.Count > 0 ? Visibility.Visible : Visibility.Hidden;
         }
 
         public void SendTradeRequest(int id, bool isOutgoing = false) {
@@ -403,6 +451,60 @@ namespace Toucan.ViewModels {
             Offers[index].IsHighlighted = true;
 
             GameHandler.Instance.HightlightStash(Offers[index].ItemName);
+        }
+
+        public void ResetFilter(bool applyToOutgoing = true) {
+            if (applyToOutgoing) {
+                if (_outgoingOffers != null) {
+                    OutgoingOffers.Clear();
+
+                    foreach (var offer in _outgoingOffers) {
+                        OutgoingOffers.Add(offer);
+                    }
+                }
+            } else {
+                if (_offers != null) {
+                    Offers.Clear();
+
+                    foreach (var offer in _offers) {
+                        Offers.Add(offer);
+                    }
+                }
+            }
+        }
+
+        public void FilterOffers(string searchText, bool applyToOutgoing = true) {
+            searchText = searchText.ToLower().Trim();
+
+            ResetFilter(applyToOutgoing);
+
+            if (applyToOutgoing) {
+                var results = OutgoingOffers.ToList().FindAll(e => e.ItemName.ToLower().IndexOf(searchText) != -1 || e.PlayerName.ToLower().IndexOf(searchText) != -1);
+
+                if (_outgoingOffers == null) {
+                    _outgoingOffers = new Offer[OutgoingOffers.Count];
+                }
+
+                OutgoingOffers.CopyTo(_outgoingOffers, 0);
+                OutgoingOffers.Clear();
+
+                foreach (var r in results) {
+                    OutgoingOffers.Add(r);
+                }
+            } else {
+                var results = Offers.ToList().FindAll(e => e.ItemName.ToLower().IndexOf(searchText) != -1 || e.PlayerName.ToLower().IndexOf(searchText) != -1);
+
+                if (_offers == null) {
+                    _offers = new Offer[Offers.Count];
+                }
+
+                Offers.CopyTo(_offers, 0);
+                Offers.Clear();
+
+                foreach (var r in results) {
+                    Offers.Add(r);
+                }
+            }
         }
     }
 }

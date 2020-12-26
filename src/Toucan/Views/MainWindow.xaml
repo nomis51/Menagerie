@@ -21,25 +21,24 @@
             <ColumnDefinition Width="20"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="25"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="100"></RowDefinition>
             <RowDefinition Height="20"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <Button x:Name="btnClearOffers" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,5,0" BorderThickness="0" Background="Transparent" Style="{StaticResource TransparentStyleTransparent}" Cursor="Hand" ToolTip="Clear all offers" Click="btnClearOffers_Click">
-            <Button.Content>
-                <fa5:ImageAwesome Width="15" Height="15"  Icon="Solid_Trash" Foreground="#a0aec0" HorizontalAlignment="Center"/>
-            </Button.Content>
-        </Button>
+        <!-- Incoming offers -->
+        <DockPanel Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" MinWidth="140" Margin="0,0,30,0" Visibility="{Binding IsOffersFilterVisible}">
+            <TextBox x:Name="txtSearchOffer" TextChanged="txtSearchOffer_TextChanged"></TextBox>
+        </DockPanel>
 
-        <Button x:Name="btnClearOutgoingOffers" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,0,0" BorderThickness="0" Background="Transparent" Style="{StaticResource TransparentStyleTransparent}" Cursor="Hand" ToolTip="Clear all outgoing offers" Click="btnClearOutgoingOffers_Click">
+        <Button x:Name="btnClearOffers" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,5,0" BorderThickness="0" Background="Transparent" Style="{StaticResource TransparentStyleTransparent}" Cursor="Hand" ToolTip="Clear all offers" Click="btnClearOffers_Click">
             <Button.Content>
                 <fa5:ImageAwesome Width="15" Height="15"  Icon="Solid_Trash" Foreground="#a0aec0" HorizontalAlignment="Center"/>
             </Button.Content>
         </Button>
         
-        <!-- Incoming offers -->
-        <ItemsControl ItemsSource="{Binding Offers, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="99">
+        <ItemsControl ItemsSource="{Binding Offers, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="99">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <DockPanel Cursor="Hand" LastChildFill="False" HorizontalAlignment="Left"/>
@@ -101,7 +100,17 @@
         </ItemsControl>
 
         <!-- Outgoing offers -->
-        <ItemsControl ItemsSource="{Binding OutgoingOffers, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="2" Grid.RowSpan="99">
+        <DockPanel Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Top" MinWidth="140" Margin="0,75,0,0" Visibility="{Binding IsOutgoingOffersFilterVisible}">
+            <TextBox x:Name="txtSearchOutgoingOffer" TextChanged="txtSearchOutgoingOffer_TextChanged"></TextBox>
+        </DockPanel>
+
+        <Button x:Name="btnClearOutgoingOffers" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,0,0" BorderThickness="0" Background="Transparent" Style="{StaticResource TransparentStyleTransparent}" Cursor="Hand" ToolTip="Clear all outgoing offers" Click="btnClearOutgoingOffers_Click">
+            <Button.Content>
+                <fa5:ImageAwesome Width="15" Height="15"  Icon="Solid_Trash" Foreground="#a0aec0" HorizontalAlignment="Center"/>
+            </Button.Content>
+        </Button>
+        
+        <ItemsControl ItemsSource="{Binding OutgoingOffers, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="2" Grid.RowSpan="99">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Cursor="Hand" Margin="0,100,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
