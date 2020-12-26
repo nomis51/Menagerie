@@ -7,18 +7,38 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Toucan.Core {
-    public class ClientFileParser {
+    public class ClientFileHandler : Handler {
         #region Events
         public delegate void NewLine(string line);
         public event NewLine OnNewLine;
         #endregion
 
-        private string ClientFilePath;
+        #region Singleton
+        private static ClientFileHandler _instance;
+        public static ClientFileHandler Instance {
+            get {
+                if (_instance == null) {
+                    _instance = new ClientFileHandler();
+                }
+
+                return _instance;
+            }
+        }
+        #endregion
+
         private long EndOfFile = 0;
 
-        public ClientFileParser(string clientFilePath) {
-            this.ClientFilePath = clientFilePath;
+        private ClientFileHandler() {
+            PoeWindowHandler.Instance.OnClientFileReady += PoeWindowHandler_OnClientFileReady;
+        }
+
+        private void PoeWindowHandler_OnClientFileReady() {
+            Ready = true;
             StartWatching();
+        }
+
+        public override void Start() {
+            base.Start();
         }
 
         private void StartWatching() {
@@ -41,12 +61,14 @@ namespace Toucan.Core {
 
         private async void Watch() {
             while (true) {
-                IEnumerable<string> newLines;
+                List<string> newLines = new List<string>();
 
                 do {
-                    await Task.Delay(500);
+                    try {
+                        await Task.Delay(500);
 
-                    newLines = this.ReadNewLines();
+                        newLines = this.ReadNewLines();
+                    } catch { }
                 }
                 while (newLines.Count() == 0);
 
@@ -57,7 +79,7 @@ namespace Toucan.Core {
         }
 
         private void SetEndOfFile() {
-            var file = File.Open(ClientFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            var file = File.Open(PoeWindowHandler.Instance.ClientFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             EndOfFile = file.Length - 1;
             file.Close();
         }
@@ -73,7 +95,7 @@ namespace Toucan.Core {
                 return lines;
             }
 
-            var file = File.Open(ClientFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            var file = File.Open(PoeWindowHandler.Instance.ClientFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             file.Position = currentPosition;
             StreamReader reader = new StreamReader(file);
 

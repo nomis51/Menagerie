@@ -54,33 +54,27 @@ namespace Toucan.ViewModels {
         }
         #endregion
 
-        private ClientFileParser ClientFile;
-        private PoeWindow Poe;
-        private ChatHandler Chat;
-        private ClipboardListener Clipboard;
-        private Parser Parser;
-        private GameHandler Game;
-
         public ObservableCollection<Offer> Offers { get; set; } = new ObservableCollection<Offer>();
         public ObservableCollection<Offer> OutgoingOffers { get; set; } = new ObservableCollection<Offer>();
 
         public MainWindowViewModel() {
-            Poe = new PoeWindow();
-            Parser = new Parser();
-            ClientFile = new ClientFileParser(@"C:\Path of Exile\logs\Client.txt");
-            Chat = new ChatHandler(Poe);
-            Game = new GameHandler(Poe);
-            Clipboard = new ClipboardListener();
+            Parser.Instance.Start();
+            ClientFileHandler.Instance.Start();
+            ChatHandler.Instance.Start();
+            GameHandler.Instance.Start();
+            ClipboardHandler.Instance.Start();
+            PoeWindowHandler.Instance.Start();
 
-            Clipboard.OnNewClipboardText += Clipboard_OnNewClipboardText;
-            ClientFile.OnNewLine += ClientFile_OnNewLine;
-            Parser.OnNewChatEvent += Parser_OnNewChatEvent;
-            Parser.OnNewOffer += Parser_OnNewOffer;
-            Parser.OnNewPlayerJoined += Parser_OnNewPlayerJoined;
+            ClipboardHandler.Instance.OnNewClipboardText += Clipboard_OnNewClipboardText;
+            ClientFileHandler.Instance.OnNewLine += ClientFile_OnNewLine;
+            Parser.Instance.OnNewChatEvent += Parser_OnNewChatEvent;
+            Parser.Instance.OnNewOffer += Parser_OnNewOffer;
+            Parser.Instance.OnNewPlayerJoined += Parser_OnNewPlayerJoined;
 
-            ClientFile.Test();
-            Poe.Focus();
+            PoeWindowHandler.Instance.Focus();
 
+            // TODO: For testing only
+            ClientFileHandler.Instance.Test();
             OutgoingOffers.Add(new Offer() {
                 Id = 99,
                 ItemName = "Saqawal",
@@ -92,11 +86,11 @@ namespace Toucan.ViewModels {
         }
 
         private void ClientFile_OnNewLine(string line) {
-            Parser.ParseClientLine(line);
+            Parser.Instance.ParseClientLine(line);
         }
 
         private void Clipboard_OnNewClipboardText(string text) {
-            Parser.ParseClipboardLine(text);
+            Parser.Instance.ParseClipboardLine(text);
         }
 
         private void Parser_OnNewPlayerJoined(string playerName) {
@@ -147,10 +141,6 @@ namespace Toucan.ViewModels {
             }
         }
 
-        public void Test() {
-            this.ClientFile.Test();
-        }
-
         public Offer GetOffer(int id) {
             var offer = Offers.FirstOrDefault(e => e.Id == id);
 
@@ -166,7 +156,7 @@ namespace Toucan.ViewModels {
         private void EnsureNotHighlighted(int index) {
             if (Offers[index].IsHighlighted) {
                 Offers[index].IsHighlighted = false;
-                Game.Input.Keyboard.KeyPress(WindowsInput.Native.VirtualKeyCode.ESCAPE);
+                GameHandler.Instance.Input.Keyboard.KeyPress(WindowsInput.Native.VirtualKeyCode.ESCAPE);
             }
         }
 
@@ -207,7 +197,7 @@ namespace Toucan.ViewModels {
                 OutgoingOffers[index].State = OfferState.TradeRequestSent;
                 UpdateOffers();
 
-                Chat.SendTradeCommand(OutgoingOffers[index].PlayerName);
+                ChatHandler.Instance.SendTradeCommand(OutgoingOffers[index].PlayerName);
             } else {
                 if (!Offers[index].PlayerInvited) {
                     return;
@@ -218,7 +208,7 @@ namespace Toucan.ViewModels {
 
                 EnsureNotHighlighted(index);
 
-                Chat.SendTradeCommand(Offers[index].PlayerName);
+                ChatHandler.Instance.SendTradeCommand(Offers[index].PlayerName);
             }
         }
 
@@ -232,7 +222,7 @@ namespace Toucan.ViewModels {
             OutgoingOffers[index].State = OfferState.HideoutJoined;
             UpdateOffers();
 
-            Chat.SendHideoutCommand(OutgoingOffers[index].PlayerName);
+            ChatHandler.Instance.SendHideoutCommand(OutgoingOffers[index].PlayerName);
         }
 
         public void SendBusyWhisper(int id) {
@@ -246,7 +236,7 @@ namespace Toucan.ViewModels {
                 return;
             }
 
-            Chat.SendChatMessage($"@{Offers[index].PlayerName} I'm busy right now, I'll whisper you for the \"{Offers[index].ItemName}\" when I'm ready");
+            ChatHandler.Instance.SendChatMessage($"@{Offers[index].PlayerName} I'm busy right now, I'll whisper you for the \"{Offers[index].ItemName}\" when I'm ready");
         }
 
         public void SendReInvite(int id) {
@@ -263,9 +253,9 @@ namespace Toucan.ViewModels {
             Thread t = new Thread(delegate () {
                 EnsureNotHighlighted(index);
 
-                Chat.SendKickCommand(Offers[index].PlayerName);
+                ChatHandler.Instance.SendKickCommand(Offers[index].PlayerName);
                 Thread.Sleep(100);
-                Chat.SendInviteCommand(Offers[index].PlayerName);
+                ChatHandler.Instance.SendInviteCommand(Offers[index].PlayerName);
             });
 
             t.SetApartmentState(ApartmentState.STA);
@@ -288,7 +278,7 @@ namespace Toucan.ViewModels {
 
             EnsureNotHighlighted(index);
 
-            Chat.SendInviteCommand(Offers[index].PlayerName);
+            ChatHandler.Instance.SendInviteCommand(Offers[index].PlayerName);
         }
 
         public void SendKick(int id, bool sayThanks = false) {
@@ -308,11 +298,11 @@ namespace Toucan.ViewModels {
             string playerName = Offers[index].PlayerName;
 
             Thread t = new Thread(delegate () {
-                Chat.SendKickCommand(playerName);
+                ChatHandler.Instance.SendKickCommand(playerName);
 
                 if (sayThanks) {
                     Thread.Sleep(250);
-                    Chat.SendChatMessage($"@{playerName} Thank you and have fun!");
+                    ChatHandler.Instance.SendChatMessage($"@{playerName} Thank you and have fun!");
                 }
             });
             t.SetApartmentState(ApartmentState.STA);
@@ -338,7 +328,7 @@ namespace Toucan.ViewModels {
 
                 if (sayThanks) {
                     Thread.Sleep(100);
-                    Chat.SendChatMessage($"@{playerName} Thank you and have fun!");
+                    ChatHandler.Instance.SendChatMessage($"@{playerName} Thank you and have fun!");
                 }
             });
             t.SetApartmentState(ApartmentState.STA);
@@ -359,7 +349,7 @@ namespace Toucan.ViewModels {
                 Dispatcher.CurrentDispatcher.Invoke(() => {
                     (isOutgoing ? OutgoingOffers : Offers).RemoveAt(index);
                     UpdateOffers();
-                    Poe.Focus();
+                    PoeWindowHandler.Instance.Focus();
                 });
             }
         }
@@ -375,7 +365,7 @@ namespace Toucan.ViewModels {
 
             EnsureNotHighlighted(index);
 
-            Chat.SendChatMessage($"@{Offers[index].PlayerName} Are you still interested in my \"{Offers[index].ItemName}\" listed for {Offers[index].Price} {Offers[index].Currency}?");
+            ChatHandler.Instance.SendChatMessage($"@{Offers[index].PlayerName} Are you still interested in my \"{Offers[index].ItemName}\" listed for {Offers[index].Price} {Offers[index].Currency}?");
         }
 
         public void SendSoldWhisper(int id) {
@@ -390,18 +380,18 @@ namespace Toucan.ViewModels {
 
             EnsureNotHighlighted(index);
 
-            Chat.SendChatMessage($"@{Offers[index].PlayerName} I'm sorry, my \"{Offers[index].ItemName}\" has already been sold");
+            ChatHandler.Instance.SendChatMessage($"@{Offers[index].PlayerName} I'm sorry, my \"{Offers[index].ItemName}\" has already been sold");
 
             RemoveOffer(id);
         }
 
         public void ClearOffers() {
-            Poe.Focus();
+            PoeWindowHandler.Instance.Focus();
             Offers.Clear();
         }
 
         public void ClearOutgoingOffers() {
-            Poe.Focus();
+            PoeWindowHandler.Instance.Focus();
             OutgoingOffers.Clear();
         }
 
@@ -414,7 +404,7 @@ namespace Toucan.ViewModels {
 
             Offers[index].IsHighlighted = true;
 
-            Game.HightlightStash(Offers[index].ItemName);
+            GameHandler.Instance.HightlightStash(Offers[index].ItemName);
         }
     }
 }

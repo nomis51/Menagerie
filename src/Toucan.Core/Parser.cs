@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using Toucan.Core.Models;
 
 namespace Toucan.Core {
-    public class Parser {
+    public class Parser : Handler {
+        #region Events
         public delegate void NewOfferHandler(Offer offer);
         public event NewOfferHandler OnNewOffer;
 
@@ -15,7 +16,22 @@ namespace Toucan.Core {
 
         public delegate void NewPlayerJoined(string playerName);
         public event NewPlayerJoined OnNewPlayerJoined;
+        #endregion
 
+        #region Singleton
+        private static Parser _instance;
+        public static Parser Instance {
+            get {
+                if (_instance == null) {
+                    _instance = new Parser();
+                }
+
+                return _instance;
+            }
+        }
+        #endregion
+
+        #region Constants
         private const string ITEM_NAME_START_WORD = "to buy your ";
         private const string ITEM_NAME_END_WORD = " listed for ";
         private const string ITEM_NAME_ALTERNATE_END_WORD = " for my ";
@@ -26,13 +42,17 @@ namespace Toucan.Core {
         private const string PLAYER_JOINED_MSG = " has joined the area";
         private const int MAX_OFFER_LINE_BUFFER = 20;
         private const int MAX_BUFFER_LIFE_MINS = 5;
+        #endregion
 
         private List<string> LastOffersLines = new List<string>();
         private List<DateTime> LastOffersTimes = new List<DateTime>();
         private static int Id = 0;
 
-        public Parser() {
+        public Parser() { }
+
+        public override void Start() {
             DoCleanBuffer();
+            Ready = true;
         }
 
         private async void DoCleanBuffer() {

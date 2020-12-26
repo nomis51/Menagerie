@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Toucan.Core": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ENV": "DEBUG"
+      }
+    }
+  }
+}

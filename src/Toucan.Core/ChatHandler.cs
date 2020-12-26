@@ -8,7 +8,8 @@ using WindowsInput;
 using WindowsInput.Native;
 
 namespace Toucan.Core {
-    public class ChatHandler {
+    public class ChatHandler : Handler {
+        #region WinAPI
         [DllImport("user32.dll")]
         internal static extern bool OpenClipboard(IntPtr hWndNewOwner);
 
@@ -17,13 +18,34 @@ namespace Toucan.Core {
 
         [DllImport("user32.dll")]
         internal static extern bool SetClipboardData(uint uFormat, IntPtr data);
+        #endregion
 
-        private PoeWindow Poe;
+        #region Singleton
+        private static ChatHandler _instance;
+        public static ChatHandler Instance {
+            get {
+                if (_instance == null) {
+                    _instance = new ChatHandler();
+                }
+
+                return _instance;
+            }
+        }
+        #endregion
+
         private InputSimulator Input;
 
-        public ChatHandler(PoeWindow poe) {
+        private ChatHandler() {
             Input = new InputSimulator();
-            Poe = poe;
+            PoeWindowHandler.Instance.OnPoeWindowReady += PoeWindowHandler_OnPoeWindowReady;
+        }
+
+        private void PoeWindowHandler_OnPoeWindowReady() {
+            Ready = true;
+        }
+
+        public override void Start() {
+            base.Start();
         }
 
         private void SendEnter() {
@@ -59,7 +81,7 @@ namespace Toucan.Core {
 
         private void Send(string message) {
             try {
-                Poe.Focus();
+                PoeWindowHandler.Instance.Focus();
                 ClearSpecialKeys();
                 SendEnter();
                 SendCtrlA();

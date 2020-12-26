@@ -5,13 +5,32 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Toucan.Core {
-    public class ClipboardListener {
+    public class ClipboardHandler : Handler {
+        #region Events
         public delegate void NewClipboardText(string text);
         public event NewClipboardText OnNewClipboardText;
+        #endregion
+
+        #region Singleton
+        private static ClipboardHandler _instance;
+        public static ClipboardHandler Instance {
+            get {
+                if (_instance == null) {
+                    _instance = new ClipboardHandler();
+                }
+
+                return _instance;
+            }
+        }
+        #endregion
 
         private string LastText = "";
 
-        public ClipboardListener() {
+        private ClipboardHandler() { }
+
+        public override void Start() {
+            base.Start();
+
             Listen();
         }
 

@@ -7,15 +7,36 @@ using WindowsInput;
 using WindowsInput.Native;
 
 namespace Toucan.Core {
-    public class GameHandler {
+    public class GameHandler : Handler {
+        #region Singleton
+        private static GameHandler _instance;
+        public static GameHandler Instance {
+            get {
+                if (_instance == null) {
+                    _instance = new GameHandler();
+                }
 
-        private PoeWindow Poe;
+                return _instance;
+            }
+        }
+        #endregion
+
         public InputSimulator Input;
 
-        public GameHandler(PoeWindow poe) {
+        public GameHandler() {
             Input = new InputSimulator();
-            Poe = poe;
+
+            PoeWindowHandler.Instance.OnPoeWindowReady += PoeWindowHandler_OnPoeWindowReady;
         }
+
+        private void PoeWindowHandler_OnPoeWindowReady() {
+            
+        }
+
+        public override void Start() {
+            base.Start();
+        }
+
         private void ClearSpecialKeys() {
             Input.Keyboard.KeyUp(VirtualKeyCode.CONTROL);
             Input.Keyboard.KeyUp(VirtualKeyCode.SHIFT);
@@ -23,7 +44,7 @@ namespace Toucan.Core {
         }
 
         public void HightlightStash(string searchText) {
-            Poe.Focus();
+            PoeWindowHandler.Instance.Focus();
 
             ClearSpecialKeys();
             Input.Keyboard.ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_F);
