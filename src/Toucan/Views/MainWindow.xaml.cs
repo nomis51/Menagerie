@@ -25,7 +25,7 @@ namespace Toucan {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private MainWindowViewModel vm;
-        private System.Windows.Forms.NotifyIcon trayIcon = null;
+        private Forms.NotifyIcon trayIcon = null;
 
         public MainWindow() {
             InitializeComponent();
@@ -58,10 +58,12 @@ namespace Toucan {
             };
 
             List<string> leagues = vm.GetLeagues();
+            string currentLeague = vm.GetCurrentLeague();
 
             foreach (var l in leagues) {
                 var item = new Forms.ToolStripMenuItem() {
-                    Text = l
+                    Text = l,
+                    Checked = currentLeague == l
                 };
                 item.Click += LeagueMenuItem_Click;
 
@@ -88,7 +90,17 @@ namespace Toucan {
         }
 
         private void LeagueMenuItem_Click(object sender, EventArgs e) {
-            throw new NotImplementedException();
+            foreach (var i in trayIcon.ContextMenuStrip.Items) {
+                if (((Forms.ToolStripMenuItem)i).Text == "League") {
+                    foreach (var k in ((Forms.ToolStripMenuItem)i).DropDownItems) {
+                        ((Forms.ToolStripMenuItem)k).Checked = false;
+                    }
+                }
+            }
+
+            Forms.ToolStripMenuItem item = (Forms.ToolStripMenuItem)sender;
+            item.Checked = true;
+            vm.SetCurrentLeague(item.Text);
         }
 
         private void ConfigItem_Click(object sender, EventArgs e) {

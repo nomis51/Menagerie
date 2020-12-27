@@ -13,6 +13,7 @@ using System.Windows.Threading;
 using System.Windows.Controls;
 using System.Windows;
 using Toucan.Core.Services;
+using Toucan.Services;
 
 namespace Toucan.ViewModels {
     public class MainWindowViewModel : INotifyPropertyChanged {
@@ -81,6 +82,12 @@ namespace Toucan.ViewModels {
             set {
                 _isOutgoingOffersFilterVisible = value;
                 OnPropertyChanged("IsOutgoingOffersFilterVisible");
+            }
+        }
+
+        public Config Config {
+            get {
+                return ConfigService.Instance.GetConfig();
             }
         }
 
@@ -510,6 +517,16 @@ namespace Toucan.ViewModels {
                     Offers.Add(r);
                 }
             }
+        }
+
+        public void SetCurrentLeague(string league) {
+            var config = Config;
+            config.CurrentLeague = league;
+            ConfigService.Instance.SetConfig(config);
+        }
+
+        public string GetCurrentLeague() {
+            return Config.CurrentLeague;
         }
     }
 }
