@@ -59,5 +59,15 @@ namespace Toucan.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
+        /// </summary>
+        internal static System.Drawing.Icon toucan {
+            get {
+                object obj = ResourceManager.GetObject("toucan", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
     }
 }

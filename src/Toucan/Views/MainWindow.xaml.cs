@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Forms = System.Windows.Forms;
 
 namespace Toucan {
     /// <summary>
@@ -24,6 +25,7 @@ namespace Toucan {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private MainWindowViewModel vm;
+        private System.Windows.Forms.NotifyIcon trayIcon = null;
 
         public MainWindow() {
             InitializeComponent();
@@ -31,7 +33,70 @@ namespace Toucan {
             vm = new MainWindowViewModel();
             this.DataContext = vm;
 
-            log.Info("test logging");
+            SetupTrayIcon();
+        }
+
+        private string GetAppVersion() {
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
+            return fvi.FileVersion;
+        }
+
+        private void SetupTrayIcon() {
+            trayIcon = new Forms.NotifyIcon();
+            trayIcon.Icon = Properties.Resources.toucan;
+
+            Forms.ContextMenuStrip menu = new Forms.ContextMenuStrip();
+
+            Forms.ToolStripMenuItem versionItem = new Forms.ToolStripMenuItem() {
+                Text = $"Version {GetAppVersion()}",
+                Enabled = false
+            };
+
+            Forms.ToolStripMenuItem leagueItem = new Forms.ToolStripMenuItem() {
+                Text = "League"
+            };
+
+            List<string> leagues = vm.GetLeagues();
+
+            foreach (var l in leagues) {
+                var item = new Forms.ToolStripMenuItem() {
+                    Text = l
+                };
+                item.Click += LeagueMenuItem_Click;
+
+                leagueItem.DropDownItems.Add(item);
+            }
+
+            Forms.ToolStripMenuItem configItem = new Forms.ToolStripMenuItem() {
+                Text = "Config"
+            };
+            configItem.Click += ConfigItem_Click;
+
+            Forms.ToolStripMenuItem quitItem = new Forms.ToolStripMenuItem() {
+                Text = "Quit"
+            };
+            quitItem.Click += QuitItem_Click;
+
+            menu.Items.Add(versionItem);
+            menu.Items.Add(leagueItem);
+            menu.Items.Add(configItem);
+            menu.Items.Add(quitItem);
+
+            trayIcon.ContextMenuStrip = menu;
+            trayIcon.Visible = true;
+        }
+
+        private void LeagueMenuItem_Click(object sender, EventArgs e) {
+            throw new NotImplementedException();
+        }
+
+        private void ConfigItem_Click(object sender, EventArgs e) {
+            // TODO: show config window (well I've to build it aswell lol)
+        }
+
+        private void QuitItem_Click(object sender, EventArgs e) {
+            Application.Current.Shutdown(0);
         }
 
         private void btnBusy_Click(object sender, RoutedEventArgs e) {

@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using System.Windows.Controls;
 using System.Windows;
+using Toucan.Core.Services;
 
 namespace Toucan.ViewModels {
     public class MainWindowViewModel : INotifyPropertyChanged {
@@ -173,6 +174,10 @@ namespace Toucan.ViewModels {
                 OutgoingOffers.Insert(0, new Offer(offer));
                 IsOutgoingOffersFilterVisible = Visibility.Visible;
             }
+        }
+
+        public List<string> GetLeagues() {
+            return PoeApiService.Instance.GetLeagues();
         }
 
         public Offer GetOffer(int id) {
