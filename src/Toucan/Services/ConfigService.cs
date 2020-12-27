@@ -32,7 +32,7 @@ namespace Toucan.Services {
             using (var db = new LiteDatabase(CONFIG_DB_FILE_PATH)) {
                 var collection = db.GetCollection<ConfigDto>("config");
 
-                if (collection.FindOne(e => e.Id != null) == null) {
+                if (collection.FindOne(e => true) == null) {
                     collection.Insert(new ConfigDto() {
                         PlayerName = "",
                         CurrentLeague = "Standard",
@@ -47,7 +47,7 @@ namespace Toucan.Services {
 
             using (var db = new LiteDatabase(CONFIG_DB_FILE_PATH)) {
                 var collection = db.GetCollection<ConfigDto>("config");
-                var dto = collection.FindOne(e => e.Id != null);
+                var dto = collection.FindOne(e => true);
                 config = new Config(dto);
             }
 

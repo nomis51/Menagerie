@@ -174,6 +174,12 @@ namespace Toucan.ViewModels {
         }
 
         private void Parser_OnNewOffer(Core.Models.Offer offer) {
+            var config = Config;
+
+            if (config.OnlyShowOffersOfCurrentLeague && config.CurrentLeague != offer.League) {
+                return;
+            }
+
             if (!offer.IsOutgoing) {
                 Offers.Add(new Offer(offer));
                 IsOffersFilterVisible = Visibility.Visible;
