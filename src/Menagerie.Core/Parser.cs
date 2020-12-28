@@ -415,8 +415,6 @@ namespace Menagerie.Core {
                         break;
                     }
                 }
-
-                var g = 0;
             }
 
             item.RawText = data;

@@ -27,9 +27,16 @@ namespace Menagerie.Core.Services {
         private const string BASE_TYPES = "base-types.json";
         #endregion
 
+        private Dictionary<string, MatchStr> _statByMatchStr;
+        private List<Tuple<string, BaseType>> _baseTypes;
+
         private AppDataService() { }
 
         public Dictionary<string, MatchStr> GetStatByMatchStr() {
+            if (_statByMatchStr != null && _statByMatchStr.Count > 0) {
+                return _statByMatchStr;
+            }
+
             var data = File.ReadAllText(Path.Combine(DATA_FOLDER, STATS));
             var dtos = JsonConvert.DeserializeObject<List<StatDto>>(data);
 
@@ -45,10 +52,16 @@ namespace Menagerie.Core.Services {
                 }
             }
 
-            return stats;
+            _statByMatchStr = stats;
+
+            return _statByMatchStr;
         }
 
         public List<Tuple<string, BaseType>> GetBaseTypes() {
+            if (_baseTypes != null && _baseTypes.Count > 0) {
+                return _baseTypes;
+            }
+
             var data = File.ReadAllText(Path.Combine(DATA_FOLDER, BASE_TYPES));
             var objs = JsonConvert.DeserializeObject<List<List<object>>>(data);
 
@@ -57,10 +70,14 @@ namespace Menagerie.Core.Services {
                 return new Tuple<string, Dictionary<string, string>>((string)o[0], parsed);
             });
 
-            return parsedObjs.Select(e => new Tuple<string, BaseType>(e.Item1, new BaseType() {
+            var baseTypes = parsedObjs.Select(e => new Tuple<string, BaseType>(e.Item1, new BaseType() {
                 Category = Item.ToItemCategory(e.Item2["category"]),
                 Icon = e.Item2.ContainsKey("icon") ? e.Item2["icon"] : null
             })).ToList();
+
+            _baseTypes = baseTypes;
+
+            return _baseTypes;
         }
     }
 
