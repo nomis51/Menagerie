@@ -748,7 +748,7 @@ namespace Menagerie.Core {
         private int ParseQualityNested(List<string> section, Item item) {
             foreach (var line in section) {
                 if (line.StartsWith("Quality: ")) {
-                    item.Quality = int.Parse(string.Join("", line.Substring("Quality: ".Length, 10).Where(c=>Char.IsDigit(c))));
+                    item.Quality = int.Parse(string.Join("", line.Substring("Quality: ".Length, 10).Where(c => Char.IsDigit(c))));
                     return SECTION_PARSED;
                 }
             }
@@ -820,7 +820,7 @@ namespace Menagerie.Core {
 
             foreach (var line in section) {
                 if (line.StartsWith("Armour: ")) {
-                    item.Props.Armour = int.Parse(string.Join("", line.Substring("Armour: ".Length, 10).Where(c=>Char.IsDigit(c))));
+                    item.Props.Armour = int.Parse(string.Join("", line.Substring("Armour: ".Length, 10).Where(c => Char.IsDigit(c))));
                     isParsed = SECTION_PARSED;
                     continue;
                 }
@@ -948,13 +948,13 @@ namespace Menagerie.Core {
                 ItemModifierType modType = ItemModifierType.None;
 
                 if (stat.EndsWith(" (implicit)")) {
-                    statIterator[i] = stat.Substring(0, stat.Length - " (implicit)".Length);
+                    stat = stat.Substring(0, stat.Length - " (implicit)".Length);
                     modType = ItemModifierType.Implicit;
                 } else if (stat.EndsWith(" (crafted)")) {
-                    statIterator[i] = stat.Substring(0, stat.Length - " (crafted)".Length);
+                    stat = stat.Substring(0, stat.Length - " (crafted)".Length);
                     modType = ItemModifierType.Crafted;
                 } else if (stat.EndsWith(" (enchant)")) {
-                    statIterator[i] = stat.Substring(0, stat.Length - " (enchant)".Length);
+                    stat = stat.Substring(0, stat.Length - " (enchant)".Length);
                     modType = ItemModifierType.Enchant;
                 }
 
@@ -1122,7 +1122,7 @@ namespace Menagerie.Core {
         private ItemModifier TryFindModifier(string stat) {
             List<string> matches = new List<string>();
             string withPlaceholders = stat;
-            Regex.Replace(withPlaceholders, @"(?<![\d#])[+-]?[\d.]+", new MatchEvaluator(a => {
+            withPlaceholders = Regex.Replace(withPlaceholders, @"(?<![\d#])[+-]?[\d.]+", new MatchEvaluator(a => {
                 matches.Add(a.Value);
                 return "#";
             }), RegexOptions.Multiline);
@@ -1136,7 +1136,7 @@ namespace Menagerie.Core {
             foreach (var combo in comboVariants) {
                 var pIdx = -1;
                 var possibleStat = "";
-                Regex.Replace(possibleStat, "#", new MatchEvaluator(a => {
+                possibleStat = Regex.Replace(withPlaceholders, "#", new MatchEvaluator(a => {
                     ++pIdx;
                     if (combo.IndexOf(pIdx) != -1) {
                         return matches[pIdx];
@@ -1146,11 +1146,10 @@ namespace Menagerie.Core {
                 }), RegexOptions.Multiline);
 
                 var matchStrs = AppDataService.Instance.GetStatByMatchStr();
-                var found = matchStrs.ContainsKey(possibleStat) ? matchStrs[possibleStat] : null;
+                var found = matchStrs.ContainsKey(withPlaceholders) ? matchStrs[withPlaceholders] : null;
 
                 if (found != null) {
-                    var values = matches.FindAll(m => !combo.Contains(matches.IndexOf(m)))
-                        .Select(str => double.Parse(str) * (found.Matcher.Negate ? -1 : 1))
+                    var values = matches.Select(str => double.Parse(str) * (found.Matcher.Negate ? -1 : 1))
                         .ToList();
 
                     return new ItemModifier() {
@@ -1170,44 +1169,68 @@ namespace Menagerie.Core {
             return null;
         }
 
-        private IEnumerable<string> SectionToStatString(List<string> section) {
-            var idx = 0;
-            var multi = (idx + 1) < section.Count;
+        private List<string> SectionToStatString(List<string> section) {
+            List<string> stats = new List<string>();
 
-            while (idx < section.Count) {
-                string str;
+            for (int i = 0; i < section.Count; ++i) {
+                if (i + 1 < section.Count) {
+                    var stat1 = section[i];
+                    var stat2 = section[i + 1];
 
-                if (multi) {
-                    var lines = new List<string>() {
-                        section[idx],
-                        section[idx+1]
-                    };
-
-                    if (lines.All(l => l.StartsWith("Added Small Passive Skills grant: "))) {
-                        lines[1] = lines[1].Substring("Added Small Passive Skills grant: ".Length);
+                    if (stat1.StartsWith("Added Small Passive Skills grant: ")) {
+                        stat1 = stat1.Substring("Added Small Passive Skills grant: ".Length);
                     }
 
-                    str = string.Join("\n", lines);
-                } else {
-                    str = section[idx];
-                }
-
-                bool isParsed = string.IsNullOrEmpty(str);
-                yield return str;
-
-                if (isParsed) {
-                    idx += multi ? 2 : 1;
-                    multi = (idx + 1) < section.Count;
-                } else {
-                    if (multi) {
-                        multi = false;
-                    } else {
-                        ++idx;
-                        multi = (idx + 1) < section.Count;
+                    if (stat2.StartsWith("Added Small Passive Skills grant: ")) {
+                        stat2 = stat2.Substring("Added Small Passive Skills grant: ".Length);
                     }
-                }
 
+                    stats.Add($"{stat1}\n{stat2}");
+                    stats.Add(section[i]);
+                } else {
+                    stats.Add(section[i]);
+                }
             }
+
+            return stats;
+
+            //var idx = 0;
+            //var multi = (idx + 1) < section.Count;
+
+            //while (idx < section.Count) {
+            //    string str;
+
+            //    if (multi) {
+            //        var lines = new List<string>() {
+            //            section[idx],
+            //            section[idx+1]
+            //        };
+
+            //        if (lines.All(l => l.StartsWith("Added Small Passive Skills grant: "))) {
+            //            lines[1] = lines[1].Substring("Added Small Passive Skills grant: ".Length);
+            //        }
+
+            //        str = string.Join("\n", lines);
+            //    } else {
+            //        str = section[idx];
+            //    }
+
+            //    bool isParsed = string.IsNullOrEmpty(str);
+            //    yield return str;
+
+            //    if (isParsed) {
+            //        idx += multi ? 2 : 1;
+            //        multi = (idx + 1) < section.Count;
+            //    } else {
+            //        if (multi) {
+            //            multi = false;
+            //        } else {
+            //            ++idx;
+            //            multi = (idx + 1) < section.Count;
+            //        }
+            //    }
+
+            //}
         }
     }
 }
