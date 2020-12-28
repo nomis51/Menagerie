@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Toucan.Core.Services;
 
 namespace Toucan.Core.Models {
     public class StatMatcher {
@@ -11,6 +12,16 @@ namespace Toucan.Core.Models {
         public StatMatcherOption Option { get; set; }
 
         public StatMatcher() { }
+
+        public StatMatcher(StatConditionDto dto) {
+            if (dto != null) {
+                String = dto.String;
+                Ref = dto.Ref;
+                Negate = dto.Negate;
+                Condition = new StatMatcherContition(dto.Condition);
+                Option = new StatMatcherOption(dto.Option);
+            }
+        }
     }
 
     public class StatMatcherContition {
@@ -18,6 +29,12 @@ namespace Toucan.Core.Models {
         public int Max { get; set; }
 
         public StatMatcherContition() { }
+        public StatMatcherContition(StatConditionConditionDto dto) {
+            if (dto != null) {
+                Min = dto.Min;
+                Max = dto.Max;
+            }
+        }
     }
 
     public class StatMatcherOption {
@@ -25,5 +42,12 @@ namespace Toucan.Core.Models {
         public string TradeId { get; set; }
 
         public StatMatcherOption() { }
+
+        public StatMatcherOption(StatConditionOptionDto dto) {
+            if (dto != null) {
+                Text = dto.Text;
+                TradeId = dto.TradeId.ToString();
+            }
+        }
     }
 }

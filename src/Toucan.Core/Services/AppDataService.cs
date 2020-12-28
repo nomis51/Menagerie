@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Toucan.Core.Models;
 
@@ -21,7 +22,7 @@ namespace Toucan.Core.Services {
         #endregion
 
         #region Constants
-        private const string DATA_FOLDER = @".\data\";
+        private const string DATA_FOLDER = @".\Data\";
         private const string STATS = "stats.json";
         private const string BASE_TYPES = "base-types.json";
         #endregion
@@ -30,13 +31,73 @@ namespace Toucan.Core.Services {
 
         public Dictionary<string, MatchStr> GetStatByMatchStr() {
             var data = File.ReadAllText(Path.Combine(DATA_FOLDER, STATS));
-            return JsonConvert.DeserializeObject<Dictionary<string, MatchStr>>(data);
+            var dtos = JsonConvert.DeserializeObject<List<StatDto>>(data);
+
+            Dictionary<string, MatchStr> stats = new Dictionary<string, MatchStr>();
+
+            foreach (var dto in dtos) {
+                foreach (var condition in dto.Conditions) {
+                    stats.Add(condition.String, new MatchStr() {
+                        Matcher = new StatMatcher(condition),
+                        Stat = new Stat(dto.Mod),
+                        Matchers = dto.Conditions.Select(c => new StatMatcher(c)).ToList()
+                    });
+                }
+            }
+
+            return stats;
         }
 
-        public Dictionary<string, BaseType> GetBaseTypes() {
+        public List<Tuple<string, BaseType>> GetBaseTypes() {
             var data = File.ReadAllText(Path.Combine(DATA_FOLDER, BASE_TYPES));
-            return JsonConvert.DeserializeObject<Dictionary<string, BaseType>>(data);
+            var objs = JsonConvert.DeserializeObject<List<List<object>>>(data);
+
+            var parsedObjs = objs.Select(o => {
+                var parsed = JsonConvert.DeserializeObject<Dictionary<string, string>>(JsonConvert.SerializeObject(o[1]));
+                return new Tuple<string, Dictionary<string, string>>((string)o[0], parsed);
+            });
+
+            return parsedObjs.Select(e => new Tuple<string, BaseType>(e.Item1, new BaseType() {
+                Category = Item.ToItemCategory(e.Item2["category"]),
+                Icon = e.Item2.ContainsKey("icon") ? e.Item2["icon"] : null
+            })).ToList();
         }
+    }
+
+    public class StatDto {
+        public List<StatConditionDto> Conditions { get; set; } = new List<StatConditionDto>();
+        public StatModDto Mod { get; set; }
+    }
+
+    public class StatModDto {
+        public string Text { get; set; }
+        public string Ref { get; set; }
+        public bool Inverted { get; set; }
+        public List<StatModTypeDto> Types { get; set; }
+    }
+
+    public class StatModTypeDto {
+        public string Name { get; set; }
+        public List<string> TradeId { get; set; } = new List<string>();
+    }
+
+    public class StatConditionDto {
+        public string String { get; set; }
+        public string Ref { get; set; }
+        public bool Negate { get; set; }
+        public StatConditionConditionDto Condition { get; set; }
+        public StatConditionOptionDto Option { get; set; }
+    }
+
+    public class StatConditionOptionDto {
+        public string Text { get; set; }
+        public string Ref { get; set; }
+        public int TradeId { get; set; }
+    }
+
+    public class StatConditionConditionDto {
+        public int Min { get; set; }
+        public int Max { get; set; }
     }
 
     public class MatchStr {

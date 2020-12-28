@@ -371,8 +371,8 @@ namespace Toucan.Core {
         }
 
         public Item ParseItem(string data) {
-            string[] lines = data.Split('\n');
-            lines = lines.Take(lines.Length - 2).ToArray();
+            string[] lines = Regex.Split(data, @"\r?\n");
+            lines = lines.Take(lines.Length - 1).ToArray();
 
             List<List<string>> sections = new List<List<string>>();
             sections.Add(new List<string>());
@@ -412,9 +412,11 @@ namespace Toucan.Core {
                         --i;
                         break;
                     } else if (result == PARSER_SKIPPED) {
-
+                        break;
                     }
                 }
+
+                var g = 0;
             }
 
             item.RawText = data;
@@ -535,11 +537,11 @@ namespace Toucan.Core {
 
                 var baseTypes = AppDataService.Instance.GetBaseTypes();
 
-                foreach (var key in baseTypes.Keys) {
-                    BaseTypes.Add(key);
+                foreach (var tuple in baseTypes) {
+                    BaseTypes.Add(tuple.Item1);
 
-                    if (baseTypes[key].Category == ItemCategory.Map) {
-                        BaseTypes.Add($"Blighted {baseTypes[key]}");
+                    if (tuple.Item2.Category == ItemCategory.Map) {
+                        BaseTypes.Add($"Blighted {tuple.Item1}");
                     }
                 }
             }
@@ -600,11 +602,15 @@ namespace Toucan.Core {
 
             if (item.Category == ItemCategory.None) {
                 var baseTypes = AppDataService.Instance.GetBaseTypes();
-                var baseType = baseTypes[item.Type] == null ? baseTypes[item.Name] : baseTypes[item.Type];
+                var baseType = baseTypes.FirstOrDefault(t => t.Item1 == item.Type);
+
+                if (baseType == null) {
+                    baseType = baseTypes.FirstOrDefault(t => t.Item1 == item.Name);
+                }
 
                 if (baseType != null) {
-                    item.Category = baseType.Category;
-                    item.Icon = baseType.Icon;
+                    item.Category = baseType.Item2.Category;
+                    item.Icon = baseType.Item2.Icon;
                 }
             }
 
@@ -671,7 +677,7 @@ namespace Toucan.Core {
 
         private int ParseItemLevel(List<string> section, Item item) {
             if (section[0].StartsWith("Item Level: ")) {
-                item.ItemLevel = Convert.ToInt32(section[0].Substring("Item Level: ".Length));
+                item.ItemLevel = int.Parse(section[0].Substring("Item Level: ".Length));
                 return SECTION_PARSED;
             }
 
@@ -710,7 +716,7 @@ namespace Toucan.Core {
             }
 
             if (section.Count > 1 && section[1].StartsWith("Level: ")) {
-                item.Props.GemLevel = Convert.ToInt32(section[1].Substring("Level: ".Length, 10));
+                item.Props.GemLevel = int.Parse(section[1].Substring("Level: ".Length, 10));
 
                 ParseQualityNested(section, item);
 
@@ -742,7 +748,7 @@ namespace Toucan.Core {
         private int ParseQualityNested(List<string> section, Item item) {
             foreach (var line in section) {
                 if (line.StartsWith("Quality: ")) {
-                    item.Quality = Convert.ToInt32(line.Substring("Quality: ".Length, 10));
+                    item.Quality = int.Parse(string.Join("", line.Substring("Quality: ".Length, 10).Where(c=>Char.IsDigit(c))));
                     return SECTION_PARSED;
                 }
             }
@@ -757,8 +763,8 @@ namespace Toucan.Core {
 
             if (section[0].StartsWith("Stack Size: ")) {
                 var stack = Regex.Replace(section[0].Substring("Stack Size: ".Length), @"[^\d/]", "").Split('/');
-                item.StackSize.Value = Convert.ToInt32(stack[0]);
-                item.StackSize.Max = Convert.ToInt32(stack[1]);
+                item.StackSize.Value = int.Parse(stack[0]);
+                item.StackSize.Max = int.Parse(stack[1]);
 
                 if (item.Category == ItemCategory.Seed) {
                     ParseSeedLevelNested(section, item);
@@ -786,7 +792,7 @@ namespace Toucan.Core {
                     return SECTION_SKIPPED;
                 }
 
-                item.ItemLevel = Convert.ToInt32(line.Substring(startIndex, endIndex - startIndex));
+                item.ItemLevel = int.Parse(line.Substring(startIndex, endIndex - startIndex));
 
                 return SECTION_PARSED;
             }
@@ -814,25 +820,25 @@ namespace Toucan.Core {
 
             foreach (var line in section) {
                 if (line.StartsWith("Armour: ")) {
-                    item.Props.Armour = Convert.ToInt32(line.Substring("Armour: ".Length, 10));
+                    item.Props.Armour = int.Parse(string.Join("", line.Substring("Armour: ".Length, 10).Where(c=>Char.IsDigit(c))));
                     isParsed = SECTION_PARSED;
                     continue;
                 }
 
                 if (line.StartsWith("Evasion Rating: ")) {
-                    item.Props.Evasion = Convert.ToInt32(line.Substring("Evasion Rating: ".Length, 10));
+                    item.Props.Evasion = int.Parse(string.Join("", line.Substring("Evasion Rating: ".Length, 10).Where(c => Char.IsDigit(c))));
                     isParsed = SECTION_PARSED;
                     continue;
                 }
 
                 if (line.StartsWith("Energy Shield: ")) {
-                    item.Props.EnergyShield = Convert.ToInt32(line.Substring("Energy Shield: ".Length, 10));
+                    item.Props.EnergyShield = int.Parse(string.Join("", line.Substring("Energy Shield: ".Length, 10).Where(c => Char.IsDigit(c))));
                     isParsed = SECTION_PARSED;
                     continue;
                 }
 
                 if (line.StartsWith("Chance to Block: ")) {
-                    item.Props.BlockChance = Convert.ToInt32(line.Substring("Chance to Block: ".Length, 10));
+                    item.Props.BlockChance = int.Parse(string.Join("", line.Substring("Chance to Block: ".Length, 10).Where(c => Char.IsDigit(c))));
                     isParsed = SECTION_PARSED;
                     continue;
                 }
@@ -1004,7 +1010,7 @@ namespace Toucan.Core {
                 }
             }
 
-            return SECTION_PARSED;
+            return SECTION_SKIPPED;
         }
 
         private int ParseCatergoryByHelpText(List<string> section, Item item) {
@@ -1079,7 +1085,7 @@ namespace Toucan.Core {
                     throw new Exception("never");
                 }
 
-                item.HeistJon = new ItemHeistJob() {
+                item.HeistJob = new ItemHeistJob() {
                     Name = ToHeistJob(match.Groups[0].Value),
                     Level = int.Parse(match.Groups[1].Value)
                 };
@@ -1139,7 +1145,8 @@ namespace Toucan.Core {
                     }
                 }), RegexOptions.Multiline);
 
-                var found = AppDataService.Instance.GetStatByMatchStr()[possibleStat];
+                var matchStrs = AppDataService.Instance.GetStatByMatchStr();
+                var found = matchStrs.ContainsKey(possibleStat) ? matchStrs[possibleStat] : null;
 
                 if (found != null) {
                     var values = matches.FindAll(m => !combo.Contains(matches.IndexOf(m)))

@@ -108,23 +108,50 @@ namespace Toucan.ViewModels {
             PoeWindowHandler.Instance.Focus();
 
             // TODO: For testing only
-            ClientFileHandler.Instance.Test();
-            OutgoingOffers.Add(new Offer() {
-                Id = 99,
-                ItemName = "Saqawal",
-                Price = 9,
-                Currency = "Chaos",
-                PlayerName = "Paul",
-                IsOutgoing = true
-            });
-            OutgoingOffers.Add(new Offer() {
-                Id = 100,
-                ItemName = "Saqawal",
-                Price = 11,
-                Currency = "Chaos",
-                PlayerName = "Paul",
-                IsOutgoing = true
-            });
+            //ClientFileHandler.Instance.Test();
+            //OutgoingOffers.Add(new Offer() {
+            //    Id = 99,
+            //    ItemName = "Saqawal",
+            //    Price = 9,
+            //    Currency = "Chaos",
+            //    PlayerName = "Paul",
+            //    IsOutgoing = true
+            //});
+            //OutgoingOffers.Add(new Offer() {
+            //    Id = 100,
+            //    ItemName = "Saqawal",
+            //    Price = 11,
+            //    Currency = "Chaos",
+            //    PlayerName = "Paul",
+            //    IsOutgoing = true
+            //});
+
+            var item = Parser.Instance.ParseItem(
+                @"Rarity: Rare
+Gale Trail
+Legion Boots
+--------
+Quality: +20% (augmented)
+Armour: 125 (augmented)
+Energy Shield: 24 (augmented)
+--------
+Requirements:
+Level: 70
+Str: 111
+Int: 155
+--------
+Sockets: B-B-B-R 
+--------
+Item Level: 69
+--------
++26% to Lightning Resistance
++22% to Chaos Resistance
+25% increased Movement Speed
++34% to Fire Resistance (crafted)
+"
+            );
+
+            var g = 0;
         }
 
         private void ClientFile_OnNewLine(string line) {
