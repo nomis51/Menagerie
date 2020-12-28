@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Menagerie.DTOs;
 
 namespace Menagerie.Models {
     public class Config : INotifyPropertyChanged {
@@ -63,12 +62,5 @@ namespace Menagerie.Models {
         }
 
         public Config() { }
-
-        public Config(ConfigDto dto) {
-            Id = dto.Id;
-            PlayerName = dto.PlayerName;
-            CurrentLeague = dto.CurrentLeague;
-            OnlyShowOffersOfCurrentLeague = dto.OnlyShowOffersOfCurrentLeague;
-        }
     }
 }

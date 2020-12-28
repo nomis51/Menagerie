@@ -4,10 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Menagerie.DTOs;
-using Menagerie.Models;
+using Menagerie.Core.DTOs;
 
-namespace Menagerie.Services {
+namespace Menagerie.Core.Services {
     public class ConfigService {
         #region Singleton
         private static ConfigService _instance;
@@ -42,26 +41,24 @@ namespace Menagerie.Services {
             }
         }
 
-        public Config GetConfig() {
-            Config config;
+        public ConfigDto GetConfig() {
+            ConfigDto dto;
 
             using (var db = new LiteDatabase(CONFIG_DB_FILE_PATH)) {
                 var collection = db.GetCollection<ConfigDto>("config");
-                var dto = collection.FindOne(e => true);
-                config = new Config(dto);
+                dto = collection.FindOne(e => true);
             }
 
-            return config;
+            return dto;
         }
 
-        public bool SetConfig(Config config) {
+        public bool SetConfig(ConfigDto config) {
             bool result = false;
 
             using (var db = new LiteDatabase(CONFIG_DB_FILE_PATH)) {
                 var collection = db.GetCollection<ConfigDto>("config");
-                var dto = new ConfigDto(config);
 
-                if (collection.Update(dto)) {
+                if (collection.Update(config)) {
                     result = true;
                 }
             }

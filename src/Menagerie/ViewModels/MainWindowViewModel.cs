@@ -13,7 +13,7 @@ using System.Windows.Threading;
 using System.Windows.Controls;
 using System.Windows;
 using Menagerie.Core.Services;
-using Menagerie.Services;
+using Menagerie.Core.DTOs;
 
 namespace Menagerie.ViewModels {
     public class MainWindowViewModel : INotifyPropertyChanged {
@@ -87,7 +87,13 @@ namespace Menagerie.ViewModels {
 
         public Config Config {
             get {
-                return ConfigService.Instance.GetConfig();
+                var dto = ConfigService.Instance.GetConfig();
+                return new Config() {
+                    CurrentLeague = dto.CurrentLeague,
+                    Id = dto.Id,
+                    OnlyShowOffersOfCurrentLeague = dto.OnlyShowOffersOfCurrentLeague,
+                    PlayerName = dto.PlayerName
+                };
             }
         }
 
@@ -127,31 +133,48 @@ namespace Menagerie.ViewModels {
             //});
 
             var item = Parser.Instance.ParseItem(
-                @"Rarity: Rare
-Gale Trail
-Legion Boots
+                @"Rarity: Unique
+Saqawal's Nest
+Blood Raiment
 --------
 Quality: +20% (augmented)
-Armour: 125 (augmented)
-Energy Shield: 24 (augmented)
+Evasion Rating: 676 (augmented)
+Energy Shield: 236 (augmented)
 --------
 Requirements:
-Level: 70
-Str: 111
-Int: 155
+Level: 65
+Dex: 107
+Int: 90
 --------
-Sockets: B-B-B-R 
+Sockets: B G-G G G B 
 --------
-Item Level: 69
+Item Level: 72
 --------
-+26% to Lightning Resistance
-+22% to Chaos Resistance
-25% increased Movement Speed
-+34% to Fire Resistance (crafted)
+5% increased maximum Life (implicit)
+--------
++34 to all Attributes
++32% to Lightning Resistance
+10% reduced Mana Reserved
+100% increased Aspect of the Avian Buff Effect
+Aspect of the Avian also grants Avian's Might and Avian's Flight to nearby Allies
++127 to Evasion Rating and Energy Shield
+--------
+The First of the Sky was the Last of the First.
+It was he who showed us that our limits are self-imposed,
+that what we take for law may just be an illusion.
+--------
+Corrupted
+--------
+Note: ~price 1 exalted
 "
             );
 
             var g = 0;
+
+            var request = PoeApiService.Instance.CreateTradeRequest(item);
+            var result = PoeApiService.Instance.GetTradeRequestResults(request).Result;
+            var result2 = PoeApiService.Instance.GetTradeResults(result).Result;
+            var h = 0;
         }
 
         private void ClientFile_OnNewLine(string line) {
@@ -555,7 +578,12 @@ Item Level: 69
         public void SetCurrentLeague(string league) {
             var config = Config;
             config.CurrentLeague = league;
-            ConfigService.Instance.SetConfig(config);
+            ConfigService.Instance.SetConfig(new ConfigDto() {
+                Id = config.Id,
+                CurrentLeague = config.CurrentLeague,
+                OnlyShowOffersOfCurrentLeague = config.OnlyShowOffersOfCurrentLeague,
+                PlayerName = config.PlayerName
+            });
         }
 
         public string GetCurrentLeague() {

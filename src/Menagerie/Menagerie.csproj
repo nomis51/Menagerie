@@ -114,7 +114,6 @@
     </Compile>
     <Compile Include="Converters\BoolConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
-    <Compile Include="DTOs\ConfigDto.cs" />
     <Compile Include="ImagePathConverter.cs" />
     <None Include="Assets\menagerie-logo.ico" />
     <Content Include="Data\base-types.json">
@@ -126,7 +125,6 @@
     <None Include="log4net.config" />
     <Compile Include="Models\Config.cs" />
     <Compile Include="Models\Offer.cs" />
-    <Compile Include="Services\ConfigService.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\OfferViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
