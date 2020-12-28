@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Menagerie.Core": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ENV": "DEBUG"
+      }
+    }
+  }
+}
