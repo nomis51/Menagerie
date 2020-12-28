@@ -21,16 +21,16 @@ namespace Menagerie {
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window {
+    public partial class Overlay : Window {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private MainWindowViewModel vm;
+        private OverlayViewModel vm;
         private Forms.NotifyIcon trayIcon = null;
 
-        public MainWindow() {
+        public Overlay() {
             InitializeComponent();
 
-            vm = new MainWindowViewModel();
+            vm = new OverlayViewModel();
             this.DataContext = vm;
 
             SetupTrayIcon();

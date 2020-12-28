@@ -16,7 +16,7 @@ using Menagerie.Core.Services;
 using Menagerie.Core.DTOs;
 
 namespace Menagerie.ViewModels {
-    public class MainWindowViewModel : INotifyPropertyChanged {
+    public class OverlayViewModel : INotifyPropertyChanged {
         #region Updater
         private ICommand mUpdater;
         public ICommand UpdateCommand {
@@ -97,7 +97,7 @@ namespace Menagerie.ViewModels {
             }
         }
 
-        public MainWindowViewModel() {
+        public OverlayViewModel() {
             Parser.Instance.Start();
             ClientFileHandler.Instance.Start();
             ChatHandler.Instance.Start();

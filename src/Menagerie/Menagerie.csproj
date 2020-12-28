@@ -104,7 +104,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Resource Include="menagerie-logo.ico" />
-    <Page Include="Views\MainWindow.xaml">
+    <Page Include="Views\Overlay.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -125,10 +125,10 @@
     <None Include="log4net.config" />
     <Compile Include="Models\Config.cs" />
     <Compile Include="Models\Offer.cs" />
-    <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\OverlayViewModel.cs" />
     <Compile Include="ViewModels\OfferViewModel.cs" />
-    <Compile Include="Views\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <Compile Include="Views\Overlay.xaml.cs">
+      <DependentUpon>Overlay.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
