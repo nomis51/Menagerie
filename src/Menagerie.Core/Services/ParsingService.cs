@@ -767,13 +767,13 @@ namespace Menagerie.Core {
 
             foreach (var line in section) {
                 if (line.StartsWith("Critical Strike Chance: ")) {
-                    item.Props.CritChance = double.Parse(line.Substring("Critical Strike Chance: ".Length));
+                    item.Props.CritChance = double.Parse(line.Substring("Critical Strike Chance: ".Length).Replace("%", "").Replace(".", ","));
                     isParsed = SECTION_PARSED;
                     continue;
                 }
 
                 if (line.StartsWith("Attacks per Second: ")) {
-                    item.Props.AttackSpeed = double.Parse(line.Substring("Attacks per Second: ".Length));
+                    item.Props.AttackSpeed = double.Parse(line.Substring("Attacks per Second: ".Length).Replace(".", ","));
                     isParsed = SECTION_PARSED;
                     continue;
                 }

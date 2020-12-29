@@ -72,6 +72,10 @@ namespace Menagerie.Core.Services {
             ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_V);
         }
 
+        public void SendCtrlC() {
+            ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_C);
+        }
+
         public void Start() {
         }
         #endregion

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -21,7 +22,7 @@ namespace Menagerie.Core.Services {
             while (true) {
                 await Task.Delay(500);
 
-                string text = Clipboard.GetText();
+                string text = GetClipboard();
 
                 if (!string.IsNullOrEmpty(text) && text != LastText) {
                     LastText = text;
@@ -40,6 +41,19 @@ namespace Menagerie.Core.Services {
                 return false;
             }
             #endregion#
+        }
+
+        public string GetClipboard() {
+            string text = "";
+
+            Thread t = new Thread(delegate () {
+                text = Clipboard.GetText();
+            });
+            t.SetApartmentState(ApartmentState.STA);
+            t.Start();
+            t.Join();
+
+            return text;
         }
 
         public void Start() {

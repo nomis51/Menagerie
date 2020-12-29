@@ -24,9 +24,6 @@ namespace Menagerie.Core.Services {
                     s.Action();
                 }
             }
-
-            var g = (ushort)VirtualKeyCode.VK_D;
-            var h = (int)VirtualKeyCode.VK_D;
         }
 
         public void Start() {

@@ -75,10 +75,17 @@ namespace Menagerie.Core.Services {
                 Control = true,
                 Shift = false,
                 Key = VirtualKeyCode.VK_D,
-                Action = () => {
-                    var g = 0;
-                }
+                Action = Shortcut_PriceCheck
             });
+        }
+
+        private void Shortcut_PriceCheck() {
+            _keyboardService.SendCtrlC();
+            string data = _clipboardService.GetClipboard();
+            Item item = _parsingService.ParseItem(data);
+            PriceCheckResult priceCheck = _priceCheckingService.PriceCheck(item).Result;
+
+            var g = 0;
         }
 
         public void FocusGame() {
