@@ -6,6 +6,7 @@ using System.Text;
 namespace Menagerie.Core.Models {
     public class FetchResult {
         public List<FetchResultElement> Result { get; set; }
+
     }
 
     public class FetchResultElement {
@@ -19,6 +20,7 @@ namespace Menagerie.Core.Models {
         public int ILvl { get; set; }
         public int StackSize { get; set; }
         public bool Corrupted { get; set; }
+        public string Icon { get; set; }
         public List<FetchResultElementItemProperty> Properties { get; set; }
 
     }
@@ -33,6 +35,7 @@ namespace Menagerie.Core.Models {
         public string Indexed { get; set; }
         public FetchResultElementListingPrice Price { get; set; }
         public FetchResultAccount Account { get; set; }
+        public double ChaosValue { get; set; }
     }
 
     public class FetchResultElementListingPrice {

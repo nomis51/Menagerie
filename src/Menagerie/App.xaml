@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:Menagerie"
              xmlns:fa5="http://schemas.fontawesome.com/icons/"
              DispatcherUnhandledException="Application_DispatcherUnhandledException"
-             StartupUri="Views/MainWindow.xaml">
+             StartupUri="Views/Overlay.xaml">
     <Application.Resources>
         <Style x:Key="TransparentStyleTransparent" TargetType="{x:Type Button}">
             <Setter Property="Template">

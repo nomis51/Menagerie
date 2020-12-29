@@ -103,6 +103,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\Item.cs" />
+    <Compile Include="ViewModels\PriceCheckViewModel.cs" />
+    <Compile Include="Views\PriceCheck.xaml.cs">
+      <DependentUpon>PriceCheck.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Views\PriceCheck.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Resource Include="menagerie-logo.ico" />
     <Page Include="Views\Overlay.xaml">
       <Generator>MSBuild:Compile</Generator>

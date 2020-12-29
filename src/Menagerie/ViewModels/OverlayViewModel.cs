@@ -14,6 +14,7 @@ using System.Windows.Controls;
 using System.Windows;
 using Menagerie.Core.Services;
 using Menagerie.Core.DTOs;
+using Menagerie.Views;
 
 namespace Menagerie.ViewModels {
     public class OverlayViewModel : INotifyPropertyChanged {
@@ -114,6 +115,7 @@ namespace Menagerie.ViewModels {
             PoeWindowHandler.Instance.Focus();
 
             // TODO: For testing only
+
             //ClientFileHandler.Instance.Test();
             //OutgoingOffers.Add(new Offer() {
             //    Id = 99,
@@ -133,7 +135,7 @@ namespace Menagerie.ViewModels {
             //});
 
             var item = Parser.Instance.ParseItem(
-                @"Rarity: Unique
+@"Rarity: Unique
 Saqawal's Nest
 Blood Raiment
 --------
@@ -169,12 +171,13 @@ Note: ~price 1 exalted
 "
             );
 
-            var g = 0;
+            var result = PriceCheckHandler.Instance.PriceCheck(item).Result;
 
-            var request = PoeApiService.Instance.CreateTradeRequest(item);
-            var result = PoeApiService.Instance.GetTradeRequestResults(request).Result;
-            var result2 = PoeApiService.Instance.GetTradeResults(result).Result;
-            var h = 0;
+            PriceCheck priceCheckWin = new PriceCheck();
+            priceCheckWin.vm.Item = new Item(item);
+            priceCheckWin.vm.PriceCheckResult = result;
+            priceCheckWin.Show();
+
         }
 
         private void ClientFile_OnNewLine(string line) {
@@ -240,7 +243,7 @@ Note: ~price 1 exalted
         }
 
         public List<string> GetLeagues() {
-            return PoeApiService.Instance.GetLeagues();
+            return PoeApiService.Instance.GetLeagues().Result;
         }
 
         public Offer GetOffer(int id) {

@@ -14,7 +14,7 @@ namespace Menagerie {
     /// </summary>
     public partial class App : Application {
         private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e) {
-            File.WriteAllText(".\\errors.log", e.Exception.Message + Environment.NewLine + e.Exception.InnerException + Environment.NewLine + e.Exception.StackTrace);
+            File.WriteAllText(".\\ui-errors.log", e.Exception.Message + Environment.NewLine + e.Exception.InnerException + Environment.NewLine + e.Exception.StackTrace);
 
             // Prevent default unhandled exception processing
             e.Handled = true;

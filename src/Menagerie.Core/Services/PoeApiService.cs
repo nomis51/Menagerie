@@ -26,22 +26,41 @@ namespace Menagerie.Core.Services {
         }
         #endregion
 
+        private const int CACHE_EXPIRATION_TIME_MINS = 30;
         private const int NB_RESULT_PER_QUERY = 10;
+        private readonly Uri ALT_POE_API_BASE_URL = new Uri("http://api.pathofexile.com");
+        private readonly Uri POE_API_BASE_URL = new Uri("https://www.pathofexile.com");
+        private readonly Uri POE_NINJA_API_BASE_URL = new Uri("https://poe.ninja");
         private const string POE_API_LEAGUES = "leagues?compact=1";
         private const string POE_API_TRADE = "api/trade/search";
         private const string POE_API_FETCH = "api/trade/fetch";
+        private const string POE_NINJA_API_CURRENCY = "api/data/currencyoverview";
 
         private static readonly HttpClient Client = new HttpClient();
+        private static readonly HttpClient AltClient = new HttpClient();
+        private static readonly HttpClient PoeNinjaClient = new HttpClient();
+
+        private PoeNinjaCache<PoeNinjaCurrency> CurrencyCache;
 
         private PoeApiService() {
-            SetupClient();
+            SetupClients();
         }
 
-        private void SetupClient() {
-            Client.BaseAddress = new Uri("https://www.pathofexile.com");
+        private void SetupClients() {
+            Client.BaseAddress = POE_API_BASE_URL;
             Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             Client.DefaultRequestHeaders.TryAddWithoutValidation("X-Powered-By", "Menagerie");
             Client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "Menagerie");
+
+            AltClient.BaseAddress = ALT_POE_API_BASE_URL;
+            AltClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            AltClient.DefaultRequestHeaders.TryAddWithoutValidation("X-Powered-By", "Menagerie");
+            AltClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "Menagerie");
+
+            PoeNinjaClient.BaseAddress = POE_NINJA_API_BASE_URL;
+            PoeNinjaClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            PoeNinjaClient.DefaultRequestHeaders.TryAddWithoutValidation("X-Powered-By", "Menagerie");
+            PoeNinjaClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "Menagerie");
         }
 
         private async Task<T> ReadResponse<T>(HttpResponseMessage response) {
@@ -60,33 +79,22 @@ namespace Menagerie.Core.Services {
         }
 
         public HttpContent SerializeBody<T>(T obj) {
-            return new StringContent(
-                JsonConvert.SerializeObject(obj, new JsonSerializerSettings {
-                    NullValueHandling = NullValueHandling.Ignore,
-                    ContractResolver = new CamelCasePropertyNamesContractResolver()
-                }),
-                Encoding.UTF8,
-                "application/json"
-            );
+            var json = JsonConvert.SerializeObject(obj, new JsonSerializerSettings {
+                NullValueHandling = NullValueHandling.Ignore,
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            });
+
+            return new StringContent(json, Encoding.UTF8, "application/json");
         }
 
-        public List<string> GetLeagues() {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(POE_API_LEAGUES);
-            request.AutomaticDecompression = DecompressionMethods.GZip;
+        public async Task<List<string>> GetLeagues() {
+            var response = AltClient.GetAsync($"/{POE_API_LEAGUES}").Result;
+            var result = await ReadResponse<List<Dictionary<string, string>>>(response);
 
-            string data = "";
-
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-            using (Stream stream = response.GetResponseStream())
-            using (StreamReader reader = new StreamReader(stream)) {
-                data = reader.ReadToEnd();
-            }
-
-            return ParseLeagues(data);
+            return ParseLeagues(result);
         }
 
-        private List<string> ParseLeagues(string data) {
-            var json = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(data);
+        private List<string> ParseLeagues(List<Dictionary<string, string>> json) {
             return json.Select(l => l["id"])
                 .ToList()
                 .FindAll(n => n.IndexOf("SSF") == -1)
@@ -113,7 +121,7 @@ namespace Menagerie.Core.Services {
             return result;
         }
 
-        public FetchResult GetTradeResults(SearchResult search, int nbResults = 20) {
+        public async Task<PriceCheckResult> GetTradeResults(SearchResult search, Item item, int nbResults = 20) {
             List<FetchResult> results = new List<FetchResult>();
             object locker = new object();
 
@@ -128,19 +136,58 @@ namespace Menagerie.Core.Services {
                 }
             });
 
-            if (results.Count == 1) {
-                return results[0];
-            }
-
             if (results.Count == 0) {
                 return null;
             }
 
-            for (int i = 1; i < results.Count; ++i) {
-                results[0].Result.AddRange(results[i].Result);
+            if (results.Count > 1) {
+                for (int i = 1; i < results.Count; ++i) {
+                    results[0].Result.AddRange(results[i].Result);
+                }
             }
 
-            return results[0];
+            if (results[0].Result.Count > 0) {
+                item.Icon = results[0].Result[0].Item.Icon;
+            }
+
+            return await CalculateChaosValue(new PriceCheckResult() {
+                Item = null,
+                Results = results[0].Result.Select(p => new PricingResult() {
+                    Currency = p.Listing.Price.Currency,
+                    Price = p.Listing.Price.Amount,
+                    CurrencyImageLink = CurrencyHandler.GetCurrencyImageLink(p.Listing.Price.Currency),
+                    PlayerName = p.Listing.Account.Name
+                }).ToList()
+            });
+        }
+
+        private async Task<PriceCheckResult> CalculateChaosValue(PriceCheckResult priceCheck) {
+            if (CurrencyCache == null || (DateTime.Now - CurrencyCache.UpdateTime).TotalMinutes >= CACHE_EXPIRATION_TIME_MINS) {
+                await UpdateCurrencyCache();
+            }
+
+            foreach (var result in priceCheck.Results) {
+                if (CurrencyCache.Map.ContainsKey(result.Currency)) {
+                    result.ChaosValue = CurrencyCache.Map[result.Currency].Receive.Value;
+                }
+            }
+
+            return priceCheck;
+        }
+
+        private async Task UpdateCurrencyCache() {
+            var response = PoeNinjaClient.GetAsync($"/{POE_NINJA_API_CURRENCY}?league={ConfigService.Instance.GetConfig().CurrentLeague}&type=Currency&language=en").Result;
+            PoeNinjaResult<PoeNinjaCurrency> result = await ReadResponse<PoeNinjaResult<PoeNinjaCurrency>>(response);
+            Dictionary<string, PoeNinjaCurrency> currencies = new Dictionary<string, PoeNinjaCurrency>();
+
+            foreach (var line in result.Lines) {
+                currencies.Add(line.CurrencyTypeName, line);
+            }
+
+            CurrencyCache = new PoeNinjaCache<PoeNinjaCurrency>() {
+                Language = result.Language,
+                Map = currencies
+            };
         }
 
         private async Task<FetchResult> GetTradeResults(string queryId, List<string> resultIds) {
@@ -149,7 +196,7 @@ namespace Menagerie.Core.Services {
 
             FetchResult result = await ReadResponse<FetchResult>(response);
 
-            if (result == null ) {
+            if (result == null) {
                 throw new Exception("Error while getting trade results");
             }
 
