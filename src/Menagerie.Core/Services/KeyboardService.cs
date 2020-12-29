@@ -4,19 +4,32 @@ using System.Collections.Generic;
 using System.Text;
 using WindowsInput;
 using WindowsInput.Native;
+using Winook;
 
 namespace Menagerie.Core.Services {
     public class KeyboardService : IService {
         #region Members
         private InputSimulator _input = new InputSimulator();
+        private KeyboardHook _keyboardHook;
+        private MouseHook _mouseHook;
         #endregion
 
-        #region COnstructors
+        #region Constructors
         public KeyboardService() {
         }
         #endregion
 
         #region Public methods
+        public void HookProcess(int processId) {
+            _keyboardHook = new KeyboardHook(processId);
+            _keyboardHook.MessageReceived += KeyboardHook_MessageReceived;
+            _keyboardHook.InstallAsync().Wait();
+        }
+
+        private void KeyboardHook_MessageReceived(object sender, KeyboardMessageEventArgs e) {
+            AppService.Instance.HandleKeyboardInput(e);
+        }
+
         public void KeyPress(VirtualKeyCode key) {
             _input.Keyboard.KeyPress(key);
         }

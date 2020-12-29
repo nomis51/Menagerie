@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using WindowsInput.Native;
+using Winook;
 
 namespace Menagerie.Core.Services {
     public class AppService : IService {
@@ -47,6 +48,7 @@ namespace Menagerie.Core.Services {
         private PriceCheckingService _priceCheckingService;
         private PoeNinjaService _poeNinjaService;
         private KeyboardService _keyboardService;
+        private ShortcutService _shortcutService;
 
         private AppService() {
             _appDataService = new AppDataService();
@@ -63,6 +65,20 @@ namespace Menagerie.Core.Services {
             _poeApiService = new PoeApiService();
             _poeNinjaService = new PoeNinjaService();
             _keyboardService = new KeyboardService();
+            _shortcutService = new ShortcutService();
+        }
+
+        private void SetShortcuts() {
+            _shortcutService.RegisterShortcut(new Shortcut() {
+                Direction = KeyDirection.Any,
+                Alt = false,
+                Control = true,
+                Shift = false,
+                Key = VirtualKeyCode.VK_D,
+                Action = () => {
+                    var g = 0;
+                }
+            });
         }
 
         public void FocusGame() {
@@ -74,7 +90,12 @@ namespace Menagerie.Core.Services {
         }
 
         public void PoeWindowReady() {
+            _keyboardService.HookProcess(_poeWindowService.ProcessId);
+            SetShortcuts();
+        }
 
+        public void HandleKeyboardInput(KeyboardMessageEventArgs evt) {
+            _shortcutService.HandleShortcut(evt);
         }
 
         public void NewClientFileLine(string line) {
@@ -239,6 +260,7 @@ namespace Menagerie.Core.Services {
             _poeNinjaService.Start();
             _poeWindowService.Start();
             _priceCheckingService.Start();
+            _shortcutService.Start();
         }
     }
 }

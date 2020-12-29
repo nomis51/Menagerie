@@ -43,6 +43,12 @@ namespace Menagerie.Core.Services {
                 return this._clientFilePath;
             }
         }
+
+        public int ProcessId {
+            get {
+                return Process == null ? -1 : Process.Id;
+            }
+        }
         #endregion
 
         #region Members
