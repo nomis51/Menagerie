@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Menagerie.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Menagerie.Core {
-    public static class CurrencyHandler {
-        private static Dictionary<string, string> CurrencyToImageLink = new Dictionary<string, string>() {
+namespace Menagerie.Core.Services {
+    public class CurrencyService : Service {
+        #region Constants
+        private readonly Dictionary<string, string> CurrencyToImageLink = new Dictionary<string, string>() {
             {"alt", "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyRerollMagic.png?v=6d9520174f6643e502da336e76b730d3"},
             {"fuse","https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyRerollSocketLinks.png?v=0ad7134a62e5c45e4f8bc8a44b95540f"},
             {"alch", "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyUpgradeToRare.png?v=89c110be97333995522c7b2c29cae728"},
@@ -22,12 +24,36 @@ namespace Menagerie.Core {
             {"transmute","https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyUpgradeToMagic.png?v=333b8b5e28b73c62972fc66e7634c5c8"},
             {" silver","https://web.poecdn.com/image/Art/2DItems/Currency/SilverObol.png?v=93c1b204ec2736a2fe5aabbb99510bcf"}
         };
+        #endregion
 
-        public static string GetCurrencyImageLink(string currencyName) {
+        #region Constructors
+        public CurrencyService() { }
+        #endregion
+
+        #region Public Methods
+        public PriceCheckResult CalculateChaosValues(PriceCheckResult priceCheck) {
+            foreach (var result in priceCheck.Results) {
+                var value = GetChaosValue(result.Currency);
+
+                if (value != 0.0d) {
+                    result.ChaosValue = value * result.Price;
+                }
+            }
+
+            return priceCheck;
+        }
+
+        public double GetChaosValue(string currencyName) {
+            string currency = GetRealName(currencyName);
+
+            return AppService.Instance.GetChaosValueOfCurrency(currencyName);
+        }
+
+        public string GetCurrencyImageLink(string currencyName) {
             return CurrencyToImageLink[NormalizeCurrency(currencyName)];
         }
 
-        public static string GetRealName(string text) {
+        public string GetRealName(string text) {
             switch (text) {
                 case "chaos":
                     return "Chaos Orb";
@@ -78,8 +104,7 @@ namespace Menagerie.Core {
                     return text;
             }
         }
-
-        public static string NormalizeCurrency(string text) {
+        public string NormalizeCurrency(string text) {
             switch (text) {
                 case "Chaos Orb":
                     return "chaos";
@@ -130,5 +155,6 @@ namespace Menagerie.Core {
                     return text;
             }
         }
+        #endregion
     }
 }

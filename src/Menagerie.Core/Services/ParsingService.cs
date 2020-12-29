@@ -8,33 +8,10 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Menagerie.Core.Models;
 using Menagerie.Core.Services;
+using Menagerie.Core;
 
 namespace Menagerie.Core {
-    public class Parser : Handler {
-        #region Events
-        public delegate void NewOfferHandler(Offer offer);
-        public event NewOfferHandler OnNewOffer;
-
-        public delegate void NewChatEvent(ChatEvent type);
-        public event NewChatEvent OnNewChatEvent;
-
-        public delegate void NewPlayerJoined(string playerName);
-        public event NewPlayerJoined OnNewPlayerJoined;
-        #endregion
-
-        #region Singleton
-        private static Parser _instance;
-        public static Parser Instance {
-            get {
-                if (_instance == null) {
-                    _instance = new Parser();
-                }
-
-                return _instance;
-            }
-        }
-        #endregion
-
+    public class ParsingService : Service {
         #region Constants
         private const string ITEM_NAME_START_WORD = "to buy your ";
         private const string ITEM_NAME_END_WORD = " listed for ";
@@ -96,23 +73,22 @@ namespace Menagerie.Core {
         };
         #endregion
 
-        #region ItemParsers
+        #region Members
         private List<Func<List<string>, Item, int>> ItemParsers = new List<Func<List<string>, Item, int>>();
-        #endregion
-
         private List<string> LastOffersLines = new List<string>();
         private List<DateTime> LastOffersTimes = new List<DateTime>();
         private static int Id = 0;
         private HashSet<string> BaseTypes = null;
+        #endregion
 
-        public Parser() { }
-
-        public override void Start() {
+        #region Constructors
+        public ParsingService() {
             DoCleanBuffer();
             SetupItemParsers();
-            Ready = true;
         }
+        #endregion
 
+        #region Private methods
         private async void DoCleanBuffer() {
             while (true) {
                 await Task.Delay(MAX_BUFFER_LIFE_MINS * 1000 * 60);
@@ -127,16 +103,16 @@ namespace Menagerie.Core {
             }
 
             switch (evt.EvenType) {
-                case ChatEvent.Offer:
-                    OnNewOffer((Offer)evt);
+                case Enums.ChatEventEnum.Offer:
+                    AppService.Instance.NewOffer((Offer)evt);
                     break;
 
-                case ChatEvent.PlayerJoined:
-                    OnNewPlayerJoined(((JoinEvent)evt).PlayerName);
+                case Enums.ChatEventEnum.PlayerJoined:
+                    AppService.Instance.NewPlayerJoined(((JoinEvent)evt).PlayerName);
                     break;
 
                 default:
-                    OnNewChatEvent(evt.EvenType);
+                    AppService.Instance.NewChatEvent(evt.EvenType);
                     break;
             }
         }
@@ -262,7 +238,7 @@ namespace Menagerie.Core {
                 }
 
                 offer.Currency = line.Substring(currencyStartIndex, currencyEndIndex - currencyStartIndex);
-                offer.CurrencyImageLink = CurrencyHandler.GetCurrencyImageLink(offer.Currency);
+                offer.CurrencyImageLink = AppService.Instance.GetCurrencyImageLink(offer.Currency);
 
                 // League
                 int leagueStartIndex = currencyEndIndex + CURRENCY_END_WORD.Length;
@@ -286,9 +262,9 @@ namespace Menagerie.Core {
                 var line = aline.ToLower();
 
                 if (line.IndexOf(TRADE_ACCEPTED_MSG) != -1) {
-                    evt = new Models.ChatEvent() { EvenType = ChatEvent.TradeAccepted };
+                    evt = new Models.ChatEvent() { EvenType = Enums.ChatEventEnum.TradeAccepted };
                 } else if (line.IndexOf(TRADE_CANCELLED_MSG) != -1) {
-                    evt = new Models.ChatEvent() { EvenType = ChatEvent.TradeCancelled };
+                    evt = new Models.ChatEvent() { EvenType = Enums.ChatEventEnum.TradeCancelled };
                 } else if (line.IndexOf(PLAYER_JOINED_MSG) != -1) {
                     var startIndex = aline.IndexOf("] ");
                     var endIndex = aline.IndexOf(PLAYER_JOINED_MSG);
@@ -300,33 +276,6 @@ namespace Menagerie.Core {
             }
 
             return evt;
-        }
-
-
-        public void ParseClipboardLine(string line) {
-            var evt = ParseLine(line, false);
-
-            if (evt != null) {
-                if (evt.EvenType == ChatEvent.Offer) {
-                    var offer = (Offer)evt;
-
-                    if (offer.IsOutgoing) {
-                        OnNewChatEventParsed(offer);
-                    }
-                }
-            }
-        }
-
-        public void ParseClientLine(string aline) {
-            if (LastOffersLines.Contains(aline)) {
-                return;
-            }
-
-            var evt = ParseLine(aline);
-
-            if (evt != null) {
-                OnNewChatEventParsed(evt);
-            }
         }
 
         private int NextId() {
@@ -368,58 +317,6 @@ namespace Menagerie.Core {
                 default:
                     return ItemRarity.Normal;
             }
-        }
-
-        public Item ParseItem(string data) {
-            string[] lines = Regex.Split(data, @"\r?\n");
-            lines = lines.Take(lines.Length - 1).ToArray();
-
-            List<List<string>> sections = new List<List<string>>();
-            sections.Add(new List<string>());
-
-            lines.Aggregate(sections[0], (section, line) => {
-                if (line != SEPARATOR) {
-                    section.Add(line);
-                    return section;
-                } else {
-                    var newSection = new List<string>();
-                    sections.Add(newSection);
-                    return newSection;
-                }
-            });
-
-            sections = sections.FindAll(s => s.Count > 0);
-
-            if (sections[0][1] == CANNOT_USER_ITEM_WORD) {
-                sections[1].Insert(0, sections[0][0]);
-                sections.RemoveAt(0);
-            }
-
-            var item = ParseItemSection(sections[0]);
-
-            if (item == null) {
-                return null;
-            }
-
-            sections.RemoveAt(0);
-
-            foreach (var parser in ItemParsers) {
-                for (int i = 0; i < sections.Count; ++i) {
-                    var result = parser(sections[i], item);
-
-                    if (result == SECTION_PARSED) {
-                        sections.RemoveAt(i);
-                        --i;
-                        break;
-                    } else if (result == PARSER_SKIPPED) {
-                        break;
-                    }
-                }
-            }
-
-            item.RawText = data;
-
-            return item;
         }
 
         private Item ParseItemSection(List<string> section) {
@@ -533,7 +430,7 @@ namespace Menagerie.Core {
             if (BaseTypes == null) {
                 BaseTypes = new HashSet<string>();
 
-                var baseTypes = AppDataService.Instance.GetBaseTypes();
+                var baseTypes = AppService.Instance.GetBaseTypes();
 
                 foreach (var tuple in baseTypes) {
                     BaseTypes.Add(tuple.Item1);
@@ -599,7 +496,7 @@ namespace Menagerie.Core {
             }
 
             if (item.Category == ItemCategory.None) {
-                var baseTypes = AppDataService.Instance.GetBaseTypes();
+                var baseTypes = AppService.Instance.GetBaseTypes();
                 var baseType = baseTypes.FirstOrDefault(t => t.Item1 == item.Type);
 
                 if (baseType == null) {
@@ -1143,7 +1040,7 @@ namespace Menagerie.Core {
                     }
                 }), RegexOptions.Multiline);
 
-                var matchStrs = AppDataService.Instance.GetStatByMatchStr();
+                var matchStrs = AppService.Instance.GetStatByMatchStr();
                 var found = matchStrs.ContainsKey(withPlaceholders) ? matchStrs[withPlaceholders] : null;
 
                 if (found != null) {
@@ -1230,5 +1127,86 @@ namespace Menagerie.Core {
 
             //}
         }
+        #endregion
+
+        #region Public methods
+        public void ParseClipboardLine(string line) {
+            var evt = ParseLine(line, false);
+
+            if (evt != null) {
+                if (evt.EvenType == Enums.ChatEventEnum.Offer) {
+                    var offer = (Offer)evt;
+
+                    if (offer.IsOutgoing) {
+                        OnNewChatEventParsed(offer);
+                    }
+                }
+            }
+        }
+
+        public void ParseClientLine(string aline) {
+            if (LastOffersLines.Contains(aline)) {
+                return;
+            }
+
+            var evt = ParseLine(aline);
+
+            if (evt != null) {
+                OnNewChatEventParsed(evt);
+            }
+        }
+
+        public Item ParseItem(string data) {
+            string[] lines = Regex.Split(data, @"\r?\n");
+            lines = lines.Take(lines.Length - 1).ToArray();
+
+            List<List<string>> sections = new List<List<string>>();
+            sections.Add(new List<string>());
+
+            lines.Aggregate(sections[0], (section, line) => {
+                if (line != SEPARATOR) {
+                    section.Add(line);
+                    return section;
+                } else {
+                    var newSection = new List<string>();
+                    sections.Add(newSection);
+                    return newSection;
+                }
+            });
+
+            sections = sections.FindAll(s => s.Count > 0);
+
+            if (sections[0][1] == CANNOT_USER_ITEM_WORD) {
+                sections[1].Insert(0, sections[0][0]);
+                sections.RemoveAt(0);
+            }
+
+            var item = ParseItemSection(sections[0]);
+
+            if (item == null) {
+                return null;
+            }
+
+            sections.RemoveAt(0);
+
+            foreach (var parser in ItemParsers) {
+                for (int i = 0; i < sections.Count; ++i) {
+                    var result = parser(sections[i], item);
+
+                    if (result == SECTION_PARSED) {
+                        sections.RemoveAt(i);
+                        --i;
+                        break;
+                    } else if (result == PARSER_SKIPPED) {
+                        break;
+                    }
+                }
+            }
+
+            item.RawText = data;
+
+            return item;
+        }
+        #endregion
     }
 }

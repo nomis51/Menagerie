@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Menagerie.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,7 +16,7 @@ namespace Menagerie.Core.Models {
         public bool IsOutgoing { get; set; } = false;
 
         public Offer() {
-            base.EvenType = Core.ChatEvent.Offer;
+            base.EvenType = ChatEventEnum.Offer;
         }
     }
 }

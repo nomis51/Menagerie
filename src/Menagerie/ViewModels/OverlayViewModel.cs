@@ -15,6 +15,7 @@ using System.Windows;
 using Menagerie.Core.Services;
 using Menagerie.Core.DTOs;
 using Menagerie.Views;
+using Menagerie.Core.Enums;
 
 namespace Menagerie.ViewModels {
     public class OverlayViewModel : INotifyPropertyChanged {
@@ -88,7 +89,7 @@ namespace Menagerie.ViewModels {
 
         public Config Config {
             get {
-                var dto = ConfigService.Instance.GetConfig();
+                var dto = AppService.Instance.GetConfig();
                 return new Config() {
                     CurrentLeague = dto.CurrentLeague,
                     Id = dto.Id,
@@ -99,21 +100,6 @@ namespace Menagerie.ViewModels {
         }
 
         public OverlayViewModel() {
-            Parser.Instance.Start();
-            ClientFileHandler.Instance.Start();
-            ChatHandler.Instance.Start();
-            GameHandler.Instance.Start();
-            ClipboardHandler.Instance.Start();
-            PoeWindowHandler.Instance.Start();
-
-            ClipboardHandler.Instance.OnNewClipboardText += Clipboard_OnNewClipboardText;
-            ClientFileHandler.Instance.OnNewLine += ClientFile_OnNewLine;
-            Parser.Instance.OnNewChatEvent += Parser_OnNewChatEvent;
-            Parser.Instance.OnNewOffer += Parser_OnNewOffer;
-            Parser.Instance.OnNewPlayerJoined += Parser_OnNewPlayerJoined;
-
-            PoeWindowHandler.Instance.Focus();
-
             // TODO: For testing only
 
             //ClientFileHandler.Instance.Test();
@@ -134,7 +120,7 @@ namespace Menagerie.ViewModels {
             //    IsOutgoing = true
             //});
 
-            var item = Parser.Instance.ParseItem(
+            var item = AppService.Instance.ParseItem(
 @"Rarity: Unique
 Saqawal's Nest
 Blood Raiment
@@ -171,21 +157,13 @@ Note: ~price 1 exalted
 "
             );
 
-            var result = PriceCheckHandler.Instance.PriceCheck(item).Result;
+            var result = AppService.Instance.PriceCheck(item).Result;
 
             PriceCheck priceCheckWin = new PriceCheck();
             priceCheckWin.vm.Item = new Item(item);
             priceCheckWin.vm.PriceCheckResult = result;
             priceCheckWin.Show();
 
-        }
-
-        private void ClientFile_OnNewLine(string line) {
-            Parser.Instance.ParseClientLine(line);
-        }
-
-        private void Clipboard_OnNewClipboardText(string text) {
-            Parser.Instance.ParseClipboardLine(text);
         }
 
         private void Parser_OnNewPlayerJoined(string playerName) {
@@ -198,9 +176,9 @@ Note: ~price 1 exalted
             UpdateOffers();
         }
 
-        private void Parser_OnNewChatEvent(ChatEvent type) {
+        private void Parser_OnNewChatEvent(ChatEventEnum type) {
             switch (type) {
-                case ChatEvent.TradeAccepted:
+                case ChatEventEnum.TradeAccepted:
                     var offer = GetActiveOffer();
 
                     if (offer == null) {
@@ -216,7 +194,7 @@ Note: ~price 1 exalted
                     }
                     break;
 
-                case ChatEvent.TradeCancelled:
+                case ChatEventEnum.TradeCancelled:
                     foreach (var o in Offers) {
                         if (o.TradeRequestSent) {
                             o.State = OfferState.PlayerInvited;
@@ -243,7 +221,7 @@ Note: ~price 1 exalted
         }
 
         public List<string> GetLeagues() {
-            return PoeApiService.Instance.GetLeagues().Result;
+            return AppService.Instance.GetLeagues().Result;
         }
 
         public Offer GetOffer(int id) {
@@ -261,7 +239,7 @@ Note: ~price 1 exalted
         private void EnsureNotHighlighted(int index) {
             if (Offers[index].IsHighlighted) {
                 Offers[index].IsHighlighted = false;
-                GameHandler.Instance.Input.Keyboard.KeyPress(WindowsInput.Native.VirtualKeyCode.ESCAPE);
+                GameService.Instance.Input.Keyboard.KeyPress(WindowsInput.Native.VirtualKeyCode.ESCAPE);
             }
         }
 
@@ -314,7 +292,7 @@ Note: ~price 1 exalted
                 OutgoingOffers[index].State = OfferState.TradeRequestSent;
                 UpdateOffers();
 
-                ChatHandler.Instance.SendTradeCommand(OutgoingOffers[index].PlayerName);
+                ChatService.Instance.SendTradeCommand(OutgoingOffers[index].PlayerName);
             } else {
                 if (!Offers[index].PlayerInvited) {
                     return;
@@ -325,7 +303,7 @@ Note: ~price 1 exalted
 
                 EnsureNotHighlighted(index);
 
-                ChatHandler.Instance.SendTradeCommand(Offers[index].PlayerName);
+                ChatService.Instance.SendTradeCommand(Offers[index].PlayerName);
             }
         }
 
@@ -339,7 +317,7 @@ Note: ~price 1 exalted
             OutgoingOffers[index].State = OfferState.HideoutJoined;
             UpdateOffers();
 
-            ChatHandler.Instance.SendHideoutCommand(OutgoingOffers[index].PlayerName);
+            ChatService.Instance.SendHideoutCommand(OutgoingOffers[index].PlayerName);
         }
 
         public void SendBusyWhisper(int id) {
@@ -353,7 +331,7 @@ Note: ~price 1 exalted
                 return;
             }
 
-            ChatHandler.Instance.SendChatMessage($"@{Offers[index].PlayerName} I'm busy right now, I'll whisper you for the \"{Offers[index].ItemName}\" when I'm ready");
+            ChatService.Instance.SendChatMessage($"@{Offers[index].PlayerName} I'm busy right now, I'll whisper you for the \"{Offers[index].ItemName}\" when I'm ready");
         }
 
         public void SendReInvite(int id) {
@@ -370,9 +348,9 @@ Note: ~price 1 exalted
             Thread t = new Thread(delegate () {
                 EnsureNotHighlighted(index);
 
-                ChatHandler.Instance.SendKickCommand(Offers[index].PlayerName);
+                ChatService.Instance.SendKickCommand(Offers[index].PlayerName);
                 Thread.Sleep(100);
-                ChatHandler.Instance.SendInviteCommand(Offers[index].PlayerName);
+                ChatService.Instance.SendInviteCommand(Offers[index].PlayerName);
             });
 
             t.SetApartmentState(ApartmentState.STA);
@@ -395,7 +373,7 @@ Note: ~price 1 exalted
 
             EnsureNotHighlighted(index);
 
-            ChatHandler.Instance.SendInviteCommand(Offers[index].PlayerName);
+            ChatService.Instance.SendInviteCommand(Offers[index].PlayerName);
         }
 
         public void SendKick(int id, bool sayThanks = false) {
@@ -415,11 +393,11 @@ Note: ~price 1 exalted
             string playerName = Offers[index].PlayerName;
 
             Thread t = new Thread(delegate () {
-                ChatHandler.Instance.SendKickCommand(playerName);
+                ChatService.Instance.SendKickCommand(playerName);
 
                 if (sayThanks) {
                     Thread.Sleep(250);
-                    ChatHandler.Instance.SendChatMessage($"@{playerName} Thank you and have fun!");
+                    ChatService.Instance.SendChatMessage($"@{playerName} Thank you and have fun!");
                 }
             });
             t.SetApartmentState(ApartmentState.STA);
@@ -445,7 +423,7 @@ Note: ~price 1 exalted
 
                 if (sayThanks) {
                     Thread.Sleep(100);
-                    ChatHandler.Instance.SendChatMessage($"@{playerName} Thank you and have fun!");
+                    ChatService.Instance.SendChatMessage($"@{playerName} Thank you and have fun!");
                 }
             });
             t.SetApartmentState(ApartmentState.STA);
@@ -466,7 +444,7 @@ Note: ~price 1 exalted
                 Dispatcher.CurrentDispatcher.Invoke(() => {
                     (isOutgoing ? OutgoingOffers : Offers).RemoveAt(index);
                     UpdateOffers();
-                    PoeWindowHandler.Instance.Focus();
+                    PoeWindowService.Instance.Focus();
                 });
             }
         }
@@ -482,7 +460,7 @@ Note: ~price 1 exalted
 
             EnsureNotHighlighted(index);
 
-            ChatHandler.Instance.SendChatMessage($"@{Offers[index].PlayerName} Are you still interested in my \"{Offers[index].ItemName}\" listed for {Offers[index].Price} {Offers[index].Currency}?");
+            ChatService.Instance.SendChatMessage($"@{Offers[index].PlayerName} Are you still interested in my \"{Offers[index].ItemName}\" listed for {Offers[index].Price} {Offers[index].Currency}?");
         }
 
         public void SendSoldWhisper(int id) {
@@ -497,18 +475,18 @@ Note: ~price 1 exalted
 
             EnsureNotHighlighted(index);
 
-            ChatHandler.Instance.SendChatMessage($"@{Offers[index].PlayerName} I'm sorry, my \"{Offers[index].ItemName}\" has already been sold");
+            ChatService.Instance.SendChatMessage($"@{Offers[index].PlayerName} I'm sorry, my \"{Offers[index].ItemName}\" has already been sold");
 
             RemoveOffer(id);
         }
 
         public void ClearOffers() {
-            PoeWindowHandler.Instance.Focus();
+            PoeWindowService.Instance.Focus();
             Offers.Clear();
         }
 
         public void ClearOutgoingOffers() {
-            PoeWindowHandler.Instance.Focus();
+            PoeWindowService.Instance.Focus();
             OutgoingOffers.Clear();
         }
 
@@ -521,7 +499,7 @@ Note: ~price 1 exalted
 
             Offers[index].IsHighlighted = true;
 
-            GameHandler.Instance.HightlightStash(Offers[index].ItemName);
+            GameService.Instance.HightlightStash(Offers[index].ItemName);
         }
 
         public void ResetFilter(bool applyToOutgoing = true) {

@@ -8,25 +8,17 @@ using Menagerie.Core.DTOs;
 
 namespace Menagerie.Core.Services {
     public class ConfigService {
-        #region Singleton
-        private static ConfigService _instance;
-        public static ConfigService Instance {
-            get {
-                if (_instance == null) {
-                    _instance = new ConfigService();
-                }
+        #region Constants
+        private const string CONFIG_DB_FILE_PATH = @".\Menagerie.db";
+        #endregion
 
-                return _instance;
-            }
+        #region Constructors
+        public ConfigService() {
+            EnsureConfigCreated();
         }
         #endregion
 
-        private const string CONFIG_DB_FILE_PATH = @".\Menagerie.db";
-
-        private ConfigService() {
-            EnsureConfigCreated();
-        }
-
+        #region Private methods
         private void EnsureConfigCreated() {
             using (var db = new LiteDatabase(CONFIG_DB_FILE_PATH)) {
                 var collection = db.GetCollection<ConfigDto>("config");
@@ -40,7 +32,9 @@ namespace Menagerie.Core.Services {
                 }
             }
         }
+        #endregion
 
+        #region Public methods
         public ConfigDto GetConfig() {
             ConfigDto dto;
 
@@ -65,5 +59,6 @@ namespace Menagerie.Core.Services {
 
             return result;
         }
+        #endregion
     }
 }

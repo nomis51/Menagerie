@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Menagerie.Core.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,7 +26,7 @@ namespace Menagerie.Core.Models {
                 return new PricingResult() {
                     ChaosValue = avgPrice,
                     Currency = "chaos",
-                    CurrencyImageLink = CurrencyHandler.GetCurrencyImageLink("chaos"),
+                    CurrencyImageLink = AppService.Instance.GetCurrencyImageLink("chaos"),
                     PlayerName = "",
                     Price = avgPrice
                 };

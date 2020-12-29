@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Menagerie.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,7 +8,7 @@ namespace Menagerie.Core.Models {
         public string PlayerName { get; set; }
 
         public JoinEvent(string playerName) {
-            EvenType = Core.ChatEvent.PlayerJoined;
+            EvenType = ChatEventEnum.PlayerJoined;
             PlayerName = playerName;
         }
     }

@@ -7,20 +7,7 @@ using System.Text;
 using Menagerie.Core.Models;
 
 namespace Menagerie.Core.Services {
-    public class AppDataService {
-        #region Singleton
-        private static AppDataService _instance;
-        public static AppDataService Instance {
-            get {
-                if (_instance == null) {
-                    _instance = new AppDataService();
-                }
-
-                return _instance;
-            }
-        }
-        #endregion
-
+    public class AppDataService : Service {
         #region Constants
         private const string DATA_FOLDER = @".\Data\";
         private const string STATS = "stats.json";
@@ -30,7 +17,7 @@ namespace Menagerie.Core.Services {
         private Dictionary<string, MatchStr> _statByMatchStr;
         private List<Tuple<string, BaseType>> _baseTypes;
 
-        private AppDataService() { }
+        public AppDataService() { }
 
         public Dictionary<string, MatchStr> GetStatByMatchStr() {
             if (_statByMatchStr != null && _statByMatchStr.Count > 0) {

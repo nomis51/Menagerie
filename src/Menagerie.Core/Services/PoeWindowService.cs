@@ -7,11 +7,10 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Menagerie.Core.Enums;
 
-namespace Menagerie.Core {
-    public class PoeWindowHandler : Handler {
-        private static bool DEBUG = true;
-
+namespace Menagerie.Core.Services {
+    public class PoeWindowService : Service {
         #region WinAPI
         [DllImport("user32.dll")]
         public static extern int SetForegroundWindow(int hwnd);
@@ -27,49 +26,35 @@ namespace Menagerie.Core {
         public static extern IntPtr FindWindowByCaption(IntPtr ZeroOnly, string lpWindowName);
         #endregion
 
-        #region Events
-        public delegate void PoeWindowReady();
-        public event PoeWindowReady OnPoeWindowReady;
-
-        public delegate void ClientFileReady();
-        public event ClientFileReady OnClientFileReady;
-        #endregion
-
-        #region Singleton
-        private static PoeWindowHandler _instance;
-        public static PoeWindowHandler Instance {
-            get {
-                if (_instance == null) {
-                    _instance = new PoeWindowHandler();
-                }
-
-                return _instance;
-            }
-        }
-        #endregion
-
+        #region Constants
+        private static bool DEBUG = true;
         private readonly List<string> PoeProcesses = new List<string>() {
             "PathOfExile",
             "PathOfExile_x64",
             "notepad"
         };
+        #endregion
 
+        #region Props
         private string _clientFilePath;
         public string ClientFilePath {
             get {
                 return this._clientFilePath;
             }
         }
+        #endregion
 
+        #region Members
         private Process Process;
+        #endregion
 
-        private PoeWindowHandler() { }
-
-        public override void Start() {
+        #region Constructors
+        public PoeWindowService() {
             FindPoeProcess();
-            Ready = true;
         }
+        #endregion
 
+        #region Private methods
         private bool ClientFileExists() {
             return this._clientFilePath != null && Directory.Exists(this._clientFilePath.Substring(0, this._clientFilePath.LastIndexOf("\\"))) && File.Exists(this._clientFilePath);
         }
@@ -82,7 +67,7 @@ namespace Menagerie.Core {
                     if (PoeProcesses.Contains(proc.ProcessName)) {
                         this.Process = proc;
 
-                        OnPoeWindowReady();
+                        AppService.Instance.PoeWindowReady();
 
                         if (DEBUG) {
                             _clientFilePath = @"C:\Path of Exile\logs\Client.txt";
@@ -98,7 +83,7 @@ namespace Menagerie.Core {
                             }
                         }
 
-                        OnClientFileReady();
+                        AppService.Instance.ClientFileReady();
                         break;
                     }
                 }
@@ -106,23 +91,17 @@ namespace Menagerie.Core {
                 await Task.Delay(5000);
             }
         }
+        #endregion
 
+        #region Public methods
         public void Focus() {
             if (Process == null) {
                 return;
             }
 
             ShowWindow(Process.MainWindowHandle, ShowWindowEnum.Restore);
-
             SetForegroundWindow((int)Process.MainWindowHandle);
         }
-
-        private enum ShowWindowEnum {
-            Hide = 0,
-            ShowNormal = 1, ShowMinimized = 2, ShowMaximized = 3,
-            Maximize = 3, ShowNormalNoActivate = 4, Show = 5,
-            Minimize = 6, ShowMinNoActivate = 7, ShowNoActivate = 8,
-            Restore = 9, ShowDefault = 10, ForceMinimized = 11
-        };
+        #endregion
     }
 }
