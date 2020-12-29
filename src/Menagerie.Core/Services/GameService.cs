@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Menagerie.Core.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,17 +8,14 @@ using WindowsInput;
 using WindowsInput.Native;
 
 namespace Menagerie.Core.Services {
-    public class GameService : Service {
+    public class GameService : IService {
         #region Constructors
         public GameService() {
-            AppService.Instance.OnPoeWindowReady += AppService_OnPoeWindowReady;
         }
         #endregion
 
         #region Private methods
-        private void AppService_OnPoeWindowReady() {
-
-        }
+       
         #endregion
 
         #region Public methods
@@ -35,6 +33,9 @@ namespace Menagerie.Core.Services {
                 var g = 0;
             }
 
+        }
+
+        public void Start() {
         }
         #endregion
     }

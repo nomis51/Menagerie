@@ -1,10 +1,11 @@
-﻿using Menagerie.Core.Models;
+﻿using Menagerie.Core.Abstractions;
+using Menagerie.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Menagerie.Core.Services {
-    public class CurrencyService : Service {
+    public class CurrencyService : IService {
         #region Constants
         private readonly Dictionary<string, string> CurrencyToImageLink = new Dictionary<string, string>() {
             {"alt", "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyRerollMagic.png?v=6d9520174f6643e502da336e76b730d3"},
@@ -154,6 +155,10 @@ namespace Menagerie.Core.Services {
                 default:
                     return text;
             }
+        }
+
+        public void Start() {
+           
         }
         #endregion
     }

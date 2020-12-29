@@ -1,18 +1,18 @@
-﻿using System;
+﻿using Menagerie.Core.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Menagerie.Core.Services {
-    public class ClipboardService : Service {
+    public class ClipboardService : IService {
         #region Members
         private string LastText = "";
         #endregion
 
         #region Constructors
         public ClipboardService() {
-            Listen();
         }
         #endregion
 
@@ -40,6 +40,10 @@ namespace Menagerie.Core.Services {
                 return false;
             }
             #endregion#
+        }
+
+        public void Start() {
+            Listen();
         }
     }
 }

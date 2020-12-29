@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Menagerie.Core.Abstractions;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
@@ -8,9 +9,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Menagerie.Core.Services {
-    public class HttpService : Service {
+    public class HttpService {
         #region Props
-        public HttpClient Client { get; private set; }
+        public HttpClient Client { get; private set; } = new HttpClient();
         #endregion
 
         #region Constructors

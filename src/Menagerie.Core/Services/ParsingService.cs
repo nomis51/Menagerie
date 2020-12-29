@@ -9,9 +9,10 @@ using System.Threading.Tasks;
 using Menagerie.Core.Models;
 using Menagerie.Core.Services;
 using Menagerie.Core;
+using Menagerie.Core.Abstractions;
 
 namespace Menagerie.Core {
-    public class ParsingService : Service {
+    public class ParsingService : IService {
         #region Constants
         private const string ITEM_NAME_START_WORD = "to buy your ";
         private const string ITEM_NAME_END_WORD = " listed for ";
@@ -83,8 +84,7 @@ namespace Menagerie.Core {
 
         #region Constructors
         public ParsingService() {
-            DoCleanBuffer();
-            SetupItemParsers();
+           
         }
         #endregion
 
@@ -1206,6 +1206,11 @@ namespace Menagerie.Core {
             item.RawText = data;
 
             return item;
+        }
+
+        public void Start() {
+            DoCleanBuffer();
+            SetupItemParsers();
         }
         #endregion
     }

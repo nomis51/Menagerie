@@ -7,10 +7,11 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Menagerie.Core.Abstractions;
 using Menagerie.Core.Enums;
 
 namespace Menagerie.Core.Services {
-    public class PoeWindowService : Service {
+    public class PoeWindowService : IService {
         #region WinAPI
         [DllImport("user32.dll")]
         public static extern int SetForegroundWindow(int hwnd);
@@ -29,9 +30,9 @@ namespace Menagerie.Core.Services {
         #region Constants
         private static bool DEBUG = true;
         private readonly List<string> PoeProcesses = new List<string>() {
+            "notepad",
             "PathOfExile",
             "PathOfExile_x64",
-            "notepad"
         };
         #endregion
 
@@ -50,7 +51,6 @@ namespace Menagerie.Core.Services {
 
         #region Constructors
         public PoeWindowService() {
-            FindPoeProcess();
         }
         #endregion
 
@@ -68,6 +68,7 @@ namespace Menagerie.Core.Services {
                         this.Process = proc;
 
                         AppService.Instance.PoeWindowReady();
+                        Focus();
 
                         if (DEBUG) {
                             _clientFilePath = @"C:\Path of Exile\logs\Client.txt";
@@ -101,6 +102,10 @@ namespace Menagerie.Core.Services {
 
             ShowWindow(Process.MainWindowHandle, ShowWindowEnum.Restore);
             SetForegroundWindow((int)Process.MainWindowHandle);
+        }
+
+        public void Start() {
+            FindPoeProcess();
         }
         #endregion
     }

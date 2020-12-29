@@ -1,4 +1,5 @@
-﻿using Menagerie.Core.Models;
+﻿using Menagerie.Core.Abstractions;
+using Menagerie.Core.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
@@ -12,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Menagerie.Core.Services {
-    public class PoeApiService : Service {
+    public class PoeApiService : IService {
         #region Constants
         private const int NB_RESULT_PER_QUERY = 10;
         private readonly Uri ALT_POE_API_BASE_URL = new Uri("http://api.pathofexile.com");
@@ -152,6 +153,9 @@ namespace Menagerie.Core.Services {
             };
 
             return body;
+        }
+
+        public void Start() {
         }
     }
 }

@@ -1,18 +1,18 @@
-﻿using System;
+﻿using Menagerie.Core.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using WindowsInput;
 using WindowsInput.Native;
 
 namespace Menagerie.Core.Services {
-    public class KeyboardService : Service {
+    public class KeyboardService : IService {
         #region Members
-        private InputSimulator _input;
+        private InputSimulator _input = new InputSimulator();
         #endregion
 
         #region COnstructors
         public KeyboardService() {
-            _input = new InputSimulator();
         }
         #endregion
 
@@ -57,6 +57,9 @@ namespace Menagerie.Core.Services {
 
         public void SendCtrlV() {
             ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_V);
+        }
+
+        public void Start() {
         }
         #endregion
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Menagerie.Core.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -8,17 +9,14 @@ using WindowsInput;
 using WindowsInput.Native;
 
 namespace Menagerie.Core.Services {
-    public class ChatService : Service {
+    public class ChatService : IService {
         #region Constructors
         public ChatService() {
-            AppService.Instance.OnPoeWindowReady += AppService_OnPoeWindowReady;
         }
         #endregion
 
         #region Handlers
-        private void AppService_OnPoeWindowReady() {
-
-        }
+       
         #endregion
 
         #region Private methods
@@ -63,6 +61,9 @@ namespace Menagerie.Core.Services {
 
         public void SendTradeCommand(string playerName) {
             Send($"/tradewith {playerName}");
+        }
+
+        public void Start() {
         }
         #endregion
     }

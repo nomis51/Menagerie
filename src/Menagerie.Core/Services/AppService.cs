@@ -1,4 +1,5 @@
-﻿using Menagerie.Core.DTOs;
+﻿using Menagerie.Core.Abstractions;
+using Menagerie.Core.DTOs;
 using Menagerie.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -7,9 +8,10 @@ using System.Threading.Tasks;
 using WindowsInput.Native;
 
 namespace Menagerie.Core.Services {
-    public class AppService : Service {
+    public class AppService : IService {
         #region Singleton
-        private static AppService _instance;
+        private static object _lock = new object();
+        private static AppService _instance = new AppService();
         public static AppService Instance {
             get {
                 if (_instance == null) {
@@ -22,18 +24,6 @@ namespace Menagerie.Core.Services {
         #endregion
 
         #region Events
-        public delegate void PoeWindowReadyEvent();
-        public event PoeWindowReadyEvent OnPoeWindowReady;
-
-        public delegate void ClienFileReadyEvent();
-        public event ClienFileReadyEvent OnClienFileReady;
-
-        public delegate void NewClientFileLineEvent(string line);
-        public event NewClientFileLineEvent OnNewClientFileLine;
-
-        public delegate void NewClipboardTextEvent(string text);
-        public event NewClipboardTextEvent OnNewClipboardText;
-
         public delegate void NewOfferEvent(Offer offer);
         public event NewOfferEvent OnNewOffer;
 
@@ -80,16 +70,17 @@ namespace Menagerie.Core.Services {
         }
 
         public void ClientFileReady() {
-            OnClienFileReady();
+            _clientFileService.StartWatching();
         }
 
         public void PoeWindowReady() {
-            OnPoeWindowReady();
+
         }
 
         public void NewClientFileLine(string line) {
-            OnNewClientFileLine(line);
-            _parsingService.ParseClientLine(line);
+            Task.Run(() => {
+                _parsingService.ParseClientLine(line);
+            });
         }
 
         public string GetClientFilePath() {
@@ -97,8 +88,9 @@ namespace Menagerie.Core.Services {
         }
 
         public void NewClipboardText(string text) {
-            OnNewClipboardText(text);
-            _parsingService.ParseClipboardLine(text);
+            Task.Run(() => {
+                _parsingService.ParseClipboardLine(text);
+            });
         }
 
         public string GetCurrencyImageLink(string currencyName) {
@@ -231,6 +223,22 @@ namespace Menagerie.Core.Services {
 
         public void HightlightStash(string text) {
             _gameService.HightlightStash(text);
+        }
+
+        public void Start() {
+            _appDataService.Start();
+            _chatService.Start();
+            _clientFileService.Start();
+            _clipboardService.Start();
+            _configService.Start();
+            _currencyService.Start();
+            _gameService.Start();
+            _keyboardService.Start();
+            _parsingService.Start();
+            _poeApiService.Start();
+            _poeNinjaService.Start();
+            _poeWindowService.Start();
+            _priceCheckingService.Start();
         }
     }
 }

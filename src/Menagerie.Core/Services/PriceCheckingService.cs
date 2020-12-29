@@ -1,4 +1,5 @@
-﻿using Menagerie.Core.Models;
+﻿using Menagerie.Core.Abstractions;
+using Menagerie.Core.Models;
 using Menagerie.Core.Services;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Menagerie.Core.Services {
-    public class PriceCheckingService {
+    public class PriceCheckingService : IService {
         #region Constructors
         public PriceCheckingService() { }
         #endregion
@@ -21,6 +22,9 @@ namespace Menagerie.Core.Services {
             }
 
             return AppService.Instance.GetTradeResults(searchResult, item);
+        }
+
+        public void Start() {
         }
         #endregion
     }

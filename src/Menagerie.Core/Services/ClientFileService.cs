@@ -1,4 +1,5 @@
-﻿using Menagerie.Core.Models;
+﻿using Menagerie.Core.Abstractions;
+using Menagerie.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,25 +8,22 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Menagerie.Core.Services {
-    public class ClientFileService : Service {
+    public class ClientFileService : IService {
         #region Members
         private long EndOfFile = 0;
         #endregion
 
         #region Constructors
         public ClientFileService() {
-            AppService.Instance.OnClienFileReady += AppService_OnClientFileReady;
         }
         #endregion
 
         #region Handlers
-        private void AppService_OnClientFileReady() {
-            StartWatching();
-        }
+
         #endregion
 
         #region Private methods
-        private void StartWatching() {
+        public void StartWatching() {
             SetEndOfFile();
             Watch();
         }
@@ -97,6 +95,10 @@ namespace Menagerie.Core.Services {
             }) {
                 AppService.Instance.NewClientFileLine(line);
             }
+        }
+
+        public void Start() {
+            
         }
         #endregion
 

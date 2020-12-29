@@ -1,4 +1,5 @@
-﻿using Menagerie.Core.Models;
+﻿using Menagerie.Core.Abstractions;
+using Menagerie.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -7,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Menagerie.Core.Services {
-    public class PoeNinjaService : Service {
+    public class PoeNinjaService : IService {
         #region Constants
         private const int CACHE_EXPIRATION_TIME_MINS = 30;
         private readonly Uri POE_NINJA_API_BASE_URL = new Uri("https://poe.ninja");
@@ -53,6 +54,9 @@ namespace Menagerie.Core.Services {
             }
 
             return 0.0d;
+        }
+
+        public void Start() {
         }
         #endregion
     }

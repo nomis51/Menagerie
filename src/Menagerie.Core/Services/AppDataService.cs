@@ -5,9 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Menagerie.Core.Models;
+using Menagerie.Core.Abstractions;
 
 namespace Menagerie.Core.Services {
-    public class AppDataService : Service {
+    public class AppDataService : IService {
         #region Constants
         private const string DATA_FOLDER = @".\Data\";
         private const string STATS = "stats.json";
@@ -65,6 +66,10 @@ namespace Menagerie.Core.Services {
             _baseTypes = baseTypes;
 
             return _baseTypes;
+        }
+
+        public void Start() {
+           
         }
     }
 
