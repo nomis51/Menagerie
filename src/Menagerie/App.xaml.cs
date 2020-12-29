@@ -1,4 +1,5 @@
-﻿using Menagerie.ViewModels;
+﻿using Menagerie.Core.Services;
+using Menagerie.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -13,6 +14,11 @@ namespace Menagerie {
     /// Logique d'interaction pour App.xaml
     /// </summary>
     public partial class App : Application {
+        public App() {
+            InitializeComponent();
+            AppService.Instance.Start();
+        }
+
         private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e) {
             File.WriteAllText(".\\ui-errors.log", e.Exception.Message + Environment.NewLine + e.Exception.InnerException + Environment.NewLine + e.Exception.StackTrace);
 

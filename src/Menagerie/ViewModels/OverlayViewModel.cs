@@ -100,9 +100,12 @@ namespace Menagerie.ViewModels {
         }
 
         public OverlayViewModel() {
+            AppService.Instance.OnNewOffer += AppService_OnNewOffer;
+            AppService.Instance.OnNewChatEvent += AppService_OnNewChatEvent;
+            AppService.Instance.OnNewPlayerJoined += AppService_OnNewPlayerJoined;
+
             // TODO: For testing only
 
-            //ClientFileHandler.Instance.Test();
             //OutgoingOffers.Add(new Offer() {
             //    Id = 99,
             //    ItemName = "Saqawal",
@@ -120,104 +123,110 @@ namespace Menagerie.ViewModels {
             //    IsOutgoing = true
             //});
 
-            var item = AppService.Instance.ParseItem(
-@"Rarity: Unique
-Saqawal's Nest
-Blood Raiment
---------
-Quality: +20% (augmented)
-Evasion Rating: 676 (augmented)
-Energy Shield: 236 (augmented)
---------
-Requirements:
-Level: 65
-Dex: 107
-Int: 90
---------
-Sockets: B G-G G G B 
---------
-Item Level: 72
---------
-5% increased maximum Life (implicit)
---------
-+34 to all Attributes
-+32% to Lightning Resistance
-10% reduced Mana Reserved
-100% increased Aspect of the Avian Buff Effect
-Aspect of the Avian also grants Avian's Might and Avian's Flight to nearby Allies
-+127 to Evasion Rating and Energy Shield
---------
-The First of the Sky was the Last of the First.
-It was he who showed us that our limits are self-imposed,
-that what we take for law may just be an illusion.
---------
-Corrupted
---------
-Note: ~price 1 exalted
-"
-            );
+            //            var item = AppService.Instance.ParseItem(
+            //@"Rarity: Unique
+            //Saqawal's Nest
+            //Blood Raiment
+            //--------
+            //Quality: +20% (augmented)
+            //Evasion Rating: 676 (augmented)
+            //Energy Shield: 236 (augmented)
+            //--------
+            //Requirements:
+            //Level: 65
+            //Dex: 107
+            //Int: 90
+            //--------
+            //Sockets: B G-G G G B 
+            //--------
+            //Item Level: 72
+            //--------
+            //5% increased maximum Life (implicit)
+            //--------
+            //+34 to all Attributes
+            //+32% to Lightning Resistance
+            //10% reduced Mana Reserved
+            //100% increased Aspect of the Avian Buff Effect
+            //Aspect of the Avian also grants Avian's Might and Avian's Flight to nearby Allies
+            //+127 to Evasion Rating and Energy Shield
+            //--------
+            //The First of the Sky was the Last of the First.
+            //It was he who showed us that our limits are self-imposed,
+            //that what we take for law may just be an illusion.
+            //--------
+            //Corrupted
+            //--------
+            //Note: ~price 1 exalted
+            //"
+            //            );
 
-            var result = AppService.Instance.PriceCheck(item).Result;
+            //            var result = AppService.Instance.PriceCheck(item).Result;
 
-            PriceCheck priceCheckWin = new PriceCheck();
-            priceCheckWin.vm.Item = new Item(item);
-            priceCheckWin.vm.PriceCheckResult = result;
-            priceCheckWin.Show();
+            //            PriceCheck priceCheckWin = new PriceCheck();
+            //            priceCheckWin.vm.Item = new Item(item);
+            //            priceCheckWin.vm.PriceCheckResult = result;
+            //            priceCheckWin.Show();
 
         }
 
-        private void Parser_OnNewPlayerJoined(string playerName) {
-            foreach (var offer in Offers) {
-                if (offer.PlayerName == playerName) {
-                    offer.PlayerJoined = true;
+        private void AppService_OnNewPlayerJoined(string playerName) {
+            App.Current.Dispatcher.Invoke(delegate {
+                foreach (var offer in Offers) {
+                    if (offer.PlayerName == playerName) {
+                        offer.PlayerJoined = true;
+                    }
                 }
-            }
+            });
 
             UpdateOffers();
         }
 
-        private void Parser_OnNewChatEvent(ChatEventEnum type) {
-            switch (type) {
-                case ChatEventEnum.TradeAccepted:
-                    var offer = GetActiveOffer();
+        private void AppService_OnNewChatEvent(ChatEventEnum type) {
+            App.Current.Dispatcher.Invoke(delegate {
+                switch (type) {
+                    case ChatEventEnum.TradeAccepted:
+                        var offer = GetActiveOffer();
 
-                    if (offer == null) {
-                        return;
-                    }
-
-                    offer.State = OfferState.Done;
-
-                    if (offer.IsOutgoing) {
-                        SendLeave(offer.Id, true);
-                    } else {
-                        SendKick(offer.Id, true);
-                    }
-                    break;
-
-                case ChatEventEnum.TradeCancelled:
-                    foreach (var o in Offers) {
-                        if (o.TradeRequestSent) {
-                            o.State = OfferState.PlayerInvited;
+                        if (offer == null) {
+                            return;
                         }
-                    }
-                    break;
-            }
+
+                        offer.State = OfferState.Done;
+
+                        if (offer.IsOutgoing) {
+                            SendLeave(offer.Id, true);
+                        } else {
+                            SendKick(offer.Id, true);
+                        }
+                        break;
+
+                    case ChatEventEnum.TradeCancelled:
+                        foreach (var o in Offers) {
+                            if (o.TradeRequestSent) {
+                                o.State = OfferState.PlayerInvited;
+                            }
+                        }
+                        break;
+                }
+            });
         }
 
-        private void Parser_OnNewOffer(Core.Models.Offer offer) {
+        private void AppService_OnNewOffer(Core.Models.Offer offer) {
             var config = Config;
 
             if (config.OnlyShowOffersOfCurrentLeague && config.CurrentLeague != offer.League) {
                 return;
             }
 
-            if (!offer.IsOutgoing) {
-                Offers.Add(new Offer(offer));
-                IsOffersFilterVisible = Visibility.Visible;
-            } else {
-                OutgoingOffers.Insert(0, new Offer(offer));
-                IsOutgoingOffersFilterVisible = Visibility.Visible;
-            }
+            App.Current.Dispatcher.Invoke(delegate {
+                if (!offer.IsOutgoing) {
+                    Offers.Add(new Offer(offer));
+                    IsOffersFilterVisible = Visibility.Visible;
+                } else {
+                    OutgoingOffers.Insert(0, new Offer(offer));
+                    IsOutgoingOffersFilterVisible = Visibility.Visible;
+                }
+            });
         }
 
         public List<string> GetLeagues() {
@@ -292,7 +301,7 @@ Note: ~price 1 exalted
                 OutgoingOffers[index].State = OfferState.TradeRequestSent;
                 UpdateOffers();
 
-              AppService.Instance.SendTradeChatCommand(OutgoingOffers[index].PlayerName);
+                AppService.Instance.SendTradeChatCommand(OutgoingOffers[index].PlayerName);
             } else {
                 if (!Offers[index].PlayerInvited) {
                     return;

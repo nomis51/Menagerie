@@ -135,7 +135,6 @@
     <Compile Include="Models\Config.cs" />
     <Compile Include="Models\Offer.cs" />
     <Compile Include="ViewModels\OverlayViewModel.cs" />
-    <Compile Include="ViewModels\OfferViewModel.cs" />
     <Compile Include="Views\Overlay.xaml.cs">
       <DependentUpon>Overlay.xaml</DependentUpon>
       <SubType>Code</SubType>
