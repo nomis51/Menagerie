@@ -27,6 +27,58 @@ namespace Menagerie.Core {
             return CurrencyToImageLink[NormalizeCurrency(currencyName)];
         }
 
+        public static string GetRealName(string text) {
+            switch (text) {
+                case "chaos":
+                    return "Chaos Orb";
+
+                case "alt":
+                    return "Orb of Alteration";
+
+                case "alc":
+                    return "Orb of Alchemy";
+
+                case "gcp":
+                    return "Gemcutter's Prism";
+
+                case "exalted":
+                    return "Exalted Orb";
+
+                case "chrome":
+                    return "Chromatic Orb";
+
+                case "jewellers":
+                    return "Jeweller's Orb";
+
+                case "chance":
+                    return "Orb of Chance";
+
+                case "chisel":
+                    return "Cartographer's Chisel";
+
+                case "vaal":
+                    return "Vaal Orb";
+
+                case "blessed":
+                    return "Blessed Orb";
+
+                case "p":
+                    return "Perandus Coin";
+
+                case "mirror":
+                    return "Mirror of Kalandra";
+
+                case "transmute":
+                    return "Orb of Transmutation";
+
+                case "silver":
+                    return "Silver Coin";
+
+                default:
+                    return text;
+            }
+        }
+
         public static string NormalizeCurrency(string text) {
             switch (text) {
                 case "Chaos Orb":

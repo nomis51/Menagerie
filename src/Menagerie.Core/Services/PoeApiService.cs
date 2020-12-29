@@ -167,8 +167,10 @@ namespace Menagerie.Core.Services {
             }
 
             foreach (var result in priceCheck.Results) {
-                if (CurrencyCache.Map.ContainsKey(result.Currency)) {
-                    result.ChaosValue = CurrencyCache.Map[result.Currency].Receive.Value;
+                var currency = CurrencyHandler.GetRealName(result.Currency);
+
+                if (CurrencyCache.Map.ContainsKey(currency)) {
+                    result.ChaosValue = CurrencyCache.Map[currency].Receive.Value * result.Price;
                 }
             }
 
