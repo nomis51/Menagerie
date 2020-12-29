@@ -239,7 +239,7 @@ Note: ~price 1 exalted
         private void EnsureNotHighlighted(int index) {
             if (Offers[index].IsHighlighted) {
                 Offers[index].IsHighlighted = false;
-                GameService.Instance.Input.Keyboard.KeyPress(WindowsInput.Native.VirtualKeyCode.ESCAPE);
+                AppService.Instance.SendEscape();
             }
         }
 
@@ -292,7 +292,7 @@ Note: ~price 1 exalted
                 OutgoingOffers[index].State = OfferState.TradeRequestSent;
                 UpdateOffers();
 
-                ChatService.Instance.SendTradeCommand(OutgoingOffers[index].PlayerName);
+              AppService.Instance.SendTradeChatCommand(OutgoingOffers[index].PlayerName);
             } else {
                 if (!Offers[index].PlayerInvited) {
                     return;
@@ -303,7 +303,7 @@ Note: ~price 1 exalted
 
                 EnsureNotHighlighted(index);
 
-                ChatService.Instance.SendTradeCommand(Offers[index].PlayerName);
+                AppService.Instance.SendTradeChatCommand(Offers[index].PlayerName);
             }
         }
 
@@ -317,7 +317,7 @@ Note: ~price 1 exalted
             OutgoingOffers[index].State = OfferState.HideoutJoined;
             UpdateOffers();
 
-            ChatService.Instance.SendHideoutCommand(OutgoingOffers[index].PlayerName);
+            AppService.Instance.SendHideoutChatCommand(OutgoingOffers[index].PlayerName);
         }
 
         public void SendBusyWhisper(int id) {
@@ -331,7 +331,7 @@ Note: ~price 1 exalted
                 return;
             }
 
-            ChatService.Instance.SendChatMessage($"@{Offers[index].PlayerName} I'm busy right now, I'll whisper you for the \"{Offers[index].ItemName}\" when I'm ready");
+            AppService.Instance.SendChatMessage($"@{Offers[index].PlayerName} I'm busy right now, I'll whisper you for the \"{Offers[index].ItemName}\" when I'm ready");
         }
 
         public void SendReInvite(int id) {
@@ -348,9 +348,9 @@ Note: ~price 1 exalted
             Thread t = new Thread(delegate () {
                 EnsureNotHighlighted(index);
 
-                ChatService.Instance.SendKickCommand(Offers[index].PlayerName);
+                AppService.Instance.SendKickChatCommand(Offers[index].PlayerName);
                 Thread.Sleep(100);
-                ChatService.Instance.SendInviteCommand(Offers[index].PlayerName);
+                AppService.Instance.SendInviteChatCommand(Offers[index].PlayerName);
             });
 
             t.SetApartmentState(ApartmentState.STA);
@@ -373,7 +373,7 @@ Note: ~price 1 exalted
 
             EnsureNotHighlighted(index);
 
-            ChatService.Instance.SendInviteCommand(Offers[index].PlayerName);
+            AppService.Instance.SendInviteChatCommand(Offers[index].PlayerName);
         }
 
         public void SendKick(int id, bool sayThanks = false) {
@@ -393,11 +393,11 @@ Note: ~price 1 exalted
             string playerName = Offers[index].PlayerName;
 
             Thread t = new Thread(delegate () {
-                ChatService.Instance.SendKickCommand(playerName);
+                AppService.Instance.SendKickChatCommand(playerName);
 
                 if (sayThanks) {
                     Thread.Sleep(250);
-                    ChatService.Instance.SendChatMessage($"@{playerName} Thank you and have fun!");
+                    AppService.Instance.SendChatMessage($"@{playerName} Thank you and have fun!");
                 }
             });
             t.SetApartmentState(ApartmentState.STA);
@@ -423,7 +423,7 @@ Note: ~price 1 exalted
 
                 if (sayThanks) {
                     Thread.Sleep(100);
-                    ChatService.Instance.SendChatMessage($"@{playerName} Thank you and have fun!");
+                    AppService.Instance.SendChatMessage($"@{playerName} Thank you and have fun!");
                 }
             });
             t.SetApartmentState(ApartmentState.STA);
@@ -444,7 +444,7 @@ Note: ~price 1 exalted
                 Dispatcher.CurrentDispatcher.Invoke(() => {
                     (isOutgoing ? OutgoingOffers : Offers).RemoveAt(index);
                     UpdateOffers();
-                    PoeWindowService.Instance.Focus();
+                    AppService.Instance.FocusGame();
                 });
             }
         }
@@ -460,7 +460,7 @@ Note: ~price 1 exalted
 
             EnsureNotHighlighted(index);
 
-            ChatService.Instance.SendChatMessage($"@{Offers[index].PlayerName} Are you still interested in my \"{Offers[index].ItemName}\" listed for {Offers[index].Price} {Offers[index].Currency}?");
+            AppService.Instance.SendChatMessage($"@{Offers[index].PlayerName} Are you still interested in my \"{Offers[index].ItemName}\" listed for {Offers[index].Price} {Offers[index].Currency}?");
         }
 
         public void SendSoldWhisper(int id) {
@@ -475,18 +475,18 @@ Note: ~price 1 exalted
 
             EnsureNotHighlighted(index);
 
-            ChatService.Instance.SendChatMessage($"@{Offers[index].PlayerName} I'm sorry, my \"{Offers[index].ItemName}\" has already been sold");
+            AppService.Instance.SendChatMessage($"@{Offers[index].PlayerName} I'm sorry, my \"{Offers[index].ItemName}\" has already been sold");
 
             RemoveOffer(id);
         }
 
         public void ClearOffers() {
-            PoeWindowService.Instance.Focus();
+            AppService.Instance.FocusGame();
             Offers.Clear();
         }
 
         public void ClearOutgoingOffers() {
-            PoeWindowService.Instance.Focus();
+            AppService.Instance.FocusGame();
             OutgoingOffers.Clear();
         }
 
@@ -499,7 +499,7 @@ Note: ~price 1 exalted
 
             Offers[index].IsHighlighted = true;
 
-            GameService.Instance.HightlightStash(Offers[index].ItemName);
+            AppService.Instance.HightlightStash(Offers[index].ItemName);
         }
 
         public void ResetFilter(bool applyToOutgoing = true) {
@@ -559,7 +559,7 @@ Note: ~price 1 exalted
         public void SetCurrentLeague(string league) {
             var config = Config;
             config.CurrentLeague = league;
-            ConfigService.Instance.SetConfig(new ConfigDto() {
+            AppService.Instance.SetConfig(new ConfigDto() {
                 Id = config.Id,
                 CurrentLeague = config.CurrentLeague,
                 OnlyShowOffersOfCurrentLeague = config.OnlyShowOffersOfCurrentLeague,

@@ -129,6 +129,10 @@ namespace Menagerie.Core.Services {
             return _configService.GetConfig();
         }
 
+        public void SetConfig(ConfigDto config) {
+            _configService.SetConfig(config);
+        }
+
         public double GetChaosValueOfCurrency(string currency) {
             return _poeNinjaService.GetChaosValue(currency);
         }
@@ -197,8 +201,36 @@ namespace Menagerie.Core.Services {
             ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_V);
         }
 
+        public void SendEscape() {
+            _keyboardService.SendEscape();
+        }
+
         public bool SetClipboard(string text) {
             return _clipboardService.SetClipboard(text);
+        }
+
+        public void SendTradeChatCommand(string player) {
+            _chatService.SendTradeCommand(player);
+        }
+
+        public void SendHideoutChatCommand(string player) {
+            _chatService.SendHideoutCommand(player);
+        }
+
+        public void SendChatMessage(string msg) {
+            _chatService.SendChatMessage(msg);
+        }
+
+        public void SendKickChatCommand(string player) {
+            _chatService.SendKickCommand(player);
+        }
+
+        public void SendInviteChatCommand(string player) {
+            _chatService.SendInviteCommand(player);
+        }
+
+        public void HightlightStash(string text) {
+            _gameService.HightlightStash(text);
         }
     }
 }

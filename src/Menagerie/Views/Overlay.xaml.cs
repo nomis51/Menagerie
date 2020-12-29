@@ -22,8 +22,6 @@ namespace Menagerie {
     /// Logique d'interaction pour MainWindow.xaml
     /// </summary>
     public partial class Overlay : Window {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
         private OverlayViewModel vm;
         private Forms.NotifyIcon trayIcon = null;
 

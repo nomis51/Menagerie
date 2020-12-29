@@ -51,6 +51,10 @@ namespace Menagerie.Core.Services {
             _input.Keyboard.KeyPress(VirtualKeyCode.BACK);
         }
 
+        public void SendEscape() {
+            _input.Keyboard.KeyPress(VirtualKeyCode.ESCAPE);
+        }
+
         public void SendCtrlV() {
             ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_V);
         }
