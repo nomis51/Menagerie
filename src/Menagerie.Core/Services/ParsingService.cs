@@ -80,11 +80,12 @@ namespace Menagerie.Core {
         private List<DateTime> LastOffersTimes = new List<DateTime>();
         private static int Id = 0;
         private HashSet<string> BaseTypes = null;
+        private Dictionary<string, BaseType> BaseTypesMap = new Dictionary<string, BaseType>();
         #endregion
 
         #region Constructors
         public ParsingService() {
-           
+
         }
         #endregion
 
@@ -433,6 +434,7 @@ namespace Menagerie.Core {
                 var baseTypes = AppService.Instance.GetBaseTypes();
 
                 foreach (var tuple in baseTypes) {
+                    BaseTypesMap.Add(tuple.Item1, tuple.Item2);
                     BaseTypes.Add(tuple.Item1);
 
                     if (tuple.Item2.Category == ItemCategory.Map) {
@@ -479,6 +481,8 @@ namespace Menagerie.Core {
                 if (!string.IsNullOrEmpty(baseType)) {
                     item.Name = baseType;
                 }
+            } else {
+                MagicBaseType("");
             }
 
             if (item.Category == ItemCategory.MetamorphSample) {
@@ -1127,6 +1131,23 @@ namespace Menagerie.Core {
 
             //}
         }
+
+        private void SetItemType(Item item) {
+            string prefix = "";
+            string suffix = "";
+
+            switch (item.Rarity) {
+                case ItemRarity.Unique:
+                    prefix = "Unique";
+                    break;
+            }
+
+            if (BaseTypesMap.ContainsKey(item.Type)) {
+                suffix = Item.ItemCategoryToType(BaseTypesMap[item.Type].Category);
+            }
+
+            item.ItemType = $"{prefix}{suffix}";
+        }
         #endregion
 
         #region Public methods
@@ -1204,6 +1225,8 @@ namespace Menagerie.Core {
             }
 
             item.RawText = data;
+
+            SetItemType(item);
 
             return item;
         }

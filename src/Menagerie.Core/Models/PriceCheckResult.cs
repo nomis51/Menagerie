@@ -8,6 +8,17 @@ namespace Menagerie.Core.Models {
     public class PriceCheckResult {
         public Item Item { get; set; }
         public List<PricingResult> Results { get; set; }
+        public double PoeNinjaChaosValue { get; set; }
+        public string PoeNinjaChaosValueText {
+            get {
+                return $"{PoeNinjaChaosValue}x";
+            }
+        }
+        public string ChaosImageLink {
+            get {
+                return AppService.Instance.GetCurrencyImageLink("chaos");
+            }
+        }
         public PricingResult LowestPricing {
             get {
                 return Results.OrderBy(r => r.ChaosValue).First();

@@ -18,13 +18,145 @@ namespace Menagerie.Core.Models {
         public ItemExtra Extra { get; set; } = new ItemExtra();
         public ItemProps Props { get; set; } = new ItemProps();
         public int Quality { get; set; } = 0;
-        public ItemStackSize StackSize { get; set; } 
+        public ItemStackSize StackSize { get; set; }
         public ItemCategory Category { get; set; } = ItemCategory.None;
         public ItemSockets Sockets { get; set; } = new ItemSockets();
         public ItemHeistJob HeistJob { get; set; } = null;
         public string Icon { get; set; }
+        public string ItemType { get; set; }
 
         public Item() { }
+
+        public static string ItemCategoryToType(ItemCategory category) {
+            switch (category) {
+                case ItemCategory.Map:
+                    return "Map";
+
+                case ItemCategory.Prophecy:
+                    return "Prophecy";
+
+                case ItemCategory.CapturedBeast:
+                    return "Beast";
+
+                case ItemCategory.MetamorphSample:
+                    return "MetamorphSample";
+
+                case ItemCategory.Seed:
+                    return "Seed";
+
+                case ItemCategory.Helmet:
+                    return "Armour";
+
+                case ItemCategory.BodyArmour:
+                    return "Armour";
+
+                case ItemCategory.Gloves:
+                    return "Armour";
+
+                case ItemCategory.Boots:
+                    return "Armour";
+
+                case ItemCategory.Shield:
+                    return "Armour";
+
+                case ItemCategory.Amulet:
+                    return "Accessories";
+
+                case ItemCategory.Belt:
+                    return "Accessories";
+
+                case ItemCategory.Ring:
+                    return "Accessories";
+
+                case ItemCategory.Flask:
+                    return "Flask";
+
+                case ItemCategory.AbyssJewel:
+                    return "Jewel";
+
+                case ItemCategory.Jewel:
+                    return "Jewel";
+
+                case ItemCategory.Quiver:
+                    return "Weapon";
+
+                case ItemCategory.Claw:
+                    return "Weapon";
+
+                case ItemCategory.Bow:
+                    return "Weapon";
+
+                case ItemCategory.Sceptre:
+                    return "Weapon";
+
+                case ItemCategory.Wand:
+                    return "Weapon";
+
+                case ItemCategory.FishingRod:
+                    return "Weapon";
+
+                case ItemCategory.Staff:
+                    return "Weapon";
+
+                case ItemCategory.Warstaff:
+                    return "Weapon";
+
+                case ItemCategory.Dagger:
+                    return "Weapon";
+
+                case ItemCategory.RuneDagger:
+                    return "Weapon";
+
+                case ItemCategory.OneHandedAxe:
+                    return "Weapon";
+
+                case ItemCategory.TwoHandedAxe:
+                    return "Weapon";
+
+                case ItemCategory.OneHandedMace:
+                    return "Weapon";
+
+                case ItemCategory.TwoHandedMace:
+                    return "Weapon";
+
+                case ItemCategory.OneHandedSword:
+                    return "Weapon";
+
+                case ItemCategory.TwoHandedSword:
+                    return "Weapon";
+
+                case ItemCategory.ClusterJewel:
+                    return "Jewel";
+
+                case ItemCategory.Watchstone:
+                    return "Watchstone";
+
+                case ItemCategory.HeistBlueprint:
+                    return "Heist Blueprint";
+
+                case ItemCategory.HeistContract:
+                    return "Heist Contract";
+
+                case ItemCategory.HeistTool:
+                    return "Heist Tool";
+
+                case ItemCategory.HeistBrooch:
+                    return "Heist Brooch";
+
+                case ItemCategory.HeistGear:
+                    return "Heist Gear";
+
+                case ItemCategory.HeistCloak:
+                    return "Heist Cloak";
+
+                case ItemCategory.Trinket:
+                    return "Trinket";
+
+                case ItemCategory.None:
+                default:
+                    return "";
+            }
+        }
 
         public static ItemCategory ToItemCategory(string text) {
             switch (text) {

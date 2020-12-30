@@ -88,7 +88,18 @@ namespace Menagerie.Core.Services {
 
             if (!string.IsNullOrEmpty(data) && data.IndexOf("Rarity") != -1) {
                 Item item = _parsingService.ParseItem(data);
-                PriceCheckResult priceCheck = _priceCheckingService.PriceCheck(item).Result;
+
+                PriceCheckResult priceCheck = null;
+                double poeNinjaChaosValue = 0.0d;
+                Task[] tasks = new Task[2];
+
+                tasks[0] = Task.Run(() => priceCheck = _priceCheckingService.PriceCheck(item).Result);
+                tasks[1] = Task.Run(() => poeNinjaChaosValue = _poeNinjaService.GetItemChaosValue(item.Name, item.ItemType));
+
+                Task.WaitAll(tasks);
+
+                priceCheck.PoeNinjaChaosValue = poeNinjaChaosValue;
+
                 OnPriceCheckResult(priceCheck);
             }
         }

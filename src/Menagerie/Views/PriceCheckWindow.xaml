@@ -62,8 +62,8 @@
 
         <DockPanel Grid.Column="2" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center" ToolTip="This the poe.ninja price of the item">
             <Image Margin="5" Width="25" Source="https://poe.ninja/images/ninja-logo.png" VerticalAlignment="Center" HorizontalAlignment="Right"></Image>
-            <TextBlock Text="5x" FontSize="18" Foreground="#a0aec0" HorizontalAlignment="Right" VerticalAlignment="Center"></TextBlock>
-            <Image Margin="2" Source="{Binding PriceCheckResult.HighestPricing.CurrencyImageLink}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="25" Width="25" Stretch="Uniform"></Image>
+            <TextBlock Text="{Binding PriceCheckResult.PoeNinjaChaosValueText}" FontSize="18" Foreground="#a0aec0" HorizontalAlignment="Right" VerticalAlignment="Center"></TextBlock>
+            <Image Margin="2" Source="{Binding PriceCheckResult.ChaosImageLink}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="25" Width="25" Stretch="Uniform"></Image>
         </DockPanel>
 
         <DockPanel  Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Margin="0">
