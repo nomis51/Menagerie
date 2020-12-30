@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Menagerie.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
