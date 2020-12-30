@@ -47,6 +47,10 @@ namespace Menagerie.Core.Services {
             Send(message);
         }
 
+        public void SendHideoutCommand() {
+            Send("/hideout");
+        }
+
         public void SendHideoutCommand(string playerName) {
             Send($"/hideout {playerName}");
         }

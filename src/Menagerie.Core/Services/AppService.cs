@@ -61,7 +61,18 @@ namespace Menagerie.Core.Services {
         }
 
         private void SetShortcuts() {
-           
+            _shortcutService.RegisterShortcut(new Shortcut() {
+                Direction = KeyDirection.Down,
+                Key = VirtualKeyCode.F5,
+                Alt = false,
+                Control = false,
+                Shift = false,
+                Action = Shortcut_GoToHideout
+            });
+        }
+
+        private void Shortcut_GoToHideout() {
+            SendHideoutChatCommand();
         }
 
         public void FocusGame() {
@@ -175,6 +186,10 @@ namespace Menagerie.Core.Services {
 
         public void SendHideoutChatCommand(string player) {
             _chatService.SendHideoutCommand(player);
+        }
+
+        public void SendHideoutChatCommand() {
+            _chatService.SendHideoutCommand();
         }
 
         public void SendChatMessage(string msg) {
