@@ -34,14 +34,21 @@ namespace Menagerie.Core.Services {
 
         #region Public methods
         public bool SetClipboard(string value) {
-            try {
-                Clipboard.SetDataObject(value, true, 10, 100);
-                return true;
-            } catch (Exception e) {
-                return false;
-            }
-            #endregion#
+            bool result = false;
+
+            Thread t = new Thread(() => {
+                try {
+                    Clipboard.SetDataObject(value, true, 10, 100);
+                    result = true;
+                } catch (Exception e) { }
+            });
+            t.SetApartmentState(ApartmentState.STA);
+            t.Start();
+            t.Join();
+
+            return result;
         }
+        #endregion
 
         public string GetClipboard() {
             string text = "";
