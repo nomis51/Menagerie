@@ -49,15 +49,19 @@
 
             <fa5:ImageAwesome Width="15" Height="15"  Icon="Solid_LessThanEqual" Foreground="#a0aec0" HorizontalAlignment="Center" VerticalAlignment="center" Margin="5"/>
 
-            <TextBlock ToolTip="This is the highest price of the current listing. Use this price if you want the most currency out of your item" Text="{Binding HighestPriceText}" FontSize="18" Foreground="#a0aec0" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
-            <Image Margin="2" Source="{Binding PriceCheckResult.HighestPricing.CurrencyImageLink}" Height="25" Width="25" Stretch="Uniform"></Image>
+            <DockPanel ToolTip="This is the highest price of the current listing. Use this price if you want the most currency out of your item">
+                <TextBlock Text="{Binding HighestPriceText}" FontSize="18" Foreground="#a0aec0" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                <Image Margin="2" Source="{Binding PriceCheckResult.HighestPricing.CurrencyImageLink}" Height="25" Width="25" Stretch="Uniform"></Image>
+            </DockPanel>
 
             <TextBlock Margin="5" Text=")" FontSize="18" Foreground="#a0aec0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"></TextBlock>
 
             <TextBlock Margin="0,0,5,10" Text="~" FontSize="38" VerticalAlignment="Center" HorizontalAlignment="Center"  Foreground="#a0aec0"></TextBlock>
 
-            <TextBlock ToolTip="This is the mode. It's the 'most popular' price -10% of the current listing. Use this price if you want to sell fast, but still get a good amount of currency out of your item" Text="{Binding ModePriceText}" FontSize="18" Foreground="#a0aec0" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+            <DockPanel ToolTip="This is the mode. It's the 'most popular' price -10% of the current listing. Use this price if you want to sell fast, but still get a good amount of currency out of your item">
+            <TextBlock  Text="{Binding ModePriceText}" FontSize="18" Foreground="#a0aec0" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
             <Image Margin="2" Source="{Binding PriceCheckResult.HighestPricing.CurrencyImageLink}" Height="25" Width="25" Stretch="Uniform"></Image>
+            </DockPanel>
         </DockPanel>
 
         <DockPanel Grid.Column="2" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center" ToolTip="This the poe.ninja price of the item">

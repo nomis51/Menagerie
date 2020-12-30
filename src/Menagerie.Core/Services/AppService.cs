@@ -1,5 +1,4 @@
 ﻿using Menagerie.Core.Abstractions;
-using Menagerie.Core.DTOs;
 using Menagerie.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -42,7 +41,6 @@ namespace Menagerie.Core.Services {
         private ChatService _chatService;
         private ClientFileService _clientFileService;
         private ClipboardService _clipboardService;
-        private ConfigService _configService;
         private CurrencyService _currencyService;
         private GameService _gameService;
         private ParsingService _parsingService;
@@ -58,7 +56,6 @@ namespace Menagerie.Core.Services {
             _chatService = new ChatService();
             _clientFileService = new ClientFileService();
             _clipboardService = new ClipboardService();
-            _configService = new ConfigService();
             _currencyService = new CurrencyService();
             _gameService = new GameService();
             _parsingService = new ParsingService();
@@ -73,7 +70,7 @@ namespace Menagerie.Core.Services {
 
         private void SetShortcuts() {
             _shortcutService.RegisterShortcut(new Shortcut() {
-                Direction = KeyDirection.Any,
+                Direction = KeyDirection.Down,
                 Alt = false,
                 Control = true,
                 Shift = false,
@@ -161,12 +158,12 @@ namespace Menagerie.Core.Services {
             OnNewChatEvent(evt);
         }
 
-        public ConfigDto GetConfig() {
-            return _configService.GetConfig();
+        public Config GetConfig() {
+            return _appDataService.GetDocument<Config>(AppDataService.COLLECTION_CONFIG);
         }
 
-        public void SetConfig(ConfigDto config) {
-            _configService.SetConfig(config);
+        public void SetConfig(Config config) {
+            _appDataService.UpdateDocument<Config>(AppDataService.COLLECTION_CONFIG, config);
         }
 
         public double GetChaosValueOfCurrency(string currency) {
@@ -269,12 +266,20 @@ namespace Menagerie.Core.Services {
             _gameService.HightlightStash(text);
         }
 
+        public void SavePoeNinjaCaches(PoeNinjaCaches caches) {
+            _appDataService.DeleteAllDocument(AppDataService.COLLECTION_POE_NINJA_CACHES);
+            _appDataService.InsertDocument<PoeNinjaCaches>(AppDataService.COLLECTION_POE_NINJA_CACHES, caches);
+        }
+
+        public PoeNinjaCaches GetPoeNinjaCaches() {
+            return _appDataService.GetDocument<PoeNinjaCaches>(AppDataService.COLLECTION_POE_NINJA_CACHES);
+        }
+
         public void Start() {
             _appDataService.Start();
             _chatService.Start();
             _clientFileService.Start();
             _clipboardService.Start();
-            _configService.Start();
             _currencyService.Start();
             _gameService.Start();
             _keyboardService.Start();

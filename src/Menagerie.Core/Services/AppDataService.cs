@@ -7,6 +7,8 @@ using System.Text;
 using Menagerie.Core.Models;
 using Menagerie.Core.Abstractions;
 using System.Threading.Tasks;
+using LiteDB;
+using System.Linq.Expressions;
 
 namespace Menagerie.Core.Services {
     public class AppDataService : IService {
@@ -14,12 +16,63 @@ namespace Menagerie.Core.Services {
         private const string DATA_FOLDER = @".\Data\";
         private const string STATS = "stats.json";
         private const string BASE_TYPES = "base-types.json";
+        private const string DB_FILE_PATH = "Menagerie.db";
+
+        public static readonly string COLLECTION_CONFIG = "config";
+        public static readonly string COLLECTION_POE_NINJA_CACHES = "poeNinjaCaches";
         #endregion
 
+        #region Members
         private Dictionary<string, MatchStr> _statByMatchStr;
         private List<Tuple<string, BaseType>> _baseTypes;
+        private readonly LiteDatabase _db;
+        #endregion
 
-        public AppDataService() { }
+        #region Constructors
+        public AppDataService() {
+            _db = new LiteDatabase(DB_FILE_PATH);
+        }
+        #endregion
+
+        private void EnsureDefaultData() {
+            if (GetDocument<Config>(COLLECTION_CONFIG) == null) {
+                InsertDocument<Config>(COLLECTION_CONFIG, new Config() {
+                    PlayerName = "",
+                    CurrentLeague = "Standard",
+                    OnlyShowOffersOfCurrentLeague = false
+                });
+            }
+        }
+
+        public List<T> GetDocuments<T>(string collectionName, Expression<Func<T, bool>> predicate = null) {
+            return predicate == null ?
+                _db.GetCollection<T>(collectionName)
+                .FindAll()
+                .ToList() :
+                _db.GetCollection<T>(collectionName)
+                .Find(predicate)
+                .ToList();
+        }
+
+        public T GetDocument<T>(string collectionName, Expression<Func<T, bool>> predicate = null) {
+            var docs = GetDocuments<T>(collectionName, predicate);
+            return docs.FirstOrDefault();
+        }
+
+        public int InsertDocument<T>(string collectionName, T doc) {
+            return _db.GetCollection<T>(collectionName)
+                .Insert(doc);
+        }
+
+        public bool UpdateDocument<T>(string collectionName, T doc) {
+            return _db.GetCollection<T>(collectionName)
+                .Update(doc);
+        }
+
+        public void DeleteAllDocument(string collectionName) {
+            _db.GetCollection(collectionName)
+                .DeleteAll();
+        }
 
         public Dictionary<string, MatchStr> GetStatByMatchStr() {
             if (_statByMatchStr != null && _statByMatchStr.Count > 0) {
@@ -70,6 +123,7 @@ namespace Menagerie.Core.Services {
         }
 
         public void Start() {
+            EnsureDefaultData();
             Task.Run(() => _ = GetStatByMatchStr());
             Task.Run(() => _ = GetBaseTypes());
         }

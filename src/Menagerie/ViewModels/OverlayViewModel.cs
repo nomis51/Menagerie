@@ -13,7 +13,6 @@ using System.Windows.Threading;
 using System.Windows.Controls;
 using System.Windows;
 using Menagerie.Core.Services;
-using Menagerie.Core.DTOs;
 using Menagerie.Views;
 using Menagerie.Core.Enums;
 
@@ -178,6 +177,11 @@ namespace Menagerie.ViewModels {
 
         private void ShowPriceCheckWindow(Core.Models.PriceCheckResult priceCheckResult) {
             App.Current.Dispatcher.Invoke(delegate {
+                if (PriceCheckWin != null && PriceCheckWin.Visibility == Visibility.Visible) {
+                    PriceCheckWin.Close();
+                    PriceCheckWin = null;
+                }
+
                 PriceCheckWin = new PriceCheckWindow();
                 PriceCheckWin.vm.SetPriceCheckResult(priceCheckResult);
                 PriceCheckWin.Show();
@@ -583,7 +587,7 @@ namespace Menagerie.ViewModels {
         public void SetCurrentLeague(string league) {
             var config = Config;
             config.CurrentLeague = league;
-            AppService.Instance.SetConfig(new ConfigDto() {
+            AppService.Instance.SetConfig(new Core.Models.Config() {
                 Id = config.Id,
                 CurrentLeague = config.CurrentLeague,
                 OnlyShowOffersOfCurrentLeague = config.OnlyShowOffersOfCurrentLeague,

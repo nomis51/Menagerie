@@ -154,23 +154,11 @@ namespace Menagerie.Core.Services {
         }
 
         private void SaveCache() {
-            lock (ConfigService.LockWrite) {
-                using (var db = new LiteDatabase(ConfigService.DbFilePath)) {
-                    var collection = db.GetCollection<PoeNinjaCaches>("poeNinjaCaches");
-
-                    collection.DeleteAll();
-                    collection.Insert(Cache);
-                }
-            }
+            AppService.Instance.SavePoeNinjaCaches(Cache);
         }
 
         private void LoadCache() {
-            lock (ConfigService.LockRead) {
-                using (var db = new LiteDatabase(ConfigService.DbFilePath)) {
-                    var collection = db.GetCollection<PoeNinjaCaches>("poeNinjaCaches");
-                    OldCache = collection.FindOne(e => true);
-                }
-            }
+            OldCache = AppService.Instance.GetPoeNinjaCaches();
         }
         #endregion
 
