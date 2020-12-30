@@ -32,7 +32,7 @@ namespace Menagerie.Core.Models {
                     sum += r.ChaosValue;
                 }
 
-                double avgPrice = sum / (double)Results.Count;
+                double avgPrice = Math.Round(sum / (double)Results.Count, 1);
 
                 return new PricingResult() {
                     ChaosValue = avgPrice,

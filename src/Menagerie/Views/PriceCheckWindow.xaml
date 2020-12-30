@@ -25,12 +25,12 @@
         </Grid.ColumnDefinitions>
 
         <DockPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" Background="#1e1e1e">
-            <TextBlock Text="{Binding PriceCheckResult.Item.Name}" HorizontalAlignment="Left" Foreground="#a0aec0" Padding="5" FontWeight="Bold"></TextBlock>
+            <TextBlock Text="{Binding Item.Name}" HorizontalAlignment="Left" Foreground="#a0aec0" Padding="5" FontWeight="Bold"></TextBlock>
             <TextBlock Visibility="{Binding CorruptedVisible}" Text="Corrupted" HorizontalAlignment="Right" Foreground="IndianRed" Padding="5" FontWeight="Bold"></TextBlock>
         </DockPanel>
 
         <DockPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <Image Source="{Binding PriceCheckResult.Item.Icon}" Height="60" Stretch="Uniform"></Image>
+            <Image Source="{Binding ItemIcon}" Height="60" Stretch="Uniform"></Image>
             <fa5:ImageAwesome Width="15" Height="15"  Icon="Solid_ArrowRight" Foreground="#a0aec0" HorizontalAlignment="Center" VerticalAlignment="center" Margin="5"/>
 
             <TextBlock Margin="5" Text="(" FontSize="18" Foreground="#a0aec0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"></TextBlock>
@@ -66,8 +66,8 @@
 
         <DockPanel Grid.Column="2" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center" ToolTip="This the poe.ninja price of the item">
             <Image Margin="5" Width="25" Source="https://poe.ninja/images/ninja-logo.png" VerticalAlignment="Center" HorizontalAlignment="Right"></Image>
-            <TextBlock Text="{Binding PriceCheckResult.PoeNinjaChaosValueText}" FontSize="18" Foreground="#a0aec0" HorizontalAlignment="Right" VerticalAlignment="Center"></TextBlock>
-            <Image Margin="2" Source="{Binding PriceCheckResult.ChaosImageLink}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="25" Width="25" Stretch="Uniform"></Image>
+            <TextBlock Text="{Binding PoeNinjaChaosValueText}" FontSize="18" Foreground="#a0aec0" HorizontalAlignment="Right" VerticalAlignment="Center"></TextBlock>
+            <Image Margin="2" Source="{Binding ChaosImageLink}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="25" Width="25" Stretch="Uniform"></Image>
         </DockPanel>
 
         <DockPanel  Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Margin="0">

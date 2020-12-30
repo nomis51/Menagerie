@@ -21,7 +21,7 @@ namespace Menagerie.Core.Services {
                 return null;
             }
 
-            return AppService.Instance.GetTradeResults(searchResult, item);
+             return AppService.Instance.GetTradeResults(searchResult, item);
         }
 
         public void Start() {

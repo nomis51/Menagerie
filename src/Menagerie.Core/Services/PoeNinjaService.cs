@@ -57,19 +57,25 @@ namespace Menagerie.Core.Services {
         #endregion
 
         #region Private methods
-        private void AutoUpdateCache(bool setOldCache = false) {
+        private void AutoUpdateCache(bool skipFirstUpdate = false, bool setOldCache = false) {
             while (true) {
-                if (setOldCache) {
-                    OldCache = Cache.Copy();
+                if (!skipFirstUpdate) {
+                    if (setOldCache) {
+                        OldCache = Cache.Copy();
+                    }
+
+                    CacheUpdating = true;
+                    Task.Run(() => UpdateCurrencyCache());
+                    Task.Run(() => UpdateItemsCache()).Wait();
+                    Cache.UpdateTime = DateTime.Now;
+                    CacheUpdating = false;
+
+                    SaveCache();
+                } else {
+                    Cache = OldCache.Copy();
                 }
 
-                CacheUpdating = true;
-                Task.Run(() => UpdateCurrencyCache());
-                Task.Run(() => UpdateItemsCache()).Wait();
-                CacheUpdating = false;
-
-                SaveCache();
-
+                skipFirstUpdate = false;
                 setOldCache = true;
 
                 Thread.Sleep(CACHE_EXPIRATION_TIME_MINS * 60 * 1000);
@@ -164,11 +170,11 @@ namespace Menagerie.Core.Services {
 
         #region Public methods
         public double GetItemChaosValue(string itemName, string itemType) {
-            if (OldCache == null) {
-                return 0.0d;
-            }
-
             if (CacheUpdating) {
+                if (OldCache == null) {
+                    return 0.0d;
+                }
+
                 if (OldCache.Items.ContainsKey(itemType)) {
                     return GetItemChaosValue(OldCache.Items[itemType], itemName);
                 }
@@ -184,11 +190,11 @@ namespace Menagerie.Core.Services {
         }
 
         public double GetCurrencyChaosValue(string currencyName) {
-            if (OldCache == null) {
-                return 0.0d;
-            }
-
             if (CacheUpdating) {
+                if (OldCache == null) {
+                    return 0.0d;
+                }
+
                 return GetCurrencyChaosValue(OldCache.Currency, currencyName);
             } else {
                 lock (_lockCurrencyCacheAccess) {
@@ -199,7 +205,7 @@ namespace Menagerie.Core.Services {
 
         public void Start() {
             LoadCache();
-            Task.Run(() => AutoUpdateCache());
+            Task.Run(() => AutoUpdateCache(OldCache != null && (DateTime.Now - OldCache.UpdateTime).TotalMinutes < CACHE_EXPIRATION_TIME_MINS));
         }
         #endregion
     }

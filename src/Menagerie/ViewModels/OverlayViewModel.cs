@@ -91,11 +91,13 @@ namespace Menagerie.ViewModels {
         public Config Config {
             get {
                 var dto = AppService.Instance.GetConfig();
-                return new Config() {
+                return dto == null ? new Config() {
+                    CurrentLeague = "Standard",
+                    OnlyShowOffersOfCurrentLeague = false,
+                    PlayerName = ""
+                } : new Config() {
+                    PlayerName = dto.PlayerName,
                     CurrentLeague = dto.CurrentLeague,
-                    Id = dto.Id,
-                    OnlyShowOffersOfCurrentLeague = dto.OnlyShowOffersOfCurrentLeague,
-                    PlayerName = dto.PlayerName
                 };
             }
         }
@@ -104,6 +106,7 @@ namespace Menagerie.ViewModels {
             AppService.Instance.OnNewOffer += AppService_OnNewOffer;
             AppService.Instance.OnNewChatEvent += AppService_OnNewChatEvent;
             AppService.Instance.OnNewPlayerJoined += AppService_OnNewPlayerJoined;
+            AppService.Instance.OnItemParsed += AppService_OnItemParsed;
             AppService.Instance.OnPriceCheckResult += AppService_OnPriceCheckResult;
 
             // TODO: For testing only
@@ -171,11 +174,7 @@ namespace Menagerie.ViewModels {
 
         }
 
-        private void AppService_OnPriceCheckResult(Core.Models.PriceCheckResult priceCheckResult) {
-            ShowPriceCheckWindow(priceCheckResult);
-        }
-
-        private void ShowPriceCheckWindow(Core.Models.PriceCheckResult priceCheckResult) {
+        private void AppService_OnItemParsed(Core.Models.Item item, double poeNinjaChaosValue, string chaosImageLink) {
             App.Current.Dispatcher.Invoke(delegate {
                 if (PriceCheckWin != null && PriceCheckWin.Visibility == Visibility.Visible) {
                     PriceCheckWin.Close();
@@ -183,9 +182,19 @@ namespace Menagerie.ViewModels {
                 }
 
                 PriceCheckWin = new PriceCheckWindow();
-                PriceCheckWin.vm.SetPriceCheckResult(priceCheckResult);
+                PriceCheckWin.vm.SetItem(item, poeNinjaChaosValue, chaosImageLink);
                 PriceCheckWin.Show();
             });
+        }
+
+        private void AppService_OnPriceCheckResult(Core.Models.PriceCheckResult priceCheckResult) {
+            ShowPriceCheckWindow(priceCheckResult);
+        }
+
+        private void ShowPriceCheckWindow(Core.Models.PriceCheckResult priceCheckResult) {
+            if (PriceCheckWin != null && PriceCheckWin.Visibility == Visibility.Visible) {
+                PriceCheckWin.vm.SetPriceCheckResult(priceCheckResult);
+            }
         }
 
         private void AppService_OnNewPlayerJoined(string playerName) {

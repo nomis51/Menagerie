@@ -35,6 +35,9 @@ namespace Menagerie.Core.Services {
 
         public delegate void PriceCheckResultEvent(PriceCheckResult priceCheckResult);
         public event PriceCheckResultEvent OnPriceCheckResult;
+
+        public delegate void ItemParsedEvent(Item item, double poeNinjaChaosValue, string chaosImageLink);
+        public event ItemParsedEvent OnItemParsed;
         #endregion
 
         private AppDataService _appDataService;
@@ -91,7 +94,10 @@ namespace Menagerie.Core.Services {
                 Task[] tasks = new Task[2];
 
                 tasks[0] = Task.Run(() => priceCheck = _priceCheckingService.PriceCheck(item).Result);
-                tasks[1] = Task.Run(() => poeNinjaChaosValue = _poeNinjaService.GetItemChaosValue(item.Name, item.ItemType));
+                tasks[1] = Task.Run(() => {
+                    poeNinjaChaosValue = _poeNinjaService.GetItemChaosValue(item.Name, item.ItemType);
+                    OnItemParsed(item, poeNinjaChaosValue, GetCurrencyImageLink("chaos"));
+                });
 
                 Task.WaitAll(tasks);
 
