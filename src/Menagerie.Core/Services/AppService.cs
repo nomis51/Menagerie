@@ -159,7 +159,7 @@ namespace Menagerie.Core.Services {
         }
 
         public double GetChaosValueOfCurrency(string currency) {
-            return _poeNinjaService.GetChaosValue(currency);
+            return _poeNinjaService.GetCurrencyChaosValue(currency);
         }
 
         public PriceCheckResult CalculateChaosValues(PriceCheckResult priceCheck) {

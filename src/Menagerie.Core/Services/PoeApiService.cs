@@ -1,4 +1,5 @@
 ﻿using Menagerie.Core.Abstractions;
+using Menagerie.Core.Extensions;
 using Menagerie.Core.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -48,11 +49,7 @@ namespace Menagerie.Core.Services {
                 .ToList();
         }
 
-        private static IEnumerable<int> SteppedIterator(int startIndex, int endIndex, int stepSize) {
-            for (int i = startIndex; i < endIndex; i = i + stepSize) {
-                yield return i;
-            }
-        }
+       
 
         public async Task<SearchResult> GetTradeRequestResults(TradeRequest request) {
             var json = _httpService.SerializeBody(request);
@@ -72,7 +69,7 @@ namespace Menagerie.Core.Services {
             List<FetchResult> results = new List<FetchResult>();
             object locker = new object();
 
-            var loopResult = Parallel.ForEach(SteppedIterator(0, nbResults, NB_RESULT_PER_QUERY),  (i) => {
+            var loopResult = Parallel.ForEach(SteppedIterator.GetIterator(0, nbResults, NB_RESULT_PER_QUERY),  (i) => {
                 var ids = search.Result.Skip(i)
                 .Take(NB_RESULT_PER_QUERY)
                 .ToList();

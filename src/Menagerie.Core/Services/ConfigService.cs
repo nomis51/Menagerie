@@ -10,12 +10,20 @@ using Menagerie.Core.Abstractions;
 namespace Menagerie.Core.Services {
     public class ConfigService : IService {
         #region Members
-        private static object LockRead = new object();
-        private static object LockWrite = new object();
+        public static object LockRead = new object();
+        public static object LockWrite = new object();
         #endregion
 
         #region Constants
         private const string CONFIG_DB_FILE_PATH = @".\Menagerie.db";
+        #endregion
+
+        #region Props
+        public static string DbFilePath {
+            get {
+                return CONFIG_DB_FILE_PATH;
+            }
+        }
         #endregion
 
         #region Constructors
