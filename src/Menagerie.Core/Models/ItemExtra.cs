@@ -8,28 +8,4 @@ namespace Menagerie.Core.Models {
         public ItemVeiled Veiled { get; set; } = ItemVeiled.None;
         public ProphecyMaster ProphecyMaster { get; set; } = ProphecyMaster.None;
     }
-
-    public enum ItemVeiled {
-        Prefix,
-        Suffix,
-        PrefixAndSuffix,
-        None
-    }
-
-    public enum ItemAltQuality {
-        Anomalous,
-        Divergent,
-        Phantasmal,
-        Superior,
-        None
-    }
-
-    public enum ProphecyMaster {
-        Alva,
-        Einhar,
-        Niko,
-        Jun,
-        Zana,
-        None
-    }
 }

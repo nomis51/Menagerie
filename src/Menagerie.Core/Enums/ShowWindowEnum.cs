@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Menagerie.Core.Enums {
+﻿namespace Menagerie.Core.Enums {
     public enum ShowWindowEnum {
         Hide = 0,
         ShowNormal = 1, ShowMinimized = 2, ShowMaximized = 3,

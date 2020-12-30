@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Menagerie.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -287,78 +288,5 @@ namespace Menagerie.Core.Models {
                     return ItemCategory.None;
             }
         }
-    }
-
-    public enum ItemRarity {
-        Normal,
-        Magic,
-        Rare,
-        Unique,
-        Gem,
-        DivinationCard,
-        Currency
-    }
-
-    public enum ItemInfluence {
-        Crusader,
-        Elder,
-        Hunter,
-        Redeemer,
-        Shaper,
-        Warlord
-    }
-
-    public enum ItemCategory {
-        Map,
-        Prophecy,
-        CapturedBeast,
-        MetamorphSample,
-        Seed,
-        Helmet,
-        BodyArmour,
-        Gloves,
-        Boots,
-        Shield,
-        Amulet,
-        Belt,
-        Ring,
-        Flask,
-        AbyssJewel,
-        Jewel,
-        Quiver,
-        Claw,
-        Bow,
-        Sceptre,
-        Wand,
-        FishingRod,
-        Staff,
-        Warstaff,
-        Dagger,
-        RuneDagger,
-        OneHandedAxe,
-        TwoHandedAxe,
-        OneHandedMace,
-        TwoHandedMace,
-        OneHandedSword,
-        TwoHandedSword,
-        ClusterJewel,
-        Watchstone,
-        HeistBlueprint,
-        HeistContract,
-        HeistTool,
-        HeistBrooch,
-        HeistGear,
-        HeistCloak,
-        Trinket,
-        None
-    }
-
-    public enum ItemModifierType {
-        Pseudo,
-        Explicit,
-        Implicit,
-        Crafted,
-        Enchant,
-        None
     }
 }
