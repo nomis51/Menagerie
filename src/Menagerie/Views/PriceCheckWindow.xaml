@@ -33,23 +33,37 @@
             <Image Source="{Binding PriceCheckResult.Item.Icon}" Height="60" Stretch="Uniform"></Image>
             <fa5:ImageAwesome Width="15" Height="15"  Icon="Solid_ArrowRight" Foreground="#a0aec0" HorizontalAlignment="Center" VerticalAlignment="center" Margin="5"/>
 
-            <TextBlock Text="{Binding LowestPriceText}" FontSize="18" Foreground="#a0aec0" HorizontalAlignment="Center" VerticalAlignment="center"></TextBlock>
-            <Image Source="{Binding PriceCheckResult.LowestPricing.CurrencyImageLink}" Height="30" Width="30" Stretch="Uniform"></Image>
+            <TextBlock Margin="5" Text="(" FontSize="18" Foreground="#a0aec0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"></TextBlock>
 
-            <fa5:ImageAwesome Width="15" Height="15"  Icon="Solid_ChevronLeft" Foreground="#a0aec0" HorizontalAlignment="Center" VerticalAlignment="center" Margin="5"/>
+            <DockPanel ToolTip="This is the lowest price of the current listing. Use this price or lower if you want to sell fast">
+                <TextBlock Text="{Binding LowestPriceText}" FontSize="18" Foreground="#a0aec0" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                <Image Margin="2" Source="{Binding PriceCheckResult.LowestPricing.CurrencyImageLink}" Height="25" Width="25" Stretch="Uniform"></Image>
+            </DockPanel>
 
-            <TextBlock Text="{Binding AvgPriceText}" FontSize="18" Foreground="#a0aec0" HorizontalAlignment="Center" VerticalAlignment="center"></TextBlock>
-            <Image Source="{Binding PriceCheckResult.AvgPricing.CurrencyImageLink}" Height="30" Width="30" Stretch="Uniform"></Image>
+            <fa5:ImageAwesome Width="15" Height="15"  Icon="Solid_LessThanEqual" Foreground="#a0aec0" HorizontalAlignment="Center" VerticalAlignment="center" Margin="5"/>
 
-            <fa5:ImageAwesome Width="15" Height="15"  Icon="Solid_ChevronLeft" Foreground="#a0aec0" HorizontalAlignment="Center" VerticalAlignment="center" Margin="5"/>
+            <DockPanel ToolTip="This is the average price of the current listing. Use this price if you want a good balance between sell time and sell price">
+                <TextBlock Text="{Binding AvgPriceText}" FontSize="18" Foreground="#a0aec0" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                <Image Margin="2" Source="{Binding PriceCheckResult.AvgPricing.CurrencyImageLink}" Height="25" Width="25" Stretch="Uniform"></Image>
+            </DockPanel>
 
-            <TextBlock Text="{Binding HighestPriceText}" FontSize="18" Foreground="#a0aec0" HorizontalAlignment="Center" VerticalAlignment="center"></TextBlock>
-            <Image Source="{Binding PriceCheckResult.HighestPricing.CurrencyImageLink}" Height="30" Width="30" Stretch="Uniform"></Image>
+            <fa5:ImageAwesome Width="15" Height="15"  Icon="Solid_LessThanEqual" Foreground="#a0aec0" HorizontalAlignment="Center" VerticalAlignment="center" Margin="5"/>
 
-            <TextBlock Text="~" FontSize="38" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,10" Foreground="#a0aec0"></TextBlock>
+            <TextBlock ToolTip="This is the highest price of the current listing. Use this price if you want the most currency out of your item" Text="{Binding HighestPriceText}" FontSize="18" Foreground="#a0aec0" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+            <Image Margin="2" Source="{Binding PriceCheckResult.HighestPricing.CurrencyImageLink}" Height="25" Width="25" Stretch="Uniform"></Image>
 
-            <TextBlock Text="{Binding ModePriceText}" FontSize="18" Foreground="#a0aec0" HorizontalAlignment="Center" VerticalAlignment="center"></TextBlock>
-            <Image Source="{Binding PriceCheckResult.HighestPricing.CurrencyImageLink}" Height="30" Width="30" Stretch="Uniform"></Image>
+            <TextBlock Margin="5" Text=")" FontSize="18" Foreground="#a0aec0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"></TextBlock>
+
+            <TextBlock Margin="0,0,5,10" Text="~" FontSize="38" VerticalAlignment="Center" HorizontalAlignment="Center"  Foreground="#a0aec0"></TextBlock>
+
+            <TextBlock ToolTip="This is the mode. It's the 'most popular' price -10% of the current listing. Use this price if you want to sell fast, but still get a good amount of currency out of your item" Text="{Binding ModePriceText}" FontSize="18" Foreground="#a0aec0" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+            <Image Margin="2" Source="{Binding PriceCheckResult.HighestPricing.CurrencyImageLink}" Height="25" Width="25" Stretch="Uniform"></Image>
+        </DockPanel>
+
+        <DockPanel Grid.Column="2" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center" ToolTip="This the poe.ninja price of the item">
+            <Image Margin="5" Width="25" Source="https://poe.ninja/images/ninja-logo.png" VerticalAlignment="Center" HorizontalAlignment="Right"></Image>
+            <TextBlock Text="5x" FontSize="18" Foreground="#a0aec0" HorizontalAlignment="Right" VerticalAlignment="Center"></TextBlock>
+            <Image Margin="2" Source="{Binding PriceCheckResult.HighestPricing.CurrencyImageLink}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="25" Width="25" Stretch="Uniform"></Image>
         </DockPanel>
 
         <DockPanel  Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Margin="0">
