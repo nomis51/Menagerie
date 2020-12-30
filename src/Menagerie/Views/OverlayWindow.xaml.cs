@@ -22,7 +22,7 @@ namespace Menagerie {
     /// Logique d'interaction pour MainWindow.xaml
     /// </summary>
     public partial class OverlayWindow : Window {
-        private OverlayViewModel vm;
+        public OverlayViewModel vm;
         private Forms.NotifyIcon trayIcon = null;
 
         public OverlayWindow() {

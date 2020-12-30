@@ -111,10 +111,18 @@
     </ApplicationDefinition>
     <Compile Include="Models\Item.cs" />
     <Compile Include="ViewModels\PriceCheckViewModel.cs" />
+    <Compile Include="ViewModels\SplashViewModel.cs" />
     <Compile Include="Views\PriceCheckWindow.xaml.cs">
       <DependentUpon>PriceCheckWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SplashWindow.xaml.cs">
+      <DependentUpon>SplashWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="Views\PriceCheckWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SplashWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -131,6 +139,7 @@
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="ImagePathConverter.cs" />
     <None Include="Assets\menagerie-logo.ico" />
+    <None Include="Assets\menagerie-logo-splash.png" />
     <Content Include="Data\base-types.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

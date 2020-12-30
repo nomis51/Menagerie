@@ -3,8 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Menagerie"
              xmlns:fa5="http://schemas.fontawesome.com/icons/"
-             DispatcherUnhandledException="Application_DispatcherUnhandledException"
-             StartupUri="Views/OverlayWindow.xaml">
+             DispatcherUnhandledException="Application_DispatcherUnhandledException">
     <Application.Resources>
         <Style x:Key="DataGridRowStyle" TargetType="{x:Type DataGridRow}">
             <Setter Property="Foreground" Value="#a0aec0"/>

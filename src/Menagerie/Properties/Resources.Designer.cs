@@ -69,5 +69,15 @@ namespace Menagerie.Properties {
                 return ((System.Drawing.Icon)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap menagerie_logo_splash {
+            get {
+                object obj = ResourceManager.GetObject("menagerie_logo_splash", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

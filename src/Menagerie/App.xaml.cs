@@ -1,5 +1,6 @@
 ﻿using Menagerie.Core.Services;
 using Menagerie.ViewModels;
+using Menagerie.Views;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -14,9 +15,27 @@ namespace Menagerie {
     /// Logique d'interaction pour App.xaml
     /// </summary>
     public partial class App : Application {
+        private OverlayWindow overlay;
+        private SplashWindow splash;
+
         public App() {
             InitializeComponent();
-            AppService.Instance.Start();
+            splash = new SplashWindow();
+            overlay = new OverlayWindow();
+            splash.Show();
+
+            Task.Run(() => {
+                AppService.Instance.Start();
+
+                App.Current.Dispatcher.Invoke(delegate {
+                    splash.Close();
+                    overlay.Show();
+                });
+            });
+        }
+
+        private void Overlay_Loaded(object sender, RoutedEventArgs e) {
+            splash.Close();
         }
 
         private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e) {
