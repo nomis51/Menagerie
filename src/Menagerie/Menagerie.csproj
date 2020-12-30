@@ -112,10 +112,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModels\ConfigViewModel.cs" />
     <Compile Include="ViewModels\SplashViewModel.cs" />
+    <Compile Include="Views\ConfigWindow.xaml.cs">
+      <DependentUpon>ConfigWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SplashWindow.xaml.cs">
       <DependentUpon>SplashWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\ConfigWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SplashWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -135,7 +143,6 @@
     <None Include="Assets\menagerie-logo.ico" />
     <None Include="Assets\menagerie-logo-splash.png" />
     <None Include="log4net.config" />
-    <Compile Include="Models\Config.cs" />
     <Compile Include="Models\Offer.cs" />
     <Compile Include="ViewModels\OverlayViewModel.cs" />
     <Compile Include="Views\OverlayWindow.xaml.cs">

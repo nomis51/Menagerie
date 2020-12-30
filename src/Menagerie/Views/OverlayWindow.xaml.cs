@@ -82,7 +82,7 @@ namespace Menagerie {
             }
 
             Forms.ToolStripMenuItem configItem = new Forms.ToolStripMenuItem() {
-                Text = "Config"
+                Text = "Settings"
             };
             configItem.Click += ConfigItem_Click;
 
@@ -115,7 +115,7 @@ namespace Menagerie {
         }
 
         private void ConfigItem_Click(object sender, EventArgs e) {
-            // TODO: show config window (well I've to build it aswell lol)
+            vm.ShowConfigWindow();
         }
 
         private void QuitItem_Click(object sender, EventArgs e) {

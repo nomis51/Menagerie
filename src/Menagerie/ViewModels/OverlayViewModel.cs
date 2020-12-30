@@ -1,20 +1,17 @@
-﻿using Menagerie.Core;
-using Menagerie.Models;
+﻿using Menagerie.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
-using System.Windows.Controls;
 using System.Windows;
 using Menagerie.Core.Services;
-using Menagerie.Views;
 using Menagerie.Core.Enums;
+using CoreModels = Menagerie.Core.Models;
+using Menagerie.Views;
 
 namespace Menagerie.ViewModels {
     public class OverlayViewModel : INotifyPropertyChanged {
@@ -58,6 +55,8 @@ namespace Menagerie.ViewModels {
         }
         #endregion
 
+        private ConfigWindow ConfigWin;
+
         private Offer[] _offers;
         private Offer[] _outgoingOffers;
 
@@ -76,17 +75,9 @@ namespace Menagerie.ViewModels {
             }
         }
 
-        public Config Config {
+        public CoreModels.Config Config {
             get {
-                var dto = AppService.Instance.GetConfig();
-                return dto == null ? new Config() {
-                    CurrentLeague = "Standard",
-                    OnlyShowOffersOfCurrentLeague = false,
-                    PlayerName = ""
-                } : new Config() {
-                    PlayerName = dto.PlayerName,
-                    CurrentLeague = dto.CurrentLeague,
-                };
+                return AppService.Instance.GetConfig();
             }
         }
 
@@ -158,6 +149,17 @@ namespace Menagerie.ViewModels {
             //            priceCheckWin.vm.PriceCheckResult = result;
             //            priceCheckWin.Show();
 
+        }
+
+        public void ShowConfigWindow() {
+            ConfigWin = new ConfigWindow();
+            ConfigWin.Closed += ConfigWin_Closed;
+            ConfigWin.Show();
+        }
+
+        private void ConfigWin_Closed(object sender, EventArgs e) {
+            ConfigWin.Closed -= ConfigWin_Closed;
+            ConfigWin = null;
         }
 
         private void AppService_OnNewPlayerJoined(string playerName) {
