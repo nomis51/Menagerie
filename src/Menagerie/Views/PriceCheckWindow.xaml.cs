@@ -17,10 +17,10 @@ namespace Menagerie.Views {
     /// <summary>
     /// Logique d'interaction pour PriceCheck.xaml
     /// </summary>
-    public partial class PriceCheck : Window {
+    public partial class PriceCheckWindow : Window {
         public PriceCheckViewModel vm;
 
-        public PriceCheck() {
+        public PriceCheckWindow() {
             InitializeComponent();
 
             vm = new PriceCheckViewModel();

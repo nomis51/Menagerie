@@ -33,6 +33,9 @@ namespace Menagerie.Core.Services {
 
         public delegate void NewPlayerJoinedEvent(string playerName);
         public event NewPlayerJoinedEvent OnNewPlayerJoined;
+
+        public delegate void PriceCheckResultEvent(PriceCheckResult priceCheckResult);
+        public event PriceCheckResultEvent OnPriceCheckResult;
         #endregion
 
         private AppDataService _appDataService;
@@ -82,10 +85,12 @@ namespace Menagerie.Core.Services {
         private void Shortcut_PriceCheck() {
             _keyboardService.SendCtrlC();
             string data = _clipboardService.GetClipboard();
-            Item item = _parsingService.ParseItem(data);
-            PriceCheckResult priceCheck = _priceCheckingService.PriceCheck(item).Result;
 
-            var g = 0;
+            if (!string.IsNullOrEmpty(data) && data.IndexOf("Rarity") != -1) {
+                Item item = _parsingService.ParseItem(data);
+                PriceCheckResult priceCheck = _priceCheckingService.PriceCheck(item).Result;
+                OnPriceCheckResult(priceCheck);
+            }
         }
 
         public void FocusGame() {

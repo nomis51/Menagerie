@@ -57,6 +57,7 @@ namespace Menagerie.Core.Services {
         }
 
         public void Start() {
+            Task.Run(() => _ = UpdateCurrencyCache());
         }
         #endregion
     }

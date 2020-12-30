@@ -34,10 +34,14 @@ namespace Menagerie.Core.Services {
         #region Public Methods
         public PriceCheckResult CalculateChaosValues(PriceCheckResult priceCheck) {
             foreach (var result in priceCheck.Results) {
-                var value = GetChaosValue(result.Currency);
+                if (result.Currency != "chaos") {
+                    var value = GetChaosValue(result.Currency);
 
-                if (value != 0.0d) {
-                    result.ChaosValue = value * result.Price;
+                    if (value != 0.0d) {
+                        result.ChaosValue = value * result.Price;
+                    }
+                } else {
+                    result.ChaosValue = result.Price;
                 }
             }
 
@@ -46,8 +50,7 @@ namespace Menagerie.Core.Services {
 
         public double GetChaosValue(string currencyName) {
             string currency = GetRealName(currencyName);
-
-            return AppService.Instance.GetChaosValueOfCurrency(currencyName);
+            return AppService.Instance.GetChaosValueOfCurrency(currency);
         }
 
         public string GetCurrencyImageLink(string currencyName) {
@@ -158,7 +161,7 @@ namespace Menagerie.Core.Services {
         }
 
         public void Start() {
-           
+
         }
         #endregion
     }

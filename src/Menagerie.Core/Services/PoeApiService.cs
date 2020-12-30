@@ -72,7 +72,7 @@ namespace Menagerie.Core.Services {
             List<FetchResult> results = new List<FetchResult>();
             object locker = new object();
 
-            var loopResult = Parallel.ForEach(SteppedIterator(0, nbResults, NB_RESULT_PER_QUERY), async (i) => {
+            var loopResult = Parallel.ForEach(SteppedIterator(0, nbResults, NB_RESULT_PER_QUERY),  (i) => {
                 var ids = search.Result.Skip(i)
                 .Take(NB_RESULT_PER_QUERY)
                 .ToList();
@@ -98,7 +98,7 @@ namespace Menagerie.Core.Services {
             }
 
             return AppService.Instance.CalculateChaosValues(new PriceCheckResult() {
-                Item = null,
+                Item = item,
                 Results = results[0].Result.Select(p => new PricingResult() {
                     Currency = p.Listing.Price.Currency,
                     Price = p.Listing.Price.Amount,

@@ -59,6 +59,8 @@ namespace Menagerie.ViewModels {
         }
         #endregion
 
+        PriceCheckWindow PriceCheckWin;
+
         private Offer[] _offers;
         private Offer[] _outgoingOffers;
 
@@ -103,6 +105,7 @@ namespace Menagerie.ViewModels {
             AppService.Instance.OnNewOffer += AppService_OnNewOffer;
             AppService.Instance.OnNewChatEvent += AppService_OnNewChatEvent;
             AppService.Instance.OnNewPlayerJoined += AppService_OnNewPlayerJoined;
+            AppService.Instance.OnPriceCheckResult += AppService_OnPriceCheckResult;
 
             // TODO: For testing only
 
@@ -167,6 +170,18 @@ namespace Menagerie.ViewModels {
             //            priceCheckWin.vm.PriceCheckResult = result;
             //            priceCheckWin.Show();
 
+        }
+
+        private void AppService_OnPriceCheckResult(Core.Models.PriceCheckResult priceCheckResult) {
+            ShowPriceCheckWindow(priceCheckResult);
+        }
+
+        private void ShowPriceCheckWindow(Core.Models.PriceCheckResult priceCheckResult) {
+            App.Current.Dispatcher.Invoke(delegate {
+                PriceCheckWin = new PriceCheckWindow();
+                PriceCheckWin.vm.SetPriceCheckResult(priceCheckResult);
+                PriceCheckWin.Show();
+            });
         }
 
         private void AppService_OnNewPlayerJoined(string playerName) {

@@ -4,8 +4,33 @@
              xmlns:local="clr-namespace:Menagerie"
              xmlns:fa5="http://schemas.fontawesome.com/icons/"
              DispatcherUnhandledException="Application_DispatcherUnhandledException"
-             StartupUri="Views/Overlay.xaml">
+             StartupUri="Views/OverlayWindow.xaml">
     <Application.Resources>
+        <Style x:Key="DataGridRowStyle" TargetType="{x:Type DataGridRow}">
+            <Setter Property="Foreground" Value="#a0aec0"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Template" Value="{DynamicResource DataGridRowControlTemplate1}"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#2d2d2f"/>
+                </Trigger>
+                <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                    <Setter Property="Background" Value="#2d2d2f"/>
+                </Trigger>
+                <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                    <Setter Property="Background" Value="#2d2d2f"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <Style x:Key="DataGridColumnHeaderStyle" TargetType="{x:Type DataGridColumnHeader}">
+            <Setter Property="Foreground" Value="#a0aec0"/>
+            <Setter Property="Background" Value="#1e1e1e" />
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+
         <Style x:Key="TransparentStyleTransparent" TargetType="{x:Type Button}">
             <Setter Property="Template">
                 <Setter.Value>

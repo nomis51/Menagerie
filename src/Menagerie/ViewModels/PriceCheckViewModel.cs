@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Input;
 using CoreModels = Menagerie.Core.Models;
 using Menagerie.Models;
+using Menagerie.Core.Models;
 
 namespace Menagerie.ViewModels {
     public class PriceCheckViewModel : INotifyPropertyChanged {
@@ -51,19 +52,9 @@ namespace Menagerie.ViewModels {
         }
         #endregion
 
-        private Item _item;
-        public Item Item {
-            get {
-                return _item;
-            }
-            set {
-                _item = value;
-                OnPropertyChanged("Item");
-            }
-        }
 
-        private CoreModels.PriceCheckResult _priceCheckResult;
-        public CoreModels.PriceCheckResult PriceCheckResult {
+        private PriceCheckResult _priceCheckResult;
+        public PriceCheckResult PriceCheckResult {
             get {
                 return _priceCheckResult;
             }
@@ -75,12 +66,40 @@ namespace Menagerie.ViewModels {
 
         public Visibility CorruptedVisible {
             get {
-                return Item.Corrupted ? Visibility.Visible : Visibility.Hidden;
+                return PriceCheckResult.Item.IsCorrupted ? Visibility.Visible : Visibility.Hidden;
+            }
+        }
+
+        public string AvgPriceText {
+            get {
+                return $"{PriceCheckResult.AvgPricing.Price}x";
+            }
+        }
+
+        public string LowestPriceText {
+            get {
+                return $"{PriceCheckResult.LowestPricing.Price}x";
+            }
+        }
+
+        public string HighestPriceText {
+            get {
+                return $"{PriceCheckResult.HighestPricing.Price}x";
+            }
+        }
+
+        public string ModePriceText {
+            get {
+                return $"{PriceCheckResult.ModePricing.Price}x";
             }
         }
 
         public PriceCheckViewModel() {
 
+        }
+
+        public void SetPriceCheckResult(PriceCheckResult result) {
+            PriceCheckResult = result;
         }
     }
 }

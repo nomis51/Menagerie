@@ -32,5 +32,27 @@ namespace Menagerie.Core.Models {
                 };
             }
         }
+
+        public PricingResult HighestPricing {
+            get {
+                return Results.OrderBy(r => r.ChaosValue).Last();
+            }
+        }
+
+        public PricingResult ModePricing {
+            get {
+                var groups = Results.GroupBy(p => p.ChaosValue);
+                int maxCount = groups.Max(r => r.Count());
+                var result = groups.First(g => g.Count() == maxCount).First();
+
+                return new PricingResult() {
+                    ChaosValue = result.ChaosValue * 0.9d,
+                    Currency = "chaos",
+                    CurrencyImageLink = AppService.Instance.GetCurrencyImageLink("chaos"),
+                    PlayerName = "",
+                    Price = result.ChaosValue
+                };
+            }
+        }
     }
 }

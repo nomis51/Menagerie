@@ -111,15 +111,15 @@
     </ApplicationDefinition>
     <Compile Include="Models\Item.cs" />
     <Compile Include="ViewModels\PriceCheckViewModel.cs" />
-    <Compile Include="Views\PriceCheck.xaml.cs">
-      <DependentUpon>PriceCheck.xaml</DependentUpon>
+    <Compile Include="Views\PriceCheckWindow.xaml.cs">
+      <DependentUpon>PriceCheckWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="Views\PriceCheck.xaml">
+    <Page Include="Views\PriceCheckWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Resource Include="menagerie-logo.ico" />
-    <Page Include="Views\Overlay.xaml">
+    <Page Include="Views\OverlayWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -141,8 +141,8 @@
     <Compile Include="Models\Config.cs" />
     <Compile Include="Models\Offer.cs" />
     <Compile Include="ViewModels\OverlayViewModel.cs" />
-    <Compile Include="Views\Overlay.xaml.cs">
-      <DependentUpon>Overlay.xaml</DependentUpon>
+    <Compile Include="Views\OverlayWindow.xaml.cs">
+      <DependentUpon>OverlayWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

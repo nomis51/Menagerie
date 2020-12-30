@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using Menagerie.Core.Models;
 using Menagerie.Core.Abstractions;
+using System.Threading.Tasks;
 
 namespace Menagerie.Core.Services {
     public class AppDataService : IService {
@@ -69,7 +70,8 @@ namespace Menagerie.Core.Services {
         }
 
         public void Start() {
-           
+            Task.Run(() => _ = GetStatByMatchStr());
+            Task.Run(() => _ = GetBaseTypes());
         }
     }
 
