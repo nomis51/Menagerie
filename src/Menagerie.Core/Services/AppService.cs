@@ -32,12 +32,6 @@ namespace Menagerie.Core.Services {
 
         public delegate void NewPlayerJoinedEvent(string playerName);
         public event NewPlayerJoinedEvent OnNewPlayerJoined;
-
-        public delegate void PriceCheckResultEvent(PriceCheckResult priceCheckResult);
-        public event PriceCheckResultEvent OnPriceCheckResult;
-
-        public delegate void ItemParsedEvent(Item item, double poeNinjaChaosValue, string chaosImageLink);
-        public event ItemParsedEvent OnItemParsed;
         #endregion
 
         private AppDataService _appDataService;
@@ -49,8 +43,6 @@ namespace Menagerie.Core.Services {
         private ParsingService _parsingService;
         private PoeApiService _poeApiService;
         private PoeWindowService _poeWindowService;
-        private PriceCheckingService _priceCheckingService;
-        private PoeNinjaService _poeNinjaService;
         private KeyboardService _keyboardService;
         private ShortcutService _shortcutService;
 
@@ -62,49 +54,14 @@ namespace Menagerie.Core.Services {
             _currencyService = new CurrencyService();
             _gameService = new GameService();
             _parsingService = new ParsingService();
-            _poeApiService = new PoeApiService();
             _poeWindowService = new PoeWindowService();
-            _priceCheckingService = new PriceCheckingService();
             _poeApiService = new PoeApiService();
-            _poeNinjaService = new PoeNinjaService();
             _keyboardService = new KeyboardService();
             _shortcutService = new ShortcutService();
         }
 
         private void SetShortcuts() {
-            _shortcutService.RegisterShortcut(new Shortcut() {
-                Direction = KeyDirection.Down,
-                Alt = false,
-                Control = true,
-                Shift = false,
-                Key = VirtualKeyCode.VK_D,
-                Action = Shortcut_PriceCheck
-            });
-        }
-
-        private void Shortcut_PriceCheck() {
-            _keyboardService.SendCtrlC();
-            string data = _clipboardService.GetClipboard();
-
-            if (!string.IsNullOrEmpty(data) && data.IndexOf("Rarity") != -1) {
-                Item item = _parsingService.ParseItem(data);
-
-                PriceCheckResult priceCheck = null;
-                double poeNinjaChaosValue = 0.0d;
-                Task[] tasks = new Task[2];
-
-                tasks[0] = Task.Run(() => priceCheck = _priceCheckingService.PriceCheck(item).Result);
-                tasks[1] = Task.Run(() => {
-                    poeNinjaChaosValue = _poeNinjaService.GetItemChaosValue(item.Name, item.ItemType);
-                    OnItemParsed(item, poeNinjaChaosValue, GetCurrencyImageLink("chaos"));
-                });
-
-                Task.WaitAll(tasks);
-
-                priceCheck.PoeNinjaChaosValue = poeNinjaChaosValue;
-
-                OnPriceCheckResult(priceCheck);
-            }
+           
         }
 
         public void FocusGame() {
@@ -144,14 +101,6 @@ namespace Menagerie.Core.Services {
             return _currencyService.GetCurrencyImageLink(currencyName);
         }
 
-        public List<Tuple<string, BaseType>> GetBaseTypes() {
-            return _appDataService.GetBaseTypes();
-        }
-
-        public Dictionary<string, MatchStr> GetStatByMatchStr() {
-            return _appDataService.GetStatByMatchStr();
-        }
-
         public void NewOffer(Offer offer) {
             OnNewOffer(offer);
         }
@@ -170,34 +119,6 @@ namespace Menagerie.Core.Services {
 
         public void SetConfig(Config config) {
             _appDataService.UpdateDocument<Config>(AppDataService.COLLECTION_CONFIG, config);
-        }
-
-        public double GetChaosValueOfCurrency(string currency) {
-            return _poeNinjaService.GetCurrencyChaosValue(currency);
-        }
-
-        public PriceCheckResult CalculateChaosValues(PriceCheckResult priceCheck) {
-            return _currencyService.CalculateChaosValues(priceCheck);
-        }
-
-        public TradeRequest CreateTradeRequest(Item item) {
-            return _poeApiService.CreateTradeRequest(item);
-        }
-
-        public async Task<SearchResult> GetTradeRequestResults(TradeRequest request) {
-            return await _poeApiService.GetTradeRequestResults(request);
-        }
-
-        public PriceCheckResult GetTradeResults(SearchResult search, Item item, int nbResults = 10) {
-            return _poeApiService.GetTradeResults(search, item, nbResults);
-        }
-
-        public async Task<PriceCheckResult> PriceCheck(Item item) {
-            return await _priceCheckingService.PriceCheck(item);
-        }
-
-        public Item ParseItem(string data) {
-            return _parsingService.ParseItem(data);
         }
 
         public async Task<List<string>> GetLeagues() {
@@ -272,15 +193,6 @@ namespace Menagerie.Core.Services {
             _gameService.HightlightStash(text);
         }
 
-        public void SavePoeNinjaCaches(PoeNinjaCaches caches) {
-            _appDataService.DeleteAllDocument(AppDataService.COLLECTION_POE_NINJA_CACHES);
-            _appDataService.InsertDocument<PoeNinjaCaches>(AppDataService.COLLECTION_POE_NINJA_CACHES, caches);
-        }
-
-        public PoeNinjaCaches GetPoeNinjaCaches() {
-            return _appDataService.GetDocument<PoeNinjaCaches>(AppDataService.COLLECTION_POE_NINJA_CACHES);
-        }
-
         public void Start() {
             _appDataService.Start();
             _chatService.Start();
@@ -290,10 +202,7 @@ namespace Menagerie.Core.Services {
             _gameService.Start();
             _keyboardService.Start();
             _parsingService.Start();
-            _poeApiService.Start();
-            _poeNinjaService.Start();
             _poeWindowService.Start();
-            _priceCheckingService.Start();
             _shortcutService.Start();
         }
     }

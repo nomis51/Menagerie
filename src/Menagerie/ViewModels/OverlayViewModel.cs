@@ -58,33 +58,21 @@ namespace Menagerie.ViewModels {
         }
         #endregion
 
-        PriceCheckWindow PriceCheckWin;
-
         private Offer[] _offers;
         private Offer[] _outgoingOffers;
 
         public ObservableCollection<Offer> Offers { get; set; } = new ObservableCollection<Offer>();
         public ObservableCollection<Offer> OutgoingOffers { get; set; } = new ObservableCollection<Offer>();
 
-        private Visibility _isOffersFilterVisible;
         public Visibility IsOffersFilterVisible {
             get {
-                return _isOffersFilterVisible;
-            }
-            set {
-                _isOffersFilterVisible = value;
-                OnPropertyChanged("IsOffersFilterVisible");
+                return Offers.Count > 1 ? Visibility.Visible : Visibility.Hidden;
             }
         }
 
-        private Visibility _isOutgoingOffersFilterVisible;
         public Visibility IsOutgoingOffersFilterVisible {
             get {
-                return _isOutgoingOffersFilterVisible;
-            }
-            set {
-                _isOutgoingOffersFilterVisible = value;
-                OnPropertyChanged("IsOutgoingOffersFilterVisible");
+                return OutgoingOffers.Count > 1 ? Visibility.Visible : Visibility.Hidden;
             }
         }
 
@@ -106,8 +94,6 @@ namespace Menagerie.ViewModels {
             AppService.Instance.OnNewOffer += AppService_OnNewOffer;
             AppService.Instance.OnNewChatEvent += AppService_OnNewChatEvent;
             AppService.Instance.OnNewPlayerJoined += AppService_OnNewPlayerJoined;
-            AppService.Instance.OnItemParsed += AppService_OnItemParsed;
-            AppService.Instance.OnPriceCheckResult += AppService_OnPriceCheckResult;
 
             // TODO: For testing only
 
@@ -174,29 +160,6 @@ namespace Menagerie.ViewModels {
 
         }
 
-        private void AppService_OnItemParsed(Core.Models.Item item, double poeNinjaChaosValue, string chaosImageLink) {
-            App.Current.Dispatcher.Invoke(delegate {
-                if (PriceCheckWin != null && PriceCheckWin.Visibility == Visibility.Visible) {
-                    PriceCheckWin.Close();
-                    PriceCheckWin = null;
-                }
-
-                PriceCheckWin = new PriceCheckWindow();
-                PriceCheckWin.vm.SetItem(item, poeNinjaChaosValue, chaosImageLink);
-                PriceCheckWin.Show();
-            });
-        }
-
-        private void AppService_OnPriceCheckResult(Core.Models.PriceCheckResult priceCheckResult) {
-            ShowPriceCheckWindow(priceCheckResult);
-        }
-
-        private void ShowPriceCheckWindow(Core.Models.PriceCheckResult priceCheckResult) {
-            if (PriceCheckWin != null && PriceCheckWin.Visibility == Visibility.Visible) {
-                PriceCheckWin.vm.SetPriceCheckResult(priceCheckResult);
-            }
-        }
-
         private void AppService_OnNewPlayerJoined(string playerName) {
             App.Current.Dispatcher.Invoke(delegate {
                 foreach (var offer in Offers) {
@@ -249,11 +212,12 @@ namespace Menagerie.ViewModels {
             App.Current.Dispatcher.Invoke(delegate {
                 if (!offer.IsOutgoing) {
                     Offers.Add(new Offer(offer));
-                    IsOffersFilterVisible = Visibility.Visible;
                 } else {
                     OutgoingOffers.Insert(0, new Offer(offer));
-                    IsOutgoingOffersFilterVisible = Visibility.Visible;
                 }
+
+                OnPropertyChanged("IsOffersFilterVisible");
+                OnPropertyChanged("IsOutgoingOffersFilterVisible");
             });
         }
 
@@ -301,8 +265,6 @@ namespace Menagerie.ViewModels {
                 Offers.Add(o);
             }
 
-            IsOffersFilterVisible = Offers.Count > 0 ? Visibility.Visible : Visibility.Hidden;
-
             Offer[] buffer2 = new Offer[OutgoingOffers.Count];
             OutgoingOffers.CopyTo(buffer2, 0);
             OutgoingOffers.Clear();
@@ -311,7 +273,8 @@ namespace Menagerie.ViewModels {
                 OutgoingOffers.Add(o);
             }
 
-            IsOutgoingOffersFilterVisible = OutgoingOffers.Count > 0 ? Visibility.Visible : Visibility.Hidden;
+            OnPropertyChanged("IsOffersFilterVisible");
+            OnPropertyChanged("IsOutgoingOffersFilterVisible");
         }
 
         public void SendTradeRequest(int id, bool isOutgoing = false) {
@@ -520,11 +483,13 @@ namespace Menagerie.ViewModels {
         public void ClearOffers() {
             AppService.Instance.FocusGame();
             Offers.Clear();
+            OnPropertyChanged("IsOffersFilterVisible");
         }
 
         public void ClearOutgoingOffers() {
             AppService.Instance.FocusGame();
             OutgoingOffers.Clear();
+            OnPropertyChanged("IsOutgoingOffersFilterVisible");
         }
 
         public void HighlightItem(int id) {
