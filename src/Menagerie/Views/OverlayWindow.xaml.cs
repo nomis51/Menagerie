@@ -1,4 +1,5 @@
 ﻿using Menagerie.Core;
+using Menagerie.Core.Services;
 using Menagerie.Models;
 using Menagerie.ViewModels;
 using System;
@@ -32,6 +33,18 @@ namespace Menagerie {
             this.DataContext = vm;
 
             SetupTrayIcon();
+
+            AppService.Instance.OnToggleOverlayVisibility += AppService_OnToggleOverlayVisibility;
+        }
+
+        private void AppService_OnToggleOverlayVisibility(bool show) {
+            App.Current.Dispatcher.Invoke(delegate {
+                if (show) {
+                    Hide();
+                } else {
+                    Show();
+                }
+            });
         }
 
         private string GetAppVersion() {

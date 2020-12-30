@@ -25,6 +25,9 @@ namespace Menagerie.Core.Services {
 
         [DllImport("user32.dll", EntryPoint = "FindWindow")]
         public static extern IntPtr FindWindowByCaption(IntPtr ZeroOnly, string lpWindowName);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        private static extern IntPtr GetForegroundWindow();
         #endregion
 
         #region Constants
@@ -47,6 +50,12 @@ namespace Menagerie.Core.Services {
         public int ProcessId {
             get {
                 return Process == null ? -1 : Process.Id;
+            }
+        }
+
+        public bool Focused {
+            get {
+                return Process == null ? false : GetForegroundWindow() == Process.MainWindowHandle;
             }
         }
         #endregion
@@ -103,6 +112,10 @@ namespace Menagerie.Core.Services {
         #region Public methods
         public void Focus() {
             if (Process == null) {
+                return;
+            }
+
+            if (Focused) {
                 return;
             }
 

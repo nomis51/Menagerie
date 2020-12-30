@@ -10,7 +10,6 @@ using Winook;
 namespace Menagerie.Core.Services {
     public class AppService : IService {
         #region Singleton
-        private static object _lock = new object();
         private static AppService _instance = new AppService();
         public static AppService Instance {
             get {
@@ -32,6 +31,9 @@ namespace Menagerie.Core.Services {
 
         public delegate void NewPlayerJoinedEvent(string playerName);
         public event NewPlayerJoinedEvent OnNewPlayerJoined;
+
+        public delegate void ToggleOverlayVisibilityEvent(bool show);
+        public event ToggleOverlayVisibilityEvent OnToggleOverlayVisibility;
         #endregion
 
         private AppDataService _appDataService;
@@ -77,6 +79,18 @@ namespace Menagerie.Core.Services {
 
         public void FocusGame() {
             _poeWindowService.Focus();
+        }
+
+        public bool GameFocused() {
+            return _poeWindowService.Focused;
+        }
+
+        public void HideOverlay() {
+            OnToggleOverlayVisibility(true);
+        }
+
+        public void ShowOverlay() {
+            OnToggleOverlayVisibility(false);
         }
 
         public void ClientFileReady() {

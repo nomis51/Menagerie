@@ -34,6 +34,8 @@ namespace Menagerie {
             });
         }
 
+       
+
         private void Overlay_Loaded(object sender, RoutedEventArgs e) {
             splash.Close();
         }
