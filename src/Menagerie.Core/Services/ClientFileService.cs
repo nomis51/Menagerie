@@ -6,15 +6,22 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Menagerie.Core.Extensions;
+using log4net;
 
 namespace Menagerie.Core.Services {
     public class ClientFileService : IService {
+        #region Constants
+        private static readonly ILog log = LogManager.GetLogger(typeof(ClientFileService)); 
+        #endregion
+
         #region Members
         private long EndOfFile = 0;
         #endregion
 
         #region Constructors
         public ClientFileService() {
+            log.Trace("Initializing ClientFileService");
         }
         #endregion
 
@@ -24,11 +31,13 @@ namespace Menagerie.Core.Services {
 
         #region Private methods
         public void StartWatching() {
+            log.Trace("Start watching");
             SetEndOfFile();
             Watch();
         }
 
         private async void Watch() {
+            log.Trace("Watching client file");
             while (true) {
                 List<string> newLines = new List<string>();
 
@@ -41,6 +50,8 @@ namespace Menagerie.Core.Services {
                 }
                 while (newLines.Count() == 0);
 
+                log.Trace("New lines");
+
                 foreach (var line in newLines) {
                     AppService.Instance.NewClientFileLine(line);
                 }
@@ -48,12 +59,14 @@ namespace Menagerie.Core.Services {
         }
 
         private void SetEndOfFile() {
+            log.Trace("Setting EOF");
             var file = File.Open(AppService.Instance.GetClientFilePath(), FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             EndOfFile = file.Length - 1;
             file.Close();
         }
 
         private List<string> ReadNewLines() {
+            log.Trace("Reading new lines");
             List<string> lines = new List<string>();
 
             long currentPosition = EndOfFile;
@@ -98,7 +111,7 @@ namespace Menagerie.Core.Services {
         }
 
         public void Start() {
-            
+            log.Trace("Starting ClientFileService");
         }
         #endregion
 
