@@ -19,12 +19,15 @@ namespace Menagerie {
     /// Logique d'interaction pour MainWindow.xaml
     /// </summary>
     public partial class OverlayWindow : Window {
+        #region WinAPI
         [DllImport("user32.dll", SetLastError = true)]
         static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
+        #endregion
 
         private static readonly ILog log = LogManager.GetLogger(typeof(OverlayWindow));
 
         private readonly System.Drawing.Rectangle screenRect;
+        private bool WinMoved = false;
 
         public OverlayViewModel vm;
         private Forms.NotifyIcon trayIcon = null;
@@ -53,10 +56,13 @@ namespace Menagerie {
         }
 
         private void OverlayWindow_SourceInitialized(object sender, EventArgs e) {
-            //base.OnSourceInitialized(e);
-            //var wih = new WindowInteropHelper(this);
-            //IntPtr hWnd = wih.Handle;
-            //MoveWindow(hWnd, screenRect.Left, screenRect.Top, screenRect.Width, screenRect.Height, false);
+            if (!WinMoved) {
+                WinMoved = true;
+                base.OnSourceInitialized(e);
+                var wih = new WindowInteropHelper(this);
+                IntPtr hWnd = wih.Handle;
+                MoveWindow(hWnd, screenRect.Left, screenRect.Top, screenRect.Width, screenRect.Height, false);
+            }
         }
 
         private void AppService_OnToggleOverlayVisibility(bool show) {
