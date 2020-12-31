@@ -1,6 +1,7 @@
 ﻿using Menagerie.Core.Enums;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace Menagerie.Core.Models {
@@ -14,6 +15,9 @@ namespace Menagerie.Core.Models {
         public string CurrencyImageLink { get; set; }
         public string League { get; set; }
         public bool IsOutgoing { get; set; } = false;
+        public string StashTab { get; set; } = "";
+        public Point Position { get; set; }
+        public string Notes { get; set; }
 
         public Offer() {
             base.EvenType = ChatEventEnum.Offer;

@@ -149,7 +149,10 @@ namespace Menagerie.ViewModels {
                                 PlayerName = offer.PlayerName,
                                 EvenType = ChatEventEnum.Offer,
                                 IsOutgoing = offer.IsOutgoing,
-                                Id = offer.Id
+                                Id = offer.Id,
+                                StashTab = offer.StashTab,
+                                Position = offer.Position,
+                                Notes = offer.Notes
                             });
                             SendKick(offer.Id, true);
                         }
