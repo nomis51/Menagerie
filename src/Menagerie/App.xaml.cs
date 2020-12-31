@@ -30,7 +30,6 @@ namespace Menagerie {
 
                 App.Current.Dispatcher.Invoke(delegate {
                     splash.Close();
-                    overlay.Show();
                 });
             });
         }

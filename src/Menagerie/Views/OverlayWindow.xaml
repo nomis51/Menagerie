@@ -11,9 +11,8 @@
         Background="Transparent"
         Topmost="True"
         ShowInTaskbar="False"
+        Visibility="Hidden"
         Title="Overlay" WindowState="Maximized">
-    <Window.Resources>
-    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="560"></ColumnDefinition>
