@@ -12,6 +12,8 @@ using Menagerie.Core.Services;
 using Menagerie.Core.Enums;
 using CoreModels = Menagerie.Core.Models;
 using Menagerie.Views;
+using log4net;
+using Menagerie.Core.Extensions;
 
 namespace Menagerie.ViewModels {
     public class OverlayViewModel : INotifyPropertyChanged {
@@ -55,6 +57,8 @@ namespace Menagerie.ViewModels {
         }
         #endregion
 
+        private readonly static ILog log = LogManager.GetLogger(typeof(OverlayViewModel));
+
         private ConfigWindow ConfigWin;
 
         private Offer[] _offers;
@@ -82,26 +86,32 @@ namespace Menagerie.ViewModels {
         }
 
         public OverlayViewModel() {
+            log.Trace("Initializing OverlayViewModel");
             AppService.Instance.OnNewOffer += AppService_OnNewOffer;
             AppService.Instance.OnNewChatEvent += AppService_OnNewChatEvent;
             AppService.Instance.OnNewPlayerJoined += AppService_OnNewPlayerJoined;
         }
 
         public void ShowConfigWindow() {
+            log.Trace("Showing config window");
             ConfigWin = new ConfigWindow();
             ConfigWin.Closed += ConfigWin_Closed;
             ConfigWin.Show();
         }
 
         private void ConfigWin_Closed(object sender, EventArgs e) {
+            log.Trace("Deleting config window");
             ConfigWin.Closed -= ConfigWin_Closed;
             ConfigWin = null;
         }
 
         private void AppService_OnNewPlayerJoined(string playerName) {
+            log.Trace("New player joined event");
+
             App.Current.Dispatcher.Invoke(delegate {
                 foreach (var offer in Offers) {
                     if (offer.PlayerName == playerName) {
+                        log.Trace($"player \"{playerName}\" joined");
                         offer.PlayerJoined = true;
                     }
                 }
@@ -111,6 +121,8 @@ namespace Menagerie.ViewModels {
         }
 
         private void AppService_OnNewChatEvent(ChatEventEnum type) {
+            log.Trace($"New chat event: {type.ToString()}");
+
             App.Current.Dispatcher.Invoke(delegate {
                 switch (type) {
                     case ChatEventEnum.TradeAccepted:
@@ -141,6 +153,7 @@ namespace Menagerie.ViewModels {
         }
 
         private void AppService_OnNewOffer(Core.Models.Offer offer) {
+            log.Trace("New offer event");
             var config = Config;
 
             if (config.OnlyShowOffersOfCurrentLeague && config.CurrentLeague != offer.League) {
@@ -160,22 +173,26 @@ namespace Menagerie.ViewModels {
         }
 
         public List<string> GetLeagues() {
+            log.Trace("Getting leagues");
             return AppService.Instance.GetLeagues().Result;
         }
 
         public Offer GetOffer(int id) {
+            log.Trace($"Getting offer {id}");
             var offer = Offers.FirstOrDefault(e => e.Id == id);
 
             return offer == null ? OutgoingOffers.FirstOrDefault(e => e.Id == id) : offer;
         }
 
         private Offer GetActiveOffer() {
+            log.Trace("Getting active offer");
             var offer = Offers.FirstOrDefault(o => o.TradeRequestSent);
 
             return offer == null ? OutgoingOffers.FirstOrDefault(o => o.TradeRequestSent) : offer;
         }
 
         private void EnsureNotHighlighted(int index) {
+            log.Trace("Verify not highlighted");
             if (Offers[index].IsHighlighted) {
                 Offers[index].IsHighlighted = false;
                 AppService.Instance.SendEscape();
@@ -183,6 +200,7 @@ namespace Menagerie.ViewModels {
         }
 
         private int GetOfferIndex(int id) {
+            log.Trace($"Getting offer's index {id}");
             int index = Offers.Select(g => g.Id)
                 .ToList()
                 .IndexOf(id);
@@ -195,6 +213,7 @@ namespace Menagerie.ViewModels {
         }
 
         private void UpdateOffers() {
+            log.Trace("Updating offers");
             Offer[] buffer = new Offer[Offers.Count];
             Offers.CopyTo(buffer, 0);
             Offers.Clear();
@@ -216,6 +235,7 @@ namespace Menagerie.ViewModels {
         }
 
         public void SendTradeRequest(int id, bool isOutgoing = false) {
+            log.Trace($"Sending trade request {id}");
             var index = GetOfferIndex(id);
 
             if (index == -1) {
@@ -246,6 +266,7 @@ namespace Menagerie.ViewModels {
         }
 
         public void SendJoinHideoutCommand(int id) {
+            log.Trace($"Sending join hideout command {id}");
             var index = GetOfferIndex(id);
 
             if (index == -1) {
@@ -259,6 +280,7 @@ namespace Menagerie.ViewModels {
         }
 
         public void SendBusyWhisper(int id) {
+            log.Trace($"Sending busy whisper {id}");
             var index = GetOfferIndex(id);
 
             if (index == -1) {
@@ -273,6 +295,7 @@ namespace Menagerie.ViewModels {
         }
 
         public void SendReInvite(int id) {
+            log.Trace($"Sending re-invite commands {id}");
             var index = GetOfferIndex(id);
 
             if (index == -1) {
@@ -296,6 +319,7 @@ namespace Menagerie.ViewModels {
         }
 
         public void SendInvite(int id) {
+            log.Trace($"Sending invite command {id}");
             var index = GetOfferIndex(id);
 
             if (index == -1) {
@@ -315,6 +339,7 @@ namespace Menagerie.ViewModels {
         }
 
         public void SendKick(int id, bool sayThanks = false) {
+            log.Trace($"Sending kick command {id}");
             var index = GetOfferIndex(id);
 
             if (index == -1) {
@@ -345,6 +370,7 @@ namespace Menagerie.ViewModels {
         }
 
         public void SendLeave(int id, bool sayThanks = false) {
+            log.Trace($"Sending leave command {id}");
             var index = GetOfferIndex(id);
 
             if (index == -1) {
@@ -370,8 +396,8 @@ namespace Menagerie.ViewModels {
             RemoveOffer(id, true);
         }
 
-
         public void RemoveOffer(int id, bool isOutgoing = false) {
+            log.Trace($"Removing offer {id}");
             int index = isOutgoing ? OutgoingOffers.Select(e => e.Id)
                 .ToList()
                 .IndexOf(id) : Offers.Select(e => e.Id)
@@ -388,6 +414,7 @@ namespace Menagerie.ViewModels {
         }
 
         public void SendStillInterestedWhisper(int id) {
+            log.Trace($"Sending still interested whisper {id}");
             var index = GetOfferIndex(id);
 
             if (index == -1) {
@@ -402,6 +429,7 @@ namespace Menagerie.ViewModels {
         }
 
         public void SendSoldWhisper(int id) {
+            log.Trace($"Sending sold whisper {id}");
             var index = GetOfferIndex(id);
 
             if (index == -1) {
@@ -419,18 +447,21 @@ namespace Menagerie.ViewModels {
         }
 
         public void ClearOffers() {
+            log.Trace("Clearing offers");
             AppService.Instance.FocusGame();
             Offers.Clear();
             OnPropertyChanged("IsOffersFilterVisible");
         }
 
         public void ClearOutgoingOffers() {
+            log.Trace("Clearing outgoing offers");
             AppService.Instance.FocusGame();
             OutgoingOffers.Clear();
             OnPropertyChanged("IsOutgoingOffersFilterVisible");
         }
 
         public void HighlightItem(int id) {
+            log.Trace($"Highlighting offer {id}");
             var index = GetOfferIndex(id);
 
             if (index == -1) {
@@ -443,6 +474,7 @@ namespace Menagerie.ViewModels {
         }
 
         public void ResetFilter(bool applyToOutgoing = true) {
+            log.Trace($"Resetting filter {(applyToOutgoing ? "Outgoing" : "Incoming")} offers");
             if (applyToOutgoing) {
                 if (_outgoingOffers != null) {
                     OutgoingOffers.Clear();
@@ -463,6 +495,8 @@ namespace Menagerie.ViewModels {
         }
 
         public void FilterOffers(string searchText, bool applyToOutgoing = true) {
+            log.Trace($"Filtering {(applyToOutgoing ? "Outgoing" : "Incoming")} offers with {searchText}");
+
             searchText = searchText.ToLower().Trim();
 
             ResetFilter(applyToOutgoing);
@@ -497,6 +531,7 @@ namespace Menagerie.ViewModels {
         }
 
         public void SetCurrentLeague(string league) {
+            log.Trace($"Setting current to {league}");
             var config = Config;
             config.CurrentLeague = league;
             AppService.Instance.SetConfig(new Core.Models.Config() {
@@ -508,7 +543,8 @@ namespace Menagerie.ViewModels {
         }
 
         public string GetCurrentLeague() {
-            return Config.CurrentLeague;
+            log.Trace("Getting current league");
+            return Config == null ? "" : Config.CurrentLeague;
         }
     }
 }

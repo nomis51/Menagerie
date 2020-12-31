@@ -1,4 +1,5 @@
-﻿using Menagerie.Core;
+﻿using log4net;
+using Menagerie.Core;
 using Menagerie.Core.Services;
 using Menagerie.Models;
 using Menagerie.ViewModels;
@@ -17,17 +18,22 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Forms = System.Windows.Forms;
+using Menagerie.Core.Extensions;
 
 namespace Menagerie {
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml
     /// </summary>
     public partial class OverlayWindow : Window {
+        private static readonly ILog log = LogManager.GetLogger(typeof(OverlayWindow)); 
+
         public OverlayViewModel vm;
         private Forms.NotifyIcon trayIcon = null;
 
         public OverlayWindow() {
             InitializeComponent();
+
+            log.Trace("Initializing Overlay");
 
             vm = new OverlayViewModel();
             this.DataContext = vm;
@@ -38,6 +44,8 @@ namespace Menagerie {
         }
 
         private void AppService_OnToggleOverlayVisibility(bool show) {
+            log.Trace($"Toggling overlay visibility: {show}");
+
             App.Current.Dispatcher.Invoke(delegate {
                 if (show) {
                     Hide();
@@ -54,6 +62,7 @@ namespace Menagerie {
         }
 
         private void SetupTrayIcon() {
+            log.Trace("Initializing system tray icon");
             trayIcon = new Forms.NotifyIcon();
             trayIcon.Icon = Properties.Resources.menagerie_logo;
 
@@ -101,6 +110,8 @@ namespace Menagerie {
         }
 
         private void LeagueMenuItem_Click(object sender, EventArgs e) {
+            log.Trace($"League system tray menu item clicked {((Forms.ToolStripMenuItem)sender).Text}");
+
             foreach (var i in trayIcon.ContextMenuStrip.Items) {
                 if (((Forms.ToolStripMenuItem)i).Text == "League") {
                     foreach (var k in ((Forms.ToolStripMenuItem)i).DropDownItems) {
@@ -115,18 +126,22 @@ namespace Menagerie {
         }
 
         private void ConfigItem_Click(object sender, EventArgs e) {
+            log.Trace("Config system tray menu item clicked");
             vm.ShowConfigWindow();
         }
 
         private void QuitItem_Click(object sender, EventArgs e) {
+            log.Trace("Quit system tray menu item clicked");
             Application.Current.Shutdown(0);
         }
 
         private void btnBusy_Click(object sender, RoutedEventArgs e) {
+            log.Trace("Busy button clicked");
             vm.SendBusyWhisper((int)((Button)sender).Tag);
         }
 
         private void btnRemove_Click(object sender, RoutedEventArgs e) {
+            log.Trace("Remove button clicked");
             int id = (int)((Button)sender).Tag;
             var offer = vm.GetOffer(id);
 
@@ -138,6 +153,7 @@ namespace Menagerie {
         }
 
         private void btnInvite_Click(object sender, RoutedEventArgs e) {
+            log.Trace("Invite button clicked");
             int id = (int)((Button)sender).Tag;
             var offer = vm.GetOffer(id);
 
@@ -149,6 +165,7 @@ namespace Menagerie {
         }
 
         private void grdOffer_MouseDown(object sender, MouseButtonEventArgs e) {
+            log.Trace("Offer clicked");
             int id = (int)((Grid)sender).Tag;
             var offer = vm.GetOffer(id);
 
@@ -179,6 +196,7 @@ namespace Menagerie {
         }
 
         private void btnJoinHideout_Click(object sender, RoutedEventArgs e) {
+            log.Trace("Join hideout button clicked");
             int id = (int)((Button)sender).Tag;
             var offer = vm.GetOffer(id);
 
@@ -190,6 +208,7 @@ namespace Menagerie {
         }
 
         private void btnTrade_Click(object sender, RoutedEventArgs e) {
+            log.Trace("Trade button clicked");
             int id = (int)((Button)sender).Tag;
             var offer = vm.GetOffer(id);
 
@@ -201,12 +220,14 @@ namespace Menagerie {
         }
 
         private void btnLeave_Click(object sender, RoutedEventArgs e) {
+            log.Trace("Leave button clicked");
             int id = (int)((Button)sender).Tag;
 
             vm.SendLeave(id);
         }
 
         private void btnClearOffers_Click(object sender, RoutedEventArgs e) {
+            log.Trace("Clear offers button clicked");
             vm.ClearOffers();
         }
 
@@ -215,6 +236,7 @@ namespace Menagerie {
         }
 
         private void txtSearchOutgoingOffer_TextChanged(object sender, TextChangedEventArgs e) {
+            log.Trace($"Outgoing offers search bar input: {txtSearchOutgoingOffer.Text}");
             if (string.IsNullOrEmpty(txtSearchOutgoingOffer.Text)) {
                 vm.ResetFilter();
             } else {
@@ -223,6 +245,7 @@ namespace Menagerie {
         }
 
         private void txtSearchOffer_TextChanged(object sender, TextChangedEventArgs e) {
+            log.Trace($"Offers offers search bar input: {txtSearchOutgoingOffer.Text}");
             if (string.IsNullOrEmpty(txtSearchOffer.Text)) {
                 vm.ResetFilter(false);
             } else {

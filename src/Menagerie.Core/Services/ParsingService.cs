@@ -11,10 +11,13 @@ using Menagerie.Core.Services;
 using Menagerie.Core;
 using Menagerie.Core.Abstractions;
 using Menagerie.Core.Enums;
+using log4net;
+using Menagerie.Core.Extensions;
 
 namespace Menagerie.Core {
     public class ParsingService : IService {
         #region Constants
+        private static readonly ILog log = LogManager.GetLogger(typeof(ParsingService));
         private const string ITEM_NAME_START_WORD = "to buy your ";
         private const string ITEM_NAME_END_WORD = " listed for ";
         private const string ITEM_NAME_ALTERNATE_END_WORD = " for my ";
@@ -35,20 +38,21 @@ namespace Menagerie.Core {
 
         #region Constructors
         public ParsingService() {
-
+            log.Trace("Initializing ParsingService");
         }
         #endregion
 
         #region Private methods
         private async void DoCleanBuffer() {
+            log.Trace("Starting clean buffer");
             while (true) {
                 await Task.Delay(MAX_BUFFER_LIFE_MINS * 1000 * 60);
                 CleanBuffer();
-
             }
         }
 
         private void OnNewChatEventParsed(Models.ChatEvent evt) {
+            log.Trace("New chat event");
             if (evt == null) {
                 return;
             }
@@ -69,6 +73,7 @@ namespace Menagerie.Core {
         }
 
         private Models.ChatEvent ParseLine(string aline, bool isClientFileLine = true) {
+            log.Trace($"Parsing line {aline} from {(isClientFileLine ? "Client file" : "Clipboard")}");
             Models.ChatEvent evt = null;
             bool processed = false;
 
@@ -210,6 +215,7 @@ namespace Menagerie.Core {
             }
 
             if (!processed) {
+                log.Trace("Line wasn't an offer, trying to parse has other events");
                 var line = aline.ToLower();
 
                 if (line.IndexOf(TRADE_ACCEPTED_MSG) != -1) {
@@ -234,6 +240,7 @@ namespace Menagerie.Core {
         }
 
         private void CleanBuffer() {
+            log.Trace("Cleaning buffer");
             for (int i = 0; i < LastOffersTimes.Count; ++i) {
                 if ((DateTime.Now - LastOffersTimes.ElementAt(i)).TotalMinutes >= MAX_BUFFER_LIFE_MINS) {
                     LastOffersLines.RemoveAt(i);
@@ -244,10 +251,12 @@ namespace Menagerie.Core {
         }
 
         private void ToBuffer(string line) {
+            log.Trace($"Adding {line} to buffer");
             LastOffersLines.Add(line);
             LastOffersTimes.Add(DateTime.Now);
 
             if (LastOffersLines.Count > MAX_OFFER_LINE_BUFFER) {
+                log.Trace("Max buffer size reached. Cleaing old entries");
                 LastOffersLines.RemoveAt(0);
                 LastOffersTimes.RemoveAt(0);
             }
@@ -256,6 +265,7 @@ namespace Menagerie.Core {
 
         #region Public methods
         public void ParseClipboardLine(string line) {
+            log.Trace($"Parsing clipboard line {line}");
             var evt = ParseLine(line, false);
 
             if (evt != null) {
@@ -270,6 +280,7 @@ namespace Menagerie.Core {
         }
 
         public void ParseClientLine(string aline) {
+            log.Trace($"Parsing client file line {aline}");
             if (LastOffersLines.Contains(aline)) {
                 return;
             }
@@ -282,6 +293,7 @@ namespace Menagerie.Core {
         }
 
         public void Start() {
+            log.Trace("Starting ParsingService");
             DoCleanBuffer();
         }
         #endregion

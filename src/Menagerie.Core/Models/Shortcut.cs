@@ -12,5 +12,9 @@ namespace Menagerie.Core.Models {
         public KeyDirection Direction { get; set; } = KeyDirection.Any;
         public VirtualKeyCode Key { get; set; }
         public Action Action { get; set; }
+
+        public override string ToString() {
+            return $"{(Control ? "Ctrl + " : "")}{(Shift ? "Shift + " : "")}{(Alt ? "Alt + " : "")}{(int)Key} {(Direction == KeyDirection.Any ? "Any direction" : (Direction == KeyDirection.Down ? "Down" : "Up"))} {Action}";
+        }
     }
 }

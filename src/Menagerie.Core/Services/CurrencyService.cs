@@ -1,12 +1,12 @@
-﻿using Menagerie.Core.Abstractions;
-using Menagerie.Core.Models;
-using System;
+﻿using log4net;
+using Menagerie.Core.Abstractions;
 using System.Collections.Generic;
-using System.Text;
+using Menagerie.Core.Extensions;
 
 namespace Menagerie.Core.Services {
     public class CurrencyService : IService {
         #region Constants
+        private static readonly ILog log = LogManager.GetLogger(typeof(CurrencyService));
         private readonly Dictionary<string, string> CurrencyToImageLink = new Dictionary<string, string>() {
             {"alt", "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyRerollMagic.png?v=6d9520174f6643e502da336e76b730d3"},
             {"fuse","https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyRerollSocketLinks.png?v=0ad7134a62e5c45e4f8bc8a44b95540f"},
@@ -28,15 +28,19 @@ namespace Menagerie.Core.Services {
         #endregion
 
         #region Constructors
-        public CurrencyService() { }
+        public CurrencyService() {
+            log.Trace("Initializing CurrencyService");
+        }
         #endregion
 
         #region Public Methods
         public string GetCurrencyImageLink(string currencyName) {
+            log.Trace($"Getting currency image link {currencyName}");
             return CurrencyToImageLink[NormalizeCurrency(currencyName)];
         }
 
         public string GetRealName(string text) {
+            log.Trace($"Getting real currency name {text}");
             switch (text) {
                 case "chaos":
                     return "Chaos Orb";
@@ -88,6 +92,7 @@ namespace Menagerie.Core.Services {
             }
         }
         public string NormalizeCurrency(string text) {
+            log.Trace($"Normalizing currency name {text}");
             switch (text) {
                 case "Chaos Orb":
                     return "chaos";
@@ -140,7 +145,7 @@ namespace Menagerie.Core.Services {
         }
 
         public void Start() {
-
+            log.Trace("Starting CurrencyService");
         }
         #endregion
     }

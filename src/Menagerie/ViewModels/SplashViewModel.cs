@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using log4net;
+using System;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
+using Menagerie.Core.Extensions;
 
 namespace Menagerie.ViewModels {
     public class SplashViewModel : INotifyPropertyChanged {
@@ -48,6 +46,10 @@ namespace Menagerie.ViewModels {
         }
         #endregion
 
-        public SplashViewModel() { }
+        private static readonly ILog log = LogManager.GetLogger(typeof(SplashViewModel));
+
+        public SplashViewModel() {
+            log.Trace("Initializing SplashViewModel");
+        }
     }
 }
