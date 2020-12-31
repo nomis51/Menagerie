@@ -65,6 +65,9 @@ namespace Menagerie.ViewModels {
         private Offer[] _offers;
         private Offer[] _outgoingOffers;
 
+        private Queue<Offer> OverflowOffers = new Queue<Offer>();
+        private Queue<Offer> OverflowOutgoingOffers = new Queue<Offer>();
+
         public ObservableCollection<Offer> Offers { get; set; } = new ObservableCollection<Offer>();
         public ObservableCollection<Offer> OutgoingOffers { get; set; } = new ObservableCollection<Offer>();
 
@@ -192,14 +195,40 @@ namespace Menagerie.ViewModels {
 
             App.Current.Dispatcher.Invoke(delegate {
                 if (!offer.IsOutgoing) {
-                    Offers.Add(new Offer(offer));
+                    if (Offers.Count >= 8) {
+                        OverflowOffers.Enqueue(new Offer(offer));
+                    } else {
+                        Offers.Add(new Offer(offer));
+                    }
                 } else {
-                    OutgoingOffers.Insert(0, new Offer(offer));
+                    if (OutgoingOffers.Count >= 8) {
+                        var buffer = OutgoingOffers.ToList();
+                        OverflowOutgoingOffers.Enqueue(buffer.Last());
+                        buffer.RemoveAt(buffer.Count - 1);
+                        OutgoingOffers.Clear();
+                        buffer.ForEach(o => OutgoingOffers.Add(o));
+                        OutgoingOffers.Add(new Offer(offer));
+                        ReorderOutgoingOffers();
+                    } else {
+                        OutgoingOffers.Add(new Offer(offer));
+                        ReorderOutgoingOffers();
+                    }
                 }
 
                 OnPropertyChanged("IsOffersFilterVisible");
                 OnPropertyChanged("IsOutgoingOffersFilterVisible");
             });
+        }
+
+        private void ReorderOutgoingOffers() {
+            var buffer = OutgoingOffers.ToList()
+                .OrderByDescending(o => o.Time);
+
+            OutgoingOffers.Clear();
+
+            foreach (var o in buffer) {
+                OutgoingOffers.Add(o);
+            }
         }
 
         public List<string> GetLeagues() {
@@ -443,7 +472,22 @@ namespace Menagerie.ViewModels {
 
             if (index != -1) {
                 Dispatcher.CurrentDispatcher.Invoke(() => {
-                    (isOutgoing ? OutgoingOffers : Offers).RemoveAt(index);
+                    var refOffers = (isOutgoing ? OutgoingOffers : Offers);
+                    refOffers.RemoveAt(index);
+
+                    if (refOffers.Count < 8) {
+                        if (isOutgoing) {
+                            if (OverflowOutgoingOffers.Count > 0) {
+                                OutgoingOffers.Add(OverflowOutgoingOffers.Dequeue());
+                                ReorderOutgoingOffers();
+                            }
+                        } else {
+                            if (OverflowOffers.Count > 0) {
+                                Offers.Add(OverflowOffers.Dequeue());
+                            }
+                        }
+                    }
+
                     UpdateOffers();
                     AppService.Instance.FocusGame();
                 });
@@ -500,6 +544,12 @@ namespace Menagerie.ViewModels {
             log.Trace("Clearing offers");
             AppService.Instance.FocusGame();
             Offers.Clear();
+
+
+            while (OverflowOffers.Count > 0) {
+                Offers.Add(OverflowOffers.Dequeue());
+            }
+
             OnPropertyChanged("IsOffersFilterVisible");
         }
 
@@ -507,6 +557,13 @@ namespace Menagerie.ViewModels {
             log.Trace("Clearing outgoing offers");
             AppService.Instance.FocusGame();
             OutgoingOffers.Clear();
+
+            while (OverflowOutgoingOffers.Count > 0) {
+                OutgoingOffers.Add(OverflowOutgoingOffers.Dequeue());
+            }
+
+            ReorderOutgoingOffers();
+
             OnPropertyChanged("IsOutgoingOffersFilterVisible");
         }
 
