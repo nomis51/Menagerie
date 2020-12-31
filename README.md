@@ -155,9 +155,6 @@ You can also at any time ```Remove``` all outgoing offers
 ![2020-12-30 19_09_39-YoloCursorOverlay](https://user-images.githubusercontent.com/25111613/103387602-9f3b8e00-4ad2-11eb-9ea7-581607d71453.png)
 
 ## Todos
-- Sound effects
-- Configurable whisper with internal variable (e.g. player name, item name, price, etc.)
-- Map check (e.g. Scan maps for good/bad mods)
 - Do some work on the (WIP) elements of the repo
 
 ## Keyboard shortcuts
