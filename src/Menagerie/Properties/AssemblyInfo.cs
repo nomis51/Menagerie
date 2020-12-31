@@ -8,9 +8,9 @@ using System.Windows;
 // l'ensemble d'attributs suivant. Pour modifier les informations
 // associées à un assembly.
 [assembly: AssemblyTitle("Menagerie")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("A trade manager for Path of Exile")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("nomis51")]
 [assembly: AssemblyProduct("Menagerie")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
