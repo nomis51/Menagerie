@@ -178,7 +178,9 @@ namespace Menagerie.ViewModels {
                 return;
             }
 
-            AudioService.Instance.PlayNotif1();
+            if (!offer.IsOutgoing) {
+                AudioService.Instance.PlayNotif1();
+            }
 
             App.Current.Dispatcher.Invoke(delegate {
                 if (!offer.IsOutgoing) {
