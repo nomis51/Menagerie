@@ -237,7 +237,7 @@ namespace Menagerie.Core {
                 }
 
                 // Aditionnal notes
-                if((topEndIndex != -1 && topEndIndex + 1 < line.Length) || (leagueEndIndex < line.Length)) {
+                if ((topEndIndex != -1 && topEndIndex + 1 < line.Length) || (leagueEndIndex < line.Length)) {
                     offer.Notes = line.Substring(topEndIndex == -1 ? leagueEndIndex : topEndIndex);
                 }
 
@@ -287,13 +287,17 @@ namespace Menagerie.Core {
 
         private void ToBuffer(string line) {
             log.Trace($"Adding {line} to buffer");
-            LastOffersLines.Add(line);
-            LastOffersTimes.Add(DateTime.Now);
+            try {
+                LastOffersLines.Add(line.Substring(line.IndexOf("]") + 1));
+                LastOffersTimes.Add(DateTime.Now);
 
-            if (LastOffersLines.Count > MAX_OFFER_LINE_BUFFER) {
-                log.Trace("Max buffer size reached. Cleaing old entries");
-                LastOffersLines.RemoveAt(0);
-                LastOffersTimes.RemoveAt(0);
+                if (LastOffersLines.Count > MAX_OFFER_LINE_BUFFER) {
+                    log.Trace("Max buffer size reached. Cleaing old entries");
+                    LastOffersLines.RemoveAt(0);
+                    LastOffersTimes.RemoveAt(0);
+                }
+            } catch (Exception e) {
+                log.Error("Error while adding line to buffer", e);
             }
         }
         #endregion
@@ -316,14 +320,18 @@ namespace Menagerie.Core {
 
         public void ParseClientLine(string aline) {
             log.Trace($"Parsing client file line {aline}");
-            if (LastOffersLines.Contains(aline)) {
-                return;
-            }
+            try {
+                if (LastOffersLines.Contains(aline.Substring(aline.IndexOf("]") + 1))) {
+                    return;
+                }
 
-            var evt = ParseLine(aline);
+                var evt = ParseLine(aline);
 
-            if (evt != null) {
-                OnNewChatEventParsed(evt);
+                if (evt != null) {
+                    OnNewChatEventParsed(evt);
+                }
+            } catch (Exception e) {
+                log.Error("Error while parsing client file", e);
             }
         }
 
