@@ -5,7 +5,9 @@ A Path of Exile trade manger to simplify and speed up your trading experience.
 - [.NET Framework 4.7.2+](https://dotnet.microsoft.com/download/dotnet-framework)
 
 ## Usage
-(WIP)
+- Go to the [Releases](https://github.com/nomis51/Menagerie/releases/latest) page
+- Download and extract Menagerie-<version here>.zip file somewhere on your computer
+- Run Menagerie.exe
 
 ## Features
 - Handles incoming trade offers workflow (From the moment someone whisper you until the trade is completed)
@@ -141,6 +143,12 @@ Once the trade is ```completed```, a ```Thanks``` whisper is automatically sent 
 You can also at any time ```Remove``` all outgoing offers
 
 ![2020-12-30 19_09_39-YoloCursorOverlay](https://user-images.githubusercontent.com/25111613/103387602-9f3b8e00-4ad2-11eb-9ea7-581607d71453.png)
+
+## Todos
+- Map check (e.g. Scan maps for good/bad mods)
+- (Issue) Move the app overlay to the screen where PoE is running (when using multiple screens)
+- Track past trades to ignore offers about sold items (configurable)
+- Do some work on the (WIP) elements of the repo
 
 ## Keyboard shortcuts
 - ```F5``` : Go to your hideout
