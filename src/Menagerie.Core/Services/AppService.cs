@@ -47,6 +47,7 @@ namespace Menagerie.Core.Services {
         private PoeWindowService _poeWindowService;
         private KeyboardService _keyboardService;
         private ShortcutService _shortcutService;
+        private TradeService _tradeService;
 
         private AppService() {
             _appDataService = new AppDataService();
@@ -60,6 +61,7 @@ namespace Menagerie.Core.Services {
             _poeApiService = new PoeApiService();
             _keyboardService = new KeyboardService();
             _shortcutService = new ShortcutService();
+            _tradeService = new TradeService();
         }
 
         private void SetShortcuts() {
@@ -128,12 +130,22 @@ namespace Menagerie.Core.Services {
 
         public void NewOffer(Offer offer) {
             var config = GetConfig();
+            
+            if (config.FilterSoldOffers && _tradeService.IsAlreadySold(offer)) {
+                return;
+            }
 
             if (config.OnlyShowOffersOfCurrentLeague && !offer.IsOutgoing && offer.League != GetConfig().CurrentLeague) {
                 return;
             }
 
             OnNewOffer(offer);
+        }
+
+        public void OfferCompleted(Offer offer) {
+            if (GetConfig().FilterSoldOffers) {
+                _tradeService.AddSoldOffer(offer);
+            }
         }
 
         public void NewPlayerJoined(string playerName) {
@@ -239,6 +251,7 @@ namespace Menagerie.Core.Services {
             _parsingService.Start();
             _poeWindowService.Start();
             _shortcutService.Start();
+            _tradeService.Start();
         }
     }
 }

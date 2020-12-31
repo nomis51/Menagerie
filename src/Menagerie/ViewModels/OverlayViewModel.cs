@@ -137,6 +137,17 @@ namespace Menagerie.ViewModels {
                         if (offer.IsOutgoing) {
                             SendLeave(offer.Id, true);
                         } else {
+                            AppService.Instance.OfferCompleted(new CoreModels.Offer() {
+                                ItemName = offer.ItemName,
+                                Currency = offer.Currency,
+                                Price = offer.Price,
+                                Time = offer.Time,
+                                League = offer.League,
+                                PlayerName = offer.PlayerName,
+                                EvenType = ChatEventEnum.Offer,
+                                IsOutgoing = offer.IsOutgoing,
+                                Id = offer.Id
+                            });
                             SendKick(offer.Id, true);
                         }
                         break;
@@ -442,6 +453,19 @@ namespace Menagerie.ViewModels {
             EnsureNotHighlighted(index);
 
             AppService.Instance.SendChatMessage($"@{Offers[index].PlayerName} I'm sorry, my \"{Offers[index].ItemName}\" has already been sold");
+
+            var offer = Offers[index];
+            AppService.Instance.OfferCompleted(new CoreModels.Offer() {
+                ItemName = offer.ItemName,
+                Currency = offer.Currency,
+                Price = offer.Price,
+                Time = offer.Time,
+                League = offer.League,
+                PlayerName = offer.PlayerName,
+                EvenType = ChatEventEnum.Offer,
+                IsOutgoing = offer.IsOutgoing,
+                Id = offer.Id
+            });
 
             RemoveOffer(id);
         }
