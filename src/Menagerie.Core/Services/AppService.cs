@@ -36,6 +36,7 @@ namespace Menagerie.Core.Services {
         public event ToggleOverlayVisibilityEvent OnToggleOverlayVisibility;
         #endregion
 
+        private IntPtr _overlayHandle;
         private AppDataService _appDataService;
         private ChatService _chatService;
         private ClientFileService _clientFileService;
@@ -77,6 +78,14 @@ namespace Menagerie.Core.Services {
 
         private void Shortcut_GoToHideout() {
             SendHideoutChatCommand();
+        }
+
+        public void SetOverlayHandle(IntPtr handle) {
+            _overlayHandle = handle;
+        }
+
+        public IntPtr GetOverlayHandle() {
+            return _overlayHandle;
         }
 
         public void FocusGame() {
@@ -130,7 +139,7 @@ namespace Menagerie.Core.Services {
 
         public void NewOffer(Offer offer) {
             var config = GetConfig();
-            
+
             if (config.FilterSoldOffers && _tradeService.IsAlreadySold(offer)) {
                 return;
             }

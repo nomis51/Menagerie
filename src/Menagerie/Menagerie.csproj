@@ -123,6 +123,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Services\AudioService.cs" />
     <Compile Include="ViewModels\ConfigViewModel.cs" />
     <Compile Include="ViewModels\SplashViewModel.cs" />
     <Compile Include="Views\ConfigWindow.xaml.cs">
@@ -157,6 +158,10 @@
     <Compile Include="ImagePathConverter.cs" />
     <None Include="Assets\menagerie-logo.ico" />
     <None Include="Assets\menagerie-logo-splash.png" />
+    <Content Include="Assets\Audio\click.wav" />
+    <Content Include="Assets\Audio\knocking-on-door.wav" />
+    <Content Include="Assets\Audio\notif1.wav" />
+    <Content Include="Assets\Audio\notif2.wav" />
     <Content Include="log4net.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

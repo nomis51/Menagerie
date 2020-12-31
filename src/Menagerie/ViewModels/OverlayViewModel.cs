@@ -14,6 +14,7 @@ using CoreModels = Menagerie.Core.Models;
 using Menagerie.Views;
 using log4net;
 using Menagerie.Core.Extensions;
+using Menagerie.Services;
 
 namespace Menagerie.ViewModels {
     public class OverlayViewModel : INotifyPropertyChanged {
@@ -108,6 +109,8 @@ namespace Menagerie.ViewModels {
         private void AppService_OnNewPlayerJoined(string playerName) {
             log.Trace("New player joined event");
 
+            AudioService.Instance.PlayKnock();
+
             App.Current.Dispatcher.Invoke(delegate {
                 foreach (var offer in Offers) {
                     if (offer.PlayerName == playerName) {
@@ -163,6 +166,10 @@ namespace Menagerie.ViewModels {
             });
         }
 
+        public void SetOverlayHandle(IntPtr handle) {
+            AppService.Instance.SetOverlayHandle(handle);
+        }
+
         private void AppService_OnNewOffer(Core.Models.Offer offer) {
             log.Trace("New offer event");
             var config = Config;
@@ -170,6 +177,8 @@ namespace Menagerie.ViewModels {
             if (config.OnlyShowOffersOfCurrentLeague && config.CurrentLeague != offer.League) {
                 return;
             }
+
+            AudioService.Instance.PlayNotif1();
 
             App.Current.Dispatcher.Invoke(delegate {
                 if (!offer.IsOutgoing) {

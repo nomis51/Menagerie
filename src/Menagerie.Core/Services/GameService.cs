@@ -5,9 +5,15 @@ using System.Threading.Tasks;
 using WindowsInput.Native;
 using Menagerie.Core.Extensions;
 using System;
+using System.Runtime.InteropServices;
 
 namespace Menagerie.Core.Services {
     public class GameService : IService {
+        #region WinAPI
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        private static extern IntPtr GetForegroundWindow();
+        #endregion
+
         #region Constants
         private static readonly ILog log = LogManager.GetLogger(typeof(GameService));
         #endregion
@@ -23,12 +29,18 @@ namespace Menagerie.Core.Services {
         #endregion
 
         #region Private methods
+        private bool IsOverlayFocused() {
+            IntPtr activeHandle = GetForegroundWindow();
+            IntPtr overlayHandle = AppService.Instance.GetOverlayHandle();
+            return activeHandle == overlayHandle;
+        }
+
         private void VerifyGameFocused() {
             log.Trace("Verifying game focus");
             while (true) {
                 bool poeWinFocused = AppService.Instance.GameFocused();
 
-                if (!poeWinFocused && GameFocused) {
+                if (!poeWinFocused && GameFocused && !IsOverlayFocused()) {
                     log.Trace("Game isn't focused");
                     GameFocused = false;
                     AppService.Instance.HideOverlay();
