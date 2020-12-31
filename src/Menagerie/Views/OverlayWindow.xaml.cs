@@ -1,4 +1,5 @@
 ﻿using Menagerie.Core;
+using Menagerie.Core.Services;
 using Menagerie.Models;
 using Menagerie.ViewModels;
 using System;
@@ -32,6 +33,18 @@ namespace Menagerie {
             this.DataContext = vm;
 
             SetupTrayIcon();
+
+            AppService.Instance.OnToggleOverlayVisibility += AppService_OnToggleOverlayVisibility;
+        }
+
+        private void AppService_OnToggleOverlayVisibility(bool show) {
+            App.Current.Dispatcher.Invoke(delegate {
+                if (show) {
+                    Hide();
+                } else {
+                    Show();
+                }
+            });
         }
 
         private string GetAppVersion() {
@@ -69,7 +82,7 @@ namespace Menagerie {
             }
 
             Forms.ToolStripMenuItem configItem = new Forms.ToolStripMenuItem() {
-                Text = "Config"
+                Text = "Settings"
             };
             configItem.Click += ConfigItem_Click;
 
@@ -102,7 +115,7 @@ namespace Menagerie {
         }
 
         private void ConfigItem_Click(object sender, EventArgs e) {
-            // TODO: show config window (well I've to build it aswell lol)
+            vm.ShowConfigWindow();
         }
 
         private void QuitItem_Click(object sender, EventArgs e) {

@@ -11,7 +11,7 @@
         Background="Transparent"
         Topmost="True"
         ShowInTaskbar="False"
-        Title="MainWindow" WindowState="Maximized">
+        Title="Overlay" WindowState="Maximized">
     <Window.Resources>
     </Window.Resources>
     <Grid>

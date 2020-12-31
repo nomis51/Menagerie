@@ -1,20 +1,17 @@
-﻿using Menagerie.Core;
-using Menagerie.Models;
+﻿using Menagerie.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
-using System.Windows.Controls;
 using System.Windows;
 using Menagerie.Core.Services;
-using Menagerie.Views;
 using Menagerie.Core.Enums;
+using CoreModels = Menagerie.Core.Models;
+using Menagerie.Views;
 
 namespace Menagerie.ViewModels {
     public class OverlayViewModel : INotifyPropertyChanged {
@@ -58,6 +55,8 @@ namespace Menagerie.ViewModels {
         }
         #endregion
 
+        private ConfigWindow ConfigWin;
+
         private Offer[] _offers;
         private Offer[] _outgoingOffers;
 
@@ -76,17 +75,9 @@ namespace Menagerie.ViewModels {
             }
         }
 
-        public Config Config {
+        public CoreModels.Config Config {
             get {
-                var dto = AppService.Instance.GetConfig();
-                return dto == null ? new Config() {
-                    CurrentLeague = "Standard",
-                    OnlyShowOffersOfCurrentLeague = false,
-                    PlayerName = ""
-                } : new Config() {
-                    PlayerName = dto.PlayerName,
-                    CurrentLeague = dto.CurrentLeague,
-                };
+                return AppService.Instance.GetConfig();
             }
         }
 
@@ -94,70 +85,17 @@ namespace Menagerie.ViewModels {
             AppService.Instance.OnNewOffer += AppService_OnNewOffer;
             AppService.Instance.OnNewChatEvent += AppService_OnNewChatEvent;
             AppService.Instance.OnNewPlayerJoined += AppService_OnNewPlayerJoined;
+        }
 
-            // TODO: For testing only
+        public void ShowConfigWindow() {
+            ConfigWin = new ConfigWindow();
+            ConfigWin.Closed += ConfigWin_Closed;
+            ConfigWin.Show();
+        }
 
-            //OutgoingOffers.Add(new Offer() {
-            //    Id = 99,
-            //    ItemName = "Saqawal",
-            //    Price = 9,
-            //    Currency = "Chaos",
-            //    PlayerName = "Paul",
-            //    IsOutgoing = true
-            //});
-            //OutgoingOffers.Add(new Offer() {
-            //    Id = 100,
-            //    ItemName = "Saqawal",
-            //    Price = 11,
-            //    Currency = "Chaos",
-            //    PlayerName = "Paul",
-            //    IsOutgoing = true
-            //});
-
-            //            var item = AppService.Instance.ParseItem(
-            //@"Rarity: Unique
-            //Saqawal's Nest
-            //Blood Raiment
-            //--------
-            //Quality: +20% (augmented)
-            //Evasion Rating: 676 (augmented)
-            //Energy Shield: 236 (augmented)
-            //--------
-            //Requirements:
-            //Level: 65
-            //Dex: 107
-            //Int: 90
-            //--------
-            //Sockets: B G-G G G B 
-            //--------
-            //Item Level: 72
-            //--------
-            //5% increased maximum Life (implicit)
-            //--------
-            //+34 to all Attributes
-            //+32% to Lightning Resistance
-            //10% reduced Mana Reserved
-            //100% increased Aspect of the Avian Buff Effect
-            //Aspect of the Avian also grants Avian's Might and Avian's Flight to nearby Allies
-            //+127 to Evasion Rating and Energy Shield
-            //--------
-            //The First of the Sky was the Last of the First.
-            //It was he who showed us that our limits are self-imposed,
-            //that what we take for law may just be an illusion.
-            //--------
-            //Corrupted
-            //--------
-            //Note: ~price 1 exalted
-            //"
-            //            );
-
-            //            var result = AppService.Instance.PriceCheck(item).Result;
-
-            //            PriceCheck priceCheckWin = new PriceCheck();
-            //            priceCheckWin.vm.Item = new Item(item);
-            //            priceCheckWin.vm.PriceCheckResult = result;
-            //            priceCheckWin.Show();
-
+        private void ConfigWin_Closed(object sender, EventArgs e) {
+            ConfigWin.Closed -= ConfigWin_Closed;
+            ConfigWin = null;
         }
 
         private void AppService_OnNewPlayerJoined(string playerName) {
