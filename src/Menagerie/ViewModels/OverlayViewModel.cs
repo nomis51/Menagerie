@@ -173,6 +173,11 @@ namespace Menagerie.ViewModels {
             AppService.Instance.SetOverlayHandle(handle);
         }
 
+        public void UpdateElapsedTime() {
+            UpdateOffers();
+            OnPropertyChanged("Tooltip");
+        }
+
         private void AppService_OnNewOffer(Core.Models.Offer offer) {
             log.Trace("New offer event");
             var config = Config;

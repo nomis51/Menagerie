@@ -255,7 +255,7 @@ namespace Menagerie.Models {
 
         public string Tooltip {
             get {
-                var text = $"Time: {Time} ({ElapsedTime()})\nPlayer: {PlayerName}\nItem: {ItemName}\nPrice: {Price} {Currency}\nLeague: {League}";
+                var text = $"Time: {Time}\nPlayer: {PlayerName}\nItem: {ItemName}\nPrice: {Price} {Currency}\nLeague: {League}";
 
                 if (!string.IsNullOrEmpty(StashTab)) {
                     text += $"\nStash tab: { StashTab}\nPosition: Left { Position.X}, Top { Position.Y}";

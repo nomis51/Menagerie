@@ -300,5 +300,9 @@ namespace Menagerie {
                 vm.FilterOffers(txtSearchOffer.Text, false);
             }
         }
+
+        private void grdOffer_MouseEnter(object sender, MouseEventArgs e) {
+            vm.UpdateElapsedTime();
+        }
     }
 }
