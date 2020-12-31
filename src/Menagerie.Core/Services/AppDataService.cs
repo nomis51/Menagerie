@@ -14,6 +14,7 @@ namespace Menagerie.Core.Services {
         private static readonly ILog log = LogManager.GetLogger(typeof(AppDataService));
         private const string DB_FILE_PATH = "Menagerie.db";
         public static readonly string COLLECTION_CONFIG = "config";
+        public static readonly string COLLECTION_TRADES = "trades";
         #endregion
 
         #region Members
@@ -33,7 +34,8 @@ namespace Menagerie.Core.Services {
                 InsertDocument<Config>(COLLECTION_CONFIG, new Config() {
                     PlayerName = "",
                     CurrentLeague = "Standard",
-                    OnlyShowOffersOfCurrentLeague = false
+                    OnlyShowOffersOfCurrentLeague = false,
+                    FilterSoldOffers = false
                 });
             }
         }
