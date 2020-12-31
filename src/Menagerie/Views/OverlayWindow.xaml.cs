@@ -1,46 +1,61 @@
 ﻿using log4net;
-using Menagerie.Core;
 using Menagerie.Core.Services;
 using Menagerie.Models;
 using Menagerie.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Forms = System.Windows.Forms;
 using Menagerie.Core.Extensions;
+using System.Runtime.InteropServices;
+using System.Windows.Interop;
 
 namespace Menagerie {
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml
     /// </summary>
     public partial class OverlayWindow : Window {
-        private static readonly ILog log = LogManager.GetLogger(typeof(OverlayWindow)); 
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
+
+        private static readonly ILog log = LogManager.GetLogger(typeof(OverlayWindow));
+
+        private readonly System.Drawing.Rectangle screenRect;
 
         public OverlayViewModel vm;
         private Forms.NotifyIcon trayIcon = null;
 
-        public OverlayWindow() {
+
+        public OverlayWindow(Forms.Screen screen) {
             InitializeComponent();
 
             log.Trace("Initializing Overlay");
 
+            screenRect = screen.WorkingArea;
+
             vm = new OverlayViewModel();
             this.DataContext = vm;
+
+            this.SourceInitialized += OverlayWindow_SourceInitialized;
+            this.Loaded += OverlayWindow_Loaded;
 
             SetupTrayIcon();
 
             AppService.Instance.OnToggleOverlayVisibility += AppService_OnToggleOverlayVisibility;
+        }
+
+        private void OverlayWindow_Loaded(object sender, RoutedEventArgs e) {
+            WindowState = WindowState.Maximized;
+        }
+
+        private void OverlayWindow_SourceInitialized(object sender, EventArgs e) {
+            base.OnSourceInitialized(e);
+            var wih = new WindowInteropHelper(this);
+            IntPtr hWnd = wih.Handle;
+            MoveWindow(hWnd, screenRect.Left, screenRect.Top, screenRect.Width, screenRect.Height, false);
         }
 
         private void AppService_OnToggleOverlayVisibility(bool show) {
