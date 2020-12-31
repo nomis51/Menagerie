@@ -245,6 +245,13 @@ namespace Menagerie.ViewModels {
             OnPropertyChanged("IsOutgoingOffersFilterVisible");
         }
 
+        private string ReplaceVars(string msg, Offer offer) {
+            return msg.Replace("{item}", offer.ItemName)
+                .Replace("{price}", $"{offer.Price} {offer.Currency}")
+                .Replace("{league}", offer.League)
+                .Replace("{player}", offer.PlayerName);
+        }
+
         public void SendTradeRequest(int id, bool isOutgoing = false) {
             log.Trace($"Sending trade request {id}");
             var index = GetOfferIndex(id);
@@ -302,7 +309,7 @@ namespace Menagerie.ViewModels {
                 return;
             }
 
-            AppService.Instance.SendChatMessage($"@{Offers[index].PlayerName} I'm busy right now, I'll whisper you for the \"{Offers[index].ItemName}\" when I'm ready");
+            AppService.Instance.SendChatMessage($"@{Offers[index].PlayerName} {ReplaceVars(AppService.Instance.GetConfig().BusyWhisper, Offers[index])}");
         }
 
         public void SendReInvite(int id) {
@@ -398,7 +405,7 @@ namespace Menagerie.ViewModels {
 
                 if (sayThanks) {
                     Thread.Sleep(100);
-                    AppService.Instance.SendChatMessage($"@{playerName} Thank you and have fun!");
+                    AppService.Instance.SendChatMessage($"@{playerName} {ReplaceVars(AppService.Instance.GetConfig().ThanksWhisper, Offers[index])}");
                 }
             });
             t.SetApartmentState(ApartmentState.STA);
@@ -436,7 +443,7 @@ namespace Menagerie.ViewModels {
 
             EnsureNotHighlighted(index);
 
-            AppService.Instance.SendChatMessage($"@{Offers[index].PlayerName} Are you still interested in my \"{Offers[index].ItemName}\" listed for {Offers[index].Price} {Offers[index].Currency}?");
+            AppService.Instance.SendChatMessage($"@{Offers[index].PlayerName} {ReplaceVars(AppService.Instance.GetConfig().StillInterestedWhisper, Offers[index])}");
         }
 
         public void SendSoldWhisper(int id) {
@@ -452,7 +459,7 @@ namespace Menagerie.ViewModels {
 
             EnsureNotHighlighted(index);
 
-            AppService.Instance.SendChatMessage($"@{Offers[index].PlayerName} I'm sorry, my \"{Offers[index].ItemName}\" has already been sold");
+            AppService.Instance.SendChatMessage($"@{Offers[index].PlayerName} {ReplaceVars(AppService.Instance.GetConfig().SoldWhisper, Offers[index])}");
 
             var offer = Offers[index];
             AppService.Instance.OfferCompleted(new CoreModels.Offer() {

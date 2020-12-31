@@ -53,10 +53,10 @@ namespace Menagerie {
         }
 
         private void OverlayWindow_SourceInitialized(object sender, EventArgs e) {
-            base.OnSourceInitialized(e);
-            var wih = new WindowInteropHelper(this);
-            IntPtr hWnd = wih.Handle;
-            MoveWindow(hWnd, screenRect.Left, screenRect.Top, screenRect.Width, screenRect.Height, false);
+            //base.OnSourceInitialized(e);
+            //var wih = new WindowInteropHelper(this);
+            //IntPtr hWnd = wih.Handle;
+            //MoveWindow(hWnd, screenRect.Left, screenRect.Top, screenRect.Width, screenRect.Height, false);
         }
 
         private void AppService_OnToggleOverlayVisibility(bool show) {
