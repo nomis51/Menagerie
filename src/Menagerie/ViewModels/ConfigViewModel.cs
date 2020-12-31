@@ -1,9 +1,11 @@
-﻿using Menagerie.Core.Models;
+﻿using log4net;
+using Menagerie.Core.Models;
 using Menagerie.Core.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
+using Menagerie.Core.Extensions;
 
 namespace Menagerie.ViewModels {
     public class ConfigViewModel : INotifyPropertyChanged {
@@ -47,6 +49,8 @@ namespace Menagerie.ViewModels {
         }
         #endregion
 
+        private static readonly ILog log = LogManager.GetLogger(typeof(ConfigViewModel));
+
         private Config _config;
         public Config Config {
             get {
@@ -70,19 +74,23 @@ namespace Menagerie.ViewModels {
         }
 
         public ConfigViewModel() {
+            log.Trace("Intializing ConfigViewModel");
             GetLeagues();
             GetConfig();
         }
 
         public void SaveConfig() {
+            log.Trace("Saving config");
             AppService.Instance.SetConfig(Config);
         }
 
         private void GetConfig() {
+            log.Trace("Getting config");
             Config = AppService.Instance.GetConfig();
         }
 
         private void GetLeagues() {
+            log.Trace("Getting leagues");
             var leagues = AppService.Instance.GetLeagues().Result;
 
             foreach (var league in leagues) {

@@ -142,7 +142,9 @@
     <Compile Include="ImagePathConverter.cs" />
     <None Include="Assets\menagerie-logo.ico" />
     <None Include="Assets\menagerie-logo-splash.png" />
-    <None Include="log4net.config" />
+    <Content Include="log4net.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Compile Include="Models\Offer.cs" />
     <Compile Include="ViewModels\OverlayViewModel.cs" />
     <Compile Include="Views\OverlayWindow.xaml.cs">
