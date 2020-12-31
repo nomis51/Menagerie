@@ -127,6 +127,12 @@ namespace Menagerie.Core.Services {
         }
 
         public void NewOffer(Offer offer) {
+            var config = GetConfig();
+
+            if (config.OnlyShowOffersOfCurrentLeague && !offer.IsOutgoing && offer.League != GetConfig().CurrentLeague) {
+                return;
+            }
+
             OnNewOffer(offer);
         }
 
