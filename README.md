@@ -19,7 +19,8 @@ A Path of Exile trade manger to simplify and speed up your trading experience.
 - Player detection (e.g. the buyer has join your area)
 - Custom keyboard shortcuts (Currently has the "go to hideout" shortcut built-in) (WIP)
 - Auto-hide when PoE is not focused
-- Switch league, configure the app (WIP) or quit with the system tray icon :
+- Can ignore offers out of your league or offers about sold items
+- Switch league, configure the app or quit with the system tray icon :
 
 ![blur-2020-12-30 19_53_33-YoloCursorOverlay](https://user-images.githubusercontent.com/25111613/103388931-d06b8c80-4ad9-11eb-94db-2a26386b9e75.png)
 
@@ -145,9 +146,9 @@ You can also at any time ```Remove``` all outgoing offers
 ![2020-12-30 19_09_39-YoloCursorOverlay](https://user-images.githubusercontent.com/25111613/103387602-9f3b8e00-4ad2-11eb-9ea7-581607d71453.png)
 
 ## Todos
+- Sound effects
+- Configurable whisper with internal variable (e.g. player name, item name, price, etc.)
 - Map check (e.g. Scan maps for good/bad mods)
-- (Issue) Move the app overlay to the screen where PoE is running (when using multiple screens)
-- Track past trades to ignore offers about sold items (configurable)
 - Do some work on the (WIP) elements of the repo
 
 ## Keyboard shortcuts
