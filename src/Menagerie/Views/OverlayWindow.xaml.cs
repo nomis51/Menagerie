@@ -12,6 +12,7 @@ using Forms = System.Windows.Forms;
 using Menagerie.Core.Extensions;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
+using System.Windows.Media;
 
 namespace Menagerie {
     /// <summary>
@@ -73,7 +74,7 @@ namespace Menagerie {
         private string GetAppVersion() {
             System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
             System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
-            return fvi.FileVersion;
+            return $"{fvi.FileMajorPart}.{fvi.FileMinorPart}.{fvi.FileBuildPart}";
         }
 
         private void SetupTrayIcon() {
@@ -81,15 +82,15 @@ namespace Menagerie {
             trayIcon = new Forms.NotifyIcon();
             trayIcon.Icon = Properties.Resources.menagerie_logo;
 
-            Forms.ContextMenuStrip menu = new Forms.ContextMenuStrip();
+            Forms.ContextMenuStrip menu = new Forms.ContextMenuStrip() { };
 
             Forms.ToolStripMenuItem versionItem = new Forms.ToolStripMenuItem() {
                 Text = $"Version {GetAppVersion()}",
-                Enabled = false
+                Enabled = false,
             };
 
             Forms.ToolStripMenuItem leagueItem = new Forms.ToolStripMenuItem() {
-                Text = "League"
+                Text = "League",
             };
 
             List<string> leagues = vm.GetLeagues();
@@ -98,7 +99,7 @@ namespace Menagerie {
             foreach (var l in leagues) {
                 var item = new Forms.ToolStripMenuItem() {
                     Text = l,
-                    Checked = currentLeague == l
+                    Checked = currentLeague == l,
                 };
                 item.Click += LeagueMenuItem_Click;
 
@@ -106,12 +107,12 @@ namespace Menagerie {
             }
 
             Forms.ToolStripMenuItem configItem = new Forms.ToolStripMenuItem() {
-                Text = "Settings"
+                Text = "Settings",
             };
             configItem.Click += ConfigItem_Click;
 
             Forms.ToolStripMenuItem quitItem = new Forms.ToolStripMenuItem() {
-                Text = "Quit"
+                Text = "Quit",
             };
             quitItem.Click += QuitItem_Click;
 
