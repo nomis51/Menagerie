@@ -1,4 +1,5 @@
 # Menagerie
+![logo](https://user-images.githubusercontent.com/25111613/103430530-0f114d80-4b93-11eb-9937-884259718529.png)
 A Path of Exile trade manger to simplify and speed up your trading experience.
 
 ## Requirements
@@ -20,6 +21,14 @@ A Path of Exile trade manger to simplify and speed up your trading experience.
 - Custom keyboard shortcuts (Currently has the "go to hideout" shortcut built-in) (WIP)
 - Auto-hide when PoE is not focused
 - Can ignore offers out of your league or offers about sold items
+- Sound effects and notifications
+- Configurable whispers with internal variables (e.g. item name, player name, price, etc.)
+- Handle aditionnal comment in trade whispers and displayed in the tooltip. There's also a yellow star on the offer to notice that there's are notes in the tooltip
+
+![2020_12_31_16_24_20_YoloCursorOverlay](https://user-images.githubusercontent.com/25111613/103426087-d4a0b400-4b84-11eb-987e-23adc7e1ec91.png)
+
+![2020-12-31 17_58_51-YoloCursorOverlay](https://user-images.githubusercontent.com/25111613/103430421-e5a3f200-4b91-11eb-9050-3f2c369e095c.png)
+
 - Switch league, configure the app or quit with the system tray icon :
 
 ![blur-2020-12-30 19_53_33-YoloCursorOverlay](https://user-images.githubusercontent.com/25111613/103388931-d06b8c80-4ad9-11eb-94db-2a26386b9e75.png)
@@ -120,10 +129,10 @@ You have severals informations (in a tooltip aswell) available such as :
 
 - The name of the item
 - The name of the player
-- The time and the elapsed time from the moment you've sent the whisper (WIP)
+- The time
 - The price (Usefull if you have multiple items with different prices)
 - The offers are ordered by price (Lowest price on top)
-- (WIP) The offers are ordered by time and they expire (removed from the overlay) after 60 seconds. The offer won't expire if you join the hideout of a player using the Join hideout action (Notice that the timer keeps running as reference). See below.
+- The offers are ordered by time
 
 ![2020-12-30 19_42_20-YoloCursorOverlay](https://user-images.githubusercontent.com/25111613/103388464-28ed5a80-4ad7-11eb-9da4-10e2958eb08b.png)
 
