@@ -72,6 +72,8 @@
                             </TextBlock>
                         </DockPanel>
 
+                        <fa5:ImageAwesome Visibility="{Binding AnyNotes}" Panel.ZIndex="99" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Width="10" Height="10"  Icon="Solid_Star" Foreground="Yellow"/>
+
                         <TextBlock Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#a0aec0" FontWeight="Bold" FontSize="{Binding PriceFontSize}" Text="{Binding PriceText}"></TextBlock>
 
                         <Image Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform"  Source="{Binding CurrencyImageLink}"/>

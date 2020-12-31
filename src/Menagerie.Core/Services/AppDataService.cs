@@ -35,7 +35,11 @@ namespace Menagerie.Core.Services {
                     PlayerName = "",
                     CurrentLeague = "Standard",
                     OnlyShowOffersOfCurrentLeague = false,
-                    FilterSoldOffers = false
+                    FilterSoldOffers = false,
+                    BusyWhisper = "I'm busy right now, I'll whisper you for the \"{item}\" when I'm ready",
+                    SoldWhisper = "I'm sorry, my \"{item}\" has already been sold",
+                    StillInterestedWhisper = "Are you still interested in my \"{item}\" listed for {price}?",
+                    ThanksWhisper = "Thank you and have fun!"
                 });
             }
         }

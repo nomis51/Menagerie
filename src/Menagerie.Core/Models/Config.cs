@@ -8,5 +8,9 @@ namespace Menagerie.Core.Models {
         public string CurrentLeague { get; set; }
         public bool OnlyShowOffersOfCurrentLeague { get; set; }
         public bool FilterSoldOffers { get; set; }
+        public string SoldWhisper { get; set; }
+        public string StillInterestedWhisper { get; set; }
+        public string BusyWhisper { get; set; }
+        public string ThanksWhisper { get; set; }
     }
 }

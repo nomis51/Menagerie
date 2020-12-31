@@ -12,6 +12,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="45"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="50"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -22,7 +23,7 @@
 
         <TextBlock Margin="5" Text="Settings" FontSize="24" FontWeight="Bold" Foreground="#a0aec0"></TextBlock>
 
-        <StackPanel Grid.Row="1" Grid.Column="0">
+        <StackPanel Grid.Row="1" Grid.Column="0" >
             <DockPanel Margin="5">
                 <Label Content="Player name:" Foreground="#a0aec0" ToolTip="Required to automatically leave party when an outgoing trade is completed"></Label>
                 <TextBox Text="{Binding Config.PlayerName, Mode=TwoWay}"></TextBox>
@@ -44,7 +45,38 @@
             </DockPanel>
         </StackPanel>
 
-        <DockPanel Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right">
+        <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+            <DockPanel Margin="5">
+                <Label Content="Sold whisper:" Foreground="#a0aec0"></Label>
+                <TextBox Text="{Binding Config.SoldWhisper, Mode=TwoWay}"></TextBox>
+            </DockPanel>
+
+            <DockPanel Margin="5">
+                <Label Content="Still interested whisper:" Foreground="#a0aec0"></Label>
+                <TextBox Text="{Binding Config.StillInterestedWhisper, Mode=TwoWay}"></TextBox>
+            </DockPanel>
+
+            <DockPanel Margin="5">
+                <Label Content="Busy whisper:" Foreground="#a0aec0"></Label>
+                <TextBox Text="{Binding Config.BusyWhisper, Mode=TwoWay}"></TextBox>
+            </DockPanel>
+
+            <DockPanel Margin="5">
+                <Label Content="Thanks whisper:" Foreground="#a0aec0"></Label>
+                <TextBox Text="{Binding Config.ThanksWhisper, Mode=TwoWay}"></TextBox>
+            </DockPanel>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Center">
+            <TextBlock Foreground="#a0aec0" FontWeight="Bold" Text="You can use the following variables in your whispers:"></TextBlock>
+            <TextBlock Foreground="#a0aec0" Text=" {item} = To display the item name"></TextBlock>
+            <TextBlock Foreground="#a0aec0" Text=" {price} = To display the price of the item"></TextBlock>
+            <TextBlock Foreground="#a0aec0" Text=" {league} = To display the league name"></TextBlock>
+            <TextBlock Foreground="#a0aec0" Text=" {player} = To display the player name"></TextBlock>
+
+        </StackPanel>
+
+        <DockPanel Grid.Row="3" Grid.Column="2"  HorizontalAlignment="Right">
             <Button Name="btnCancel" Click="btnCancel_Click" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Right" MinWidth="80" >
                 <Button.Content>
                     <DockPanel HorizontalAlignment="Center" VerticalAlignment="Center">

@@ -202,8 +202,43 @@ namespace Menagerie.Core {
 
                 if (leagueEndIndex == -1) {
                     offer.League = line.Substring(leagueStartIndex);
+                    leagueEndIndex = leagueStartIndex + offer.League.Length;
                 } else {
                     offer.League = line.Substring(leagueStartIndex, leagueEndIndex - leagueStartIndex);
+                }
+
+                // Item location
+                int itemTabStartIndex = line.IndexOf("(stash tab \"", leagueEndIndex);
+                int topEndIndex = -1;
+
+                if (itemTabStartIndex != -1) {
+                    itemTabStartIndex += "(stash tab \"".Length;
+                    int itemTabEndIndex = line.IndexOf("\"; position: left ", itemTabStartIndex);
+
+                    if (itemTabEndIndex != -1) {
+                        offer.StashTab = line.Substring(itemTabStartIndex, itemTabEndIndex - itemTabStartIndex);
+
+                        int leftStartIndex = itemTabEndIndex + "\"; position: left ".Length;
+                        int leftEndIndex = line.IndexOf(", top ", leftStartIndex);
+
+                        if (leftEndIndex != -1) {
+                            int x = int.Parse(line.Substring(leftStartIndex, leftEndIndex - leftStartIndex));
+
+                            int topStartIndex = leftEndIndex + ", top ".Length;
+                            topEndIndex = line.IndexOf(")", topStartIndex);
+
+                            if (topEndIndex != -1) {
+                                int y = int.Parse(line.Substring(topStartIndex, topEndIndex - topStartIndex));
+                                ++topEndIndex;
+                                offer.Position = new System.Drawing.Point(x, y);
+                            }
+                        }
+                    }
+                }
+
+                // Aditionnal notes
+                if((topEndIndex != -1 && topEndIndex + 1 < line.Length) || (leagueEndIndex < line.Length)) {
+                    offer.Notes = line.Substring(topEndIndex == -1 ? leagueEndIndex : topEndIndex);
                 }
 
                 offer.Id = NextId();

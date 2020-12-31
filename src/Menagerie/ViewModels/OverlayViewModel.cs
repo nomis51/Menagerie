@@ -14,6 +14,7 @@ using CoreModels = Menagerie.Core.Models;
 using Menagerie.Views;
 using log4net;
 using Menagerie.Core.Extensions;
+using Menagerie.Services;
 
 namespace Menagerie.ViewModels {
     public class OverlayViewModel : INotifyPropertyChanged {
@@ -64,6 +65,9 @@ namespace Menagerie.ViewModels {
         private Offer[] _offers;
         private Offer[] _outgoingOffers;
 
+        private Queue<Offer> OverflowOffers = new Queue<Offer>();
+        private Queue<Offer> OverflowOutgoingOffers = new Queue<Offer>();
+
         public ObservableCollection<Offer> Offers { get; set; } = new ObservableCollection<Offer>();
         public ObservableCollection<Offer> OutgoingOffers { get; set; } = new ObservableCollection<Offer>();
 
@@ -108,6 +112,8 @@ namespace Menagerie.ViewModels {
         private void AppService_OnNewPlayerJoined(string playerName) {
             log.Trace("New player joined event");
 
+            AudioService.Instance.PlayKnock();
+
             App.Current.Dispatcher.Invoke(delegate {
                 foreach (var offer in Offers) {
                     if (offer.PlayerName == playerName) {
@@ -146,7 +152,10 @@ namespace Menagerie.ViewModels {
                                 PlayerName = offer.PlayerName,
                                 EvenType = ChatEventEnum.Offer,
                                 IsOutgoing = offer.IsOutgoing,
-                                Id = offer.Id
+                                Id = offer.Id,
+                                StashTab = offer.StashTab,
+                                Position = offer.Position,
+                                Notes = offer.Notes
                             });
                             SendKick(offer.Id, true);
                         }
@@ -163,6 +172,15 @@ namespace Menagerie.ViewModels {
             });
         }
 
+        public void SetOverlayHandle(IntPtr handle) {
+            AppService.Instance.SetOverlayHandle(handle);
+        }
+
+        public void UpdateElapsedTime() {
+            UpdateOffers();
+            OnPropertyChanged("Tooltip");
+        }
+
         private void AppService_OnNewOffer(Core.Models.Offer offer) {
             log.Trace("New offer event");
             var config = Config;
@@ -171,16 +189,46 @@ namespace Menagerie.ViewModels {
                 return;
             }
 
+            if (!offer.IsOutgoing) {
+                AudioService.Instance.PlayNotif1();
+            }
+
             App.Current.Dispatcher.Invoke(delegate {
                 if (!offer.IsOutgoing) {
-                    Offers.Add(new Offer(offer));
+                    if (Offers.Count >= 8) {
+                        OverflowOffers.Enqueue(new Offer(offer));
+                    } else {
+                        Offers.Add(new Offer(offer));
+                    }
                 } else {
-                    OutgoingOffers.Insert(0, new Offer(offer));
+                    if (OutgoingOffers.Count >= 8) {
+                        var buffer = OutgoingOffers.ToList();
+                        OverflowOutgoingOffers.Enqueue(buffer.Last());
+                        buffer.RemoveAt(buffer.Count - 1);
+                        OutgoingOffers.Clear();
+                        buffer.ForEach(o => OutgoingOffers.Add(o));
+                        OutgoingOffers.Add(new Offer(offer));
+                        ReorderOutgoingOffers();
+                    } else {
+                        OutgoingOffers.Add(new Offer(offer));
+                        ReorderOutgoingOffers();
+                    }
                 }
 
                 OnPropertyChanged("IsOffersFilterVisible");
                 OnPropertyChanged("IsOutgoingOffersFilterVisible");
             });
+        }
+
+        private void ReorderOutgoingOffers() {
+            var buffer = OutgoingOffers.ToList()
+                .OrderByDescending(o => o.Time);
+
+            OutgoingOffers.Clear();
+
+            foreach (var o in buffer) {
+                OutgoingOffers.Add(o);
+            }
         }
 
         public List<string> GetLeagues() {
@@ -245,6 +293,13 @@ namespace Menagerie.ViewModels {
             OnPropertyChanged("IsOutgoingOffersFilterVisible");
         }
 
+        private string ReplaceVars(string msg, Offer offer) {
+            return msg.Replace("{item}", offer.ItemName)
+                .Replace("{price}", $"{offer.Price} {offer.Currency}")
+                .Replace("{league}", offer.League)
+                .Replace("{player}", offer.PlayerName);
+        }
+
         public void SendTradeRequest(int id, bool isOutgoing = false) {
             log.Trace($"Sending trade request {id}");
             var index = GetOfferIndex(id);
@@ -302,7 +357,7 @@ namespace Menagerie.ViewModels {
                 return;
             }
 
-            AppService.Instance.SendChatMessage($"@{Offers[index].PlayerName} I'm busy right now, I'll whisper you for the \"{Offers[index].ItemName}\" when I'm ready");
+            AppService.Instance.SendChatMessage($"@{Offers[index].PlayerName} {ReplaceVars(AppService.Instance.GetConfig().BusyWhisper, Offers[index])}");
         }
 
         public void SendReInvite(int id) {
@@ -398,7 +453,7 @@ namespace Menagerie.ViewModels {
 
                 if (sayThanks) {
                     Thread.Sleep(100);
-                    AppService.Instance.SendChatMessage($"@{playerName} Thank you and have fun!");
+                    AppService.Instance.SendChatMessage($"@{playerName} {ReplaceVars(AppService.Instance.GetConfig().ThanksWhisper, Offers[index])}");
                 }
             });
             t.SetApartmentState(ApartmentState.STA);
@@ -417,7 +472,22 @@ namespace Menagerie.ViewModels {
 
             if (index != -1) {
                 Dispatcher.CurrentDispatcher.Invoke(() => {
-                    (isOutgoing ? OutgoingOffers : Offers).RemoveAt(index);
+                    var refOffers = (isOutgoing ? OutgoingOffers : Offers);
+                    refOffers.RemoveAt(index);
+
+                    if (refOffers.Count < 8) {
+                        if (isOutgoing) {
+                            if (OverflowOutgoingOffers.Count > 0) {
+                                OutgoingOffers.Add(OverflowOutgoingOffers.Dequeue());
+                                ReorderOutgoingOffers();
+                            }
+                        } else {
+                            if (OverflowOffers.Count > 0) {
+                                Offers.Add(OverflowOffers.Dequeue());
+                            }
+                        }
+                    }
+
                     UpdateOffers();
                     AppService.Instance.FocusGame();
                 });
@@ -436,7 +506,7 @@ namespace Menagerie.ViewModels {
 
             EnsureNotHighlighted(index);
 
-            AppService.Instance.SendChatMessage($"@{Offers[index].PlayerName} Are you still interested in my \"{Offers[index].ItemName}\" listed for {Offers[index].Price} {Offers[index].Currency}?");
+            AppService.Instance.SendChatMessage($"@{Offers[index].PlayerName} {ReplaceVars(AppService.Instance.GetConfig().StillInterestedWhisper, Offers[index])}");
         }
 
         public void SendSoldWhisper(int id) {
@@ -452,7 +522,7 @@ namespace Menagerie.ViewModels {
 
             EnsureNotHighlighted(index);
 
-            AppService.Instance.SendChatMessage($"@{Offers[index].PlayerName} I'm sorry, my \"{Offers[index].ItemName}\" has already been sold");
+            AppService.Instance.SendChatMessage($"@{Offers[index].PlayerName} {ReplaceVars(AppService.Instance.GetConfig().SoldWhisper, Offers[index])}");
 
             var offer = Offers[index];
             AppService.Instance.OfferCompleted(new CoreModels.Offer() {
@@ -474,6 +544,12 @@ namespace Menagerie.ViewModels {
             log.Trace("Clearing offers");
             AppService.Instance.FocusGame();
             Offers.Clear();
+
+
+            while (OverflowOffers.Count > 0) {
+                Offers.Add(OverflowOffers.Dequeue());
+            }
+
             OnPropertyChanged("IsOffersFilterVisible");
         }
 
@@ -481,6 +557,13 @@ namespace Menagerie.ViewModels {
             log.Trace("Clearing outgoing offers");
             AppService.Instance.FocusGame();
             OutgoingOffers.Clear();
+
+            while (OverflowOutgoingOffers.Count > 0) {
+                OutgoingOffers.Add(OverflowOutgoingOffers.Dequeue());
+            }
+
+            ReorderOutgoingOffers();
+
             OnPropertyChanged("IsOutgoingOffersFilterVisible");
         }
 

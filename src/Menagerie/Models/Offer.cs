@@ -52,6 +52,39 @@ namespace Menagerie.Models {
             }
         }
 
+        private string _stashTab;
+        public string StashTab {
+            get {
+                return _stashTab;
+            }
+            set {
+                _stashTab = value;
+                OnPropertyChanged("StashTab");
+            }
+        }
+
+        private System.Drawing.Point _position;
+        public System.Drawing.Point Position {
+            get {
+                return _position;
+            }
+            set {
+                _position = value;
+                OnPropertyChanged("Position");
+            }
+        }
+
+        private string _notes;
+        public string Notes {
+            get {
+                return _notes;
+            }
+            set {
+                _notes = value;
+                OnPropertyChanged("Notes");
+            }
+        }
+
         private DateTime _time;
         public DateTime Time {
             get {
@@ -222,7 +255,23 @@ namespace Menagerie.Models {
 
         public string Tooltip {
             get {
-                return $"Time: {Time} ({ElapsedTime()})\nPlayer: {PlayerName}\nItem: {ItemName}\nPrice: {Price} {Currency}\nLeague: {League}";
+                var text = $"Time: {Time}\nPlayer: {PlayerName}\nItem: {ItemName}\nPrice: {Price} {Currency}\nLeague: {League}";
+
+                if (!string.IsNullOrEmpty(StashTab)) {
+                    text += $"\nStash tab: { StashTab}\nPosition: Left { Position.X}, Top { Position.Y}";
+                }
+
+                if (!string.IsNullOrEmpty(Notes)) {
+                    text += $"\nNotes: {Notes}";
+                }
+
+                return text;
+            }
+        }
+
+        public Visibility AnyNotes {
+            get {
+                return !string.IsNullOrEmpty(Notes) ? Visibility.Visible : Visibility.Hidden;
             }
         }
 
@@ -238,6 +287,9 @@ namespace Menagerie.Models {
             this.Price = offer.Price;
             this.League = offer.League;
             this.IsOutgoing = offer.IsOutgoing;
+            StashTab = offer.StashTab;
+            Position = offer.Position;
+            Notes = offer.Notes;
         }
 
         private string ElapsedTime() {
