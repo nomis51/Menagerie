@@ -34,6 +34,11 @@ namespace Menagerie.Core.Services {
         #endregion
 
         #region Public Methods
+        public double GetChaosValue(string currencyName) {
+            string currency = GetRealName(currencyName);
+            return AppService.Instance.GetChaosValueOfCurrency(currency);
+        }
+
         public string GetCurrencyImageLink(string currencyName) {
             log.Trace($"Getting currency image link {currencyName}");
             return CurrencyToImageLink[NormalizeCurrency(currencyName)];

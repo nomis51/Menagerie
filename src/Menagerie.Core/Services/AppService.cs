@@ -49,6 +49,7 @@ namespace Menagerie.Core.Services {
         private KeyboardService _keyboardService;
         private ShortcutService _shortcutService;
         private TradeService _tradeService;
+        private PoeNinjaService _poeNinjaService;
 
         private AppService() {
             _appDataService = new AppDataService();
@@ -63,6 +64,7 @@ namespace Menagerie.Core.Services {
             _keyboardService = new KeyboardService();
             _shortcutService = new ShortcutService();
             _tradeService = new TradeService();
+            _poeNinjaService = new PoeNinjaService();
         }
 
         private void SetShortcuts() {
@@ -131,6 +133,19 @@ namespace Menagerie.Core.Services {
             Task.Run(() => {
                 _parsingService.ParseClipboardLine(text);
             });
+        }
+
+        public double GetChaosValueOfCurrency(string currency) {
+            return _poeNinjaService.GetCurrencyChaosValue(currency);
+        }
+
+        public void SavePoeNinjaCaches(PoeNinjaCaches caches) {
+            _appDataService.DeleteAllDocument(AppDataService.COLLECTION_POE_NINJA_CACHES);
+            _appDataService.InsertDocument<PoeNinjaCaches>(AppDataService.COLLECTION_POE_NINJA_CACHES, caches);
+        }
+
+        public PoeNinjaCaches GetPoeNinjaCaches() {
+            return _appDataService.GetDocument<PoeNinjaCaches>(AppDataService.COLLECTION_POE_NINJA_CACHES);
         }
 
         public string GetCurrencyImageLink(string currencyName) {
@@ -269,6 +284,7 @@ namespace Menagerie.Core.Services {
             _poeWindowService.Start();
             _shortcutService.Start();
             _tradeService.Start();
+            _poeNinjaService.Start();
         }
     }
 }

@@ -15,6 +15,7 @@ namespace Menagerie.Core.Services {
         private const string DB_FILE_PATH = "Menagerie.db";
         public static readonly string COLLECTION_CONFIG = "config";
         public static readonly string COLLECTION_TRADES = "trades";
+        public static readonly string COLLECTION_POE_NINJA_CACHES = "poeNinjaCaches";
         #endregion
 
         #region Members

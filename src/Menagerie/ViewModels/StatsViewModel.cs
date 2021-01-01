@@ -113,7 +113,7 @@ namespace Menagerie.ViewModels {
             foreach (var d in groups.Keys) {
                 Labels.Add(d.ToString("dd MMM"));
                 Trades[0].Values.Add(new ObservableValue(groups[d].Count()));
-                Currencies[0].Values.Add(new ObservableValue(groups[d].Sum(t => t.Price)));
+                Currencies[0].Values.Add(new ObservableValue(groups[d].Sum(t => t.Currency.ToLower() == "chaos" ? t.Price : (AppService.Instance.GetChaosValueOfCurrency(t.Currency) * t.Price))));
             }
         }
 
