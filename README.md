@@ -131,7 +131,6 @@ You have severals informations (in a tooltip aswell) available such as :
 - The name of the player
 - The time
 - The price (Usefull if you have multiple items with different prices)
-- The offers are ordered by price (Lowest price on top)
 - The offers are ordered by time
 
 ![2020-12-30 19_42_20-YoloCursorOverlay](https://user-images.githubusercontent.com/25111613/103388464-28ed5a80-4ad7-11eb-9da4-10e2958eb08b.png)
