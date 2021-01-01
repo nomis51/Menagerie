@@ -59,6 +59,10 @@ namespace Menagerie.Core.Services {
             Offers.Add(offer.ItemName, offer);
         }
 
+        public void SaveTrade(Offer offer) {
+            AppService.Instance.SaveTrade(offer);
+        }
+
         public void Start() {
             log.Trace("Starting TradeService");
             Task.Run(() => AutoCleanOffers());
