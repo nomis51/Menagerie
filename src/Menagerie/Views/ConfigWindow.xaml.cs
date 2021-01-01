@@ -2,12 +2,13 @@
 using Menagerie.ViewModels;
 using System.Windows;
 using Menagerie.Core.Extensions;
+using AdonisUI.Controls;
 
 namespace Menagerie.Views {
     /// <summary>
     /// Logique d'interaction pour ConfigWindow.xaml
     /// </summary>
-    public partial class ConfigWindow {
+    public partial class ConfigWindow : AdonisWindow {
         private static readonly ILog log = LogManager.GetLogger(typeof(ConfigWindow));
 
         public ConfigViewModel vm;

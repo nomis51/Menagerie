@@ -1,13 +1,17 @@
-﻿<mah:MetroWindow x:Class="Menagerie.Views.ConfigWindow"
+﻿<adonisControls:AdonisWindow x:Class="Menagerie.Views.ConfigWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Menagerie.Views"
-        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:fa5="http://schemas.fontawesome.com/icons/"
+        xmlns:adonisControls="clr-namespace:AdonisUI.Controls;assembly=AdonisUI"
         mc:Ignorable="d"
-        Title="Settings" Height="450" Width="800">
+        Title="Settings" Height="530" Width="800">
+    <Window.Style>
+        <Style TargetType="Window" BasedOn="{StaticResource {x:Type Window}}"/>
+    </Window.Style>
+
     <Grid Background="#2d2d2f">
         <Grid.RowDefinitions>
             <RowDefinition Height="45"></RowDefinition>
@@ -24,47 +28,47 @@
         <TextBlock Margin="5" Text="Settings" FontSize="24" FontWeight="Bold" Foreground="#a0aec0"></TextBlock>
 
         <StackPanel Grid.Row="1" Grid.Column="0" >
-            <DockPanel Margin="5">
+            <StackPanel Margin="5">
                 <Label Content="Player name:" Foreground="#a0aec0" ToolTip="Required to automatically leave party when an outgoing trade is completed"></Label>
                 <TextBox Text="{Binding Config.PlayerName, Mode=TwoWay}"></TextBox>
-            </DockPanel>
+            </StackPanel>
 
-            <DockPanel Margin="5">
+            <StackPanel Margin="5">
                 <Label Content="League:" Foreground="#a0aec0" ToolTip="Required to automatically filter offers out of your league"></Label>
                 <ComboBox ItemsSource="{Binding Leagues}" SelectedItem="{Binding Config.CurrentLeague, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
-            </DockPanel>
+            </StackPanel>
 
             <DockPanel Margin="5">
                 <Label Content="Ignore offers out of your league:" Foreground="#a0aec0"></Label>
-                <CheckBox IsChecked="{Binding Config.OnlyShowOffersOfCurrentLeague, Mode=TwoWay}" Margin="0,6,0,0"></CheckBox>
+                <CheckBox IsChecked="{Binding Config.OnlyShowOffersOfCurrentLeague, Mode=TwoWay}" Margin="5,2.5,0,0"></CheckBox>
             </DockPanel>
 
             <DockPanel Margin="5">
                 <Label Content="Filter sold offers:" Foreground="#a0aec0"></Label>
-                <CheckBox IsChecked="{Binding Config.FilterSoldOffers, Mode=TwoWay}" Margin="0,6,0,0"></CheckBox>
+                <CheckBox IsChecked="{Binding Config.FilterSoldOffers, Mode=TwoWay}" Margin="5,2.5,0,0"></CheckBox>
             </DockPanel>
         </StackPanel>
 
         <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
-            <DockPanel Margin="5">
+            <StackPanel Margin="5">
                 <Label Content="Sold whisper:" Foreground="#a0aec0"></Label>
                 <TextBox Text="{Binding Config.SoldWhisper, Mode=TwoWay}"></TextBox>
-            </DockPanel>
+            </StackPanel>
 
-            <DockPanel Margin="5">
+            <StackPanel Margin="5">
                 <Label Content="Still interested whisper:" Foreground="#a0aec0"></Label>
                 <TextBox Text="{Binding Config.StillInterestedWhisper, Mode=TwoWay}"></TextBox>
-            </DockPanel>
+            </StackPanel>
 
-            <DockPanel Margin="5">
+            <StackPanel Margin="5">
                 <Label Content="Busy whisper:" Foreground="#a0aec0"></Label>
                 <TextBox Text="{Binding Config.BusyWhisper, Mode=TwoWay}"></TextBox>
-            </DockPanel>
+            </StackPanel>
 
-            <DockPanel Margin="5">
+            <StackPanel Margin="5">
                 <Label Content="Thanks whisper:" Foreground="#a0aec0"></Label>
                 <TextBox Text="{Binding Config.ThanksWhisper, Mode=TwoWay}"></TextBox>
-            </DockPanel>
+            </StackPanel>
         </StackPanel>
 
         <StackPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Center">
@@ -96,4 +100,4 @@
             </Button>
         </DockPanel>
     </Grid>
-</mah:MetroWindow>
+</adonisControls:AdonisWindow>
