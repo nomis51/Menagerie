@@ -254,7 +254,10 @@ namespace Menagerie.ViewModels {
             log.Trace("Verify not highlighted");
             if (Offers[index].IsHighlighted) {
                 Offers[index].IsHighlighted = false;
+                AppService.Instance.FocusGame();
+                AppService.Instance.ClearSpecialKeys();
                 AppService.Instance.SendEscape();
+                Thread.Sleep(100);
             }
         }
 
@@ -342,6 +345,8 @@ namespace Menagerie.ViewModels {
             OutgoingOffers[index].State = OfferState.HideoutJoined;
             UpdateOffers();
 
+            EnsureNotHighlighted(index);
+
             AppService.Instance.SendHideoutChatCommand(OutgoingOffers[index].PlayerName);
         }
 
@@ -356,6 +361,8 @@ namespace Menagerie.ViewModels {
             if (Offers[index].State != OfferState.Initial) {
                 return;
             }
+
+            EnsureNotHighlighted(index);
 
             AppService.Instance.SendChatMessage($"@{Offers[index].PlayerName} {ReplaceVars(AppService.Instance.GetConfig().BusyWhisper, Offers[index])}");
         }
@@ -422,17 +429,18 @@ namespace Menagerie.ViewModels {
             string playerName = Offers[index].PlayerName;
 
             Thread t = new Thread(delegate () {
+                EnsureNotHighlighted(index);
                 AppService.Instance.SendKickChatCommand(playerName);
 
                 if (sayThanks) {
                     Thread.Sleep(250);
                     AppService.Instance.SendChatMessage($"@{playerName} Thank you and have fun!");
                 }
+
+                RemoveOffer(id);
             });
             t.SetApartmentState(ApartmentState.STA);
             t.Start();
-
-            RemoveOffer(id);
         }
 
         public void SendLeave(int id, bool sayThanks = false) {
@@ -449,6 +457,7 @@ namespace Menagerie.ViewModels {
             string playerName = OutgoingOffers[index].PlayerName;
 
             Thread t = new Thread(delegate () {
+                EnsureNotHighlighted(index);
                 // TODO: Kick myself here
 
                 if (sayThanks) {
@@ -458,6 +467,7 @@ namespace Menagerie.ViewModels {
             });
             t.SetApartmentState(ApartmentState.STA);
             t.Start();
+
 
             RemoveOffer(id, true);
         }
@@ -471,7 +481,7 @@ namespace Menagerie.ViewModels {
                 .IndexOf(id);
 
             if (index != -1) {
-                Dispatcher.CurrentDispatcher.Invoke(() => {
+               App.Current.Dispatcher.Invoke(() => {
                     var refOffers = (isOutgoing ? OutgoingOffers : Offers);
                     refOffers.RemoveAt(index);
 
