@@ -84,27 +84,33 @@ namespace Menagerie.ViewModels {
             List<Offer> trades = new List<Offer>() {
                 new Offer() {
                     Time = DateTime.Now.AddDays(-5),
-                    Price = 50
+                    Price = 50,
+                    Currency = "chaos"
                 },
                   new Offer() {
                     Time = DateTime.Now.AddDays(-5),
-                    Price = 1
+                    Price = 1,
+                     Currency = "exalted"
                 },
                 new Offer() {
                     Time = DateTime.Now.AddDays(-3),
-                    Price  =120
+                    Price  =120,
+                     Currency = "chaos"
                 },
                 new Offer() {
                     Time = DateTime.Now.AddDays(-3),
-                    Price = 5
+                    Price = 5,
+                     Currency = "chaos"
                 },
                  new Offer() {
                     Time = DateTime.Now.AddDays(-3),
-                     Price = 23
+                     Price = 23,
+                      Currency = "exalted"
                 },
-                  new Offer() {
+                new Offer() {
                     Time = DateTime.Now,
-                    Price =132
+                    Price =132,
+                     Currency = "chaos"
                 }
             };
 
@@ -113,7 +119,7 @@ namespace Menagerie.ViewModels {
             foreach (var d in groups.Keys) {
                 Labels.Add(d.ToString("dd MMM"));
                 Trades[0].Values.Add(new ObservableValue(groups[d].Count()));
-                Currencies[0].Values.Add(new ObservableValue(groups[d].Sum(t => t.Currency.ToLower() == "chaos" ? t.Price : (AppService.Instance.GetChaosValueOfCurrency(t.Currency) * t.Price))));
+                Currencies[0].Values.Add(new ObservableValue(groups[d].Sum(t => t.Currency.ToLower() == "chaos" ? t.Price : (AppService.Instance.GetChaosValueOfRealNameCurrency(t.Currency) * t.Price))));
             }
         }
 

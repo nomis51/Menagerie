@@ -139,6 +139,10 @@ namespace Menagerie.Core.Services {
             return _poeNinjaService.GetCurrencyChaosValue(currency);
         }
 
+        public double GetChaosValueOfRealNameCurrency(string currency) {
+            return _currencyService.GetChaosValue(currency);
+        }
+
         public void SavePoeNinjaCaches(PoeNinjaCaches caches) {
             _appDataService.DeleteAllDocument(AppDataService.COLLECTION_POE_NINJA_CACHES);
             _appDataService.InsertDocument<PoeNinjaCaches>(AppDataService.COLLECTION_POE_NINJA_CACHES, caches);
@@ -146,6 +150,10 @@ namespace Menagerie.Core.Services {
 
         public PoeNinjaCaches GetPoeNinjaCaches() {
             return _appDataService.GetDocument<PoeNinjaCaches>(AppDataService.COLLECTION_POE_NINJA_CACHES);
+        }
+
+        public bool IsPoeNinjaCacheReady() {
+            return _poeNinjaService.CacheReady;
         }
 
         public string GetCurrencyImageLink(string currencyName) {

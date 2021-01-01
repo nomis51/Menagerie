@@ -1,14 +1,18 @@
-﻿using Menagerie.Core.Abstractions;
+﻿using log4net;
+using Menagerie.Core.Abstractions;
 using Menagerie.Core.Extensions;
 using Menagerie.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Menagerie.Core.Extensions;
 
 namespace Menagerie.Core.Services {
     public class PoeNinjaService : IService {
-        private static object _lockUpdatePoeNinjaItemsLoop = new object();
+        private readonly static ILog log = LogManager.GetLogger(typeof(PoeNinjaService));
+
+        //private static object _lockUpdatePoeNinjaItemsLoop = new object();
         private static object _lockCurrencyCacheAccess = new object();
         //private static object _lockItemsCacheAccess = new object();
 
@@ -46,31 +50,41 @@ namespace Menagerie.Core.Services {
         private bool CacheUpdating = false;
         #endregion
 
+        #region Props
+        public bool CacheReady { get; private set; } = false;
+        #endregion
+
         #region Constructors
         public PoeNinjaService() {
+            log.Trace("Initializing PoeNinjaService");
             _httpService = new HttpService(POE_NINJA_API_BASE_URL);
         }
         #endregion
 
         #region Private methods
         private void AutoUpdateCache(bool skipFirstUpdate = false, bool setOldCache = false) {
+            log.Trace("Starting auto cache update");
             while (true) {
                 if (!skipFirstUpdate) {
                     if (setOldCache) {
+                        log.Trace("Backup old cache");
                         OldCache = Cache.Copy();
                     }
 
+                    log.Trace("Updating cache");
                     CacheUpdating = true;
-                    Task.Run(() => UpdateCurrencyCache());
+                    Task.Run(() => UpdateCurrencyCache()).Wait();
                     // Task.Run(() => UpdateItemsCache()).Wait();
                     Cache.UpdateTime = DateTime.Now;
                     CacheUpdating = false;
 
                     SaveCache();
                 } else {
+                    log.Trace("Skipping first cache update");
                     Cache = OldCache.Copy();
                 }
 
+                CacheReady = true;
                 skipFirstUpdate = false;
                 setOldCache = true;
 
@@ -79,6 +93,7 @@ namespace Menagerie.Core.Services {
         }
 
         private void UpdateCurrencyCache() {
+            log.Trace("Updating currency cache");
             lock (_lockCurrencyCacheAccess) {
                 var response = _httpService.Client.GetAsync($"/{POE_NINJA_API_CURRENCY}?league={AppService.Instance.GetConfig().CurrentLeague}&type=Currency&language=en").Result;
                 PoeNinjaResult<PoeNinjaCurrency> result = _httpService.ReadResponse<PoeNinjaResult<PoeNinjaCurrency>>(response).Result;
@@ -87,6 +102,8 @@ namespace Menagerie.Core.Services {
                 foreach (var line in result.Lines) {
                     currencies.Add(line.CurrencyTypeName, new List<PoeNinjaCurrency>() { line });
                 }
+
+                log.Trace($"Poe Ninja returned {currencies.Count} currencies");
 
                 Cache.Currency = new PoeNinjaCache<PoeNinjaCurrency>() {
                     Language = result.Language,
@@ -143,7 +160,8 @@ namespace Menagerie.Core.Services {
         //    return 0.0d;
         //}
 
-        public double GetCurrencyChaosValue(PoeNinjaCache<PoeNinjaCurrency> cache, string currencyName) {
+        private double GetCurrencyChaosValue(PoeNinjaCache<PoeNinjaCurrency> cache, string currencyName) {
+            log.Trace($"Getting currency chaos value for {currencyName}");
             if (cache == null) {
                 return 0.0d;
             }
@@ -156,11 +174,17 @@ namespace Menagerie.Core.Services {
         }
 
         private void SaveCache() {
+            log.Trace("Saving cache");
             AppService.Instance.SavePoeNinjaCaches(Cache);
         }
 
         private void LoadCache() {
+            log.Trace("Loading cache");
             OldCache = AppService.Instance.GetPoeNinjaCaches();
+
+            if (OldCache != null) {
+                log.Trace("Existing cache found");
+            }
         }
         #endregion
 
@@ -191,15 +215,19 @@ namespace Menagerie.Core.Services {
                     return 0.0d;
                 }
 
+                log.Trace($"Getting chaos value of {currencyName} from old cache");
+
                 return GetCurrencyChaosValue(OldCache.Currency, currencyName);
             } else {
                 lock (_lockCurrencyCacheAccess) {
+                    log.Trace($"Getting chaos value of {currencyName} from current cache");
                     return GetCurrencyChaosValue(Cache.Currency, currencyName);
                 }
             }
         }
 
         public void Start() {
+            log.Trace("Starting PoeNinjaService");
             LoadCache();
             Task.Run(() => AutoUpdateCache(OldCache != null && (DateTime.Now - OldCache.UpdateTime).TotalMinutes < CACHE_EXPIRATION_TIME_MINS));
         }

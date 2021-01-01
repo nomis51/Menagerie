@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Menagerie.Core.Extensions;
 using Forms = System.Windows.Forms;
+using System.Threading;
 
 namespace Menagerie {
     /// <summary>
@@ -31,13 +32,15 @@ namespace Menagerie {
 
                 App.Current.Dispatcher.Invoke(delegate {
                     splash.Close();
+
+                    while (!AppService.Instance.IsPoeNinjaCacheReady()) {
+                        Thread.Sleep(1000);
+                    }
+
+                    (new StatsWindow()).Show();
                 });
             });
-
-            (new StatsWindow()).Show();
         }
-
-
 
         private void Overlay_Loaded(object sender, RoutedEventArgs e) {
             log.Trace("Closing splash window");
