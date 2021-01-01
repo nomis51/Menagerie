@@ -7,7 +7,7 @@ A Path of Exile trade manger to simplify and speed up your trading experience.
 
 ## Usage
 - Go to the [Releases](https://github.com/nomis51/Menagerie/releases/latest) page
-- Download and extract Menagerie-<version here>.zip file somewhere on your computer
+- Download and extract Menagerie-< version here >.zip file somewhere on your computer
 - Run Menagerie.exe
 
 ## Features
