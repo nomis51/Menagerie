@@ -23,6 +23,7 @@ A Path of Exile trade manger to simplify and speed up your trading experience.
 - Can ignore offers out of your league or offers about sold items
 - Sound effects and notifications
 - Configurable whispers with internal variables (e.g. item name, player name, price, etc.)
+- Can search/filter offers by item name or player name using the overlay search bars
 - Handle aditionnal comment in trade whispers and displayed in the tooltip. There's also a yellow star on the offer to notice that there's are notes in the tooltip
 
 ![2020_12_31_16_24_20_YoloCursorOverlay](https://user-images.githubusercontent.com/25111613/103426087-d4a0b400-4b84-11eb-987e-23adc7e1ec91.png)
