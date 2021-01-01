@@ -157,6 +157,10 @@ namespace Menagerie.Core.Services {
             }
         }
 
+        public List<Offer> GetCompletedTrades() {
+            return _appDataService.GetDocuments<Offer>(AppDataService.COLLECTION_TRADES);
+        }
+
         public void NewPlayerJoined(string playerName) {
             OnNewPlayerJoined(playerName);
         }

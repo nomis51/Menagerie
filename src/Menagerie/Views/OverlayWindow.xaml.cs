@@ -36,7 +36,6 @@ namespace Menagerie {
 
             log.Trace("Initializing Overlay");
 
-
             screenRect = screen.WorkingArea;
 
             vm = new OverlayViewModel();

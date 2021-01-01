@@ -33,6 +33,8 @@ namespace Menagerie {
                     splash.Close();
                 });
             });
+
+            (new StatsWindow()).Show();
         }
 
 
