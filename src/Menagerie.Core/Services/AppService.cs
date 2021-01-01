@@ -173,6 +173,10 @@ namespace Menagerie.Core.Services {
             _appDataService.UpdateDocument<Config>(AppDataService.COLLECTION_CONFIG, config);
         }
 
+        public void SaveTrade(Offer offer) {
+            _appDataService.InsertDocument<Offer>(AppDataService.COLLECTION_TRADES, offer);
+        }
+
         public async Task<List<string>> GetLeagues() {
             return await _poeApiService.GetLeagues();
         }
