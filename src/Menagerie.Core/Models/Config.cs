@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Menagerie.Core.Models {
+﻿namespace Menagerie.Core.Models {
     public class Config : DbModel {
         public string PlayerName { get; set; }
         public string CurrentLeague { get; set; }
@@ -12,5 +8,10 @@ namespace Menagerie.Core.Models {
         public string StillInterestedWhisper { get; set; }
         public string BusyWhisper { get; set; }
         public string ThanksWhisper { get; set; }
+        public bool AutoThanks { get; set; }
+        public bool AutoWhisper { get; set; }
+        public bool AutoWhisperOutOfLeague { get; set; }
+        public string OutOfLeagueWhisper { get; set; }
+        public int PoeNinjaUpdateRate { get; set; }
     }
 }

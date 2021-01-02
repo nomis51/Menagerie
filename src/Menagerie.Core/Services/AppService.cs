@@ -259,6 +259,13 @@ namespace Menagerie.Core.Services {
             return _clipboardService.SetClipboard(text);
         }
 
+        public string ReplaceVars(string msg, Offer offer) {
+            return msg.Replace("{item}", offer.ItemName)
+                .Replace("{price}", $"{offer.Price} {offer.Currency}")
+                .Replace("{league}", offer.League)
+                .Replace("{player}", offer.PlayerName);
+        }
+
         public void SendTradeChatCommand(string player) {
             _chatService.SendTradeCommand(player);
         }
