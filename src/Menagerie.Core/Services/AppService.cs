@@ -2,6 +2,7 @@
 using Menagerie.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WindowsInput.Native;
@@ -143,6 +144,10 @@ namespace Menagerie.Core.Services {
             return _currencyService.GetChaosValue(currency);
         }
 
+        public string GetCurrencyRealName(string currency) {
+            return _currencyService.GetRealName(currency);
+        }
+
         public void SavePoeNinjaCaches(PoeNinjaCaches caches) {
             _appDataService.DeleteAllDocument(AppDataService.COLLECTION_POE_NINJA_CACHES);
             _appDataService.InsertDocument<PoeNinjaCaches>(AppDataService.COLLECTION_POE_NINJA_CACHES, caches);
@@ -181,7 +186,9 @@ namespace Menagerie.Core.Services {
         }
 
         public List<Offer> GetCompletedTrades() {
-            return _appDataService.GetDocuments<Offer>(AppDataService.COLLECTION_TRADES);
+            return _appDataService.GetDocuments<Offer>(AppDataService.COLLECTION_TRADES)
+                .OrderBy(t => t.Time)
+                .ToList();
         }
 
         public void NewPlayerJoined(string playerName) {

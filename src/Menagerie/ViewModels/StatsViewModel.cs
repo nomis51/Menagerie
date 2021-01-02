@@ -12,6 +12,7 @@ using LiveCharts.Defaults;
 using LiveCharts.Wpf;
 using Menagerie.Core.Services;
 using Menagerie.Core.Models;
+using System.Windows;
 
 namespace Menagerie.ViewModels {
     public class StatsViewModel : INotifyPropertyChanged {
@@ -59,18 +60,28 @@ namespace Menagerie.ViewModels {
 
         public SeriesCollection Trades { get; set; } = new SeriesCollection() {
                 new LineSeries() {
+                    Title = "Amount of Trades",
                     AreaLimit = 0,
                     Values = new ChartValues<ObservableValue>()
                 }
-            };
+        };
         public SeriesCollection Currencies { get; set; } = new SeriesCollection() {
                 new LineSeries() {
+                    Title = "Amount of Currency (in Chaos Orbs)",
                     AreaLimit = 0,
                     Values = new ChartValues<ObservableValue>()
                 }
-            };
+        };
+        public SeriesCollection CurrencyGroups { get; set; } = new SeriesCollection();
 
         public List<string> Labels { get; set; } = new List<string>();
+
+        private bool _noData = false;
+        public Visibility NoDataVisible {
+            get {
+                return _noData ? Visibility.Visible : Visibility.Hidden;
+            }
+        }
 
         public StatsViewModel() {
             log.Trace("Initializing StatsViewModel");
@@ -79,47 +90,43 @@ namespace Menagerie.ViewModels {
         }
 
         private void GetTrades() {
-            // var trades = AppService.Instance.GetCompletedTrades();
+            var trades = AppService.Instance.GetCompletedTrades();
 
-            List<Offer> trades = new List<Offer>() {
-                new Offer() {
-                    Time = DateTime.Now.AddDays(-5),
-                    Price = 50,
-                    Currency = "chaos"
-                },
-                  new Offer() {
-                    Time = DateTime.Now.AddDays(-5),
-                    Price = 1,
-                     Currency = "exalted"
-                },
-                new Offer() {
-                    Time = DateTime.Now.AddDays(-3),
-                    Price  =120,
-                     Currency = "chaos"
-                },
-                new Offer() {
-                    Time = DateTime.Now.AddDays(-3),
-                    Price = 5,
-                     Currency = "chaos"
-                },
-                 new Offer() {
-                    Time = DateTime.Now.AddDays(-3),
-                     Price = 23,
-                      Currency = "exalted"
-                },
-                new Offer() {
-                    Time = DateTime.Now,
-                    Price =132,
-                     Currency = "chaos"
-                }
-            };
+            if (trades.Count == 0) {
+                _noData = true;
+                OnPropertyChanged("NoDataVisible");
+                return;
+            }
 
-            var groups = GroupByDate(trades);
+            var groups = GroupByDate(trades.OrderBy(t => t.Time).ToList());
+            int totalCurrency = 0;
+            Dictionary<string, int> currencies = new Dictionary<string, int>();
 
             foreach (var d in groups.Keys) {
                 Labels.Add(d.ToString("dd MMM"));
                 Trades[0].Values.Add(new ObservableValue(groups[d].Count()));
-                Currencies[0].Values.Add(new ObservableValue(groups[d].Sum(t => t.Currency.ToLower() == "chaos" ? t.Price : (AppService.Instance.GetChaosValueOfRealNameCurrency(t.Currency) * t.Price))));
+                Currencies[0].Values.Add(new ObservableValue(groups[d].Sum(t => t.Currency.ToLower() == "chaos" ? t.Price : Math.Ceiling(AppService.Instance.GetChaosValueOfRealNameCurrency(t.Currency) * t.Price))));
+
+
+                foreach (var t in groups[d]) {
+                    string currencyName = AppService.Instance.GetCurrencyRealName(t.Currency.ToLower());
+
+                    if (!currencies.ContainsKey(currencyName)) {
+                        currencies.Add(currencyName, 0);
+                    }
+
+                    ++currencies[currencyName];
+                    ++totalCurrency;
+                }
+            }
+
+            foreach (var c in currencies.Keys) {
+                CurrencyGroups.Add(new PieSeries {
+                    Title = c,
+                    Values = new ChartValues<ObservableValue>() {
+                        new ObservableValue(Math.Round((double)currencies[c] / (double)totalCurrency, 2))
+                    }
+                });
             }
         }
 

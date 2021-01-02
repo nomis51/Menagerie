@@ -32,12 +32,6 @@ namespace Menagerie {
 
                 App.Current.Dispatcher.Invoke(delegate {
                     splash.Close();
-
-                    while (!AppService.Instance.IsPoeNinjaCacheReady()) {
-                        Thread.Sleep(1000);
-                    }
-
-                    (new StatsWindow()).Show();
                 });
             });
         }

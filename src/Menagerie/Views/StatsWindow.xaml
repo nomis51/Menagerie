@@ -7,41 +7,27 @@
         xmlns:adonisControls="clr-namespace:AdonisUI.Controls;assembly=AdonisUI"
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
-        Title="StatsWindow" Height="800" Width="1200">
+        Title="Statistics" Height="800" Width="1200">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition></RowDefinition>
+            <RowDefinition Height="30"></RowDefinition>
             <RowDefinition></RowDefinition>
 
+            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <TextBlock  Grid.Row="0" Grid.Column="0" Text="Nb Trades" HorizontalAlignment="Center" FontWeight="Bold" FontSize="18"></TextBlock>
+        <StackPanel Visibility="{Binding NoDataVisible}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="99" Grid.RowSpan="99" Panel.ZIndex="99" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <TextBlock Text="No data" FontSize="42" FontWeight="Bold"></TextBlock>
+        </StackPanel>
+        
+        <TextBlock  Grid.Row="0" Grid.Column="0" Text="Amount of Trades" HorizontalAlignment="Center" FontWeight="Bold" FontSize="18"></TextBlock>
 
-            <lvc:CartesianChart Grid.Row="0" Grid.Column="0" Series="{Binding Trades}" Hoverable="False" >
-                <lvc:CartesianChart.AxisY>
-                    <lvc:Axis Title="Nb Trades"></lvc:Axis>
-                </lvc:CartesianChart.AxisY>
-                <lvc:CartesianChart.AxisX>
-                    <lvc:Axis Title="Days" Labels="{Binding Labels}"></lvc:Axis>
-                </lvc:CartesianChart.AxisX>
-            </lvc:CartesianChart>
-
-        <TextBlock Grid.Row="0" Grid.Column="1" Text="Amount of currency" HorizontalAlignment="Center" FontWeight="Bold" FontSize="18"></TextBlock>
-
-        <lvc:CartesianChart Grid.Row="0" Grid.Column="1" Series="{Binding Currencies}" Hoverable="False" >
-            <lvc:CartesianChart.AxisY>
-                <lvc:Axis Title="Amount of currency"></lvc:Axis>
-            </lvc:CartesianChart.AxisY>
-            <lvc:CartesianChart.AxisX>
-                <lvc:Axis Title="Days" Labels="{Binding Labels}"></lvc:Axis>
-            </lvc:CartesianChart.AxisX>
-        </lvc:CartesianChart>
-
-        <!--<lvc:CartesianChart Grid.Row="1" Grid.Column="0" Series="{Binding Trades}" Hoverable="False" LegendLocation="Right">
+        <lvc:CartesianChart Name="chTrades" Grid.Row="1" Grid.Column="0" Series="{Binding Trades}" Hoverable="False" >
             <lvc:CartesianChart.AxisY>
                 <lvc:Axis Title="Nb Trades"></lvc:Axis>
             </lvc:CartesianChart.AxisY>
@@ -50,7 +36,22 @@
             </lvc:CartesianChart.AxisX>
         </lvc:CartesianChart>
 
-        <lvc:CartesianChart Grid.Row="1" Grid.Column="1" Series="{Binding Trades}" Hoverable="False" LegendLocation="Right">
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="Amount of Currency (in Chaos Orbs)" HorizontalAlignment="Center" FontWeight="Bold" FontSize="18"></TextBlock>
+
+        <lvc:CartesianChart Name="chCurrencies" Grid.Row="1" Grid.Column="1" Series="{Binding Currencies}" Hoverable="False">
+            <lvc:CartesianChart.AxisY>
+                <lvc:Axis Title="Amount of currency"></lvc:Axis>
+            </lvc:CartesianChart.AxisY>
+            <lvc:CartesianChart.AxisX>
+                <lvc:Axis Title="Days" Labels="{Binding Labels}"></lvc:Axis>
+            </lvc:CartesianChart.AxisX>
+        </lvc:CartesianChart>
+
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Currency Distribution" HorizontalAlignment="Center" FontWeight="Bold" FontSize="18"></TextBlock>
+
+        <lvc:PieChart Name="chCurrencyGroups" Grid.Row="3" Grid.Column="0" Series="{Binding CurrencyGroups}"  StartingRotationAngle="0"/>
+
+        <!--<lvc:CartesianChart Grid.Row="1" Grid.Column="1" Series="{Binding Trades}" Hoverable="False" LegendLocation="Right">
             <lvc:CartesianChart.AxisY>
                 <lvc:Axis Title="Nb Trades"></lvc:Axis>
             </lvc:CartesianChart.AxisY>

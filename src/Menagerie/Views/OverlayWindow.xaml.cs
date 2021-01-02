@@ -12,6 +12,9 @@ using Menagerie.Core.Extensions;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using Menagerie.Services;
+using Menagerie.Views;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Menagerie {
     /// <summary>
@@ -117,6 +120,11 @@ namespace Menagerie {
                 leagueItem.DropDownItems.Add(item);
             }
 
+            Forms.ToolStripMenuItem statsItem = new Forms.ToolStripMenuItem() {
+                Text = "Statistics",
+            };
+            statsItem.Click += StatsItem_Click;
+
             Forms.ToolStripMenuItem configItem = new Forms.ToolStripMenuItem() {
                 Text = "Settings",
             };
@@ -129,11 +137,28 @@ namespace Menagerie {
 
             menu.Items.Add(versionItem);
             menu.Items.Add(leagueItem);
+            menu.Items.Add(statsItem);
             menu.Items.Add(configItem);
             menu.Items.Add(quitItem);
 
             trayIcon.ContextMenuStrip = menu;
             trayIcon.Visible = true;
+        }
+
+        private void StatsItem_Click(object sender, EventArgs e) {
+            ShowStatsWindow();
+        }
+
+        private void ShowStatsWindow() {
+            Task.Run(() => {
+                while (!AppService.Instance.IsPoeNinjaCacheReady()) {
+                    Thread.Sleep(1000);
+                }
+
+                App.Current.Dispatcher.Invoke(delegate {
+                    (new StatsWindow()).Show();
+                });
+            });
         }
 
         private void LeagueMenuItem_Click(object sender, EventArgs e) {
