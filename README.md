@@ -49,8 +49,8 @@ The informations are :
 - The name of the buyer
 - The time and elapsed time
 - The league
-- The stash tab name (e.g. tab "The tab name here") (WIP)
-- The position of the item in that tab (e.g. Left: 4, Top: 5) (WIP)
+- The stash tab name (e.g. tab "The tab name here")
+- The position of the item in that tab (e.g. Left: 4, Top: 5)
 
 ![2020-12-30 19_13_11-Overlay](https://user-images.githubusercontent.com/25111613/103387685-16712200-4ad3-11eb-8338-e13678efa5e0.png)
 
@@ -163,6 +163,7 @@ You can take a look at your trades made in the app with the Statistics window.
 ![2021-01-01 19_46_27-YoloCursorOverlay](https://user-images.githubusercontent.com/25111613/103448710-64209280-4c6b-11eb-9eed-a7101859da37.png)
 
 ## Todos
+- Custom keyboard shortcuts
 - Trades statistics
 - Languages support
 - Do some work on the (WIP) elements of the repo
