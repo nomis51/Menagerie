@@ -35,10 +35,16 @@ namespace Menagerie.Core.Services {
 
         public async Task<List<string>> GetLeagues() {
             log.Trace("Getting leagues");
-            var response = _altHttpService.Client.GetAsync($"/{POE_API_LEAGUES}").Result;
-            var result = await _altHttpService.ReadResponse<List<Dictionary<string, string>>>(response);
+            try {
+                var response = _altHttpService.Client.GetAsync($"/{POE_API_LEAGUES}").Result;
+                var result = await _altHttpService.ReadResponse<List<Dictionary<string, string>>>(response);
 
-            return ParseLeagues(result);
+                return ParseLeagues(result);
+            } catch (Exception e) {
+                log.Error("Error while getting leagues ", e);
+            }
+
+            return new List<string>();
         }
 
         private List<string> ParseLeagues(List<Dictionary<string, string>> json) {
