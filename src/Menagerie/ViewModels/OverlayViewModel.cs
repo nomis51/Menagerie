@@ -452,11 +452,15 @@ namespace Menagerie.ViewModels {
 
             Thread t = new Thread(delegate () {
                 EnsureNotHighlighted(index);
-                // TODO: Kick myself here
+                var config = AppService.Instance.GetConfig();
+
+                if (!string.IsNullOrEmpty(config.PlayerName)) {
+                    AppService.Instance.SendKickChatCommand(config.PlayerName);
+                }
 
                 if (sayThanks) {
                     Thread.Sleep(100);
-                    AppService.Instance.SendChatMessage($"@{playerName} {(AppService.Instance.ReplaceVars(AppService.Instance.GetConfig().ThanksWhisper, new CoreModels.Offer() { ItemName = Offers[index].ItemName, PlayerName = Offers[index].PlayerName, Price = Offers[index].Price, Currency = Offers[index].Currency, League = Offers[index].League }))}");
+                    AppService.Instance.SendChatMessage($"@{playerName} {(AppService.Instance.ReplaceVars(config.ThanksWhisper, new CoreModels.Offer() { ItemName = Offers[index].ItemName, PlayerName = Offers[index].PlayerName, Price = Offers[index].Price, Currency = Offers[index].Currency, League = Offers[index].League }))}");
                 }
             });
             t.SetApartmentState(ApartmentState.STA);
