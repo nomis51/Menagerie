@@ -24,6 +24,7 @@ A Path of Exile trade manger to simplify and speed up your trading experience.
 - Sound effects and notifications
 - Configurable whispers with internal variables (e.g. item name, player name, price, etc.)
 - Can search/filter offers by item name or player name using the overlay search bars
+- Statistics of your trades made in the app, such as amount of trades and amount of currency per date and currency distrubution
 - Handle aditionnal comment in trade whispers and displayed in the tooltip. There's also a yellow star on the offer to notice that there's are notes in the tooltip
 
 ![2020_12_31_16_24_20_YoloCursorOverlay](https://user-images.githubusercontent.com/25111613/103426087-d4a0b400-4b84-11eb-987e-23adc7e1ec91.png)
@@ -153,6 +154,13 @@ Once the trade is ```completed```, a ```Thanks``` whisper is automatically sent 
 You can also at any time ```Remove``` all outgoing offers
 
 ![2020-12-30 19_09_39-YoloCursorOverlay](https://user-images.githubusercontent.com/25111613/103387602-9f3b8e00-4ad2-11eb-9ea7-581607d71453.png)
+
+### Statistics
+You can take a look at your trades made in the app with the Statistics window.
+
+![2021-01-01 19_27_00-](https://user-images.githubusercontent.com/25111613/103448717-6da9fa80-4c6b-11eb-9350-d27f6b8ad009.png)
+  
+![2021-01-01 19_46_27-YoloCursorOverlay](https://user-images.githubusercontent.com/25111613/103448710-64209280-4c6b-11eb-9eed-a7101859da37.png)
 
 ## Todos
 - Trades statistics
