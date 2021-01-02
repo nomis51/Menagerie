@@ -6,6 +6,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
 using Menagerie.Core.Extensions;
+using System.Windows.Controls;
+using System.Collections.Generic;
 
 namespace Menagerie.ViewModels {
     public class ConfigViewModel : INotifyPropertyChanged {

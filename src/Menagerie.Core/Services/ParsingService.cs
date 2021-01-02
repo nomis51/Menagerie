@@ -207,6 +207,12 @@ namespace Menagerie.Core {
                     offer.League = line.Substring(leagueStartIndex, leagueEndIndex - leagueStartIndex);
                 }
 
+                var config = AppService.Instance.GetConfig();
+                if (config.AutoWhisperOutOfLeague && offer.League != config.CurrentLeague) {
+                    AppService.Instance.SendChatMessage($"@{offer.PlayerName} {AppService.Instance.ReplaceVars(config.OutOfLeagueWhisper, offer)}");
+                    return null;
+                }
+
                 // Item location
                 int itemTabStartIndex = line.IndexOf("(stash tab \"", leagueEndIndex);
                 int topEndIndex = -1;

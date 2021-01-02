@@ -11,11 +11,14 @@ using Winook;
 namespace Menagerie.Core.Services {
     public class AppService : IService {
         #region Singleton
-        private static AppService _instance = new AppService();
+        private static object _lockInstance = new object();
+        private static AppService _instance;
         public static AppService Instance {
             get {
-                if (_instance == null) {
-                    _instance = new AppService();
+                lock (_lockInstance) {
+                    if (_instance == null) {
+                        _instance = new AppService();
+                    }
                 }
 
                 return _instance;
@@ -257,6 +260,13 @@ namespace Menagerie.Core.Services {
 
         public bool SetClipboard(string text) {
             return _clipboardService.SetClipboard(text);
+        }
+
+        public string ReplaceVars(string msg, Offer offer) {
+            return msg.Replace("{item}", offer.ItemName)
+                .Replace("{price}", $"{offer.Price} {offer.Currency}")
+                .Replace("{league}", offer.League)
+                .Replace("{player}", offer.PlayerName);
         }
 
         public void SendTradeChatCommand(string player) {

@@ -24,13 +24,13 @@ namespace Menagerie {
             log.Trace("Initializing App", null);
 
             splash = new SplashWindow();
-            overlay = new OverlayWindow(Forms.Screen.PrimaryScreen);
             splash.Show();
 
             Task.Run(() => {
                 AppService.Instance.Start();
 
                 App.Current.Dispatcher.Invoke(delegate {
+                    overlay = new OverlayWindow(Forms.Screen.PrimaryScreen);
                     splash.Close();
                 });
             });

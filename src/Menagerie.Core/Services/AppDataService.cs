@@ -35,12 +35,17 @@ namespace Menagerie.Core.Services {
                 InsertDocument<Config>(COLLECTION_CONFIG, new Config() {
                     PlayerName = "",
                     CurrentLeague = "Standard",
-                    OnlyShowOffersOfCurrentLeague = false,
-                    FilterSoldOffers = false,
+                    OnlyShowOffersOfCurrentLeague = true,
+                    FilterSoldOffers = true,
                     BusyWhisper = "I'm busy right now, I'll whisper you for the \"{item}\" when I'm ready",
                     SoldWhisper = "I'm sorry, my \"{item}\" has already been sold",
                     StillInterestedWhisper = "Are you still interested in my \"{item}\" listed for {price}?",
-                    ThanksWhisper = "Thank you and have fun!"
+                    ThanksWhisper = "Thank you and have fun!",
+                    AutoThanks = true,
+                    AutoWhisper = true,
+                    AutoWhisperOutOfLeague = false,
+                    OutOfLeagueWhisper = "Sorry, I'm busy in another league",
+                    PoeNinjaUpdateRate = 30
                 });
             }
         }

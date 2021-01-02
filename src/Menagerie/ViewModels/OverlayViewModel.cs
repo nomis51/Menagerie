@@ -157,7 +157,8 @@ namespace Menagerie.ViewModels {
                                 Position = offer.Position,
                                 Notes = offer.Notes
                             });
-                            SendKick(offer.Id, true);
+
+                            SendKick(offer.Id, AppService.Instance.GetConfig().AutoThanks);
                         }
                         break;
 
@@ -296,13 +297,6 @@ namespace Menagerie.ViewModels {
             OnPropertyChanged("IsOutgoingOffersFilterVisible");
         }
 
-        private string ReplaceVars(string msg, Offer offer) {
-            return msg.Replace("{item}", offer.ItemName)
-                .Replace("{price}", $"{offer.Price} {offer.Currency}")
-                .Replace("{league}", offer.League)
-                .Replace("{player}", offer.PlayerName);
-        }
-
         public void SendTradeRequest(int id, bool isOutgoing = false) {
             log.Trace($"Sending trade request {id}");
             var index = GetOfferIndex(id);
@@ -364,7 +358,7 @@ namespace Menagerie.ViewModels {
 
             EnsureNotHighlighted(index);
 
-            AppService.Instance.SendChatMessage($"@{Offers[index].PlayerName} {ReplaceVars(AppService.Instance.GetConfig().BusyWhisper, Offers[index])}");
+            AppService.Instance.SendChatMessage($"@{Offers[index].PlayerName} {AppService.Instance.ReplaceVars(AppService.Instance.GetConfig().BusyWhisper, new CoreModels.Offer() { ItemName = Offers[index].ItemName, PlayerName = Offers[index].PlayerName, Price = Offers[index].Price, Currency = Offers[index].Currency, League = Offers[index].League })}");
         }
 
         public void SendReInvite(int id) {
@@ -434,7 +428,7 @@ namespace Menagerie.ViewModels {
 
                 if (sayThanks) {
                     Thread.Sleep(250);
-                    AppService.Instance.SendChatMessage($"@{playerName} Thank you and have fun!");
+                    AppService.Instance.SendChatMessage($"@{playerName} {AppService.Instance.ReplaceVars(AppService.Instance.GetConfig().ThanksWhisper, new CoreModels.Offer() { ItemName = Offers[index].ItemName, PlayerName = Offers[index].PlayerName, Price = Offers[index].Price, Currency = Offers[index].Currency, League = Offers[index].League })}");
                 }
 
                 RemoveOffer(id);
@@ -462,7 +456,7 @@ namespace Menagerie.ViewModels {
 
                 if (sayThanks) {
                     Thread.Sleep(100);
-                    AppService.Instance.SendChatMessage($"@{playerName} {ReplaceVars(AppService.Instance.GetConfig().ThanksWhisper, Offers[index])}");
+                    AppService.Instance.SendChatMessage($"@{playerName} {(AppService.Instance.ReplaceVars(AppService.Instance.GetConfig().ThanksWhisper, new CoreModels.Offer() { ItemName = Offers[index].ItemName, PlayerName = Offers[index].PlayerName, Price = Offers[index].Price, Currency = Offers[index].Currency, League = Offers[index].League }))}");
                 }
             });
             t.SetApartmentState(ApartmentState.STA);
@@ -481,7 +475,7 @@ namespace Menagerie.ViewModels {
                 .IndexOf(id);
 
             if (index != -1) {
-               App.Current.Dispatcher.Invoke(() => {
+                App.Current.Dispatcher.Invoke(() => {
                     var refOffers = (isOutgoing ? OutgoingOffers : Offers);
                     refOffers.RemoveAt(index);
 
@@ -516,7 +510,7 @@ namespace Menagerie.ViewModels {
 
             EnsureNotHighlighted(index);
 
-            AppService.Instance.SendChatMessage($"@{Offers[index].PlayerName} {ReplaceVars(AppService.Instance.GetConfig().StillInterestedWhisper, Offers[index])}");
+            AppService.Instance.SendChatMessage($"@{Offers[index].PlayerName} {AppService.Instance.ReplaceVars(AppService.Instance.GetConfig().StillInterestedWhisper, new CoreModels.Offer() { ItemName = Offers[index].ItemName, PlayerName = Offers[index].PlayerName, Price = Offers[index].Price, Currency = Offers[index].Currency, League = Offers[index].League })}");
         }
 
         public void SendSoldWhisper(int id) {
@@ -532,7 +526,7 @@ namespace Menagerie.ViewModels {
 
             EnsureNotHighlighted(index);
 
-            AppService.Instance.SendChatMessage($"@{Offers[index].PlayerName} {ReplaceVars(AppService.Instance.GetConfig().SoldWhisper, Offers[index])}");
+            AppService.Instance.SendChatMessage($"@{Offers[index].PlayerName} {AppService.Instance.ReplaceVars(AppService.Instance.GetConfig().SoldWhisper, new CoreModels.Offer() { ItemName = Offers[index].ItemName, PlayerName = Offers[index].PlayerName, Price = Offers[index].Price, Currency = Offers[index].Currency, League = Offers[index].League })}");
 
             var offer = Offers[index];
             AppService.Instance.OfferCompleted(new CoreModels.Offer() {

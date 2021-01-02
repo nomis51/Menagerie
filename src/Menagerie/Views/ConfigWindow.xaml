@@ -11,76 +11,170 @@
     <Window.Style>
         <Style TargetType="Window" BasedOn="{StaticResource {x:Type Window}}"/>
     </Window.Style>
-
-    <Grid Background="#2d2d2f">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="45"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="45"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="120"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <TextBlock Margin="5" Text="Settings" FontSize="24" FontWeight="Bold" Foreground="#a0aec0"></TextBlock>
+        <TextBlock Margin="5,-5,0,0" Text="Settings" FontSize="24" FontWeight="Bold" Foreground="#a0aec0" Grid.Column="1" Grid.Row="0"></TextBlock>
 
-        <StackPanel Grid.Row="1" Grid.Column="0" >
-            <StackPanel Margin="5">
-                <Label Content="Player name:" Foreground="#a0aec0" ToolTip="Required to automatically leave party when an outgoing trade is completed"></Label>
-                <TextBox Text="{Binding Config.PlayerName, Mode=TwoWay}"></TextBox>
+        <Menu Grid.Column="0" Grid.Row="0" Grid.RowSpan="99">
+            <Menu.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel Orientation="Vertical"></VirtualizingStackPanel>
+                </ItemsPanelTemplate>
+            </Menu.ItemsPanel>
+
+            <MenuItem Name="itGeneral" Click="itGeneral_Click">
+                <MenuItem.Header>
+                    <DockPanel>
+                        <fa5:ImageAwesome  Margin="0,0,5,0" Width="15" Height="15"  Icon="Solid_Cogs" Foreground="#a0aec0" HorizontalAlignment="Center"/>
+                        <TextBlock Text="General"></TextBlock>
+                    </DockPanel>
+                </MenuItem.Header>
+            </MenuItem>
+
+            <MenuItem Name="itWhispers" Click="itWhispers_Click">
+                <MenuItem.Header>
+                    <DockPanel>
+                        <fa5:ImageAwesome Margin="0,0,5,0" Width="15" Height="15"  Icon="Solid_CommentDots" Foreground="#a0aec0" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Whispers"></TextBlock>
+                    </DockPanel>
+                </MenuItem.Header>
+            </MenuItem>
+
+            <MenuItem Name="itApi" Click="itApi_Click">
+                <MenuItem.Header>
+                    <DockPanel>
+                        <fa5:ImageAwesome Margin="0,0,5,0" Width="15" Height="15"  Icon="Solid_Server" Foreground="#a0aec0" HorizontalAlignment="Center"/>
+                        <TextBlock Text="API"></TextBlock>
+                    </DockPanel>
+                </MenuItem.Header>
+            </MenuItem>
+        </Menu>
+        
+        <!-- General -->
+        <Grid Visibility="Hidden" Name="grdGeneral" Grid.Column="1" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+
+            <StackPanel Grid.Row="0" Grid.Column="0" >
+                <StackPanel Margin="5">
+                    <Label Content="Player name:" Foreground="#a0aec0" ToolTip="Required to automatically leave party when an outgoing trade is completed"></Label>
+                    <TextBox Text="{Binding Config.PlayerName, Mode=TwoWay}"></TextBox>
+                </StackPanel>
+
+                <StackPanel Margin="5">
+                    <Label Content="League:" Foreground="#a0aec0" ToolTip="Required to automatically filter offers out of your league"></Label>
+                    <ComboBox ItemsSource="{Binding Leagues}" SelectedItem="{Binding Config.CurrentLeague, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
+                </StackPanel>
+
+                <DockPanel Margin="5">
+                    <Label Content="Ignore offers out of your league:" Foreground="#a0aec0"></Label>
+                    <CheckBox IsChecked="{Binding Config.OnlyShowOffersOfCurrentLeague, Mode=TwoWay}" Margin="5,2.5,0,0"></CheckBox>
+                </DockPanel>
+
+                <DockPanel Margin="5">
+                    <Label Content="Filter sold offers:" Foreground="#a0aec0"></Label>
+                    <CheckBox IsChecked="{Binding Config.FilterSoldOffers, Mode=TwoWay}" Margin="5,2.5,0,0"></CheckBox>
+                </DockPanel>
+            </StackPanel>
+        </Grid>
+        
+        <!-- Whispers -->
+        <Grid Visibility="Hidden" Name="grdWhispers" Grid.Row="1" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                <StackPanel Margin="5">
+                    <Label Content="Sold whisper:" Foreground="#a0aec0"></Label>
+                    <TextBox Text="{Binding Config.SoldWhisper, Mode=TwoWay}"></TextBox>
+                </StackPanel>
+
+                <StackPanel Margin="5">
+                    <Label Content="Still interested whisper:" Foreground="#a0aec0"></Label>
+                    <TextBox Text="{Binding Config.StillInterestedWhisper, Mode=TwoWay}"></TextBox>
+                </StackPanel>
+
+                <StackPanel Margin="5">
+                    <Label Content="Busy whisper:" Foreground="#a0aec0"></Label>
+                    <TextBox Text="{Binding Config.BusyWhisper, Mode=TwoWay}"></TextBox>
+                </StackPanel>
+
+                <StackPanel Margin="5">
+                    <Label Content="Thanks whisper:" Foreground="#a0aec0"></Label>
+                    <TextBox Text="{Binding Config.ThanksWhisper, Mode=TwoWay}"></TextBox>
+                </StackPanel>
+
+                <StackPanel Margin="5">
+                    <Label Content="Out of league whisper:" Foreground="#a0aec0"></Label>
+                    <TextBox Text="{Binding Config.OutOfLeagueWhisper, Mode=TwoWay}"></TextBox>
+                </StackPanel>
+
+                <DockPanel Margin="5">
+                    <Label Content="Auto whisper Thanks:" Foreground="#a0aec0"></Label>
+                    <CheckBox IsChecked="{Binding Config.AutoThanks, Mode=TwoWay}" Margin="5,2.5,0,0"></CheckBox>
+                </DockPanel>
+
+                <DockPanel Margin="5">
+                    <Label Content="Auto whisper Out of League:" Foreground="#a0aec0"></Label>
+                    <CheckBox IsChecked="{Binding Config.AutoOutOfLeague, Mode=TwoWay}" Margin="5,2.5,0,0"></CheckBox>
+                </DockPanel>
+
+                <DockPanel Margin="5">
+                    <Label Content="Auto whisper Outgoing offers:" Foreground="#a0aec0"></Label>
+                    <CheckBox IsChecked="{Binding Config.AutoWhisper, Mode=TwoWay}" Margin="5,2.5,0,0"></CheckBox>
+                </DockPanel>
             </StackPanel>
 
-            <StackPanel Margin="5">
-                <Label Content="League:" Foreground="#a0aec0" ToolTip="Required to automatically filter offers out of your league"></Label>
-                <ComboBox ItemsSource="{Binding Leagues}" SelectedItem="{Binding Config.CurrentLeague, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
+            <StackPanel Grid.Row="0" Grid.Column="2" Margin="0,15,0,0" HorizontalAlignment="Center">
+                <TextBlock TextWrapping="Wrap" Foreground="#a0aec0" FontWeight="Bold" Text="You can use the following variables in your whispers:"></TextBlock>
+                <TextBlock Foreground="#a0aec0" Text=" {item} = To display the item name"></TextBlock>
+                <TextBlock Foreground="#a0aec0" Text=" {price} = To display the price of the item"></TextBlock>
+                <TextBlock Foreground="#a0aec0" Text=" {league} = To display the league name"></TextBlock>
+                <TextBlock Foreground="#a0aec0" Text=" {player} = To display the player name"></TextBlock>
             </StackPanel>
+        </Grid>
+        
+        <!-- API -->
+        <Grid x:Name="grdApi" Visibility="Hidden" Grid.Row="1" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
 
-            <DockPanel Margin="5">
-                <Label Content="Ignore offers out of your league:" Foreground="#a0aec0"></Label>
-                <CheckBox IsChecked="{Binding Config.OnlyShowOffersOfCurrentLeague, Mode=TwoWay}" Margin="5,2.5,0,0"></CheckBox>
-            </DockPanel>
-
-            <DockPanel Margin="5">
-                <Label Content="Filter sold offers:" Foreground="#a0aec0"></Label>
-                <CheckBox IsChecked="{Binding Config.FilterSoldOffers, Mode=TwoWay}" Margin="5,2.5,0,0"></CheckBox>
-            </DockPanel>
-        </StackPanel>
-
-        <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
-            <StackPanel Margin="5">
-                <Label Content="Sold whisper:" Foreground="#a0aec0"></Label>
-                <TextBox Text="{Binding Config.SoldWhisper, Mode=TwoWay}"></TextBox>
+            <StackPanel Grid.Row="0" Grid.Column="0">
+                <StackPanel Margin="5">
+                    <Label Content="PoE Ninja cache update rate (in minutes):" Foreground="#a0aec0" ></Label>
+                    <TextBox Text="{Binding Config.PoeNinjaUpdateRate, Mode=TwoWay}" Width="150" HorizontalAlignment="Left"></TextBox>
+                </StackPanel>
             </StackPanel>
-
-            <StackPanel Margin="5">
-                <Label Content="Still interested whisper:" Foreground="#a0aec0"></Label>
-                <TextBox Text="{Binding Config.StillInterestedWhisper, Mode=TwoWay}"></TextBox>
-            </StackPanel>
-
-            <StackPanel Margin="5">
-                <Label Content="Busy whisper:" Foreground="#a0aec0"></Label>
-                <TextBox Text="{Binding Config.BusyWhisper, Mode=TwoWay}"></TextBox>
-            </StackPanel>
-
-            <StackPanel Margin="5">
-                <Label Content="Thanks whisper:" Foreground="#a0aec0"></Label>
-                <TextBox Text="{Binding Config.ThanksWhisper, Mode=TwoWay}"></TextBox>
-            </StackPanel>
-        </StackPanel>
-
-        <StackPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Center">
-            <TextBlock Foreground="#a0aec0" FontWeight="Bold" Text="You can use the following variables in your whispers:"></TextBlock>
-            <TextBlock Foreground="#a0aec0" Text=" {item} = To display the item name"></TextBlock>
-            <TextBlock Foreground="#a0aec0" Text=" {price} = To display the price of the item"></TextBlock>
-            <TextBlock Foreground="#a0aec0" Text=" {league} = To display the league name"></TextBlock>
-            <TextBlock Foreground="#a0aec0" Text=" {player} = To display the player name"></TextBlock>
-
-        </StackPanel>
-
-        <DockPanel Grid.Row="3" Grid.Column="2"  HorizontalAlignment="Right">
+        </Grid>
+        
+        
+        <DockPanel Grid.Row="2" Grid.Column="2"  HorizontalAlignment="Right">
             <Button Name="btnCancel" Click="btnCancel_Click" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Right" MinWidth="80" >
                 <Button.Content>
                     <DockPanel HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -100,4 +194,5 @@
             </Button>
         </DockPanel>
     </Grid>
+
 </adonisControls:AdonisWindow>
