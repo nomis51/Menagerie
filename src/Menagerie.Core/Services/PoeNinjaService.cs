@@ -17,7 +17,7 @@ namespace Menagerie.Core.Services {
         //private static object _lockItemsCacheAccess = new object();
 
         #region Constants
-        private readonly int CACHE_EXPIRATION_TIME_MINS = AppService.Instance.GetConfig().PoeNinjaUpdateRate;
+        private int CACHE_EXPIRATION_TIME_MINS = 30;
         private readonly Uri POE_NINJA_API_BASE_URL = new Uri("https://poe.ninja");
         private const string POE_NINJA_API_CURRENCY = "api/data/currencyoverview";
         //private const string POE_NINJA_API_ITEM = "api/data/itemoverview";
@@ -228,6 +228,9 @@ namespace Menagerie.Core.Services {
 
         public void Start() {
             log.Trace("Starting PoeNinjaService");
+
+            CACHE_EXPIRATION_TIME_MINS = AppService.Instance.GetConfig().PoeNinjaUpdateRate;
+
             LoadCache();
             Task.Run(() => AutoUpdateCache(OldCache != null && (DateTime.Now - OldCache.UpdateTime).TotalMinutes < CACHE_EXPIRATION_TIME_MINS));
         }
