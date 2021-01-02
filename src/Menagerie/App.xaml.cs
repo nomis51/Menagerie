@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Menagerie.Core.Extensions;
 using Forms = System.Windows.Forms;
+using System.Threading;
 
 namespace Menagerie {
     /// <summary>
@@ -34,8 +35,6 @@ namespace Menagerie {
                 });
             });
         }
-
-
 
         private void Overlay_Loaded(object sender, RoutedEventArgs e) {
             log.Trace("Closing splash window");

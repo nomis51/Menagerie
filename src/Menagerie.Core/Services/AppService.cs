@@ -2,6 +2,7 @@
 using Menagerie.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WindowsInput.Native;
@@ -49,6 +50,7 @@ namespace Menagerie.Core.Services {
         private KeyboardService _keyboardService;
         private ShortcutService _shortcutService;
         private TradeService _tradeService;
+        private PoeNinjaService _poeNinjaService;
 
         private AppService() {
             _appDataService = new AppDataService();
@@ -63,6 +65,7 @@ namespace Menagerie.Core.Services {
             _keyboardService = new KeyboardService();
             _shortcutService = new ShortcutService();
             _tradeService = new TradeService();
+            _poeNinjaService = new PoeNinjaService();
         }
 
         private void SetShortcuts() {
@@ -133,6 +136,31 @@ namespace Menagerie.Core.Services {
             });
         }
 
+        public double GetChaosValueOfCurrency(string currency) {
+            return _poeNinjaService.GetCurrencyChaosValue(currency);
+        }
+
+        public double GetChaosValueOfRealNameCurrency(string currency) {
+            return _currencyService.GetChaosValue(currency);
+        }
+
+        public string GetCurrencyRealName(string currency) {
+            return _currencyService.GetRealName(currency);
+        }
+
+        public void SavePoeNinjaCaches(PoeNinjaCaches caches) {
+            _appDataService.DeleteAllDocument(AppDataService.COLLECTION_POE_NINJA_CACHES);
+            _appDataService.InsertDocument<PoeNinjaCaches>(AppDataService.COLLECTION_POE_NINJA_CACHES, caches);
+        }
+
+        public PoeNinjaCaches GetPoeNinjaCaches() {
+            return _appDataService.GetDocument<PoeNinjaCaches>(AppDataService.COLLECTION_POE_NINJA_CACHES);
+        }
+
+        public bool IsPoeNinjaCacheReady() {
+            return _poeNinjaService.CacheReady;
+        }
+
         public string GetCurrencyImageLink(string currencyName) {
             return _currencyService.GetCurrencyImageLink(currencyName);
         }
@@ -155,6 +183,12 @@ namespace Menagerie.Core.Services {
             if (GetConfig().FilterSoldOffers) {
                 _tradeService.AddSoldOffer(offer);
             }
+        }
+
+        public List<Offer> GetCompletedTrades() {
+            return _appDataService.GetDocuments<Offer>(AppDataService.COLLECTION_TRADES)
+                .OrderBy(t => t.Time)
+                .ToList();
         }
 
         public void NewPlayerJoined(string playerName) {
@@ -265,6 +299,7 @@ namespace Menagerie.Core.Services {
             _poeWindowService.Start();
             _shortcutService.Start();
             _tradeService.Start();
+            _poeNinjaService.Start();
         }
     }
 }
