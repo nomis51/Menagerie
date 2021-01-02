@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using WindowsInput.Native;
 using Winook;
@@ -112,6 +113,24 @@ namespace Menagerie.Core.Services {
 
         public void ClientFileReady() {
             _clientFileService.StartWatching();
+        }
+
+        public void EnsureNotHighlightingItem() {
+            string text = _clipboardService.GetClipboard();
+
+            Thread.Sleep(100);
+            SendCtrlA();
+            SendCtrlC();
+
+            string newText = _clipboardService.GetClipboard();
+
+            if(text == newText) {
+                return;
+            }
+
+            if(newText.IndexOf("--") != -1 || newText.IndexOf("\n") != -1) {
+                SendEscape();
+            }
         }
 
         public void PoeWindowReady() {
@@ -244,6 +263,10 @@ namespace Menagerie.Core.Services {
 
         public void SendCtrlA() {
             ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_A);
+        }
+
+        public void SendCtrlC() {
+            ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_C);
         }
 
         public void SendBackspace() {
