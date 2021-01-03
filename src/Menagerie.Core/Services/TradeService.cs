@@ -57,6 +57,7 @@ namespace Menagerie.Core.Services {
 
         public void AddSoldOffer(Offer offer) {
             Offers.Add(offer.ItemName, offer);
+            SaveTrade(offer);
         }
 
         public void SaveTrade(Offer offer) {
