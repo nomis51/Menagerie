@@ -9,7 +9,6 @@ namespace Menagerie.Services {
         public async Task CheckUpdates() {
             using (var updateManager = await UpdateManager.GitHubUpdateManager("https://github.com/nomis51/Menagerie")) {
                 await updateManager.UpdateApp();
-                UpdateManager.RestartApp();
             }
         }
     }
