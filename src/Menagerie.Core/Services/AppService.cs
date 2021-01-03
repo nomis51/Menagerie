@@ -90,7 +90,7 @@ namespace Menagerie.Core.Services {
         public void SetOverlayHandle(IntPtr handle) {
             _overlayHandle = handle;
         }
-        
+
         public bool EnsurePoeAlive() {
             return _poeWindowService.EnsurePoeWindowAlive();
         }
@@ -128,11 +128,11 @@ namespace Menagerie.Core.Services {
 
             string newText = _clipboardService.GetClipboard();
 
-            if(text == newText) {
+            if (text == newText) {
                 return;
             }
 
-            if(newText.IndexOf("--") != -1 || newText.IndexOf("\n") != -1) {
+            if (newText.IndexOf("--") != -1 || newText.IndexOf("\n") != -1) {
                 SendEscape();
             }
         }
@@ -206,9 +206,7 @@ namespace Menagerie.Core.Services {
         }
 
         public void OfferCompleted(Offer offer) {
-            if (GetConfig().FilterSoldOffers) {
-                _tradeService.AddSoldOffer(offer);
-            }
+            _tradeService.AddSoldOffer(offer);
         }
 
         public List<Offer> GetCompletedTrades() {
