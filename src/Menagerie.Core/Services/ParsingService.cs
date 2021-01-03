@@ -207,6 +207,8 @@ namespace Menagerie.Core {
                     offer.League = line.Substring(leagueStartIndex, leagueEndIndex - leagueStartIndex);
                 }
 
+                offer.League = Regex.Replace(offer.League, @"[0-9\.]", "");
+
                 var config = AppService.Instance.GetConfig();
                 if (config.AutoWhisperOutOfLeague && offer.League != config.CurrentLeague) {
                     AppService.Instance.SendChatMessage($"@{offer.PlayerName} {AppService.Instance.ReplaceVars(config.OutOfLeagueWhisper, offer)}");

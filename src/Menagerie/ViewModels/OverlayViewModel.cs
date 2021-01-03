@@ -253,11 +253,12 @@ namespace Menagerie.ViewModels {
 
         private void EnsureNotHighlighted(int index) {
             log.Trace("Verify not highlighted");
+
             if (Offers[index].IsHighlighted) {
                 Offers[index].IsHighlighted = false;
                 AppService.Instance.FocusGame();
                 AppService.Instance.ClearSpecialKeys();
-                AppService.Instance.SendEscape();
+                AppService.Instance.EnsureNotHighlightingItem();
                 Thread.Sleep(100);
             }
         }

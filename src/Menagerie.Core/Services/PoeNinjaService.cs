@@ -95,20 +95,24 @@ namespace Menagerie.Core.Services {
         private void UpdateCurrencyCache() {
             log.Trace("Updating currency cache");
             lock (_lockCurrencyCacheAccess) {
-                var response = _httpService.Client.GetAsync($"/{POE_NINJA_API_CURRENCY}?league={AppService.Instance.GetConfig().CurrentLeague}&type=Currency&language=en").Result;
-                PoeNinjaResult<PoeNinjaCurrency> result = _httpService.ReadResponse<PoeNinjaResult<PoeNinjaCurrency>>(response).Result;
-                Dictionary<string, List<PoeNinjaCurrency>> currencies = new Dictionary<string, List<PoeNinjaCurrency>>();
+                try {
+                    var response = _httpService.Client.GetAsync($"/{POE_NINJA_API_CURRENCY}?league={AppService.Instance.GetConfig().CurrentLeague}&type=Currency&language=en").Result;
+                    PoeNinjaResult<PoeNinjaCurrency> result = _httpService.ReadResponse<PoeNinjaResult<PoeNinjaCurrency>>(response).Result;
+                    Dictionary<string, List<PoeNinjaCurrency>> currencies = new Dictionary<string, List<PoeNinjaCurrency>>();
 
-                foreach (var line in result.Lines) {
-                    currencies.Add(line.CurrencyTypeName, new List<PoeNinjaCurrency>() { line });
+                    foreach (var line in result.Lines) {
+                        currencies.Add(line.CurrencyTypeName, new List<PoeNinjaCurrency>() { line });
+                    }
+
+                    log.Trace($"Poe Ninja returned {currencies.Count} currencies");
+
+                    Cache.Currency = new PoeNinjaCache<PoeNinjaCurrency>() {
+                        Language = result.Language,
+                        Map = currencies
+                    };
+                } catch (Exception e) {
+                    log.Error("Error while updating currency cache", e);
                 }
-
-                log.Trace($"Poe Ninja returned {currencies.Count} currencies");
-
-                Cache.Currency = new PoeNinjaCache<PoeNinjaCurrency>() {
-                    Language = result.Language,
-                    Map = currencies
-                };
             }
         }
 

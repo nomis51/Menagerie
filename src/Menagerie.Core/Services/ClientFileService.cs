@@ -12,11 +12,12 @@ using log4net;
 namespace Menagerie.Core.Services {
     public class ClientFileService : IService {
         #region Constants
-        private static readonly ILog log = LogManager.GetLogger(typeof(ClientFileService)); 
+        private static readonly ILog log = LogManager.GetLogger(typeof(ClientFileService));
         #endregion
 
         #region Members
         private long EndOfFile = 0;
+        private bool Started = false;
         #endregion
 
         #region Constructors
@@ -31,9 +32,12 @@ namespace Menagerie.Core.Services {
 
         #region Private methods
         public void StartWatching() {
-            log.Trace("Start watching");
-            SetEndOfFile();
-            Watch();
+            if (!Started) {
+                log.Trace("Start watching");
+                Started = true;
+                SetEndOfFile();
+                Watch();
+            }
         }
 
         private async void Watch() {

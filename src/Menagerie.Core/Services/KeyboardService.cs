@@ -29,9 +29,21 @@ namespace Menagerie.Core.Services {
         #region Public methods
         public void HookProcess(int processId) {
             log.Trace($"Hooking process {processId}");
-            _keyboardHook = new KeyboardHook(processId);
-            _keyboardHook.MessageReceived += KeyboardHook_MessageReceived;
-            _keyboardHook.InstallAsync().Wait();
+
+            if (processId != 0) {
+                if (_keyboardHook != null) {
+                    _keyboardHook.MessageReceived -= KeyboardHook_MessageReceived;
+                    _keyboardHook = null;
+                }
+
+                try {
+                    _keyboardHook = new KeyboardHook(processId);
+                    _keyboardHook.MessageReceived += KeyboardHook_MessageReceived;
+                    _keyboardHook.InstallAsync().Wait();
+                } catch (Exception e) {
+                    log.Error($"Error while hooking process {processId}", e);
+                 }
+            }
         }
 
         private void KeyboardHook_MessageReceived(object sender, KeyboardMessageEventArgs e) {
@@ -43,8 +55,8 @@ namespace Menagerie.Core.Services {
             _input.Keyboard.KeyPress(key);
         }
 
-        public void KeyUp(VirtualKeyCode key) { 
-              log.Trace($"Sending key up {(int)key}");
+        public void KeyUp(VirtualKeyCode key) {
+            log.Trace($"Sending key up {(int)key}");
             _input.Keyboard.KeyUp(key);
         }
 

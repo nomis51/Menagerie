@@ -36,8 +36,6 @@ namespace Menagerie.Core.Services {
         private static readonly ILog log = LogManager.GetLogger(typeof(PoeWindowService));
         private static bool DEBUG = true;
         private readonly List<string> PoeProcesses = new List<string>() {
-            "notepad",
-            "PathOfExile",
             "PathOfExile_x64",
         };
         #endregion
@@ -81,11 +79,11 @@ namespace Menagerie.Core.Services {
 
         private async void FindPoeProcess() {
             log.Trace("Looking for PoE process");
-            while (!ClientFileExists()) {
+            while (!ClientFileExists() || Process == null) {
                 Process[] processes = Process.GetProcesses();
 
                 foreach (var proc in processes) {
-                    if (PoeProcesses.Contains(proc.ProcessName)) {
+                    if (PoeProcesses.Contains(proc.ProcessName) && !proc.HasExited) {
                         log.Trace("PoE process found");
                         this.Process = proc;
 
@@ -109,7 +107,7 @@ namespace Menagerie.Core.Services {
                                 GetModuleFileNameEx(proc.Handle, IntPtr.Zero, filename, 2014);
                                 _clientFilePath = $"{filename.ToString().Substring(0, filename.ToString().LastIndexOf("\\"))}\\logs\\Client.txt";
                                 log.Trace($"64bits Client file location: {_clientFilePath}");
-                            } catch(Exception e) {
+                            } catch (Exception e) {
                                 log.Error("Error while getting PoE process location", e);
                             }
                         }
@@ -129,6 +127,17 @@ namespace Menagerie.Core.Services {
         #endregion
 
         #region Public methods
+        public bool EnsurePoeWindowAlive() {
+            log.Trace("Ensuring Poe window alive");
+            if (Process.HasExited) {
+                Process = null;
+                Task.Run(() => FindPoeProcess());
+                return false;
+            }
+
+            return true;
+        }
+
         public void Focus() {
             log.Trace("Focusing PoE");
             if (Process == null) {
