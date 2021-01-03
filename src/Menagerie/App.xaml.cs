@@ -7,6 +7,7 @@ using System.Windows;
 using Menagerie.Core.Extensions;
 using Forms = System.Windows.Forms;
 using System.Threading;
+using Menagerie.Services;
 
 namespace Menagerie {
     /// <summary>
@@ -22,6 +23,8 @@ namespace Menagerie {
             InitializeComponent();
 
             log.Trace("Initializing App", null);
+
+            _ = (new UpdateService()).CheckUpdates();
 
             splash = new SplashWindow();
             overlay = new OverlayWindow(Forms.Screen.PrimaryScreen);
