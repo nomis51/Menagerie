@@ -141,8 +141,22 @@ namespace Menagerie {
             menu.Items.Add(configItem);
             menu.Items.Add(quitItem);
 
+            trayIcon.Click += TrayIcon_Click;
+
             trayIcon.ContextMenuStrip = menu;
             trayIcon.Visible = true;
+        }
+
+        private void TrayIcon_Click(object sender, EventArgs evt) {
+            var config = AppService.Instance.GetConfig();
+
+            foreach (var item in trayIcon.ContextMenuStrip.Items) {
+                if (((Forms.ToolStripMenuItem)item).Text == "League") {
+                    foreach (var e in ((Forms.ToolStripMenuItem)item).DropDownItems) {
+                        ((Forms.ToolStripMenuItem)e).Checked = ((Forms.ToolStripMenuItem)e).Text == config.CurrentLeague;
+                    }
+                }
+            }
         }
 
         private void StatsItem_Click(object sender, EventArgs e) {
