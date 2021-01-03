@@ -90,6 +90,10 @@ namespace Menagerie.Core.Services {
         public void SetOverlayHandle(IntPtr handle) {
             _overlayHandle = handle;
         }
+        
+        public bool EnsurePoeAlive() {
+            return _poeWindowService.EnsurePoeWindowAlive();
+        }
 
         public IntPtr GetOverlayHandle() {
             return _overlayHandle;

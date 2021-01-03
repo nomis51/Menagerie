@@ -24,7 +24,10 @@ namespace Menagerie.Core.Services {
 
         public void RegisterShortcut(Shortcut shortcut) {
             log.Trace($"Registering shortcut {shortcut}");
-            Shortcuts.Add(shortcut);
+
+            if (!Shortcuts.Contains(shortcut)) {
+                Shortcuts.Add(shortcut);
+            }
         }
 
         public void HandleShortcut(KeyboardMessageEventArgs evt) {

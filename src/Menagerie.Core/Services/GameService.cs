@@ -44,6 +44,7 @@ namespace Menagerie.Core.Services {
                     log.Trace("Game isn't focused");
                     GameFocused = false;
                     AppService.Instance.HideOverlay();
+                    AppService.Instance.EnsurePoeAlive();
                 } else if (poeWinFocused && !GameFocused) {
                     log.Trace("Game is focused");
                     GameFocused = true;
