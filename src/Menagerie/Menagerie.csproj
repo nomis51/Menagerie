@@ -172,6 +172,7 @@
     </ApplicationDefinition>
     <Compile Include="Converters\Base64ImageConverter.cs" />
     <Compile Include="Helpers\HighlightTermBehavior.cs" />
+    <Compile Include="Models\StatsOffer.cs" />
     <Compile Include="Services\AudioService.cs" />
     <Compile Include="Services\NotificationService.cs" />
     <Compile Include="Services\UpdateService.cs" />
