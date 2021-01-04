@@ -1,21 +1,24 @@
-﻿<Window x:Class="Menagerie.OverlayWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:app="clr-namespace:Menagerie"
-        xmlns:converters="clr-namespace:Menagerie.Converters"
-        xmlns:fa5="http://schemas.fontawesome.com/icons/"
-        mc:Ignorable="d"
-        WindowStyle="None"
-        AllowsTransparency="True"
-        Background="Transparent"
-        Topmost="True"
-        ShowInTaskbar="False"
-        Visibility="Hidden"
-        Title="Overlay" WindowState="Maximized">
+﻿<adonisControls:AdonisWindow x:Class="Menagerie.OverlayWindow"
+                             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                             xmlns:app="clr-namespace:Menagerie"
+                             xmlns:converters="clr-namespace:Menagerie.Converters"
+                             xmlns:fa5="http://schemas.fontawesome.com/icons/"
+                             xmlns:adonisControls="clr-namespace:AdonisUI.Controls;assembly=AdonisUI"
+                             xmlns:adonisUi="clr-namespace:AdonisUI;assembly=AdonisUI"
+                             mc:Ignorable="d"
+                             WindowStyle="None"
+                             AllowsTransparency="True"
+                             Background="Transparent"
+                             Topmost="True"
+                             ShowInTaskbar="False"
+                             Visibility="Hidden"
+                             Title="Overlay"
+                             WindowState="Maximized">
     <Window.Resources>
-        <converters:Base64ImageConverter x:Key="Base64ImageConverter"/>
+        <converters:Base64ImageConverter x:Key="Base64ImageConverter" />
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -30,27 +33,66 @@
             <RowDefinition Height="100"></RowDefinition>
             <RowDefinition Height="20"></RowDefinition>
         </Grid.RowDefinitions>
-
         <!-- Incoming offers -->
-        <DockPanel Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" MinWidth="140" Margin="0,0,30,0" Visibility="{Binding IsOffersFilterVisible}">
-            <TextBox x:Name="txtSearchOffer" TextChanged="txtSearchOffer_TextChanged"></TextBox>
+        <DockPanel Grid.Row="2"
+                   Grid.Column="0"
+                   HorizontalAlignment="Right"
+                   VerticalAlignment="Top"
+                   MinWidth="140"
+                   Margin="0,0,30,0"
+                   Visibility="{Binding IsOffersFilterVisible}">
+            <TextBox x:Name="txtSearchOffer"
+                     TextChanged="txtSearchOffer_TextChanged"></TextBox>
         </DockPanel>
-
-        <Button x:Name="btnClearOffers" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,5,0" BorderThickness="0" Background="Transparent" Style="{StaticResource TransparentStyleTransparent}" Cursor="Hand" ToolTip="Clear all offers" Click="btnClearOffers_Click">
+        <Ellipse Width="20"
+                 Height="20"
+                 Fill="{DynamicResource {x:Static adonisUi:Brushes.Layer1BackgroundBrush}}"
+                 Grid.Row="2"
+                 Grid.Column="0"
+                 HorizontalAlignment="Right"
+                 VerticalAlignment="Top"
+                 Margin="0,-2.5,2.5,0"></Ellipse>
+        <Button x:Name="btnClearOffers"
+                Grid.Row="2"
+                Grid.Column="0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Margin="0,0,5,0"
+                BorderThickness="0"
+                Background="Transparent"
+                Style="{StaticResource TransparentStyleTransparent}"
+                Cursor="Hand"
+                ToolTip="Clear all offers"
+                Click="btnClearOffers_Click">
             <Button.Content>
-                <fa5:ImageAwesome Width="15" Height="15"  Icon="Solid_Trash" Foreground="#a0aec0" HorizontalAlignment="Center"/>
+                <fa5:ImageAwesome Width="15"
+                                  Height="15"
+                                  Icon="Solid_Trash"
+                                  Foreground="#a0aec0"
+                                  HorizontalAlignment="Center" />
             </Button.Content>
         </Button>
-
-        <ItemsControl ItemsSource="{Binding Offers, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="99">
+        <ItemsControl ItemsSource="{Binding Offers, UpdateSourceTrigger=PropertyChanged}"
+                      Grid.Row="2"
+                      Grid.Column="1"
+                      Grid.ColumnSpan="99">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <DockPanel Cursor="Hand" LastChildFill="False" HorizontalAlignment="Left"/>
+                    <DockPanel Cursor="Hand"
+                               LastChildFill="False"
+                               HorizontalAlignment="Left" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Grid Name="grdOffer" Background="#2d2d2f" Width="90" Height="80" Margin="2" MouseDown="grdOffer_MouseDown" Tag="{Binding Id}" ToolTip="{Binding Tooltip}">
+                    <Grid Name="grdOffer"
+                          Background="{DynamicResource {x:Static adonisUi:Brushes.Layer1BackgroundBrush}}"
+                          Width="90"
+                          Height="80"
+                          Margin="2"
+                          MouseDown="grdOffer_MouseDown"
+                          Tag="{Binding Id}"
+                          ToolTip="{Binding Tooltip}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="3"></RowDefinition>
                             <RowDefinition Height="15"></RowDefinition>
@@ -64,67 +106,183 @@
                             <ColumnDefinition Width="*"></ColumnDefinition>
                             <ColumnDefinition Width="3"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-
-                        <fa5:ImageAwesome Visibility="{Binding PlayerJoinedIconVisible}" Panel.ZIndex="99" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="15" Height="15"  Icon="Solid_UserCircle" Foreground="Lime"/>
-
-                        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="999" Grid.RowSpan="999" BorderThickness="3" BorderBrush="#1e1e1e"   Visibility="{Binding IsNormalBorderVisible}"></Border>
-                        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="999" Grid.RowSpan="999" BorderThickness="3" BorderBrush="Green" Visibility="{Binding IsInviteBorderVisible}"></Border>
-                        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="999" Grid.RowSpan="999" BorderThickness="3" BorderBrush="Orange" Visibility="{Binding IsTradeBorderVisible}"></Border>
-
-                        <DockPanel Background="#1e1e1e" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
-                            <TextBlock x:Name="txtOfferTitle" FontWeight="Bold" Foreground="#a0aec0" Background="#1e1e1e" FontSize="12" Text="{Binding ItemNameText}" HorizontalAlignment="Center" VerticalAlignment="Center" >
-                            </TextBlock>
+                        <fa5:ImageAwesome Visibility="{Binding PlayerJoinedIconVisible}"
+                                          Panel.ZIndex="99"
+                                          Grid.Row="2"
+                                          Grid.Column="2"
+                                          HorizontalAlignment="Right"
+                                          VerticalAlignment="Bottom"
+                                          Width="15"
+                                          Height="15"
+                                          Icon="Solid_UserCircle"
+                                          Foreground="Lime" />
+                        <Border Grid.Row="0"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="999"
+                                Grid.RowSpan="999"
+                                BorderThickness="3"
+                                BorderBrush="{DynamicResource {x:Static adonisUi:Brushes.Layer0BackgroundBrush}}"
+                                Visibility="{Binding IsNormalBorderVisible}"></Border>
+                        <Border Grid.Row="0"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="999"
+                                Grid.RowSpan="999"
+                                BorderThickness="3"
+                                BorderBrush="Green"
+                                Visibility="{Binding IsInviteBorderVisible}"></Border>
+                        <Border Grid.Row="0"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="999"
+                                Grid.RowSpan="999"
+                                BorderThickness="3"
+                                BorderBrush="Orange"
+                                Visibility="{Binding IsTradeBorderVisible}"></Border>
+                        <DockPanel Background="{DynamicResource {x:Static adonisUi:Brushes.Layer0BackgroundBrush}}"
+                                   Grid.Row="1"
+                                   Grid.Column="1"
+                                   Grid.ColumnSpan="2">
+                            <TextBlock x:Name="txtOfferTitle"
+                                       FontWeight="Bold"
+                                       Foreground="#a0aec0"
+                                       Background="{DynamicResource {x:Static adonisUi:Brushes.Layer0BackgroundBrush}}"
+                                       FontSize="12"
+                                       Text="{Binding ItemNameText}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"></TextBlock>
                         </DockPanel>
-
-                        <fa5:ImageAwesome Visibility="{Binding AnyNotes}" Panel.ZIndex="99" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Width="10" Height="10"  Icon="Solid_Star" Foreground="Yellow"/>
-
-                        <TextBlock Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#a0aec0" FontWeight="Bold" FontSize="{Binding PriceFontSize}" Text="{Binding PriceText}"></TextBlock>
-
-                        <Image Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform"  Source="{Binding CurrencyImageLink, Converter={StaticResource Base64ImageConverter}}"/>
-
-                        <Button Name="btnBusy" Tag="{Binding Id}"  Click="btnBusy_Click" Grid.Row="3" Grid.Column="1" Style="{StaticResource TransparentStyleBlue}" Visibility= "{Binding IsBusyButtonVisible}">
+                        <fa5:ImageAwesome Visibility="{Binding AnyNotes}"
+                                          Panel.ZIndex="99"
+                                          Grid.Row="2"
+                                          Grid.Column="1"
+                                          HorizontalAlignment="Left"
+                                          VerticalAlignment="Top"
+                                          Width="10"
+                                          Height="10"
+                                          Icon="Solid_Star"
+                                          Foreground="Yellow" />
+                        <TextBlock Grid.Row="2"
+                                   Grid.Column="1"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Foreground="#a0aec0"
+                                   FontWeight="Bold"
+                                   FontSize="{Binding PriceFontSize}"
+                                   Text="{Binding PriceText}"></TextBlock>
+                        <Image Grid.Row="2"
+                               Grid.Column="2"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Stretch="Uniform"
+                               Source="{Binding CurrencyImageLink, Converter={StaticResource Base64ImageConverter}}" />
+                        <Button Name="btnBusy"
+                                Tag="{Binding Id}"
+                                Click="btnBusy_Click"
+                                Grid.Row="3"
+                                Grid.Column="1"
+                                Style="{StaticResource TransparentStyleBlue}"
+                                Visibility="{Binding IsBusyButtonVisible}">
                             <Button.Content>
-                                <fa5:ImageAwesome Width="15" Height="15"  Icon="Solid_Clock" Foreground="#a0aec0" HorizontalAlignment="Center"/>
+                                <fa5:ImageAwesome Width="15"
+                                                  Height="15"
+                                                  Icon="Solid_Clock"
+                                                  Foreground="#a0aec0"
+                                                  HorizontalAlignment="Center" />
                             </Button.Content>
                         </Button>
-
-                        <Button x:Name="btnRemove" Tag="{Binding Id}"  Click="btnRemove_Click" Grid.Row="3" Grid.Column="2" Style="{StaticResource TransparentStyleRed}" >
+                        <Button x:Name="btnRemove"
+                                Tag="{Binding Id}"
+                                Click="btnRemove_Click"
+                                Grid.Row="3"
+                                Grid.Column="2"
+                                Style="{StaticResource TransparentStyleRed}">
                             <Button.Content>
-                                <fa5:ImageAwesome Width="15" Height="15"  Icon="Solid_TimesCircle" Foreground="#a0aec0" HorizontalAlignment="Center"/>
+                                <fa5:ImageAwesome Width="15"
+                                                  Height="15"
+                                                  Icon="Solid_TimesCircle"
+                                                  Foreground="#a0aec0"
+                                                  HorizontalAlignment="Center" />
                             </Button.Content>
                         </Button>
-
-                        <Button x:Name="btnInvite" Tag="{Binding Id}"  Click="btnInvite_Click" Grid.Row="3" Grid.Column="1" Style="{StaticResource TransparentStyleGreen}" Visibility= "{Binding IsReInviteButtonVisible}">
+                        <Button x:Name="btnInvite"
+                                Tag="{Binding Id}"
+                                Click="btnInvite_Click"
+                                Grid.Row="3"
+                                Grid.Column="1"
+                                Style="{StaticResource TransparentStyleGreen}"
+                                Visibility="{Binding IsReInviteButtonVisible}">
                             <Button.Content>
-                                <fa5:ImageAwesome Width="15" Height="15"  Icon="Solid_UserPlus" Foreground="#a0aec0" HorizontalAlignment="Center"/>
+                                <fa5:ImageAwesome Width="15"
+                                                  Height="15"
+                                                  Icon="Solid_UserPlus"
+                                                  Foreground="#a0aec0"
+                                                  HorizontalAlignment="Center" />
                             </Button.Content>
                         </Button>
-
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-
         <!-- Outgoing offers -->
-        <DockPanel Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Top" MinWidth="140" Margin="0,75,0,0" Visibility="{Binding IsOutgoingOffersFilterVisible}">
-            <TextBox x:Name="txtSearchOutgoingOffer" TextChanged="txtSearchOutgoingOffer_TextChanged"></TextBox>
+        <DockPanel Grid.Row="1"
+                   Grid.Column="2"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Top"
+                   MinWidth="140"
+                   Margin="0,75,0,0"
+                   Visibility="{Binding IsOutgoingOffersFilterVisible}">
+            <TextBox x:Name="txtSearchOutgoingOffer"
+                     TextChanged="txtSearchOutgoingOffer_TextChanged"></TextBox>
         </DockPanel>
-
-        <Button x:Name="btnClearOutgoingOffers" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,0,0" BorderThickness="0" Background="Transparent" Style="{StaticResource TransparentStyleTransparent}" Cursor="Hand" ToolTip="Clear all outgoing offers" Click="btnClearOutgoingOffers_Click">
+        <Ellipse Width="20"
+                 Height="20"
+                 Fill="{DynamicResource {x:Static adonisUi:Brushes.Layer1BackgroundBrush}}"
+                 Grid.Row="2"
+                 Grid.Column="2"
+                 HorizontalAlignment="Right"
+                 VerticalAlignment="Top"
+                Margin="0,-2.5,-2.5,0"></Ellipse>
+        <Button x:Name="btnClearOutgoingOffers"
+                Grid.Row="2"
+                Grid.Column="2"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Margin="0,0,0,0"
+                BorderThickness="0"
+                Background="Transparent"
+                Style="{StaticResource TransparentStyleTransparent}"
+                Cursor="Hand"
+                ToolTip="Clear all outgoing offers"
+                Click="btnClearOutgoingOffers_Click">
             <Button.Content>
-                <fa5:ImageAwesome Width="15" Height="15"  Icon="Solid_Trash" Foreground="#a0aec0" HorizontalAlignment="Center"/>
+                <fa5:ImageAwesome Width="15"
+                                  Height="15"
+                                  Icon="Solid_Trash"
+                                  Foreground="#a0aec0"
+                                  HorizontalAlignment="Center" />
             </Button.Content>
         </Button>
-
-        <ItemsControl ItemsSource="{Binding OutgoingOffers, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="2" Grid.RowSpan="99">
+        <ItemsControl ItemsSource="{Binding OutgoingOffers, UpdateSourceTrigger=PropertyChanged}"
+                      Grid.Row="1"
+                      Grid.Column="2"
+                      Grid.RowSpan="99">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <StackPanel Cursor="Hand" Margin="0,100,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                    <StackPanel Cursor="Hand"
+                                Margin="0,100,0,0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Top" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Grid Name="grdOutgoingOffer" Background="#2d2d2f" MinWidth="140" MaxWidth="200" MaxHeight="90" Margin="2" Tag="{Binding Id}" ToolTip="{Binding Tooltip}">
+                    <Grid Name="grdOutgoingOffer"
+                          Background="{DynamicResource {x:Static adonisUi:Brushes.Layer1BackgroundBrush}}"
+                          MinWidth="140"
+                          MaxWidth="200"
+                          MaxHeight="90"
+                          Margin="2"
+                          Tag="{Binding Id}"
+                          ToolTip="{Binding Tooltip}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="3"></RowDefinition>
                             <RowDefinition Height="15"></RowDefinition>
@@ -143,35 +301,93 @@
                             <ColumnDefinition Width="*"></ColumnDefinition>
                             <ColumnDefinition Width="3"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-
-                        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="999" Grid.RowSpan="999" BorderThickness="3" BorderBrush="#1e1e1e"></Border>
-
-                        <DockPanel Background="#1e1e1e" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="99">
-                            <TextBlock x:Name="txtOfferTitle" FontWeight="Bold" Foreground="#a0aec0" Background="#1e1e1e" FontSize="12" Text="{Binding ItemNameText}" HorizontalAlignment="Center" VerticalAlignment="Center" >
-                            </TextBlock>
+                        <Border Grid.Row="0"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="999"
+                                Grid.RowSpan="999"
+                                BorderThickness="3"
+                                BorderBrush="{DynamicResource {x:Static adonisUi:Brushes.Layer0BackgroundBrush}}"></Border>
+                        <DockPanel Background="#1e1e1e"
+                                   Grid.Row="1"
+                                   Grid.Column="1"
+                                   Grid.ColumnSpan="99">
+                            <TextBlock x:Name="txtOfferTitle"
+                                       FontWeight="Bold"
+                                       Foreground="#a0aec0"
+                                       Background="{DynamicResource {x:Static adonisUi:Brushes.Layer0BackgroundBrush}}"
+                                       FontSize="12"
+                                       Text="{Binding ItemNameText}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"></TextBlock>
                         </DockPanel>
-
-                        <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="99" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#a0aec0" FontWeight="Bold" FontSize="12" Text="{Binding PlayerNameText}"></TextBlock>
-
-                        <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#a0aec0" FontWeight="Bold" FontSize="{Binding PriceFontSize}" Text="{Binding PriceText}"></TextBlock>
-
-                        <Image Grid.Row="3" Grid.Column="4" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform"  Source="{Binding CurrencyImageLink}"/>
-
-                        <Button x:Name="btnJoinHideout" Click="btnJoinHideout_Click" Tag="{Binding Id}"  Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Style="{StaticResource TransparentStyleBlue}">
+                        <TextBlock Grid.Row="2"
+                                   Grid.Column="1"
+                                   Grid.ColumnSpan="99"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Foreground="#a0aec0"
+                                   FontWeight="Bold"
+                                   FontSize="12"
+                                   Text="{Binding PlayerNameText}"></TextBlock>
+                        <TextBlock Grid.Row="3"
+                                   Grid.Column="1"
+                                   Grid.ColumnSpan="3"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Foreground="#a0aec0"
+                                   FontWeight="Bold"
+                                   FontSize="{Binding PriceFontSize}"
+                                   Text="{Binding PriceText}"></TextBlock>
+                        <Image Grid.Row="3"
+                               Grid.Column="4"
+                               Grid.ColumnSpan="3"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Stretch="Uniform"
+                               Source="{Binding CurrencyImageLink}" />
+                        <Button x:Name="btnJoinHideout"
+                                Click="btnJoinHideout_Click"
+                                Tag="{Binding Id}"
+                                Grid.Row="4"
+                                Grid.Column="1"
+                                Grid.ColumnSpan="2"
+                                Style="{StaticResource TransparentStyleBlue}">
                             <Button.Content>
-                                <fa5:ImageAwesome Width="15" Height="15"  Icon="Solid_Home" Foreground="#a0aec0" HorizontalAlignment="Center"/>
+                                <fa5:ImageAwesome Width="15"
+                                                  Height="15"
+                                                  Icon="Solid_Home"
+                                                  Foreground="#a0aec0"
+                                                  HorizontalAlignment="Center" />
                             </Button.Content>
                         </Button>
-
-                        <Button x:Name="btnTrade" Tag="{Binding Id}" Click="btnTrade_Click"  Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="2" Style="{StaticResource TransparentStyleOrange}">
+                        <Button x:Name="btnTrade"
+                                Tag="{Binding Id}"
+                                Click="btnTrade_Click"
+                                Grid.Row="4"
+                                Grid.Column="3"
+                                Grid.ColumnSpan="2"
+                                Style="{StaticResource TransparentStyleOrange}">
                             <Button.Content>
-                                <fa5:ImageAwesome Width="15" Height="15"  Icon="Solid_DollarSign" Foreground="#a0aec0" HorizontalAlignment="Center"/>
+                                <fa5:ImageAwesome Width="15"
+                                                  Height="15"
+                                                  Icon="Solid_DollarSign"
+                                                  Foreground="#a0aec0"
+                                                  HorizontalAlignment="Center" />
                             </Button.Content>
                         </Button>
-
-                        <Button x:Name="btnLeave" Tag="{Binding Id}" Click="btnLeave_Click" Grid.Row="4" Grid.Column="5" Grid.ColumnSpan="2" Style="{StaticResource TransparentStyleRed}">
+                        <Button x:Name="btnLeave"
+                                Tag="{Binding Id}"
+                                Click="btnLeave_Click"
+                                Grid.Row="4"
+                                Grid.Column="5"
+                                Grid.ColumnSpan="2"
+                                Style="{StaticResource TransparentStyleRed}">
                             <Button.Content>
-                                <fa5:ImageAwesome Width="15" Height="15"  Icon="Solid_SignOutAlt" Foreground="#a0aec0" HorizontalAlignment="Center"/>
+                                <fa5:ImageAwesome Width="15"
+                                                  Height="15"
+                                                  Icon="Solid_SignOutAlt"
+                                                  Foreground="#a0aec0"
+                                                  HorizontalAlignment="Center" />
                             </Button.Content>
                         </Button>
                     </Grid>
@@ -179,4 +395,4 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
     </Grid>
-</Window>
+</adonisControls:AdonisWindow>

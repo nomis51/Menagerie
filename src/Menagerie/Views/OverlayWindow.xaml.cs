@@ -15,12 +15,13 @@ using Menagerie.Services;
 using Menagerie.Views;
 using System.Threading;
 using System.Threading.Tasks;
+using AdonisUI.Controls;
 
 namespace Menagerie {
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml
     /// </summary>
-    public partial class OverlayWindow : Window {
+    public partial class OverlayWindow : AdonisWindow {
         #region WinAPI
         [DllImport("user32.dll", SetLastError = true)]
         static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);

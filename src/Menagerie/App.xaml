@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Menagerie"
              xmlns:fa5="http://schemas.fontawesome.com/icons/"
+             xmlns:adonisUi="clr-namespace:AdonisUI;assembly=AdonisUI"
              DispatcherUnhandledException="Application_DispatcherUnhandledException">
     <Application.Resources>
             <ResourceDictionary>
@@ -13,5 +14,6 @@
                 <ResourceDictionary Source="Views/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
             </ResourceDictionary>
+
     </Application.Resources>
 </Application>
