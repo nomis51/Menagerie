@@ -92,7 +92,8 @@
                           Margin="2"
                           MouseDown="grdOffer_MouseDown"
                           Tag="{Binding Id}"
-                          ToolTip="{Binding Tooltip}">
+                          ToolTip="{Binding Tooltip}"
+                          ToolTipService.ShowDuration="60000">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="3"></RowDefinition>
                             <RowDefinition Height="15"></RowDefinition>
@@ -116,6 +117,17 @@
                                           Height="15"
                                           Icon="Solid_UserCircle"
                                           Foreground="Lime" />
+                        <fa5:ImageAwesome Visibility="{Binding PossibleScamVisible}"
+                                          Panel.ZIndex="99"
+                                          Grid.Row="2"
+                                          Grid.Column="1"
+                                          Grid.ColumnSpan="2"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Bottom"
+                                          Width="20"
+                                          Height="20"
+                                          Icon="Solid_ExclamationTriangle"
+                                          Foreground="Yellow" />
                         <Border Grid.Row="0"
                                 Grid.Column="0"
                                 Grid.ColumnSpan="999"
@@ -240,7 +252,7 @@
                  Grid.Column="2"
                  HorizontalAlignment="Right"
                  VerticalAlignment="Top"
-                Margin="0,-2.5,-2.5,0"></Ellipse>
+                 Margin="0,-2.5,-2.5,0"></Ellipse>
         <Button x:Name="btnClearOutgoingOffers"
                 Grid.Row="2"
                 Grid.Column="2"
@@ -307,7 +319,7 @@
                                 Grid.RowSpan="999"
                                 BorderThickness="3"
                                 BorderBrush="{DynamicResource {x:Static adonisUi:Brushes.Layer0BackgroundBrush}}"></Border>
-                        <DockPanel Background="#1e1e1e"
+                        <DockPanel Background="{DynamicResource {x:Static adonisUi:Brushes.Layer0BackgroundBrush}}"
                                    Grid.Row="1"
                                    Grid.Column="1"
                                    Grid.ColumnSpan="99">

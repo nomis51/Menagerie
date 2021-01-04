@@ -94,6 +94,26 @@ namespace Menagerie.ViewModels {
             AppService.Instance.OnNewOffer += AppService_OnNewOffer;
             AppService.Instance.OnNewChatEvent += AppService_OnNewChatEvent;
             AppService.Instance.OnNewPlayerJoined += AppService_OnNewPlayerJoined;
+            AppService.Instance.OnOfferScam += Instance_OnOfferScam;
+        }
+
+        private void Instance_OnOfferScam(CoreModels.PriceCheckResult result, CoreModels.Offer offer) {
+            int nbTry = 0;
+
+            while (++nbTry <= 5) {
+                foreach (var o in Offers) {
+                    if (o.Id == offer.Id) {
+                        App.Current.Dispatcher.Invoke(delegate {
+                            o.PriceCheck = result;
+                            o.PossibleScam = true;
+                            UpdateOffers();
+                        });
+                        return;
+                    }
+                }
+
+                Thread.Sleep(200);
+            }
         }
 
         public void ShowConfigWindow() {

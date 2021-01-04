@@ -140,6 +140,15 @@ namespace Menagerie.Models {
             }
         }
 
+        public Core.Models.PriceCheckResult PriceCheck { get; set; }
+        public bool PossibleScam { get; set; } = false;
+
+        public Visibility PossibleScamVisible {
+            get {
+                return PossibleScam ? Visibility.Visible : Visibility.Hidden;
+            }
+        }
+
         public OfferState State { get; set; }
 
         public Visibility IsBusyButtonVisible {
@@ -263,6 +272,18 @@ namespace Menagerie.Models {
 
                 if (!string.IsNullOrEmpty(Notes)) {
                     text += $"\nNotes: {Notes}";
+                }
+
+                if (PossibleScam) {
+                    string prices = "";
+
+                    foreach (var r in PriceCheck.Results) {
+                        prices += $"{r.Price} {r.Currency}, ";
+                    }
+
+                    prices = prices.Substring(0, prices.Length - 2);
+
+                    text += $"\n\nPossible scam: You have a {ItemName} listed for\n{prices}\non www.pathofexile.com/trade, but the player is asking for {Price} {Currency}";
                 }
 
                 return text;

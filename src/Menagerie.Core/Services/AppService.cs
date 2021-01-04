@@ -39,6 +39,9 @@ namespace Menagerie.Core.Services {
 
         public delegate void ToggleOverlayVisibilityEvent(bool show);
         public event ToggleOverlayVisibilityEvent OnToggleOverlayVisibility;
+
+        public delegate void OfferScamEvent(PriceCheckResult result, Offer offer);
+        public event OfferScamEvent OnOfferScam;
         #endregion
 
         private IntPtr _overlayHandle;
@@ -55,6 +58,7 @@ namespace Menagerie.Core.Services {
         private ShortcutService _shortcutService;
         private TradeService _tradeService;
         private PoeNinjaService _poeNinjaService;
+        private PriceCheckingService _priceCheckingService;
 
         private AppService() {
             _appDataService = new AppDataService();
@@ -70,6 +74,7 @@ namespace Menagerie.Core.Services {
             _shortcutService = new ShortcutService();
             _tradeService = new TradeService();
             _poeNinjaService = new PoeNinjaService();
+            _priceCheckingService = new PriceCheckingService();
         }
 
         private void SetShortcuts() {
@@ -162,6 +167,22 @@ namespace Menagerie.Core.Services {
             });
         }
 
+        public TradeRequest CreateTradeRequest(Offer offer) {
+            return _poeApiService.CreateTradeRequest(offer);
+        }
+
+        public async Task<SearchResult> GetTradeRequestResults(TradeRequest request, string league) {
+            return await _poeApiService.GetTradeRequestResults(request, league);
+        }
+
+        public PriceCheckResult GetTradeResults(SearchResult search) {
+            return _poeApiService.GetTradeResults(search);
+        }
+
+        public async Task<PriceCheckResult> PriceCheck(Offer offer) {
+            return await _priceCheckingService.PriceCheck(offer);
+        }
+
         public double GetChaosValueOfCurrency(string currency) {
             return _poeNinjaService.GetCurrencyChaosValue(currency);
         }
@@ -208,6 +229,20 @@ namespace Menagerie.Core.Services {
 
             if (config.OnlyShowOffersOfCurrentLeague && !offer.IsOutgoing && offer.League != GetConfig().CurrentLeague) {
                 return;
+            }
+
+            if (!string.IsNullOrEmpty(config.PlayerName) && !offer.IsOutgoing) {
+                Task.Run(() => {
+                    var priceCheck = PriceCheck(offer).Result;
+
+                    foreach (var r in priceCheck.Results) {
+                        if (r.Price == offer.Price && r.Currency == offer.Currency) {
+                            return;
+                        }
+                    }
+
+                    OnOfferScam(priceCheck, offer);
+                });
             }
 
             OnNewOffer(offer);
@@ -343,6 +378,7 @@ namespace Menagerie.Core.Services {
             _shortcutService.Start();
             _tradeService.Start();
             _poeNinjaService.Start();
+            _priceCheckingService.Start();
         }
     }
 }
