@@ -325,7 +325,7 @@ namespace Menagerie.Core {
                     var offer = (Offer)evt;
 
                     if (offer.IsOutgoing) {
-                        if (AppService.Instance.GetConfig().AutoWhisper && ) {
+                        if (AppService.Instance.GetConfig().AutoWhisper) {
                             AppService.Instance.SendChatMessage(line.Substring(line.IndexOf("@")));
                         }
                         OnNewChatEventParsed(offer);

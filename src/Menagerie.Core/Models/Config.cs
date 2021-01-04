@@ -1,4 +1,6 @@
-﻿namespace Menagerie.Core.Models {
+﻿using System.Collections.Generic;
+
+namespace Menagerie.Core.Models {
     public class Config : DbModel {
         public string PlayerName { get; set; }
         public string CurrentLeague { get; set; }
@@ -13,5 +15,6 @@
         public bool AutoWhisperOutOfLeague { get; set; }
         public string OutOfLeagueWhisper { get; set; }
         public int PoeNinjaUpdateRate { get; set; }
+        public List<string> ChatScanWords { get; set; } = new List<string>();
     }
 }

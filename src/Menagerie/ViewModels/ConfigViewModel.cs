@@ -8,6 +8,7 @@ using System.Windows.Input;
 using Menagerie.Core.Extensions;
 using System.Windows.Controls;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Menagerie.ViewModels {
     public class ConfigViewModel : INotifyPropertyChanged {
@@ -60,6 +61,16 @@ namespace Menagerie.ViewModels {
             }
             set {
                 _config = value;
+                OnPropertyChanged("Config");
+            }
+        }
+
+        public string ChatScanWords {
+            get {
+                return string.Join(" ", _config.ChatScanWords);
+            }
+            set {
+                _config.ChatScanWords = value.Split(' ').ToList();
                 OnPropertyChanged("Config");
             }
         }

@@ -33,6 +33,7 @@ namespace Menagerie.Views {
             views.Add(grdApi);
             views.Add(grdGeneral);
             views.Add(grdWhispers);
+            views.Add(grdChatScan);
         }
         private void ShowView(string name) {
             foreach (var v in views) {
@@ -61,6 +62,10 @@ namespace Menagerie.Views {
 
         private void itWhispers_Click(object sender, RoutedEventArgs e) {
             ShowView("grdWhispers");
+        }
+
+        private void itChatScan_Click(object sender, RoutedEventArgs e) {
+            ShowView("grdChatScan");
         }
     }
 }
