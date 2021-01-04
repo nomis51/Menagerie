@@ -112,14 +112,19 @@ namespace Menagerie.Core {
                 }
 
                 // Player name
+                bool alternatePlayerEndIndex = false;
                 int playerStartIndex = line.IndexOf("@From ");
 
                 if (playerStartIndex == -1) {
                     playerStartIndex = line.IndexOf("@To ");
 
                     if (playerStartIndex == -1) {
-                        // Not a whisper
-                        continue;
+                        playerStartIndex = line.IndexOf("@");
+                        alternatePlayerEndIndex = true;
+
+                        if (playerStartIndex == -1) {
+                            continue;
+                        }
                     }
 
                     offer.IsOutgoing = true;
@@ -130,7 +135,7 @@ namespace Menagerie.Core {
 
                 int playerEndIndex = -1;
 
-                playerEndIndex = line.IndexOf(": ", playerStartIndex);
+                playerEndIndex = line.IndexOf(alternatePlayerEndIndex ? " Hi" : ": ", playerStartIndex);
 
                 if (playerEndIndex == -1) {
                     continue;
@@ -320,6 +325,9 @@ namespace Menagerie.Core {
                     var offer = (Offer)evt;
 
                     if (offer.IsOutgoing) {
+                        if (AppService.Instance.GetConfig().AutoWhisper && ) {
+                            AppService.Instance.SendChatMessage(line.Substring(line.IndexOf("@")));
+                        }
                         OnNewChatEventParsed(offer);
                     }
                 }
