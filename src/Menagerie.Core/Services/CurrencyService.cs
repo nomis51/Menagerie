@@ -2,6 +2,8 @@
 using Menagerie.Core.Abstractions;
 using System.Collections.Generic;
 using Menagerie.Core.Extensions;
+using System.Net.Http;
+using System;
 
 namespace Menagerie.Core.Services {
     public class CurrencyService : IService {
@@ -27,9 +29,23 @@ namespace Menagerie.Core.Services {
         };
         #endregion
 
+        #region Members
+        private HttpService _http;
+        #endregion
+
         #region Constructors
         public CurrencyService() {
             log.Trace("Initializing CurrencyService");
+        }
+        #endregion
+
+        #region Private methods
+        private string GetImage(string link) {
+            using (var handler = new HttpClientHandler())
+            using (var client = new HttpClient(handler)) {
+                var bytes = client.GetByteArrayAsync(link).Result;
+                return Convert.ToBase64String(bytes);
+            }
         }
         #endregion
 
@@ -41,7 +57,21 @@ namespace Menagerie.Core.Services {
 
         public string GetCurrencyImageLink(string currencyName) {
             log.Trace($"Getting currency image link {currencyName}");
-            return CurrencyToImageLink[NormalizeCurrency(currencyName)];
+
+            var link = CurrencyToImageLink[NormalizeCurrency(currencyName)];
+
+            var dbImage = AppService.Instance.GetImage(link);
+
+            if (dbImage == null) {
+                dbImage = new Models.AppImage() {
+                    Link = link,
+                    Base64 = GetImage(link)
+                };
+
+                AppService.Instance.SaveImage(dbImage);
+            }
+
+            return dbImage.Base64;
         }
 
         public string GetRealName(string text) {
