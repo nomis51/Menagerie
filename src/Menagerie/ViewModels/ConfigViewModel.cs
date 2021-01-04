@@ -70,7 +70,7 @@ namespace Menagerie.ViewModels {
                 return string.Join(" ", _config.ChatScanWords);
             }
             set {
-                _config.ChatScanWords = value.Split(' ').ToList();
+                _config.ChatScanWords = value.Split(' ').Select(w => w.ToLower()).ToList();
                 OnPropertyChanged("Config");
             }
         }

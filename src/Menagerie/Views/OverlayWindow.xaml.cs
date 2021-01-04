@@ -64,6 +64,7 @@ namespace Menagerie {
         }
 
         private void OverlayWindow_SourceInitialized(object sender, EventArgs e) {
+            NotificationService.Instance.Setup(lblNotification, txtNotificationTitle, txtNotificationContent);
 
             if (!WinMoved) {
                 WinMoved = true;
@@ -335,6 +336,10 @@ namespace Menagerie {
             } else {
                 vm.FilterOffers(txtSearchOffer.Text, false);
             }
+        }
+
+        private void btnNotificationClose_Click(object sender, RoutedEventArgs e) {
+            NotificationService.Instance.CloseNotification();
         }
     }
 }

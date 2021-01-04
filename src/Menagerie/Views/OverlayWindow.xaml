@@ -33,6 +33,59 @@
             <RowDefinition Height="100"></RowDefinition>
             <RowDefinition Height="20"></RowDefinition>
         </Grid.RowDefinitions>
+        <!-- Notifications -->
+        <Label Name="lblNotification"
+               Grid.Row="0"
+               Grid.Column="0"
+               Grid.RowSpan="99"
+               Grid.ColumnSpan="99"
+               Margin="0,0,10,250"
+               MaxHeight="100"
+               MaxWidth="350"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Bottom"
+               Visibility="Visible"
+               Foreground="#a0aec0"
+               Background="{DynamicResource {x:Static adonisUi:Brushes.Layer1BackgroundBrush}}">
+            <Label.Content>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition Height="20"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <DockPanel Grid.Row="0"
+                               Grid.Column="0"
+                               Grid.ColumnSpan="2"
+                               Background="{DynamicResource {x:Static adonisUi:Brushes.Layer0BackgroundBrush}}">
+                        <TextBlock x:Name="txtNotificationTitle"
+                            Padding="3"
+                                   Text="Title"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"></TextBlock>
+                    </DockPanel>
+                    <TextBlock Name="txtNotificationContent" Padding="10"
+                               Grid.Column="0"
+                               Grid.ColumnSpan="2"
+                               Grid.Row="1"
+                               Text="Player said: bla bla bla"></TextBlock>
+                    <Button x:Name="btnNotificationClose" Click="btnNotificationClose_Click" Grid.Row="2"
+                            Grid.Column="0" Grid.ColumnSpan="2">
+                        <Button.Content>
+                            <fa5:ImageAwesome Width="10"
+                                              Height="10"
+                                              Icon="Solid_Times"
+                                              Foreground="#a0aec0"
+                                              HorizontalAlignment="Center" />
+                        </Button.Content>
+                    </Button>
+                </Grid>
+            </Label.Content>
+        </Label>
         <!-- Incoming offers -->
         <DockPanel Grid.Row="2"
                    Grid.Column="0"

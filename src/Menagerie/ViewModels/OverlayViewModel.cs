@@ -15,6 +15,11 @@ using Menagerie.Views;
 using log4net;
 using Menagerie.Core.Extensions;
 using Menagerie.Services;
+using System.Reflection;
+using System.Drawing;
+using System.Windows.Forms;
+using Windows.UI.Notifications;
+using System.Xml;
 
 namespace Menagerie.ViewModels {
     public class OverlayViewModel : INotifyPropertyChanged {
@@ -95,6 +100,11 @@ namespace Menagerie.ViewModels {
             AppService.Instance.OnNewChatEvent += AppService_OnNewChatEvent;
             AppService.Instance.OnNewPlayerJoined += AppService_OnNewPlayerJoined;
             AppService.Instance.OnOfferScam += Instance_OnOfferScam;
+            AppService.Instance.OnNewTradeChatLine += AppService_OnNewTradeChatLine;
+        }
+
+        private void AppService_OnNewTradeChatLine(CoreModels.TradeChatLine line) {
+            NotificationService.Instance.ShowNotification("Trade Chat Match", $"{line.PlayerName} said:\n\"{line.Whisper}\"");
         }
 
         private void Instance_OnOfferScam(CoreModels.PriceCheckResult result, CoreModels.Offer offer) {

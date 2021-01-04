@@ -72,9 +72,9 @@ namespace Menagerie.Core {
             }
         }
 
-        private Models.ChatEvent ParseLine(string aline, bool isClientFileLine = true) {
+        private ChatEvent ParseLine(string aline, bool isClientFileLine = true) {
             log.Trace($"Parsing line {aline} from {(isClientFileLine ? "Client file" : "Clipboard")}");
-            Models.ChatEvent evt = null;
+            ChatEvent evt = null;
             bool processed = false;
 
             foreach (var line in new List<string> { aline }) {
@@ -267,9 +267,9 @@ namespace Menagerie.Core {
                 var line = aline.ToLower();
 
                 if (line.IndexOf(TRADE_ACCEPTED_MSG) != -1) {
-                    evt = new Models.ChatEvent() { EvenType = Enums.ChatEventEnum.TradeAccepted };
+                    evt = new ChatEvent() { EvenType = Enums.ChatEventEnum.TradeAccepted };
                 } else if (line.IndexOf(TRADE_CANCELLED_MSG) != -1) {
-                    evt = new Models.ChatEvent() { EvenType = Enums.ChatEventEnum.TradeCancelled };
+                    evt = new ChatEvent() { EvenType = Enums.ChatEventEnum.TradeCancelled };
                 } else if (line.IndexOf(PLAYER_JOINED_MSG) != -1) {
                     var startIndex = aline.IndexOf("] ");
                     var endIndex = aline.IndexOf(PLAYER_JOINED_MSG);
@@ -316,6 +316,68 @@ namespace Menagerie.Core {
         #endregion
 
         #region Public methods
+        public void ParseTradeChatLine(string line, List<string> words) {
+            TradeChatLine tradeChatLine = new TradeChatLine();
+
+            // Time
+            int timeIndex = line.IndexOf(" ");
+
+            if (timeIndex == -1) {
+                return;
+            }
+
+            timeIndex = line.IndexOf(" ", timeIndex + 1);
+
+            if (timeIndex == -1) {
+                return;
+            }
+
+            var strTime = line.Substring(0, timeIndex);
+
+            if (string.IsNullOrEmpty(strTime) || string.IsNullOrWhiteSpace(strTime)) {
+                return;
+            }
+
+            DateTime date;
+
+            if (!DateTime.TryParse(strTime.Replace("/", "-"), out date)) {
+                return;
+            }
+
+            tradeChatLine.Time = date;
+
+            // Player name
+            int playerNameStartIndex = line.IndexOf("$");
+
+            if (playerNameStartIndex == -1) {
+                return;
+            }
+
+            int playerNameEndIndex = line.IndexOf(":", playerNameStartIndex + 1);
+
+            if (playerNameEndIndex == -1) {
+                return;
+            }
+
+            tradeChatLine.PlayerName = line.Substring(playerNameStartIndex + 1, playerNameEndIndex - playerNameStartIndex - 1);
+
+            // Highlighted whisper
+            string whisper = line.Substring(line.IndexOf("]") + 1);
+
+            foreach (var word in words) {
+                int index = whisper.IndexOf(word);
+
+                if (index != -1) {
+                    whisper = whisper.Insert(index, "*");
+                    whisper = whisper.Insert(index + word.Length + 1, "*");
+                }
+            }
+
+            tradeChatLine.Whisper = whisper.Substring(whisper.IndexOf(":") + 2);
+
+            AppService.Instance.NewTradeChatLine(tradeChatLine);
+        }
+
         public void ParseClipboardLine(string line) {
             log.Trace($"Parsing clipboard line {line}");
             var evt = ParseLine(line, false);
