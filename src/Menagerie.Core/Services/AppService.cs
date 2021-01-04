@@ -191,6 +191,14 @@ namespace Menagerie.Core.Services {
             return _currencyService.GetCurrencyImageLink(currencyName);
         }
 
+        public void SaveImage(AppImage image) {
+            _appDataService.InsertDocument(AppDataService.COLLECTION_IMAGES, image);
+        }
+
+        public AppImage GetImage(string link) {
+            return _appDataService.GetDocument<AppImage>(AppDataService.COLLECTION_IMAGES, e => e.Link == link);
+        }
+
         public void NewOffer(Offer offer) {
             var config = GetConfig();
 

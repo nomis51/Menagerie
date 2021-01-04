@@ -16,6 +16,7 @@ namespace Menagerie.Core.Services {
         public static readonly string COLLECTION_CONFIG = "config";
         public static readonly string COLLECTION_TRADES = "trades";
         public static readonly string COLLECTION_POE_NINJA_CACHES = "poeNinjaCaches";
+        public static readonly string COLLECTION_IMAGES = "images";
         #endregion
 
         #region Members

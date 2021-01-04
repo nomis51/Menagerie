@@ -137,7 +137,7 @@
 
                 <DockPanel Margin="5">
                     <Label Content="Auto whisper Out of League:" Foreground="#a0aec0"></Label>
-                    <CheckBox IsChecked="{Binding Config.AutoOutOfLeague, Mode=TwoWay}" Margin="5,2.5,0,0"></CheckBox>
+                    <CheckBox IsChecked="{Binding Config.AutoWhisperOutOfLeague, Mode=TwoWay}" Margin="5,2.5,0,0"></CheckBox>
                 </DockPanel>
 
                 <DockPanel Margin="5">

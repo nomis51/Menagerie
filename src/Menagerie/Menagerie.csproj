@@ -163,6 +163,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\Base64ImageConverter.cs" />
     <Compile Include="Services\AudioService.cs" />
     <Compile Include="Services\UpdateService.cs" />
     <Compile Include="ViewModels\ConfigViewModel.cs" />
