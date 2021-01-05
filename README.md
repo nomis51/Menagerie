@@ -30,7 +30,7 @@ A Path of Exile trade manger to simplify and speed up your trading experience.
 
 ![2020_12_31_16_24_20_YoloCursorOverlay](https://user-images.githubusercontent.com/25111613/103426087-d4a0b400-4b84-11eb-987e-23adc7e1ec91.png)
 
-![2020-12-31 17_58_51-YoloCursorOverlay](https://user-images.githubusercontent.com/25111613/103430421-e5a3f200-4b91-11eb-9050-3f2c369e095c.png)
+![103430421-e5a3f200-4b91-11eb-9050-3f2c369e095c](https://user-images.githubusercontent.com/25111613/103696789-f5924c00-4f6c-11eb-8af5-098c3c3c8e6a.png)
 
 - Switch league, configure the app or quit with the system tray icon :
 
@@ -53,7 +53,7 @@ The informations are :
 - The stash tab name (e.g. tab "The tab name here")
 - The position of the item in that tab (e.g. Left: 4, Top: 5)
 
-![2020-12-30 19_13_11-Overlay](https://user-images.githubusercontent.com/25111613/103387685-16712200-4ad3-11eb-8338-e13678efa5e0.png)
+![103387685-16712200-4ad3-11eb-8338-e13678efa5e0](https://user-images.githubusercontent.com/25111613/103696880-178bce80-4f6d-11eb-8c0e-60555287356e.png)
 
 #### Actions before you invite the player to your party
 Whisper that you're ```Busy``` :
@@ -126,7 +126,7 @@ The whisper is automatically sent to the related player in-game.
 
 And the offer is displayed onto the overlay, on the right side of the screen.
 
-![2020-12-30 19_38_04-New Issue · nomis51_Menagerie](https://user-images.githubusercontent.com/25111613/103388364-9482f800-4ad6-11eb-835d-f6f35f432e2a.png)
+![103388364-9482f800-4ad6-11eb-835d-f6f35f432e2a](https://user-images.githubusercontent.com/25111613/103696985-44d87c80-4f6d-11eb-92df-2912d067e4ab.png)
 
 You have severals informations (in a tooltip aswell) available such as :
 
@@ -136,19 +136,22 @@ You have severals informations (in a tooltip aswell) available such as :
 - The price (Usefull if you have multiple items with different prices)
 - The offers are ordered by time
 
-![2020-12-30 19_42_20-YoloCursorOverlay](https://user-images.githubusercontent.com/25111613/103388464-28ed5a80-4ad7-11eb-9da4-10e2958eb08b.png)
+![103388464-28ed5a80-4ad7-11eb-9da4-10e2958eb08b](https://user-images.githubusercontent.com/25111613/103697105-705b6700-4f6d-11eb-865d-3ac08b5b70ba.png)
 
 You can ```join``` the ```hideout``` of the player (after you've joined his party) :
 
-![2020-12-30 19_43_03-YoloCursorOverlay](https://user-images.githubusercontent.com/25111613/103388491-3f93b180-4ad7-11eb-9bec-6d700e80cbdd.png)
+![103388491-3f93b180-4ad7-11eb-9bec-6d700e80cbdd](https://user-images.githubusercontent.com/25111613/103697170-879a5480-4f6d-11eb-8f20-b6b62feef782.png)
+
 
 You can send a ```Trade Request``` to the player :
 
-![2020-12-30 19_43_28-YoloCursorOverlay](https://user-images.githubusercontent.com/25111613/103388505-54704500-4ad7-11eb-84a8-b12dffc90ed6.png)
+![103388505-54704500-4ad7-11eb-84a8-b12dffc90ed6](https://user-images.githubusercontent.com/25111613/103697226-997bf780-4f6d-11eb-8633-2934e7594043.png)
+
 
 You can dismiss the offer :
 
-![2020-12-30 19_44_04-YoloCursorOverlay](https://user-images.githubusercontent.com/25111613/103388515-6651e800-4ad7-11eb-911c-aabd5ceea07e.png)
+![103388515-6651e800-4ad7-11eb-911c-aabd5ceea07e](https://user-images.githubusercontent.com/25111613/103697275-ad275e00-4f6d-11eb-8cb0-8ccb208a385a.png)
+
 
 Once the trade is ```completed```, a ```Thanks``` whisper is automatically sent to the player and (WIP) you automatically ```leave the party```
 
@@ -173,7 +176,8 @@ You can scan the trade chat to find specific words:
 ### Anti-Scam
 Menagerie will look for you items on [www.pathofexile.com](www.pathofexile.com) when you receive an offer and compare the prices to prevent you from getting scammed if the price in the whisper in not the same. You'll have a visual indicator on the offer and a short description showing the difference in price.
 
-![scam](https://user-images.githubusercontent.com/25111613/103553388-5e999700-4e7b-11eb-81ff-c0a526d99f0e.png)
+![103553388-5e999700-4e7b-11eb-81ff-c0a526d99f0e](https://user-images.githubusercontent.com/25111613/103697346-cc25f000-4f6d-11eb-96e7-9e8ebd070a10.png)
+
 
 ## Todos
 - Chat scan (WIP)
