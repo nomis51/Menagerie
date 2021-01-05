@@ -18,7 +18,7 @@ namespace Menagerie.Services {
         }
         #endregion
 
-        private const int DURATION = 99999;
+        private const int DURATION = 8000;
         private bool Ready = false;
         private bool NotificationRunning = false;
         private TaskbarIcon TrayIcon;
