@@ -16,6 +16,8 @@ using Menagerie.Views;
 using System.Threading;
 using System.Threading.Tasks;
 using AdonisUI.Controls;
+using Hardcodet.Wpf.TaskbarNotification;
+using System.Text.RegularExpressions;
 
 namespace Menagerie {
     /// <summary>
@@ -33,7 +35,6 @@ namespace Menagerie {
         private bool WinMoved = false;
 
         public OverlayViewModel vm;
-        private Forms.NotifyIcon trayIcon = null;
 
         public OverlayWindow(Forms.Screen screen) {
             InitializeComponent();
@@ -50,7 +51,7 @@ namespace Menagerie {
             this.Loaded += OverlayWindow_Loaded;
             this.Activated += OverlayWindow_Activated;
 
-            SetupTrayIcon();
+         //   SetupTrayIcon();
 
             AppService.Instance.OnToggleOverlayVisibility += AppService_OnToggleOverlayVisibility;
         }
@@ -64,7 +65,7 @@ namespace Menagerie {
         }
 
         private void OverlayWindow_SourceInitialized(object sender, EventArgs e) {
-            NotificationService.Instance.Setup(lblNotification, txtNotificationTitle, txtNotificationContent);
+          //  NotificationService.Instance.Setup(lblNotification, txtNotificationTitle, txtNotificationContent);
 
             if (!WinMoved) {
                 WinMoved = true;
@@ -87,84 +88,6 @@ namespace Menagerie {
             });
         }
 
-        private string GetAppVersion() {
-            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
-            System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
-            return $"{fvi.FileMajorPart}.{fvi.FileMinorPart}.{fvi.FileBuildPart}";
-        }
-
-        private void SetupTrayIcon() {
-            log.Trace("Initializing system tray icon");
-            trayIcon = new Forms.NotifyIcon();
-            trayIcon.Icon = Properties.Resources.menagerie_logo;
-
-            Forms.ContextMenuStrip menu = new Forms.ContextMenuStrip() { };
-
-            Forms.ToolStripMenuItem versionItem = new Forms.ToolStripMenuItem() {
-                Text = $"Version {GetAppVersion()}",
-                Enabled = false,
-            };
-
-            Forms.ToolStripMenuItem leagueItem = new Forms.ToolStripMenuItem() {
-                Text = "League",
-            };
-
-            List<string> leagues = vm.GetLeagues();
-            string currentLeague = vm.GetCurrentLeague();
-
-            foreach (var l in leagues) {
-                var item = new Forms.ToolStripMenuItem() {
-                    Text = l,
-                    Checked = currentLeague == l,
-                };
-                item.Click += LeagueMenuItem_Click;
-
-                leagueItem.DropDownItems.Add(item);
-            }
-
-            Forms.ToolStripMenuItem statsItem = new Forms.ToolStripMenuItem() {
-                Text = "Statistics",
-            };
-            statsItem.Click += StatsItem_Click;
-
-            Forms.ToolStripMenuItem configItem = new Forms.ToolStripMenuItem() {
-                Text = "Settings",
-            };
-            configItem.Click += ConfigItem_Click;
-
-            Forms.ToolStripMenuItem quitItem = new Forms.ToolStripMenuItem() {
-                Text = "Quit",
-            };
-            quitItem.Click += QuitItem_Click;
-
-            menu.Items.Add(versionItem);
-            menu.Items.Add(leagueItem);
-            menu.Items.Add(statsItem);
-            menu.Items.Add(configItem);
-            menu.Items.Add(quitItem);
-
-            trayIcon.Click += TrayIcon_Click;
-
-            trayIcon.ContextMenuStrip = menu;
-            trayIcon.Visible = true;
-        }
-
-        private void TrayIcon_Click(object sender, EventArgs evt) {
-            var config = AppService.Instance.GetConfig();
-
-            foreach (var item in trayIcon.ContextMenuStrip.Items) {
-                if (((Forms.ToolStripMenuItem)item).Text == "League") {
-                    foreach (var e in ((Forms.ToolStripMenuItem)item).DropDownItems) {
-                        ((Forms.ToolStripMenuItem)e).Checked = ((Forms.ToolStripMenuItem)e).Text == config.CurrentLeague;
-                    }
-                }
-            }
-        }
-
-        private void StatsItem_Click(object sender, EventArgs e) {
-            ShowStatsWindow();
-        }
-
         private void ShowStatsWindow() {
             Task.Run(() => {
                 while (!AppService.Instance.IsPoeNinjaCacheReady()) {
@@ -175,32 +98,6 @@ namespace Menagerie {
                     (new StatsWindow()).Show();
                 });
             });
-        }
-
-        private void LeagueMenuItem_Click(object sender, EventArgs e) {
-            log.Trace($"League system tray menu item clicked {((Forms.ToolStripMenuItem)sender).Text}");
-
-            foreach (var i in trayIcon.ContextMenuStrip.Items) {
-                if (((Forms.ToolStripMenuItem)i).Text == "League") {
-                    foreach (var k in ((Forms.ToolStripMenuItem)i).DropDownItems) {
-                        ((Forms.ToolStripMenuItem)k).Checked = false;
-                    }
-                }
-            }
-
-            Forms.ToolStripMenuItem item = (Forms.ToolStripMenuItem)sender;
-            item.Checked = true;
-            vm.SetCurrentLeague(item.Text);
-        }
-
-        private void ConfigItem_Click(object sender, EventArgs e) {
-            log.Trace("Config system tray menu item clicked");
-            vm.ShowConfigWindow();
-        }
-
-        private void QuitItem_Click(object sender, EventArgs e) {
-            log.Trace("Quit system tray menu item clicked");
-            Application.Current.Shutdown(0);
         }
 
         private void btnBusy_Click(object sender, RoutedEventArgs e) {
@@ -340,6 +237,24 @@ namespace Menagerie {
 
         private void btnNotificationClose_Click(object sender, RoutedEventArgs e) {
             NotificationService.Instance.CloseNotification();
+        }
+
+        private void itLeague_Click(object sender, RoutedEventArgs e) {
+
+        }
+
+        private void itStats_Click(object sender, RoutedEventArgs e) {
+            ShowStatsWindow();
+        }
+
+        private void itSettings_Click(object sender, RoutedEventArgs e) {
+            log.Trace("Config system tray menu item clicked");
+            vm.ShowConfigWindow();
+        }
+
+        private void itQuit_Click(object sender, RoutedEventArgs e) {
+            log.Trace("Quit system tray menu item clicked");
+            Application.Current.Shutdown(0);
         }
     }
 }
