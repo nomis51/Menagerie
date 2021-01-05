@@ -163,6 +163,18 @@ You can take a look at your trades made in the app with the Statistics window.
   
 ![2021-01-01 19_46_27-YoloCursorOverlay](https://user-images.githubusercontent.com/25111613/103448710-64209280-4c6b-11eb-9eed-a7101859da37.png)
 
+### Chat scanning
+You can scan the trade chat to find specific words:
+
+![d](https://user-images.githubusercontent.com/25111613/103695753-2a9d9f00-4f6b-11eb-8eab-9ee7df4c7358.png)
+
+![f](https://user-images.githubusercontent.com/25111613/103695727-207ba080-4f6b-11eb-88d6-cd826fdb2eba.png)
+
+### Anti-Scam
+Menagerie will look for you items on [www.pathofexile.com](www.pathofexile.com) when you receive an offer and compare the prices to prevent you from getting scammed if the price in the whisper in not the same. You'll have a visual indicator on the offer and a short description showing the difference in price.
+
+![scam](https://user-images.githubusercontent.com/25111613/103553388-5e999700-4e7b-11eb-81ff-c0a526d99f0e.png)
+
 ## Todos
 - Chat scan (WIP)
 - Custom keyboard shortcuts
