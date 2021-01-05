@@ -164,10 +164,10 @@ You can take a look at your trades made in the app with the Statistics window.
 ![2021-01-01 19_46_27-YoloCursorOverlay](https://user-images.githubusercontent.com/25111613/103448710-64209280-4c6b-11eb-9eed-a7101859da37.png)
 
 ## Todos
+- Chat scan (WIP)
 - Custom keyboard shortcuts
-- Trades statistics
+- Trades statistics (WIP)
 - Languages support
-- Do some work on the (WIP) elements of the repo
 
 ## Keyboard shortcuts
 - ```F5``` : Go to your hideout
