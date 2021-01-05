@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 
 namespace Menagerie.Models {
-   public class StatsOffer : INotifyPropertyChanged {
+    public class StatsOffer : INotifyPropertyChanged {
         #region INotifyPropertyChanged Members  
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -59,6 +59,17 @@ namespace Menagerie.Models {
             set {
                 _currentImageLink = value;
                 OnPropertyChanged("CurrencyImageLink");
+            }
+        }
+
+        private DateTime _time;
+        public DateTime Time {
+            get {
+                return _time;
+            }
+            set {
+                _time = value;
+                OnPropertyChanged("Time");
             }
         }
 

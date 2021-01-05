@@ -128,7 +128,7 @@ namespace Menagerie.ViewModels {
         }
 
         private void AppService_OnNewTradeChatLine(CoreModels.TradeChatLine line) {
-            NotificationService.Instance.ShowTradeChatMatchNotification($"{line.PlayerName} said:\n\"{line.Whisper}\"");
+            NotificationService.Instance.ShowTradeChatMatchNotification(line);
         }
 
         private void Instance_OnOfferScam(CoreModels.PriceCheckResult result, CoreModels.Offer offer) {

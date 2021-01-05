@@ -6,6 +6,6 @@ namespace Menagerie.Core.Models {
     public class TradeChatLine {
         public DateTime Time { get; set; }
         public string PlayerName { get; set; }
-        public string Whisper { get; set; }
+        public List<TradeChatWords> Words{ get; set; }
     }
 }

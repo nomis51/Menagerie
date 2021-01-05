@@ -1,12 +1,7 @@
-﻿using System.Threading;
-using System.Windows.Controls;
-using System.Windows;
-using Label = System.Windows.Controls.Label;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System;
+﻿using System.Threading.Tasks;
 using Hardcodet.Wpf.TaskbarNotification;
 using Menagerie.Controls;
+using Menagerie.Core.Models;
 
 namespace Menagerie.Services {
     public class NotificationService {
@@ -23,13 +18,12 @@ namespace Menagerie.Services {
         }
         #endregion
 
-        private Queue<Tuple<string, string>> Notifications = new Queue<Tuple<string, string>>();
+        private const int DURATION = 99999;
         private bool Ready = false;
         private bool NotificationRunning = false;
         private TaskbarIcon TrayIcon;
 
         private NotificationService() {
-
         }
 
         public void Setup(TaskbarIcon trayIcon) {
@@ -37,12 +31,18 @@ namespace Menagerie.Services {
             Ready = true;
         }
 
-        public void ShowTradeChatMatchNotification(string content) {
-            Task.Run(() => {
-                App.Current.Dispatcher.Invoke(delegate {
-                    TrayIcon.ShowCustomBalloon(new TradeChatNotificationControl() { ContentText = content, Title = "New Trade Chat Match" }, System.Windows.Controls.Primitives.PopupAnimation.Slide, 5000);
-                });
-            });
+        public void ShowTradeChatMatchNotification(TradeChatLine line) {
+            if (Ready) {
+                Task.Run(() => AudioService.Instance.PlayNotif2());
+
+                if (!NotificationRunning) {
+                    Task.Run(() => {
+                        App.Current.Dispatcher.Invoke(delegate {
+                            TrayIcon.ShowCustomBalloon(new TradeChatNotificationControl(line, TrayIcon.CloseBalloon), System.Windows.Controls.Primitives.PopupAnimation.Slide, DURATION);
+                        });
+                    });
+                }
+            }
         }
     }
 }

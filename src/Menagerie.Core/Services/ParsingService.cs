@@ -362,18 +362,51 @@ namespace Menagerie.Core {
             tradeChatLine.PlayerName = line.Substring(playerNameStartIndex + 1, playerNameEndIndex - playerNameStartIndex - 1);
 
             // Highlighted whisper
-            string whisper = line.Substring(line.IndexOf("]") + 1);
+            string whisper = line.Substring(line.IndexOf(": ") + 2);
+
+            List<TradeChatWords> tradeWords = new List<TradeChatWords>();
 
             foreach (var word in words) {
-                int index = whisper.IndexOf(word);
+                int index = 0;
 
-                if (index != -1) {
-                    whisper = whisper.Insert(index, "*");
-                    whisper = whisper.Insert(index + word.Length + 1, "*");
+                while ((index = whisper.IndexOf(word)) != -1) {
+                    if (index != -1) {
+                        int endIndex = index + word.Length;
+
+                        if (endIndex <= whisper.Length) {
+                            tradeWords.Add(new TradeChatWords() {
+                                Highlighted = true,
+                                Words = whisper.Substring(index, endIndex - index),
+                                Index = index
+                            });
+
+                            whisper = $"{whisper.Substring(0, index)}~{whisper.Substring(endIndex)}";
+                        }
+                    }
                 }
             }
 
-            tradeChatLine.Whisper = whisper.Substring(whisper.IndexOf(":") + 2);
+            int currentIndex = 0;
+            while (currentIndex < whisper.Length) {
+                int nextIndex = whisper.IndexOf('~', currentIndex);
+
+                if (nextIndex == -1) {
+                    tradeWords.Add(new TradeChatWords() {
+                        Words = whisper.Substring(currentIndex),
+                        Index = currentIndex
+                    });
+                    break;
+                }
+
+                tradeWords.Add(new TradeChatWords() {
+                    Words = whisper.Substring(currentIndex, nextIndex - currentIndex),
+                    Index = currentIndex
+                });
+
+                currentIndex = nextIndex + 1;
+            }
+
+            tradeChatLine.Words = tradeWords.OrderBy(w => w.Index).ToList();
 
             AppService.Instance.NewTradeChatLine(tradeChatLine);
         }
