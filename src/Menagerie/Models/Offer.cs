@@ -296,6 +296,17 @@ namespace Menagerie.Models {
             }
         }
 
+        private List<string> _tradeChatScanWords = new List<string>();
+        public string TradeChatScanWords {
+            get {
+                return string.Join(" ", _tradeChatScanWords);
+            }
+            set {
+                _tradeChatScanWords = value.Split(' ').ToList();
+                OnPropertyChanged("TradeChatScanWords");
+            }
+        }
+
         public Offer() { }
 
         public Offer(Core.Models.Offer offer) {

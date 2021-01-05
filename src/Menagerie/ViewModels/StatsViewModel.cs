@@ -13,6 +13,7 @@ using LiveCharts.Wpf;
 using Menagerie.Core.Services;
 using Menagerie.Core.Models;
 using System.Windows;
+using StatsOffer = Menagerie.Models.StatsOffer;
 
 namespace Menagerie.ViewModels {
     public class StatsViewModel : INotifyPropertyChanged {
@@ -73,6 +74,7 @@ namespace Menagerie.ViewModels {
                 }
         };
         public SeriesCollection CurrencyGroups { get; set; } = new SeriesCollection();
+        public List<StatsOffer> Offers { get; set; } = new List<StatsOffer>();
 
         public List<string> Labels { get; set; } = new List<string>();
 
@@ -97,6 +99,14 @@ namespace Menagerie.ViewModels {
                 OnPropertyChanged("NoDataVisible");
                 return;
             }
+
+            Offers = trades.Select(o => new StatsOffer() {
+                ItemName = o.ItemName,
+                PlayerName = o.PlayerName,
+                Price = o.Price.ToString(),
+                CurrencyImageLink = o.CurrencyImageLink == null ? AppService.Instance.GetCurrencyImageLink(o.Currency) : o.CurrencyImageLink
+            })
+                .ToList();
 
             var groups = GroupByDate(trades.OrderBy(t => t.Time).ToList());
             int totalCurrency = 0;

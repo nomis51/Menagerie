@@ -17,7 +17,7 @@ namespace Menagerie.Core.Services {
         #endregion
 
         #region Members
-        Dictionary<string, Offer> Offers = new Dictionary<string, Offer>();
+        List<Offer> Offers = new List<Offer>();
 
         #endregion
 
@@ -33,8 +33,8 @@ namespace Menagerie.Core.Services {
             while (true) {
                 log.Trace("Cleaning offers");
                 for (int i = 0; i < Offers.Count; ++i) {
-                    if ((DateTime.Now - Offers.ElementAt(i).Value.Time).TotalMinutes >= OFFER_EXPIRATION_MINS) {
-                        Offers.Remove(Offers.ElementAt(i).Key);
+                    if ((DateTime.Now - Offers.ElementAt(i).Time).TotalMinutes >= OFFER_EXPIRATION_MINS) {
+                        Offers.RemoveAt(i);
                         --i;
                     }
                 }
@@ -46,17 +46,15 @@ namespace Menagerie.Core.Services {
 
         #region Public methods
         public bool IsAlreadySold(Offer offer) {
-            if (!offer.IsOutgoing && Offers.ContainsKey(offer.ItemName)) {
-                return Offers[offer.ItemName].Currency == offer.Currency &&
-                    Offers[offer.ItemName].Price == offer.Price &&
-                    Offers[offer.ItemName].League == offer.League;
+            if (!offer.IsOutgoing) {
+                return Offers.FindIndex(o => o.ItemName == offer.ItemName && o.Price == offer.Price && o.Currency == offer.Currency && o.League == offer.League) != -1;
             }
 
             return false;
         }
 
         public void AddSoldOffer(Offer offer) {
-            Offers.Add(offer.ItemName, offer);
+            Offers.Add( offer);
             SaveTrade(offer);
         }
 

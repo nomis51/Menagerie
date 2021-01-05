@@ -15,6 +15,11 @@ using Menagerie.Views;
 using log4net;
 using Menagerie.Core.Extensions;
 using Menagerie.Services;
+using System.Reflection;
+using System.Drawing;
+using System.Windows.Forms;
+using Windows.UI.Notifications;
+using System.Xml;
 
 namespace Menagerie.ViewModels {
     public class OverlayViewModel : INotifyPropertyChanged {
@@ -71,6 +76,30 @@ namespace Menagerie.ViewModels {
         public ObservableCollection<Offer> Offers { get; set; } = new ObservableCollection<Offer>();
         public ObservableCollection<Offer> OutgoingOffers { get; set; } = new ObservableCollection<Offer>();
 
+        public string AppVersion {
+            get {
+                return $"Version {GetAppVersion()}";
+            }
+        }
+
+        public Icon MenagerieIcon {
+            get {
+                return Properties.Resources.menagerie_logo;
+            }
+        }
+
+        public string CurrentLeague {
+            get {
+                return $"League: {AppService.Instance.GetConfig().CurrentLeague}";
+            }
+        }
+
+        private string GetAppVersion() {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
+            return $"{fvi.FileMajorPart}.{fvi.FileMinorPart}.{fvi.FileBuildPart}";
+        }
+
         public Visibility IsOffersFilterVisible {
             get {
                 return Offers.Count > 1 ? Visibility.Visible : Visibility.Hidden;
@@ -95,6 +124,11 @@ namespace Menagerie.ViewModels {
             AppService.Instance.OnNewChatEvent += AppService_OnNewChatEvent;
             AppService.Instance.OnNewPlayerJoined += AppService_OnNewPlayerJoined;
             AppService.Instance.OnOfferScam += Instance_OnOfferScam;
+            AppService.Instance.OnNewTradeChatLine += AppService_OnNewTradeChatLine;
+        }
+
+        private void AppService_OnNewTradeChatLine(CoreModels.TradeChatLine line) {
+            NotificationService.Instance.ShowTradeChatMatchNotification(line);
         }
 
         private void Instance_OnOfferScam(CoreModels.PriceCheckResult result, CoreModels.Offer offer) {

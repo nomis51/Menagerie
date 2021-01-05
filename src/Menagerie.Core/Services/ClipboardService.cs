@@ -14,6 +14,7 @@ namespace Menagerie.Core.Services {
 
         #region Members
         private string LastText = "";
+        private bool FirstTextSkipped = false;
         #endregion
 
         #region Constructors
@@ -29,6 +30,12 @@ namespace Menagerie.Core.Services {
                 await Task.Delay(500);
 
                 string text = GetClipboard();
+
+                if (!FirstTextSkipped) {
+                    FirstTextSkipped = true;
+                    LastText = text;
+                    continue;
+                }
 
                 if (!string.IsNullOrEmpty(text) && text != LastText) {
                     log.Trace("New clipboard input");

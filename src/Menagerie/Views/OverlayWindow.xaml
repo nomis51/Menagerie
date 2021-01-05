@@ -8,6 +8,7 @@
                              xmlns:fa5="http://schemas.fontawesome.com/icons/"
                              xmlns:adonisControls="clr-namespace:AdonisUI.Controls;assembly=AdonisUI"
                              xmlns:adonisUi="clr-namespace:AdonisUI;assembly=AdonisUI"
+                             xmlns:tb="http://www.hardcodet.net/taskbar"
                              mc:Ignorable="d"
                              WindowStyle="None"
                              AllowsTransparency="True"
@@ -33,6 +34,52 @@
             <RowDefinition Height="100"></RowDefinition>
             <RowDefinition Height="20"></RowDefinition>
         </Grid.RowDefinitions>
+        <!-- Notifications -->
+        <tb:TaskbarIcon x:Name="trayIcon"
+                        Visibility="Visible"
+                        IconSource="/Assets/menagerie-logo.ico"
+                        MenuActivation="LeftOrRightClick">
+            <tb:TaskbarIcon.ContextMenu>
+                <ContextMenu>
+                    <MenuItem IsEnabled="False"
+                              Header="{Binding AppVersion}"></MenuItem>
+                    <Separator></Separator>
+                    <MenuItem Name="itLeague"
+                              Header="{Binding CurrentLeague}">
+                        <MenuItem.Icon>
+                            <fa5:ImageAwesome Icon="Solid_ListAlt"
+                                              Foreground="#a0aec0" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Name="itStats"
+                              Click="itStats_Click"
+                              Header="Statistics">
+                        <MenuItem.Icon>
+                            <fa5:ImageAwesome Icon="Solid_ChartLine"
+                                              Foreground="#a0aec0" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Name="itSettings"
+                              Click="itSettings_Click"
+                              Header="Settings">
+                        <MenuItem.Icon>
+                            <fa5:ImageAwesome Icon="Solid_Cogs"
+                                              Foreground="#a0aec0" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator></Separator>
+                    <MenuItem Name="itQuit"
+                              Click="itQuit_Click"
+                              Header="Quit">
+                        <MenuItem.Icon>
+                            <fa5:ImageAwesome Icon="Solid_SignInAlt"
+                                              Foreground="#a0aec0" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </ContextMenu>
+            </tb:TaskbarIcon.ContextMenu>
+        </tb:TaskbarIcon>
+        
         <!-- Incoming offers -->
         <DockPanel Grid.Row="2"
                    Grid.Column="0"

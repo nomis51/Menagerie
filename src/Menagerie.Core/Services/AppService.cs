@@ -42,6 +42,9 @@ namespace Menagerie.Core.Services {
 
         public delegate void OfferScamEvent(PriceCheckResult result, Offer offer);
         public event OfferScamEvent OnOfferScam;
+
+        public delegate void NewTradeChatLineEvent(TradeChatLine line);
+        public event NewTradeChatLineEvent OnNewTradeChatLine;
         #endregion
 
         private IntPtr _overlayHandle;
@@ -142,6 +145,10 @@ namespace Menagerie.Core.Services {
             }
         }
 
+        public void NewTradeChatLine(TradeChatLine line) {
+            OnNewTradeChatLine(line);
+        }
+
         public void PoeWindowReady() {
             _keyboardService.HookProcess(_poeWindowService.ProcessId);
             SetShortcuts();
@@ -154,6 +161,16 @@ namespace Menagerie.Core.Services {
         public void NewClientFileLine(string line) {
             Task.Run(() => {
                 _parsingService.ParseClientLine(line);
+
+                var chatScanWords = GetConfig().ChatScanWords;
+                string loweredLine = line.ToLower().Substring(line.IndexOf("]") + 1);
+
+                foreach (var word in chatScanWords) {
+                    if (loweredLine.IndexOf(word) != -1) {
+                        _parsingService.ParseTradeChatLine(line, chatScanWords);
+                        break;
+                    }
+                }
             });
         }
 
