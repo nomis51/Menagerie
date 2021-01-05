@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using AdonisUI.Controls;
 using Hardcodet.Wpf.TaskbarNotification;
 using System.Text.RegularExpressions;
+using Menagerie.Controls;
 
 namespace Menagerie {
     /// <summary>
@@ -51,8 +52,6 @@ namespace Menagerie {
             this.Loaded += OverlayWindow_Loaded;
             this.Activated += OverlayWindow_Activated;
 
-         //   SetupTrayIcon();
-
             AppService.Instance.OnToggleOverlayVisibility += AppService_OnToggleOverlayVisibility;
         }
 
@@ -65,7 +64,7 @@ namespace Menagerie {
         }
 
         private void OverlayWindow_SourceInitialized(object sender, EventArgs e) {
-          //  NotificationService.Instance.Setup(lblNotification, txtNotificationTitle, txtNotificationContent);
+            NotificationService.Instance.Setup(trayIcon);
 
             if (!WinMoved) {
                 WinMoved = true;
@@ -233,14 +232,6 @@ namespace Menagerie {
             } else {
                 vm.FilterOffers(txtSearchOffer.Text, false);
             }
-        }
-
-        private void btnNotificationClose_Click(object sender, RoutedEventArgs e) {
-            NotificationService.Instance.CloseNotification();
-        }
-
-        private void itLeague_Click(object sender, RoutedEventArgs e) {
-
         }
 
         private void itStats_Click(object sender, RoutedEventArgs e) {

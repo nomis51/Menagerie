@@ -173,6 +173,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\TradeChatNotificationControl.xaml.cs">
+      <DependentUpon>TradeChatNotificationControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\Base64ImageConverter.cs" />
     <Compile Include="Helpers\HighlightTermBehavior.cs" />
     <Compile Include="Models\StatsOffer.cs" />
@@ -191,6 +194,10 @@
     <Compile Include="Views\StatsWindow.xaml.cs">
       <DependentUpon>StatsWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\TradeChatNotificationControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ConfigWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -222,7 +229,9 @@
     <Resource Include="Assets\menagerie-logo.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <None Include="Assets\menagerie-logo-splash.png" />
+    <Resource Include="Assets\menagerie-logo-splash.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Content Include="Assets\Audio\click.wav" />
     <Content Include="Assets\Audio\knocking-on-door.wav" />
     <Content Include="Assets\Audio\notif1.wav" />
