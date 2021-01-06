@@ -250,15 +250,17 @@ namespace Menagerie.Core.Services {
 
             if (!string.IsNullOrEmpty(config.PlayerName) && !offer.IsOutgoing) {
                 Task.Run(() => {
-                    var priceCheck = PriceCheck(offer).Result;
+                    try {
+                        var priceCheck = PriceCheck(offer).Result;
 
-                    foreach (var r in priceCheck.Results) {
-                        if (r.Price == offer.Price && r.Currency == offer.Currency) {
-                            return;
+                        foreach (var r in priceCheck.Results) {
+                            if (r.Price == offer.Price && r.Currency == offer.Currency) {
+                                return;
+                            }
                         }
-                    }
 
-                    OnOfferScam(priceCheck, offer);
+                        OnOfferScam(priceCheck, offer);
+                    }catch(Exception) {  }
                 });
             }
 
