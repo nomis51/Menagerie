@@ -175,9 +175,9 @@ namespace Menagerie.ViewModels {
                         offer.PlayerJoined = true;
                     }
                 }
-            });
 
-            UpdateOffers();
+                UpdateOffers();
+            });
         }
 
         private void AppService_OnNewChatEvent(ChatEventEnum type) {
