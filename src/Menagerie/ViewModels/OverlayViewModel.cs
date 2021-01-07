@@ -127,6 +127,10 @@ namespace Menagerie.ViewModels {
             AppService.Instance.OnNewTradeChatLine += AppService_OnNewTradeChatLine;
         }
 
+        public void Notify(string name) {
+            OnPropertyChanged(name);
+        }
+
         private void AppService_OnNewTradeChatLine(CoreModels.TradeChatLine line) {
             NotificationService.Instance.ShowTradeChatMatchNotification(line);
         }

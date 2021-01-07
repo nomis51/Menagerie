@@ -247,5 +247,9 @@ namespace Menagerie {
             log.Trace("Quit system tray menu item clicked");
             Application.Current.Shutdown(0);
         }
+
+        private void trayIcon_TrayContextMenuOpen(object sender, RoutedEventArgs e) {
+            vm.Notify("CurrentLeague");
+        }
     }
 }

@@ -38,6 +38,7 @@
         <tb:TaskbarIcon x:Name="trayIcon"
                         Visibility="Visible"
                         IconSource="/Assets/menagerie-logo.ico"
+                        TrayContextMenuOpen="trayIcon_TrayContextMenuOpen"
                         MenuActivation="LeftOrRightClick">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>
