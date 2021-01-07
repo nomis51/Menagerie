@@ -253,14 +253,18 @@ namespace Menagerie.Core.Services {
                     try {
                         var priceCheck = PriceCheck(offer).Result;
 
-                        foreach (var r in priceCheck.Results) {
-                            if (r.Price == offer.Price && r.Currency == offer.Currency) {
-                                return;
+                        if (priceCheck != null) {
+                            foreach (var r in priceCheck.Results) {
+                                if (r.Price == offer.Price && r.Currency == offer.Currency) {
+                                    return;
+                                }
                             }
-                        }
 
-                        OnOfferScam(priceCheck, offer);
-                    }catch(Exception) {  }
+                            OnOfferScam(priceCheck, offer);
+                        }
+                    } catch (Exception e) {
+
+                    }
                 });
             }
 
