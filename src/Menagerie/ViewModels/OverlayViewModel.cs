@@ -309,15 +309,25 @@ namespace Menagerie.ViewModels {
             return offer == null ? OutgoingOffers.FirstOrDefault(o => o.TradeRequestSent) : offer;
         }
 
-        private void EnsureNotHighlighted(int index) {
+        private void EnsureNotHighlighted(int index, bool isOutgoing = false) {
             log.Trace("Verify not highlighted");
 
-            if (Offers[index].IsHighlighted) {
-                Offers[index].IsHighlighted = false;
-                AppService.Instance.FocusGame();
-                AppService.Instance.ClearSpecialKeys();
-                AppService.Instance.EnsureNotHighlightingItem();
-                Thread.Sleep(100);
+            if (isOutgoing) {
+                if (OutgoingOffers[index].IsHighlighted) {
+                    OutgoingOffers[index].IsHighlighted = false;
+                    AppService.Instance.FocusGame();
+                    AppService.Instance.ClearSpecialKeys();
+                    AppService.Instance.EnsureNotHighlightingItem();
+                    Thread.Sleep(100);
+                }
+            } else {
+                if (Offers[index].IsHighlighted) {
+                    Offers[index].IsHighlighted = false;
+                    AppService.Instance.FocusGame();
+                    AppService.Instance.ClearSpecialKeys();
+                    AppService.Instance.EnsureNotHighlightingItem();
+                    Thread.Sleep(100);
+                }
             }
         }
 
@@ -372,6 +382,8 @@ namespace Menagerie.ViewModels {
                 OutgoingOffers[index].State = OfferState.TradeRequestSent;
                 UpdateOffers();
 
+                EnsureNotHighlighted(index);
+
                 AppService.Instance.SendTradeChatCommand(OutgoingOffers[index].PlayerName);
             } else {
                 if (!Offers[index].PlayerInvited) {
@@ -381,7 +393,7 @@ namespace Menagerie.ViewModels {
                 Offers[index].State = OfferState.TradeRequestSent;
                 UpdateOffers();
 
-                EnsureNotHighlighted(index);
+                EnsureNotHighlighted(index, true);
 
                 AppService.Instance.SendTradeChatCommand(Offers[index].PlayerName);
             }
@@ -398,7 +410,7 @@ namespace Menagerie.ViewModels {
             OutgoingOffers[index].State = OfferState.HideoutJoined;
             UpdateOffers();
 
-            EnsureNotHighlighted(index);
+            EnsureNotHighlighted(index, true);
 
             AppService.Instance.SendHideoutChatCommand(OutgoingOffers[index].PlayerName);
         }
