@@ -9,18 +9,20 @@ namespace Menagerie.Core.Services {
         #endregion
 
         #region Public methods
-        public async Task<PriceCheckResult> PriceCheck(Offer offer) {
+        public async Task<PriceCheckResult> PriceCheck(Offer offer, int nbResults = 10) {
             var request = AppService.Instance.CreateTradeRequest(offer);
-            var searchResult = await AppService.Instance.GetTradeRequestResults(request, offer.League);
+            var searchResult = await AppService.Instance.GetTradeRequestResults(request, offer == null ? AppService.Instance.GetConfig().CurrentLeague : offer.League);
 
             if (searchResult == null || searchResult.Result.Count == 0) {
                 return null;
             }
 
-            return AppService.Instance.GetTradeResults(searchResult);
+            var result = AppService.Instance.GetTradeResults(searchResult, nbResults);
+
+            return result;
         }
 
-        public void Start() {  }
+        public void Start() { }
         #endregion
     }
 }

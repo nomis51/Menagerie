@@ -192,12 +192,12 @@ namespace Menagerie.Core.Services {
             return await _poeApiService.GetTradeRequestResults(request, league);
         }
 
-        public PriceCheckResult GetTradeResults(SearchResult search) {
-            return _poeApiService.GetTradeResults(search);
+        public PriceCheckResult GetTradeResults(SearchResult search, int nbResults = 10) {
+            return _poeApiService.GetTradeResults(search, nbResults);
         }
 
-        public async Task<PriceCheckResult> PriceCheck(Offer offer) {
-            return await _priceCheckingService.PriceCheck(offer);
+        public async Task<PriceCheckResult> PriceCheck(Offer offer, int nbResults = 10) {
+            return await _priceCheckingService.PriceCheck(offer, nbResults);
         }
 
         public double GetChaosValueOfCurrency(string currency) {
@@ -251,15 +251,9 @@ namespace Menagerie.Core.Services {
             if (!string.IsNullOrEmpty(config.PlayerName) && !offer.IsOutgoing) {
                 Task.Run(() => {
                     try {
-                        var priceCheck = PriceCheck(offer).Result;
+                        var priceCheck = _poeApiService.VerifyScam(offer);
 
                         if (priceCheck != null) {
-                            foreach (var r in priceCheck.Results) {
-                                if (r.Price == offer.Price && r.Currency == offer.Currency) {
-                                    return;
-                                }
-                            }
-
                             OnOfferScam(priceCheck, offer);
                         }
                     } catch (Exception e) {
@@ -294,7 +288,13 @@ namespace Menagerie.Core.Services {
         }
 
         public void SetConfig(Config config) {
+            var currentConfig = GetConfig();
+
             _appDataService.UpdateDocument<Config>(AppDataService.COLLECTION_CONFIG, config);
+
+            if (currentConfig.CurrentLeague != config.CurrentLeague) {
+                _poeApiService.UpdateCacheItemsCache();
+            }
         }
 
         public void SaveTrade(Offer offer) {
@@ -401,6 +401,7 @@ namespace Menagerie.Core.Services {
             _shortcutService.Start();
             _tradeService.Start();
             _poeNinjaService.Start();
+            _poeApiService.Start();
             _priceCheckingService.Start();
         }
     }

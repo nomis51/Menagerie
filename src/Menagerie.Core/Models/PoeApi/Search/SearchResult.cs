@@ -9,5 +9,6 @@ namespace Menagerie.Core.Models {
         public int Total { get; set; }
         public bool Inexact { get; set; }
         public SearchResultError Error { get; set; }
+        public string League { get; set; }
     }
 }

@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Menagerie.Core.Models {
     public class FetchResultElementItem {
+        public string Name { get; set; }
+        [JsonProperty("typeLine")]
+        public string Type { get; set; }
         [JsonProperty("ilvl")]
         public int ILvl { get; set; }
         public int StackSize { get; set; }
