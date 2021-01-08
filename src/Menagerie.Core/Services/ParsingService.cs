@@ -258,8 +258,6 @@ namespace Menagerie.Core {
 
                 evt = offer;
                 processed = true;
-
-                ToBuffer(line);
             }
 
             if (!processed) {
@@ -301,7 +299,7 @@ namespace Menagerie.Core {
         private void ToBuffer(string line) {
             log.Trace($"Adding {line} to buffer");
             try {
-                LastOffersLines.Add(line.Substring(line.IndexOf("]") + 1));
+                LastOffersLines.Add(line);
                 LastOffersTimes.Add(DateTime.Now);
 
                 if (LastOffersLines.Count > MAX_OFFER_LINE_BUFFER) {
@@ -413,17 +411,18 @@ namespace Menagerie.Core {
 
         public void ParseClipboardLine(string line) {
             log.Trace($"Parsing clipboard line {line}");
-            var evt = ParseLine(line, false);
 
-            if (evt != null) {
-                if (evt.EvenType == Enums.ChatEventEnum.Offer) {
-                    var offer = (Offer)evt;
+            if (AppService.Instance.GetConfig().AutoWhisper) {
+                var evt = ParseLine(line, false);
 
-                    if (offer.IsOutgoing) {
-                        if (AppService.Instance.GetConfig().AutoWhisper) {
+                if (evt != null) {
+                    if (evt.EvenType == ChatEventEnum.Offer) {
+                        var offer = (Offer)evt;
+
+                        if (offer.IsOutgoing) {
                             AppService.Instance.SendChatMessage(line.Substring(line.IndexOf("@")));
                         }
-                        OnNewChatEventParsed(offer);
+                        //  OnNewChatEventParsed(offer);
                     }
                 }
             }
@@ -432,13 +431,34 @@ namespace Menagerie.Core {
         public void ParseClientLine(string aline) {
             log.Trace($"Parsing client file line {aline}");
             try {
-                if (LastOffersLines.Contains(aline.Substring(aline.IndexOf("]") + 1))) {
+                int index = aline.IndexOf("@From ");
+
+                if (index == -1) {
+                    index = aline.IndexOf("@");
+
+                    if (index == -1) {
+                        index = aline.IndexOf("@To ");
+
+                        if (index == -1) {
+                            index = aline.IndexOf("]") + 2;
+                        } else {
+                            index += 4;
+                        }
+                    } else {
+                        ++index;
+                    }
+                } else {
+                    index += 6;
+                }
+
+                if (LastOffersLines.Contains(aline.Replace(": Hi", " Hi").Substring(index))) {
                     return;
                 }
 
                 var evt = ParseLine(aline);
 
                 if (evt != null) {
+                    ToBuffer(aline.Replace(": Hi", " Hi").Substring(index));
                     OnNewChatEventParsed(evt);
                 }
             } catch (Exception e) {

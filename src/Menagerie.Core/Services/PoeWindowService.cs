@@ -34,9 +34,9 @@ namespace Menagerie.Core.Services {
 
         #region Constants
         private static readonly ILog log = LogManager.GetLogger(typeof(PoeWindowService));
-        private static bool DEBUG = true;
         private readonly List<string> PoeProcesses = new List<string>() {
             "PathOfExile_x64",
+            "notepad"
         };
         #endregion
 
@@ -90,26 +90,21 @@ namespace Menagerie.Core.Services {
                         AppService.Instance.PoeWindowReady();
                         Focus();
 
-                        if (DEBUG) {
-                            log.Trace("DEBUG enabled, using alternate client file path");
-                            _clientFilePath = @"C:\Path of Exile\logs\Client.txt";
-                        } else {
-                            try {
-                                // 64 bits
-                                log.Trace("Trying to get 64bits location");
-                                this._clientFilePath = $"{proc.MainModule.FileName.Substring(0, proc.MainModule.FileName.LastIndexOf("\\"))}\\logs\\Client.txt";
-                                log.Trace($"32bits Client file location: {_clientFilePath}");
-                            } catch (Win32Exception) {
-                                //32 bits
-                                log.Trace("Failed trying to get 64bits location");
-                                log.Trace("Trying to get 32bits location");
-                                StringBuilder filename = new StringBuilder(1024);
-                                GetModuleFileNameEx(proc.Handle, IntPtr.Zero, filename, 2014);
-                                _clientFilePath = $"{filename.ToString().Substring(0, filename.ToString().LastIndexOf("\\"))}\\logs\\Client.txt";
-                                log.Trace($"64bits Client file location: {_clientFilePath}");
-                            } catch (Exception e) {
-                                log.Error("Error while getting PoE process location", e);
-                            }
+                        try {
+                            // 64 bits
+                            log.Trace("Trying to get 64bits location");
+                            this._clientFilePath = $"{proc.MainModule.FileName.Substring(0, proc.MainModule.FileName.LastIndexOf("\\"))}\\logs\\Client.txt";
+                            log.Trace($"32bits Client file location: {_clientFilePath}");
+                        } catch (Win32Exception) {
+                            //32 bits
+                            log.Trace("Failed trying to get 64bits location");
+                            log.Trace("Trying to get 32bits location");
+                            StringBuilder filename = new StringBuilder(1024);
+                            GetModuleFileNameEx(proc.Handle, IntPtr.Zero, filename, 2014);
+                            _clientFilePath = $"{filename.ToString().Substring(0, filename.ToString().LastIndexOf("\\"))}\\logs\\Client.txt";
+                            log.Trace($"64bits Client file location: {_clientFilePath}");
+                        } catch (Exception e) {
+                            log.Error("Error while getting PoE process location", e);
                         }
 
                         AppService.Instance.ClientFileReady();

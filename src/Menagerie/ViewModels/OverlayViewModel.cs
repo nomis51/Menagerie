@@ -310,25 +310,25 @@ namespace Menagerie.ViewModels {
         }
 
         private void EnsureNotHighlighted(int index, bool isOutgoing = false) {
-            log.Trace("Verify not highlighted");
+            //log.Trace("Verify not highlighted");
 
-            if (isOutgoing) {
-                if (OutgoingOffers[index].IsHighlighted) {
-                    OutgoingOffers[index].IsHighlighted = false;
-                    AppService.Instance.FocusGame();
-                    AppService.Instance.ClearSpecialKeys();
-                    AppService.Instance.EnsureNotHighlightingItem();
-                    Thread.Sleep(100);
-                }
-            } else {
-                if (Offers[index].IsHighlighted) {
-                    Offers[index].IsHighlighted = false;
-                    AppService.Instance.FocusGame();
-                    AppService.Instance.ClearSpecialKeys();
-                    AppService.Instance.EnsureNotHighlightingItem();
-                    Thread.Sleep(100);
-                }
-            }
+            //if (isOutgoing) {
+            //    if (OutgoingOffers[index].IsHighlighted) {
+            //        OutgoingOffers[index].IsHighlighted = false;
+            //        AppService.Instance.FocusGame();
+            //        AppService.Instance.ClearSpecialKeys();
+            //        AppService.Instance.EnsureNotHighlightingItem();
+            //        Thread.Sleep(100);
+            //    }
+            //} else {
+            //    if (Offers[index].IsHighlighted) {
+            //        Offers[index].IsHighlighted = false;
+            //        AppService.Instance.FocusGame();
+            //        AppService.Instance.ClearSpecialKeys();
+            //        AppService.Instance.EnsureNotHighlightingItem();
+            //        Thread.Sleep(100);
+            //    }
+            //}
         }
 
         private int GetOfferIndex(int id) {
@@ -382,7 +382,7 @@ namespace Menagerie.ViewModels {
                 OutgoingOffers[index].State = OfferState.TradeRequestSent;
                 UpdateOffers();
 
-                EnsureNotHighlighted(index);
+               // EnsureNotHighlighted(index);
 
                 AppService.Instance.SendTradeChatCommand(OutgoingOffers[index].PlayerName);
             } else {
@@ -393,7 +393,7 @@ namespace Menagerie.ViewModels {
                 Offers[index].State = OfferState.TradeRequestSent;
                 UpdateOffers();
 
-                EnsureNotHighlighted(index, true);
+             //   EnsureNotHighlighted(index, true);
 
                 AppService.Instance.SendTradeChatCommand(Offers[index].PlayerName);
             }
@@ -410,7 +410,7 @@ namespace Menagerie.ViewModels {
             OutgoingOffers[index].State = OfferState.HideoutJoined;
             UpdateOffers();
 
-            EnsureNotHighlighted(index, true);
+         //   EnsureNotHighlighted(index, true);
 
             AppService.Instance.SendHideoutChatCommand(OutgoingOffers[index].PlayerName);
         }
@@ -427,7 +427,7 @@ namespace Menagerie.ViewModels {
                 return;
             }
 
-            EnsureNotHighlighted(index);
+        //    EnsureNotHighlighted(index);
 
             AppService.Instance.SendChatMessage($"@{Offers[index].PlayerName} {AppService.Instance.ReplaceVars(AppService.Instance.GetConfig().BusyWhisper, new CoreModels.Offer() { ItemName = Offers[index].ItemName, PlayerName = Offers[index].PlayerName, Price = Offers[index].Price, Currency = Offers[index].Currency, League = Offers[index].League })}");
         }
@@ -445,7 +445,7 @@ namespace Menagerie.ViewModels {
             }
 
             Thread t = new Thread(delegate () {
-                EnsureNotHighlighted(index);
+           //     EnsureNotHighlighted(index);
 
                 AppService.Instance.SendKickChatCommand(Offers[index].PlayerName);
                 Thread.Sleep(100);
@@ -471,7 +471,7 @@ namespace Menagerie.ViewModels {
             Offers[index].State = OfferState.PlayerInvited;
             UpdateOffers();
 
-            EnsureNotHighlighted(index);
+        //    EnsureNotHighlighted(index);
 
             AppService.Instance.SendInviteChatCommand(Offers[index].PlayerName);
         }
@@ -494,7 +494,7 @@ namespace Menagerie.ViewModels {
             string playerName = Offers[index].PlayerName;
 
             Thread t = new Thread(delegate () {
-                EnsureNotHighlighted(index);
+              //  EnsureNotHighlighted(index);
                 AppService.Instance.SendKickChatCommand(playerName);
 
                 if (sayThanks) {
@@ -522,7 +522,7 @@ namespace Menagerie.ViewModels {
             string playerName = OutgoingOffers[index].PlayerName;
 
             Thread t = new Thread(delegate () {
-                EnsureNotHighlighted(index);
+            //    EnsureNotHighlighted(index);
                 var config = AppService.Instance.GetConfig();
 
                 if (!string.IsNullOrEmpty(config.PlayerName)) {
@@ -582,7 +582,7 @@ namespace Menagerie.ViewModels {
 
             UpdateOffers();
 
-            EnsureNotHighlighted(index);
+        //    EnsureNotHighlighted(index);
 
             AppService.Instance.SendChatMessage($"@{Offers[index].PlayerName} {AppService.Instance.ReplaceVars(AppService.Instance.GetConfig().StillInterestedWhisper, new CoreModels.Offer() { ItemName = Offers[index].ItemName, PlayerName = Offers[index].PlayerName, Price = Offers[index].Price, Currency = Offers[index].Currency, League = Offers[index].League })}");
         }
@@ -598,7 +598,7 @@ namespace Menagerie.ViewModels {
             Offers[index].State = OfferState.Done;
             UpdateOffers();
 
-            EnsureNotHighlighted(index);
+        //    EnsureNotHighlighted(index);
 
             AppService.Instance.SendChatMessage($"@{Offers[index].PlayerName} {AppService.Instance.ReplaceVars(AppService.Instance.GetConfig().SoldWhisper, new CoreModels.Offer() { ItemName = Offers[index].ItemName, PlayerName = Offers[index].PlayerName, Price = Offers[index].Price, Currency = Offers[index].Currency, League = Offers[index].League })}");
 
