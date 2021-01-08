@@ -521,12 +521,11 @@ namespace Menagerie.ViewModels {
                     Thread.Sleep(100);
                     AppService.Instance.SendChatMessage($"@{playerName} {(AppService.Instance.ReplaceVars(config.ThanksWhisper, new CoreModels.Offer() { ItemName = Offers[index].ItemName, PlayerName = Offers[index].PlayerName, Price = Offers[index].Price, Currency = Offers[index].Currency, League = Offers[index].League }))}");
                 }
+
+                RemoveOffer(id, true);
             });
             t.SetApartmentState(ApartmentState.STA);
             t.Start();
-
-
-            RemoveOffer(id, true);
         }
 
         public void RemoveOffer(int id, bool isOutgoing = false) {
