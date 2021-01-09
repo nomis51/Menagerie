@@ -269,11 +269,12 @@ namespace Menagerie.Core {
                 } else if (line.IndexOf(TRADE_CANCELLED_MSG) != -1) {
                     evt = new ChatEvent() { EvenType = Enums.ChatEventEnum.TradeCancelled };
                 } else if (line.IndexOf(PLAYER_JOINED_MSG) != -1) {
-                    var startIndex = aline.IndexOf("] ");
+                    var startIndex = aline.IndexOf("] : ");
                     var endIndex = aline.IndexOf(PLAYER_JOINED_MSG);
 
                     if (startIndex != -1 && endIndex != -1) {
-                        evt = new JoinEvent(aline.Substring(startIndex + 2, endIndex - startIndex - 2));
+                        startIndex += "] : ".Length;
+                        evt = new JoinEvent(aline.Substring(startIndex, endIndex - startIndex));
                     }
                 }
             }
@@ -432,33 +433,38 @@ namespace Menagerie.Core {
             log.Trace($"Parsing client file line {aline}");
             try {
                 int index = aline.IndexOf("@From ");
+                bool isTo = false;
 
                 if (index == -1) {
-                    index = aline.IndexOf("@");
+                    index = aline.IndexOf("@To ");
 
                     if (index == -1) {
-                        index = aline.IndexOf("@To ");
+                        index = aline.IndexOf("@");
 
                         if (index == -1) {
                             index = aline.IndexOf("]") + 2;
                         } else {
-                            index += 4;
+                            ++index;
                         }
                     } else {
-                        ++index;
+                        isTo = true;
+                        index += 4;
                     }
                 } else {
                     index += 6;
                 }
 
-                if (LastOffersLines.Contains(aline.Replace(": Hi", " Hi").Substring(index))) {
+                if (!isTo && LastOffersLines.Contains(aline.Replace(": Hi", " Hi").Substring(index))) {
                     return;
                 }
 
                 var evt = ParseLine(aline);
 
                 if (evt != null) {
-                    ToBuffer(aline.Replace(": Hi", " Hi").Substring(index));
+                    if (!isTo && evt.EvenType == ChatEventEnum.Offer) {
+                        ToBuffer(aline.Replace(": Hi", " Hi").Substring(index));
+                    }
+
                     OnNewChatEventParsed(evt);
                 }
             } catch (Exception e) {
