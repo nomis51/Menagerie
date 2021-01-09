@@ -226,6 +226,8 @@ namespace Menagerie.ViewModels {
                                 o.State = OfferState.PlayerInvited;
                             }
                         }
+
+                        UpdateOffers();
                         break;
                 }
             });
