@@ -37,6 +37,7 @@ namespace Menagerie.Core.Services {
         private HttpService _httpService;
         private HttpService _authHttpService;
         private ItemCache Cache;
+        private StashTab ChaosRecipeTab;
         #endregion
 
 
@@ -60,26 +61,11 @@ namespace Menagerie.Core.Services {
             return new List<string>();
         }
 
-        private async Task GetStashTabs() {
+        public async Task GetChaosRecipeStashTab() {
             var config = AppService.Instance.GetConfig();
 
-            var response = await _authHttpService.Client.GetAsync($"/{POE_API_CHARS}?league={config.CurrentLeague}&tabs=1&tabIndex=0&accountName={config.PlayerName}");
-            var result = await _authHttpService.ReadResponse<StashTabsResult>(response);
-
-            foreach (var tab in result.Tabs) {
-                if (tab.Index > 0) {
-                    tab.Items = await GetItems(tab.Index);
-                }
-            }
-        }
-
-        private async Task<List<StashItem>> GetItems(int index) {
-            var config = AppService.Instance.GetConfig();
-
-            var response = await _authHttpService.Client.GetAsync($"/{POE_API_CHARS}?league={config.CurrentLeague}&tabs=0&tabIndex={index}&accountName={config.PlayerName}");
-            var result = await _authHttpService.ReadResponse<StashTab>(response);
-
-            return result.Items;
+            var response = await _authHttpService.Client.GetAsync($"/{POE_API_CHARS}?league={config.CurrentLeague}&tabs=0&tabIndex={config.ChaosRecipeTabIndex}&accountName={config.PlayerName}");
+            ChaosRecipeTab = await _authHttpService.ReadResponse<StashTab>(response);
         }
 
         private List<string> ParseLeagues(List<Dictionary<string, string>> json) {
@@ -254,9 +240,30 @@ namespace Menagerie.Core.Services {
             }
         }
 
+        private void AutoUpdateChaosRecipeTab() {
+            var config = AppService.Instance.GetConfig();
+
+            while (true) {
+                try {
+                    GetChaosRecipeStashTab().Wait();
+                } catch (Exception e) {
+                    log.Trace("Error while updating chaos recipe tab", e);
+                }
+
+                Thread.Sleep(config.ChaosRecipeRefreshRate * 60 * 1000);
+            }
+        }
+
         public void Start() {
             log.Trace("Starting PoeApiService");
+            _authHttpService = new HttpService(POE_API_BASE_URL, new List<Cookie>() { new Cookie("POESESSID", AppService.Instance.GetConfig().POESESSID) });
+
             Task.Run(() => AutoUpdateItemsCache());
+
+            Task.Run(() => {
+                Thread.Sleep(3000);
+                AutoUpdateChaosRecipeTab();
+            });
         }
     }
 }
