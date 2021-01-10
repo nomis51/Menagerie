@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using Menagerie.Core.Extensions;
 using System.Threading;
 using Menagerie.Core.Models.PoeApi;
+using Menagerie.Core.Models.PoeApi.Stash;
 
 namespace Menagerie.Core.Services {
     public class PoeApiService : IService {
@@ -27,12 +28,14 @@ namespace Menagerie.Core.Services {
         private const string POE_API_LEAGUES = "leagues?compact=1";
         private const string POE_API_TRADE = "api/trade/search";
         private const string POE_API_FETCH = "api/trade/fetch";
+        private const string POE_API_CHARS = "character-window/get-stash-items";
         private const int CACHE_EXPIRATION_TIME_MINS = 15;
         #endregion
 
         #region Members
         private HttpService _altHttpService;
         private HttpService _httpService;
+        private HttpService _authHttpService;
         private ItemCache Cache;
         #endregion
 
@@ -55,6 +58,28 @@ namespace Menagerie.Core.Services {
             }
 
             return new List<string>();
+        }
+
+        private async Task GetStashTabs() {
+            var config = AppService.Instance.GetConfig();
+
+            var response = await _authHttpService.Client.GetAsync($"/{POE_API_CHARS}?league={config.CurrentLeague}&tabs=1&tabIndex=0&accountName={config.PlayerName}");
+            var result = await _authHttpService.ReadResponse<StashTabsResult>(response);
+
+            foreach (var tab in result.Tabs) {
+                if (tab.Index > 0) {
+                    tab.Items = await GetItems(tab.Index);
+                }
+            }
+        }
+
+        private async Task<List<StashItem>> GetItems(int index) {
+            var config = AppService.Instance.GetConfig();
+
+            var response = await _authHttpService.Client.GetAsync($"/{POE_API_CHARS}?league={config.CurrentLeague}&tabs=0&tabIndex={index}&accountName={config.PlayerName}");
+            var result = await _authHttpService.ReadResponse<StashTab>(response);
+
+            return result.Items;
         }
 
         private List<string> ParseLeagues(List<Dictionary<string, string>> json) {
