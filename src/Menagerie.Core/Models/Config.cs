@@ -16,5 +16,8 @@ namespace Menagerie.Core.Models {
         public string OutOfLeagueWhisper { get; set; }
         public int PoeNinjaUpdateRate { get; set; }
         public List<string> ChatScanWords { get; set; } = new List<string>();
+        public int ChaosRecipeTabIndex { get; set; }
+        public int ChaosRecipeRefreshRate { get; set; }
+        public string POESESSID { get; set; }
     }
 }
