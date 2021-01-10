@@ -251,5 +251,13 @@ namespace Menagerie {
         private void trayIcon_TrayContextMenuOpen(object sender, RoutedEventArgs e) {
             vm.Notify("CurrentLeague");
         }
+
+        private void grdChaosRecipe_MouseEnter(object sender, MouseEventArgs e) {
+            grdChaosRecipe.Opacity = 0.1;
+        }
+
+        private void grdChaosRecipe_MouseLeave(object sender, MouseEventArgs e) {
+            grdChaosRecipe.Opacity = 0.7;
+        }
     }
 }

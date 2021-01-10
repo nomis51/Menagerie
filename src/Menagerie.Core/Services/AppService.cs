@@ -188,6 +188,10 @@ namespace Menagerie.Core.Services {
             });
         }
 
+        public void StashApiUpdated() {
+            _poeApiService.StashApiReady();
+        }
+
         public void NewChaosRecipeResult(ChaosRecipeResult result) {
             OnNewChaosRecipeResult(result);
         }

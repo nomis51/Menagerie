@@ -23,6 +23,7 @@ namespace Menagerie.Core.Services {
         #region Constants
 
         private static readonly ILog log = LogManager.GetLogger(typeof(PoeApiService));
+        private static object _lockStashApi = new object();
         private readonly Uri ALT_POE_API_BASE_URL = new Uri("http://api.pathofexile.com");
         private readonly Uri POE_API_BASE_URL = new Uri("https://www.pathofexile.com");
         private const string POE_API_LEAGUES = "leagues?compact=1";
@@ -38,6 +39,7 @@ namespace Menagerie.Core.Services {
         private HttpService _authHttpService;
         private ItemCache Cache;
         private StashTab ChaosRecipeTab;
+        private bool StashApiUpdated = true;
         #endregion
 
 
@@ -59,6 +61,12 @@ namespace Menagerie.Core.Services {
             }
 
             return new List<string>();
+        }
+
+        public void StashApiReady() {
+            lock (_lockStashApi) {
+                StashApiUpdated = true;
+            }
         }
 
         private async Task GetChaosRecipeStashTab() {
@@ -112,10 +120,6 @@ namespace Menagerie.Core.Services {
                 case "Weapons/TwoHandWeapons":
                     ++result.Nb2HWeapons;
                     break;
-
-                default:
-                    var idk = 0;
-                    break;
             }
         }
 
@@ -125,7 +129,7 @@ namespace Menagerie.Core.Services {
             string startStr = "https://web.poecdn.com/image/Art/2DItems/";
 
             foreach (var item in tab.Items) {
-                if (item.FrameType == 2) {
+                if (item.FrameType == 2 && item.ItemLevel >= 60 && item.ItemLevel < 75) {
                     int startIndex = item.IconUrl.IndexOf(startStr);
 
                     if (startIndex == -1) {
@@ -341,13 +345,21 @@ namespace Menagerie.Core.Services {
             var config = AppService.Instance.GetConfig();
 
             while (true) {
-                try {
-                    GetChaosRecipeStashTab().Wait();
-                } catch (Exception e) {
-                    log.Trace("Error while updating chaos recipe tab", e);
-                }
+                if (StashApiUpdated) {
+                    lock (_lockStashApi) {
+                        StashApiUpdated = false;
+                    }
 
-                Thread.Sleep(config.ChaosRecipeRefreshRate * 60 * 1000);
+                    try {
+                        GetChaosRecipeStashTab().Wait();
+                    } catch (Exception e) {
+                        log.Trace("Error while updating chaos recipe tab", e);
+                    }
+
+                    Thread.Sleep(config.ChaosRecipeRefreshRate * 60 * 1000);
+                } else {
+                    Thread.Sleep(1 * 1000);
+                }
             }
         }
 
@@ -357,10 +369,12 @@ namespace Menagerie.Core.Services {
 
             Task.Run(() => AutoUpdateItemsCache());
 
-            Task.Run(() => {
-                Thread.Sleep(3000);
-                AutoUpdateChaosRecipeTab();
-            });
+            if (AppService.Instance.GetConfig().ChaosRecipeEnabled) {
+                Task.Run(() => {
+                    Thread.Sleep(3000);
+                    AutoUpdateChaosRecipeTab();
+                });
+            }
         }
     }
 }

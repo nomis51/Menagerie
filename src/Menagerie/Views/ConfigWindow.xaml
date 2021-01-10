@@ -24,6 +24,7 @@
             <ColumnDefinition Width="150"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
+       
         <TextBlock Margin="5,-5,0,0"
                    Text="Settings"
                    FontSize="24"
@@ -124,6 +125,10 @@
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Row="0"
                         Grid.Column="0">
+                <DockPanel>
+                    <TextBlock Text="Enable chaos recipe (overlay, sets calculation, etc.) (Restart required):"></TextBlock>
+                    <CheckBox Checked="{Binding Config.ChaosRecipeEnabled}"></CheckBox>
+                </DockPanel>
                 <StackPanel Margin="5">
                     <Label Content="POESESSID:"
                            Foreground="#a0aec0"

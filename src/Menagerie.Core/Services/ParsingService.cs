@@ -26,6 +26,7 @@ namespace Menagerie.Core {
         private const string TRADE_CANCELLED_MSG = "trade cancelled";
         private const string PLAYER_NOT_FOUND = "player not in this area";
         private const string PLAYER_JOINED_MSG = " has joined the area";
+        private const string AREA_JOINED = "you have entered ";
         private const int MAX_OFFER_LINE_BUFFER = 20;
         private const int MAX_BUFFER_LIFE_MINS = 5;
         #endregion
@@ -64,6 +65,10 @@ namespace Menagerie.Core {
 
                 case Enums.ChatEventEnum.PlayerJoined:
                     AppService.Instance.NewPlayerJoined(((JoinEvent)evt).PlayerName);
+                    break;
+
+                case ChatEventEnum.AreaJoined:
+                    AppService.Instance.StashApiUpdated();
                     break;
 
                 default:
@@ -276,7 +281,9 @@ namespace Menagerie.Core {
                         startIndex += "] : ".Length;
                         evt = new JoinEvent(aline.Substring(startIndex, endIndex - startIndex));
                     }
-                }
+                } else if (line.ToLower().IndexOf(AREA_JOINED) != -1 && line.ToLower().IndexOf("hideout") == -1) {
+                    evt = new ChatEvent() { EvenType = ChatEventEnum.AreaJoined };
+                 }
             }
 
             return evt;

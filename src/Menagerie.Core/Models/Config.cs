@@ -18,6 +18,8 @@ namespace Menagerie.Core.Models {
         public List<string> ChatScanWords { get; set; } = new List<string>();
         public int ChaosRecipeTabIndex { get; set; }
         public int ChaosRecipeRefreshRate { get; set; }
+        public int ChaosRecipeMaxSets { get; set; }
         public string POESESSID { get; set; }
+        public bool ChaosRecipeEnabled { get; set; }
     }
 }
