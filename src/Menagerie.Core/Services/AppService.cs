@@ -1,5 +1,6 @@
 ﻿using Menagerie.Core.Abstractions;
 using Menagerie.Core.Models;
+using Menagerie.Core.Models.PoeApi.Stash;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,6 +46,9 @@ namespace Menagerie.Core.Services {
 
         public delegate void NewTradeChatLineEvent(TradeChatLine line);
         public event NewTradeChatLineEvent OnNewTradeChatLine;
+
+        public delegate void NewChaosRecipeResultEvent(ChaosRecipeResult result);
+        public event NewChaosRecipeResultEvent OnNewChaosRecipeResult;
         #endregion
 
         private IntPtr _overlayHandle;
@@ -182,6 +186,10 @@ namespace Menagerie.Core.Services {
             Task.Run(() => {
                 _parsingService.ParseClipboardLine(text);
             });
+        }
+
+        public void NewChaosRecipeResult(ChaosRecipeResult result) {
+            OnNewChaosRecipeResult(result);
         }
 
         public TradeRequest CreateTradeRequest(Offer offer) {
