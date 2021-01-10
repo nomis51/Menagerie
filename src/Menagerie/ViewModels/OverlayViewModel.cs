@@ -125,6 +125,11 @@ namespace Menagerie.ViewModels {
             AppService.Instance.OnNewPlayerJoined += AppService_OnNewPlayerJoined;
             AppService.Instance.OnOfferScam += Instance_OnOfferScam;
             AppService.Instance.OnNewTradeChatLine += AppService_OnNewTradeChatLine;
+            AppService.Instance.OnNewChaosRecipeResult += AppService_OnNewChaosRecipeResult;
+        }
+
+        private void AppService_OnNewChaosRecipeResult(CoreModels.PoeApi.Stash.ChaosRecipeResult result) {
+
         }
 
         public void Notify(string name) {
