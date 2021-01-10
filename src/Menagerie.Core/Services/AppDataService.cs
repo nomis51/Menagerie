@@ -46,7 +46,9 @@ namespace Menagerie.Core.Services {
                     AutoWhisper = true,
                     AutoWhisperOutOfLeague = false,
                     OutOfLeagueWhisper = "Sorry, I'm busy in another league",
-                    PoeNinjaUpdateRate = 30
+                    PoeNinjaUpdateRate = 30,
+                    ChaosRecipeTabIndex = 3,
+                    ChaosRecipeRefreshRate = 2
                 });
             }
         }
