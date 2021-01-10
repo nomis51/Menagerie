@@ -7,6 +7,8 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Menagerie.Core.Extensions;
+using System.Collections.Generic;
+using System.Net;
 
 namespace Menagerie.Core.Services {
     public class HttpService {
@@ -15,17 +17,32 @@ namespace Menagerie.Core.Services {
         #endregion
 
         #region Props
-        public HttpClient Client { get; private set; } = new HttpClient();
+        public HttpClient Client { get; private set; }
         #endregion
 
         #region Constructors
         public HttpService(Uri baseUrl) {
             log.Trace("Initializing HttpService");
+            Client = new HttpClient();
+            SetupClient(baseUrl);
+        }
+
+        public HttpService(Uri baseUrl, List<Cookie> cookies) {
+            log.Trace("Initializing HttpService");
+            Client = new HttpClient(GetHandler(baseUrl, cookies));
             SetupClient(baseUrl);
         }
         #endregion
 
         #region Private methods
+        private HttpClientHandler GetHandler(Uri baseUrl, List<Cookie> cookies) {
+            var cookieContainer = new CookieContainer();
+
+            cookies.ForEach(c => cookieContainer.Add(baseUrl, c));
+
+            return new HttpClientHandler() { CookieContainer = cookieContainer };
+        }
+
         private void SetupClient(Uri baseUrl) {
             log.Trace($"Settings client for {baseUrl}");
             Client.BaseAddress = baseUrl;
