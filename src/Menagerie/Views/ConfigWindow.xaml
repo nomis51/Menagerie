@@ -125,10 +125,7 @@
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Row="0"
                         Grid.Column="0">
-                <DockPanel>
-                    <TextBlock Text="Enable chaos recipe (overlay, sets calculation, etc.) (Restart required):"></TextBlock>
-                    <CheckBox Checked="{Binding Config.ChaosRecipeEnabled}"></CheckBox>
-                </DockPanel>
+               
                 <StackPanel Margin="5">
                     <Label Content="POESESSID:"
                            Foreground="#a0aec0"
@@ -290,6 +287,7 @@
               Grid.Row="1"
               Grid.Column="1">
             <Grid.RowDefinitions>
+                <RowDefinition Height="50"></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -297,7 +295,18 @@
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <StackPanel  Grid.Row="0"
-                         Grid.Column="0">
+                         Grid.Column="0"
+                         Grid.ColumnSpan="2">
+                <StackPanel>
+                    <TextBlock Text="Enable chaos recipe (overlay, sets calculation, etc.) (Restart required):"
+                               Margin="5"></TextBlock>
+                    <CheckBox IsChecked="{Binding Config.ChaosRecipeEnabled}"
+                              Margin="5"></CheckBox>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel  Grid.Row="1"
+                         Grid.Column="0"
+                         >
                 <StackPanel Margin="5">
                     <Label Content="Chaos Recipe tab:"
                            Foreground="#a0aec0"></Label>
