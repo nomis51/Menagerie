@@ -21,9 +21,10 @@
             <RowDefinition Height="45"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="120"></ColumnDefinition>
+            <ColumnDefinition Width="150"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
+       
         <TextBlock Margin="5,-5,0,0"
                    Text="Settings"
                    FontSize="24"
@@ -81,6 +82,20 @@
                     </DockPanel>
                 </MenuItem.Header>
             </MenuItem>
+            <MenuItem Name="itChaosRecipe"
+                      Click="itChaosRecipe_Click">
+                <MenuItem.Header>
+                    <DockPanel>
+                        <fa5:ImageAwesome Margin="0,0,5,0"
+                                          Width="15"
+                                          Height="15"
+                                          Icon="Solid_MoneyBillAlt"
+                                          Foreground="#a0aec0"
+                                          HorizontalAlignment="Center" />
+                        <TextBlock Text="Chaos Recipe"></TextBlock>
+                    </DockPanel>
+                </MenuItem.Header>
+            </MenuItem>
             <MenuItem Name="itApi"
                       Click="itApi_Click">
                 <MenuItem.Header>
@@ -110,10 +125,17 @@
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Row="0"
                         Grid.Column="0">
+               
+                <StackPanel Margin="5">
+                    <Label Content="POESESSID:"
+                           Foreground="#a0aec0"
+                           ToolTip="Required for the Chaos Recipe"></Label>
+                    <TextBox Text="{Binding Config.POESESSID, Mode=TwoWay}"></TextBox>
+                </StackPanel>
                 <StackPanel Margin="5">
                     <Label Content="Player name:"
                            Foreground="#a0aec0"
-                           ToolTip="Required to automatically leave party when an outgoing trade is completed"></Label>
+                           ToolTip="Required to automatically leave party when an outgoing trade is completed and for the Chaos Recipe"></Label>
                     <TextBox Text="{Binding Config.PlayerName, Mode=TwoWay}"></TextBox>
                 </StackPanel>
                 <StackPanel Margin="5">
@@ -255,8 +277,45 @@
                 <StackPanel Margin="5">
                     <Label Content="Words to look for (separated by spaces):"
                            Foreground="#a0aec0"></Label>
-                    <TextBox Text="{Binding ChatScanWords, Mode=TwoWay}"
-                             ></TextBox>
+                    <TextBox Text="{Binding ChatScanWords, Mode=TwoWay}"></TextBox>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+        <!-- Chaos Recipe -->
+        <Grid Name="grdChaosRecipe"
+              Visibility="Hidden"
+              Grid.Row="1"
+              Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <StackPanel  Grid.Row="0"
+                         Grid.Column="0"
+                         Grid.ColumnSpan="2">
+                <StackPanel>
+                    <TextBlock Text="Enable chaos recipe (overlay, sets calculation, etc.) (Restart required):"
+                               Margin="5"></TextBlock>
+                    <CheckBox IsChecked="{Binding Config.ChaosRecipeEnabled}"
+                              Margin="5"></CheckBox>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel  Grid.Row="1"
+                         Grid.Column="0"
+                         >
+                <StackPanel Margin="5">
+                    <Label Content="Chaos Recipe tab:"
+                           Foreground="#a0aec0"></Label>
+                    <TextBox Text="{Binding Config.ChaosRecipeTabIndex, Mode=TwoWay}"></TextBox>
+                </StackPanel>
+                <StackPanel Margin="5">
+                    <Label Content="Chaos Recipe refresh rate (in minutes):"
+                           Foreground="#a0aec0"></Label>
+                    <TextBox Text="{Binding Config.ChaosRecipeRefreshRate, Mode=TwoWay}"></TextBox>
                 </StackPanel>
             </StackPanel>
         </Grid>

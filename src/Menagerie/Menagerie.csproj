@@ -236,6 +236,14 @@
     <Content Include="Assets\Audio\knocking-on-door.wav" />
     <Content Include="Assets\Audio\notif1.wav" />
     <Content Include="Assets\Audio\notif2.wav" />
+    <Resource Include="Assets\ChaosRecipe\amulet.png" />
+    <Resource Include="Assets\ChaosRecipe\belt.png" />
+    <Resource Include="Assets\ChaosRecipe\body-armour.png" />
+    <Resource Include="Assets\ChaosRecipe\boot.png" />
+    <Resource Include="Assets\ChaosRecipe\glove.png" />
+    <Resource Include="Assets\ChaosRecipe\hand.png" />
+    <Resource Include="Assets\ChaosRecipe\helmet.png" />
+    <Resource Include="Assets\ChaosRecipe\ring.png" />
     <Content Include="log4net.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

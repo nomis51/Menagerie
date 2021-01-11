@@ -4,6 +4,7 @@
         TradeCancelled,
         PlayerJoined,
         PlayerLeft,
-        Offer
+        Offer,
+        AreaJoined
     }
 }

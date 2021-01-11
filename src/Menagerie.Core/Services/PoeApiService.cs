@@ -16,24 +16,30 @@ using System.Threading.Tasks;
 using Menagerie.Core.Extensions;
 using System.Threading;
 using Menagerie.Core.Models.PoeApi;
+using Menagerie.Core.Models.PoeApi.Stash;
 
 namespace Menagerie.Core.Services {
     public class PoeApiService : IService {
         #region Constants
 
         private static readonly ILog log = LogManager.GetLogger(typeof(PoeApiService));
+        private static object _lockStashApi = new object();
         private readonly Uri ALT_POE_API_BASE_URL = new Uri("http://api.pathofexile.com");
         private readonly Uri POE_API_BASE_URL = new Uri("https://www.pathofexile.com");
         private const string POE_API_LEAGUES = "leagues?compact=1";
         private const string POE_API_TRADE = "api/trade/search";
         private const string POE_API_FETCH = "api/trade/fetch";
+        private const string POE_API_CHARS = "character-window/get-stash-items";
         private const int CACHE_EXPIRATION_TIME_MINS = 15;
         #endregion
 
         #region Members
         private HttpService _altHttpService;
         private HttpService _httpService;
+        private HttpService _authHttpService;
         private ItemCache Cache;
+        private StashTab ChaosRecipeTab;
+        private bool StashApiUpdated = true;
         #endregion
 
 
@@ -55,6 +61,112 @@ namespace Menagerie.Core.Services {
             }
 
             return new List<string>();
+        }
+
+        public void StashApiReady() {
+            lock (_lockStashApi) {
+                StashApiUpdated = true;
+            }
+        }
+
+        private async Task GetChaosRecipeStashTab() {
+            var config = AppService.Instance.GetConfig();
+
+            var response = await _authHttpService.Client.GetAsync($"/{POE_API_CHARS}?league={config.CurrentLeague}&tabs=0&tabIndex={config.ChaosRecipeTabIndex}&accountName={config.PlayerName}");
+            ChaosRecipeTab = await _authHttpService.ReadResponse<StashTab>(response);
+
+            var result = CalculateChaosRecipe(ChaosRecipeTab);
+            AppService.Instance.NewChaosRecipeResult(result);
+        }
+
+        private void SetResult(string type, ref ChaosRecipeResult result) {
+            switch (type) {
+                case "Rings":
+                    ++result.NbRings;
+                    break;
+
+                case "Belts":
+                    ++result.NbBelts;
+                    break;
+
+                case "Amulets":
+                    ++result.NbAmulets;
+                    break;
+
+                case "Armours/Helmets":
+                    ++result.NbHelmets;
+                    break;
+
+                case "Armours/Boots":
+                    ++result.NbBoots;
+                    break;
+
+                case "Armours/Gloves":
+                    ++result.NbGloves;
+                    break;
+
+                case "Armours/BodyArmours":
+                    ++result.NbBodyArmours;
+                    break;
+
+                case "Armours/Shields":
+                    ++result.NbOffHands;
+                    break;
+
+                case "Weapons/OneHandWeapons":
+                    ++result.Nb1HWeapons;
+                    break;
+
+                case "Weapons/TwoHandWeapons":
+                    ++result.Nb2HWeapons;
+                    break;
+            }
+        }
+
+        private ChaosRecipeResult CalculateChaosRecipe(StashTab tab) {
+            ChaosRecipeResult result = new ChaosRecipeResult();
+
+            string startStr = "https://web.poecdn.com/image/Art/2DItems/";
+
+            foreach (var item in tab.Items) {
+                if (item.FrameType == 2 && item.ItemLevel >= 60 && item.ItemLevel < 75) {
+                    int startIndex = item.IconUrl.IndexOf(startStr);
+
+                    if (startIndex == -1) {
+                        continue;
+                    }
+
+                    startIndex += startStr.Length;
+
+                    int endIndex = item.IconUrl.IndexOf("/", startIndex);
+
+                    if (endIndex == -1) {
+                        continue;
+                    }
+
+                    string type = item.IconUrl.Substring(startIndex, endIndex - startIndex);
+
+                    if (type == "Weapons") {
+                        int nextIndex = item.IconUrl.IndexOf("/", endIndex + 1);
+
+                        if (nextIndex != -1) {
+                            type = item.IconUrl.Substring(startIndex, nextIndex - startIndex);
+                        }
+                    }
+
+                    if (type == "Armours") {
+                        int nextIndex = item.IconUrl.IndexOf("/", endIndex + 1);
+
+                        if (nextIndex != -1) {
+                            type = item.IconUrl.Substring(startIndex, nextIndex - startIndex);
+                        }
+                    }
+
+                    SetResult(type, ref result);
+                }
+            }
+
+            return result;
         }
 
         private List<string> ParseLeagues(List<Dictionary<string, string>> json) {
@@ -229,9 +341,40 @@ namespace Menagerie.Core.Services {
             }
         }
 
+        private void AutoUpdateChaosRecipeTab() {
+            var config = AppService.Instance.GetConfig();
+
+            while (true) {
+                if (StashApiUpdated) {
+                    lock (_lockStashApi) {
+                        StashApiUpdated = false;
+                    }
+
+                    try {
+                        GetChaosRecipeStashTab().Wait();
+                    } catch (Exception e) {
+                        log.Trace("Error while updating chaos recipe tab", e);
+                    }
+
+                    Thread.Sleep(config.ChaosRecipeRefreshRate * 60 * 1000);
+                } else {
+                    Thread.Sleep(1 * 1000);
+                }
+            }
+        }
+
         public void Start() {
             log.Trace("Starting PoeApiService");
+            _authHttpService = new HttpService(POE_API_BASE_URL, new List<Cookie>() { new Cookie("POESESSID", AppService.Instance.GetConfig().POESESSID) });
+
             Task.Run(() => AutoUpdateItemsCache());
+
+            if (AppService.Instance.GetConfig().ChaosRecipeEnabled) {
+                Task.Run(() => {
+                    Thread.Sleep(3000);
+                    AutoUpdateChaosRecipeTab();
+                });
+            }
         }
     }
 }
