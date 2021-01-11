@@ -26,6 +26,7 @@ A Path of Exile trade manger to simplify and speed up your trading experience.
 - Can search/filter offers by item name or player name using the overlay search bars
 - Statistics of your trades made in the app, such as amount of trades and amount of currency per date and currency distrubution
 - App automatically update itself
+- Chaos Recipe overlay / helper (BETA feature) (See [release 1.2.9-BETA](https://github.com/nomis51/Menagerie/releases/tag/v1.2.9))
 - Handle aditionnal comment in trade whispers and displayed in the tooltip. There's also a yellow star on the offer to notice that there's are notes in the tooltip
 
 ![2020_12_31_16_24_20_YoloCursorOverlay](https://user-images.githubusercontent.com/25111613/103426087-d4a0b400-4b84-11eb-987e-23adc7e1ec91.png)
