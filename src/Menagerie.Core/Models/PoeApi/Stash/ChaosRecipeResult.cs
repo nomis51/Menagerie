@@ -66,7 +66,7 @@ namespace Menagerie.Core.Models.PoeApi.Stash {
         }
         public int NbSets {
             get {
-                return Math.Min(NbGloves, Math.Min(NbHelmets, Math.Min(NbBoots, Math.Min(NbBelts, Math.Min(NbBodyArmours, Math.Min(NbAmulets, Math.Min(NbRings, Math.Min(Nb1HWeapons, Nb2HWeapons))))))));
+                return Math.Min(NbGloves, Math.Min(NbHelmets, Math.Min(NbBoots, Math.Min(NbBelts, Math.Min(NbBodyArmours, Math.Min(NbAmulets, Math.Min(NbRingSets, NbWeaponSets)))))));
             }
         }
 

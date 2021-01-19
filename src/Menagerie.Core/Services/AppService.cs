@@ -196,6 +196,12 @@ namespace Menagerie.Core.Services {
             OnNewChaosRecipeResult(result);
         }
 
+        public int GetLastOfferId() {
+            return _appDataService.GetDocuments<Offer>(AppDataService.COLLECTION_TRADES, t => true)
+                .Select(t => t.Id)
+                .Max();
+        }
+
         public TradeRequest CreateTradeRequest(Offer offer) {
             return _poeApiService.CreateTradeRequest(offer);
         }
