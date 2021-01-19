@@ -34,7 +34,7 @@ namespace Menagerie.Core {
         #region Members
         private List<string> LastOffersLines = new List<string>();
         private List<DateTime> LastOffersTimes = new List<DateTime>();
-        private static int Id = 0;
+        private static int Id = -1;
         #endregion
 
         #region Constructors
@@ -290,7 +290,11 @@ namespace Menagerie.Core {
         }
 
         private int NextId() {
-            return ++Id;
+            if(Id == -1) {
+                Id = AppService.Instance.GetLastOfferId();
+            }
+
+            return ++Id; 
         }
 
         private void CleanBuffer() {
