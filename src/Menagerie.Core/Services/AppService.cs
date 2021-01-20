@@ -197,9 +197,13 @@ namespace Menagerie.Core.Services {
         }
 
         public int GetLastOfferId() {
-            return _appDataService.GetDocuments<Offer>(AppDataService.COLLECTION_TRADES, t => true)
-                .Select(t => t.Id)
-                .Max();
+            try {
+                return _appDataService.GetDocuments<Offer>(AppDataService.COLLECTION_TRADES, t => true)
+                    .Select(t => t.Id)
+                    .Max();
+            } catch (Exception e) {
+                return 0;
+            }
         }
 
         public TradeRequest CreateTradeRequest(Offer offer) {
