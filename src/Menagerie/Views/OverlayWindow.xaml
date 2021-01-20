@@ -82,10 +82,13 @@
         </tb:TaskbarIcon>
 
         <!-- Chaos Recipe -->
-        <Grid Name="grdChaosRecipe" Grid.Row="1"
+        <Grid Name="grdChaosRecipe"
               Grid.Column="0"
-              VerticalAlignment="Center"
-              HorizontalAlignment="Left"
+              Grid.ColumnSpan="99"
+              Grid.Row="0"
+              Grid.RowSpan="2"
+              VerticalAlignment="Top"
+              HorizontalAlignment="Center"
               Background="{DynamicResource {x:Static adonisUi:Brushes.Layer1BackgroundBrush}}"
               Opacity="0.7"
               MouseEnter="grdChaosRecipe_MouseEnter"
@@ -97,7 +100,7 @@
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Row="0"
+            <DockPanel Grid.Row="0"
                         Grid.Column="0" >
                 <DockPanel Visibility="{Binding AmuletsVisible}">
                     <Image Margin="5,5,5,5"
@@ -214,7 +217,7 @@
                 <Separator Height="5"
                       Foreground="#a0aec0" Width="Auto"></Separator>
                 <DockPanel>
-                    <TextBlock Margin="5,5,0,5"
+                    <TextBlock Margin="5,5,5,5"
                                FontSize="14"
                                FontWeight="Bold"
                                Foreground="White"
@@ -229,7 +232,7 @@
                                VerticalAlignment="Center"
                                Text="{Binding ChaosRecipe.NbSets}"></TextBlock>
                 </DockPanel>
-            </StackPanel>
+            </DockPanel>
         </Grid>
 
         <!-- Incoming offers -->
