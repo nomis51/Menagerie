@@ -83,6 +83,7 @@
 
         <!-- Chaos Recipe -->
         <Grid Name="grdChaosRecipe"
+              Visibility="{Binding ChaosRecipeOverlayVisible}"
               Grid.Column="0"
               Grid.ColumnSpan="99"
               Grid.Row="0"

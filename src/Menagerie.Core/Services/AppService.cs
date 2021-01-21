@@ -49,6 +49,9 @@ namespace Menagerie.Core.Services {
 
         public delegate void NewChaosRecipeResultEvent(ChaosRecipeResult result);
         public event NewChaosRecipeResultEvent OnNewChaosRecipeResult;
+
+        public delegate void ToggleChaosRecipeOverlayVisibilityEvent(bool show);
+        public event ToggleChaosRecipeOverlayVisibilityEvent OnToggleChaosRecipeOverlayVisibility;
         #endregion
 
         private IntPtr _overlayHandle;
@@ -125,6 +128,14 @@ namespace Menagerie.Core.Services {
 
         public void ShowOverlay() {
             OnToggleOverlayVisibility(false);
+        }
+
+        public void ShowChaosRecipeOverlay() {
+            OnToggleChaosRecipeOverlayVisibility(true);
+        }
+
+        public void HideChaosRecipeOverlay() {
+            OnToggleChaosRecipeOverlayVisibility(false);
         }
 
         public void ClientFileReady() {
@@ -316,6 +327,12 @@ namespace Menagerie.Core.Services {
 
             if (currentConfig.CurrentLeague != config.CurrentLeague) {
                 _poeApiService.UpdateCacheItemsCache();
+            }
+
+            if (config.ChaosRecipeEnabled) {
+                ShowChaosRecipeOverlay();
+            } else {
+                HideChaosRecipeOverlay();
             }
         }
 
