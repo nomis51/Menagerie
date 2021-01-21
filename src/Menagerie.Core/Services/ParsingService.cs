@@ -432,9 +432,8 @@ namespace Menagerie.Core {
                         var offer = (Offer)evt;
 
                         if (offer.IsOutgoing) {
-                            AppService.Instance.SendChatMessage(line.Substring(line.IndexOf("@")));
+                            AppService.Instance.SendChatMessage(line.Substring(line.IndexOf("@")), 500);
                         }
-                        //  OnNewChatEventParsed(offer);
                     }
                 }
             }

@@ -411,8 +411,8 @@ namespace Menagerie.Core.Services {
             _chatService.SendHideoutCommand();
         }
 
-        public void SendChatMessage(string msg) {
-            _chatService.SendChatMessage(msg);
+        public void SendChatMessage(string msg, int delay = 0) {
+            _chatService.SendChatMessage(msg, delay);
         }
 
         public void SendKickChatCommand(string player) {
