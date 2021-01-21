@@ -43,12 +43,12 @@ namespace Menagerie.Core.Services {
                     StillInterestedWhisper = "Are you still interested in my \"{item}\" listed for {price}?",
                     ThanksWhisper = "Thank you and have fun!",
                     AutoThanks = true,
-                    AutoWhisper = true,
+                    AutoWhisper = false,
                     AutoWhisperOutOfLeague = false,
                     OutOfLeagueWhisper = "Sorry, I'm busy in another league",
                     PoeNinjaUpdateRate = 30,
                     ChaosRecipeTabIndex = 3,
-                    ChaosRecipeRefreshRate = 2,
+                    ChaosRecipeRefreshRate = 1,
                     ChaosRecipeMaxSets = 3,
                     ChaosRecipeEnabled = false
                 });

@@ -95,6 +95,18 @@ namespace Menagerie.ViewModels {
             }
         }
 
+        private Visibility _chaosRecipeOverlayVisible = Visibility.Collapsed;
+        public Visibility ChaosRecipeOverlayVisible {
+            get {
+                var state = _chaosRecipeOverlayVisible == Visibility.Collapsed ? (AppService.Instance.GetConfig().ChaosRecipeEnabled ? Visibility.Visible : Visibility.Hidden) : _chaosRecipeOverlayVisible;
+                return state;
+            }
+            set {
+                _chaosRecipeOverlayVisible = value;
+                OnPropertyChanged("ChaosRecipeOverlayVisible");
+            }
+        }
+
         public Visibility GlovesVisible {
             get {
                 return ChaosRecipe.NeedGloves ? Visibility.Visible : Visibility.Hidden;
@@ -193,6 +205,11 @@ namespace Menagerie.ViewModels {
             AppService.Instance.OnOfferScam += Instance_OnOfferScam;
             AppService.Instance.OnNewTradeChatLine += AppService_OnNewTradeChatLine;
             AppService.Instance.OnNewChaosRecipeResult += AppService_OnNewChaosRecipeResult;
+            AppService.Instance.OnToggleChaosRecipeOverlayVisibility += AppService_OnToggleChaosRecipeOverlayVisibility;
+        }
+
+        private void AppService_OnToggleChaosRecipeOverlayVisibility(bool show) {
+            ChaosRecipeOverlayVisible = show ? Visibility.Visible : Visibility.Hidden;
         }
 
         private void AppService_OnNewChaosRecipeResult(CoreModels.PoeApi.Stash.ChaosRecipeResult result) {

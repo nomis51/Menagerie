@@ -3,6 +3,7 @@ using Menagerie.Core.Abstractions;
 using System;
 using WindowsInput.Native;
 using Menagerie.Core.Extensions;
+using System.Threading;
 
 namespace Menagerie.Core.Services {
     public class ChatService : IService {
@@ -21,10 +22,15 @@ namespace Menagerie.Core.Services {
         #endregion
 
         #region Private methods
-        private void Send(string message) {
+        private void Send(string message, int delay = 0) {
             log.Trace("Sending message");
             try {
                 AppService.Instance.FocusGame();
+
+                if(delay > 0) {
+                    Thread.Sleep(delay);
+                }
+
                 ClearSpecialKeys();
                 AppService.Instance.SendEnter();
                 AppService.Instance.SendCtrlA();
@@ -46,9 +52,9 @@ namespace Menagerie.Core.Services {
         #endregion
 
         #region Public methods
-        public void SendChatMessage(string message) {
+        public void SendChatMessage(string message, int delay = 0) {
             log.Trace("Seding chat message");
-            Send(message);
+            Send(message, delay);
         }
 
         public void SendHideoutCommand() {
