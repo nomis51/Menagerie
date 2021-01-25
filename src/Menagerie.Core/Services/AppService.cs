@@ -114,8 +114,8 @@ namespace Menagerie.Core.Services {
             return _overlayHandle;
         }
 
-        public void FocusGame() {
-            _poeWindowService.Focus();
+        public bool FocusGame() {
+            return _poeWindowService.Focus();
         }
 
         public bool GameFocused() {

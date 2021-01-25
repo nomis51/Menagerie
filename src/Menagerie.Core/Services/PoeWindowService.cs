@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using log4net;
 using Menagerie.Core.Abstractions;
@@ -132,18 +133,32 @@ namespace Menagerie.Core.Services {
             return true;
         }
 
-        public void Focus() {
+        private bool IsGameWindowFocused() {
+            IntPtr activeHandle = GetForegroundWindow();
+            return activeHandle == Process.MainWindowHandle;
+        }
+
+        public bool Focus() {
             log.Trace("Focusing PoE");
             if (Process == null) {
-                return;
+                return false;
             }
 
             if (Focused) {
-                return;
+                return true;
             }
 
-            ShowWindow(Process.MainWindowHandle, ShowWindowEnum.Restore);
-            SetForegroundWindow((int)Process.MainWindowHandle);
+            int i = 0;
+
+            while (!IsGameWindowFocused() && i < 3) {
+                ShowWindow(Process.MainWindowHandle, ShowWindowEnum.Restore);
+                SetForegroundWindow((int)Process.MainWindowHandle);
+
+                Thread.Sleep(200);
+                ++i;
+            }
+
+            return IsGameWindowFocused();
         }
 
         public void Start() {
