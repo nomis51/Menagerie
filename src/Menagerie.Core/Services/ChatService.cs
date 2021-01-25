@@ -25,7 +25,9 @@ namespace Menagerie.Core.Services {
         private void Send(string message, int delay = 0) {
             log.Trace("Sending message");
             try {
-                AppService.Instance.FocusGame();
+                if (!AppService.Instance.FocusGame()) {
+                    return;
+                }
 
                 if(delay > 0) {
                     Thread.Sleep(delay);

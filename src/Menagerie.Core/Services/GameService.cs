@@ -59,7 +59,9 @@ namespace Menagerie.Core.Services {
         #region Public methods
         public void HightlightStash(string searchText) {
             log.Trace($"Highlighting stash {searchText}");
-            AppService.Instance.FocusGame();
+            if (!AppService.Instance.FocusGame()) {
+                return;
+            }
 
             AppService.Instance.ClearSpecialKeys();
             AppService.Instance.ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_F);
