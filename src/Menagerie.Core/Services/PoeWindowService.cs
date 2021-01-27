@@ -151,7 +151,7 @@ namespace Menagerie.Core.Services {
             int i = 0;
 
             while (!IsGameWindowFocused() && i < 3) {
-                ShowWindow(Process.MainWindowHandle, ShowWindowEnum.Restore);
+                ShowWindow(Process.MainWindowHandle, ShowWindowEnum.Show);
                 SetForegroundWindow((int)Process.MainWindowHandle);
 
                 Thread.Sleep(200);
