@@ -98,7 +98,8 @@ namespace Menagerie.ViewModels {
         private Visibility _chaosRecipeOverlayVisible = Visibility.Collapsed;
         public Visibility ChaosRecipeOverlayVisible {
             get {
-                var state = _chaosRecipeOverlayVisible == Visibility.Collapsed ? (AppService.Instance.GetConfig().ChaosRecipeEnabled ? Visibility.Visible : Visibility.Hidden) : _chaosRecipeOverlayVisible;
+                var config = AppService.Instance.GetConfig();
+                var state = _chaosRecipeOverlayVisible == Visibility.Collapsed ? (config != null && config.ChaosRecipeEnabled ? Visibility.Visible : Visibility.Hidden) : _chaosRecipeOverlayVisible;
                 return state;
             }
             set {
@@ -169,7 +170,8 @@ namespace Menagerie.ViewModels {
 
         public string CurrentLeague {
             get {
-                return $"League: {AppService.Instance.GetConfig().CurrentLeague}";
+                var config = AppService.Instance.GetConfig();
+                return $"League: {(config != null ? config.CurrentLeague : "Standard")}";
             }
         }
 

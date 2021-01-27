@@ -131,6 +131,8 @@
                            Foreground="#a0aec0"
                            ToolTip="Required for the Chaos Recipe"></Label>
                     <TextBox Text="{Binding Config.POESESSID, Mode=TwoWay}"></TextBox>
+                    <Label Content="(a restart is required)"
+                           Foreground="#a0aec0"></Label>
                 </StackPanel>
                 <StackPanel Margin="5">
                     <Label Content="Player name:"
@@ -298,10 +300,15 @@
                          Grid.Column="0"
                          Grid.ColumnSpan="2">
                 <StackPanel>
-                    <TextBlock Text="Enable chaos recipe (overlay, sets calculation, etc.) (Restart required):"
-                               Margin="5"></TextBlock>
+                    <Label Content="Enable chaos recipe (overlay, sets calculation, etc.):"
+                               Foreground="#a0aec0"
+                               Margin="5"></Label>
+                    <DockPanel>
                     <CheckBox IsChecked="{Binding Config.ChaosRecipeEnabled}"
                               Margin="5"></CheckBox>
+                    <Label Content="(a restart is required)"
+                           Foreground="#a0aec0"></Label>
+                    </DockPanel>
                 </StackPanel>
             </StackPanel>
             <StackPanel  Grid.Row="1"

@@ -325,7 +325,7 @@ namespace Menagerie.Core.Services {
 
             _appDataService.UpdateDocument<Config>(AppDataService.COLLECTION_CONFIG, config);
 
-            if (currentConfig.CurrentLeague != config.CurrentLeague) {
+            if (currentConfig == null || currentConfig.CurrentLeague != config.CurrentLeague) {
                 _poeApiService.UpdateCacheItemsCache();
             }
 
