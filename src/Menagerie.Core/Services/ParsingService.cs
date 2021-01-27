@@ -288,10 +288,20 @@ namespace Menagerie.Core {
                     }
                 } else if (line.ToLower().IndexOf(AREA_JOINED) != -1) {
                     string name = line.Substring(AREA_JOINED.Length + 1);
+                    string type = "Unknown";
 
+                    foreach (var area in Areas) {
+                        if (name.IndexOf(area.Name) != -1) {
+                            name = area.Name;
+                            type = area.Type;
+                        }
+                    }
 
-
-                    evt = new ChatEvent() { EvenType = ChatEventEnum.AreaJoined };
+                    evt = new AreaChangedEvent() {
+                        EvenType = ChatEventEnum.AreaJoined,
+                        Name = name,
+                        Type = type
+                    };
                 }
             }
 
