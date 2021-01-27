@@ -29,12 +29,14 @@ namespace Menagerie.Core {
         private const string AREA_JOINED = "you have entered ";
         private const int MAX_OFFER_LINE_BUFFER = 20;
         private const int MAX_BUFFER_LIFE_MINS = 5;
+        private const string LOCATIONS_FILE = @".\Data\locations.json";
         #endregion
 
         #region Members
         private List<string> LastOffersLines = new List<string>();
         private List<DateTime> LastOffersTimes = new List<DateTime>();
         private static int Id = -1;
+        private List<Area> Areas = new List<Area>();
         #endregion
 
         #region Constructors
@@ -68,7 +70,10 @@ namespace Menagerie.Core {
                     break;
 
                 case ChatEventEnum.AreaJoined:
-                    AppService.Instance.StashApiUpdated();
+                    var area = (AreaChangedEvent)evt;
+                    if (area.Name.ToLower().IndexOf("hideout") == -1) {
+                        AppService.Instance.StashApiUpdated();
+                    }
                     break;
 
                 default:
@@ -281,20 +286,24 @@ namespace Menagerie.Core {
                         startIndex += "] : ".Length;
                         evt = new JoinEvent(aline.Substring(startIndex, endIndex - startIndex));
                     }
-                } else if (line.ToLower().IndexOf(AREA_JOINED) != -1 && line.ToLower().IndexOf("hideout") == -1) {
+                } else if (line.ToLower().IndexOf(AREA_JOINED) != -1) {
+                    string name = line.Substring(AREA_JOINED.Length + 1);
+
+
+
                     evt = new ChatEvent() { EvenType = ChatEventEnum.AreaJoined };
-                 }
+                }
             }
 
             return evt;
         }
 
         private int NextId() {
-            if(Id == -1) {
+            if (Id == -1) {
                 Id = AppService.Instance.GetLastOfferId();
             }
 
-            return ++Id; 
+            return ++Id;
         }
 
         private void CleanBuffer() {
@@ -482,9 +491,21 @@ namespace Menagerie.Core {
             }
         }
 
+        private void LoadLocations() {
+            log.Trace("Loading locations");
+
+            try {
+                var str = File.ReadAllText(LOCATIONS_FILE);
+                Areas = JsonConvert.DeserializeObject<List<Area>>(str);
+            } catch (Exception e) {
+                log.Error("Error while reading locations", e);
+            }
+        }
+
         public void Start() {
             log.Trace("Starting ParsingService");
             DoCleanBuffer();
+            LoadLocations();
         }
         #endregion
     }
