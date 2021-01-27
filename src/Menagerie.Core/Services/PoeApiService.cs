@@ -342,23 +342,27 @@ namespace Menagerie.Core.Services {
         }
 
         private void AutoUpdateChaosRecipeTab() {
-            var config = AppService.Instance.GetConfig();
-
             while (true) {
-                if (StashApiUpdated) {
-                    lock (_lockStashApi) {
-                        StashApiUpdated = false;
-                    }
+                var config = AppService.Instance.GetConfig();
 
-                    try {
-                        GetChaosRecipeStashTab().Wait();
-                    } catch (Exception e) {
-                        log.Trace("Error while updating chaos recipe tab", e);
-                    }
+                if (config.ChaosRecipeEnabled) {
+                    if (StashApiUpdated) {
+                        lock (_lockStashApi) {
+                            StashApiUpdated = false;
+                        }
 
-                    Thread.Sleep(config.ChaosRecipeRefreshRate * 60 * 1000);
+                        try {
+                            GetChaosRecipeStashTab().Wait();
+                        } catch (Exception e) {
+                            log.Trace("Error while updating chaos recipe tab", e);
+                        }
+
+                        Thread.Sleep(config.ChaosRecipeRefreshRate * 60 * 1000);
+                    } else {
+                        Thread.Sleep(1 * 1000);
+                    }
                 } else {
-                    Thread.Sleep(1 * 1000);
+                    Thread.Sleep(10 * 1000);
                 }
             }
         }
