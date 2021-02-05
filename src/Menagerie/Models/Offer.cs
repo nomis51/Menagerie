@@ -41,6 +41,17 @@ namespace Menagerie.Models {
             }
         }
 
+        private string _escapedName;
+        public string EscapedName {
+            get {
+                return this._escapedName;
+            }
+            set {
+                this._escapedName = value;
+                this.OnPropertyChanged("EscapedName");
+            }
+        }
+
         private string _playerName;
         public string PlayerName {
             get {
@@ -312,6 +323,7 @@ namespace Menagerie.Models {
         public Offer(Core.Models.Offer offer) {
             this.Id = offer.Id;
             this.ItemName = offer.ItemName;
+            this.EscapedName = offer.EscapedName;
             this.PlayerName = offer.PlayerName;
             this.Time = offer.Time;
             this.Currency = offer.Currency;

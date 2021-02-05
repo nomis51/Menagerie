@@ -748,7 +748,7 @@ namespace Menagerie.ViewModels {
 
             Offers[index].IsHighlighted = true;
 
-            AppService.Instance.HightlightStash(Offers[index].ItemName);
+            AppService.Instance.HightlightStash(Offers[index].EscapedName);
         }
 
         public void ResetFilter(bool applyToOutgoing = true) {
