@@ -179,16 +179,23 @@ Menagerie will look for you items on [www.pathofexile.com](www.pathofexile.com) 
 
 ![103553388-5e999700-4e7b-11eb-81ff-c0a526d99f0e](https://user-images.githubusercontent.com/25111613/103697346-cc25f000-4f6d-11eb-96e7-9e8ebd070a10.png)
 
-
-## Todos
-- Chat scan (WIP)
-- Custom keyboard shortcuts
-- Trades statistics (WIP)
-- Languages support
-
 ## Keyboard shortcuts
 - ```F5``` : Go to your hideout
 - ```Ctrl + Click``` (on an offer) : Invite or trade with a player (depends the situation)
 - ```Ctrl + Shift + Click``` (on an offer) : Send the "Are you still interested ?" whisper
 - ```Ctrl + Click``` (on an offer) : Send the "Sold" whisper
 - ```Shift + Click``` (on an offer) : Highlight the item in your stash (you need to first open your stash and select the relevant tab)
+
+## Thanks to
+- [AdonisUI](https://github.com/benruehl/adonis-ui) for the UI/UX experience
+- [Winook](https://github.com/macote/Winook) for the keyboard/mouse hooking
+- [LiveCharts](https://github.com/Live-Charts/Live-Charts) for the charts
+- [FontAwesome5](https://github.com/MartinTopfstedt/FontAwesome5) for the icons
+- [Squirrel](https://github.com/Squirrel/Squirrel.Windows) for the app updates management
+
+## Todos
+- Chat scan (WIP)
+- Custom keyboard shortcuts
+- Languages support
+
+
