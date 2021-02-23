@@ -20,7 +20,6 @@
                              WindowState="Maximized">
     <Window.Resources>
         <converters:Base64ImageConverter x:Key="Base64ImageConverter" />
-        <converters:GridLengthConverter x:Key="GridLengthConverter" />
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>

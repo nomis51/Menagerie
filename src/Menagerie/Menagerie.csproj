@@ -177,7 +177,6 @@
       <DependentUpon>TradeChatNotificationControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\Base64ImageConverter.cs" />
-    <Compile Include="Converters\GridLengthConverter.cs" />
     <Compile Include="Helpers\HighlightTermBehavior.cs" />
     <Compile Include="Models\StatsOffer.cs" />
     <Compile Include="Services\AudioService.cs" />
