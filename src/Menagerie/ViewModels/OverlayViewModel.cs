@@ -95,6 +95,92 @@ namespace Menagerie.ViewModels {
             }
         }
 
+        private int _screenWidth = 1920;
+        private int _screenHeight = 1080;
+        public int ScreenWidth {
+            get {
+                return _screenWidth;
+            }
+            set {
+                _screenWidth = value;
+                OnPropertyChanged("ScreenWidth");
+                OnPropertyChanged("Offers");
+                OnPropertyChanged("FirstColumnOffset");
+                OnPropertyChanged("IconsSize");
+                OnPropertyChanged("IconsBackgroundSize");
+                OnPropertyChanged("IncomingTileHeight");
+                OnPropertyChanged("IncomingTileWidth");
+                OnPropertyChanged("IncomingTileFirstRowOffset");
+                OnPropertyChanged("IncomingTileLastRowOffset");
+                OnPropertyChanged("TilesIconSize");
+                OnPropertyChanged("TileTextSize");
+            }
+        }
+        public int ScreenHeight {
+            get {
+                return _screenHeight;
+            }
+            set {
+                _screenHeight = value;
+                OnPropertyChanged("ScreenHeight");
+                OnPropertyChanged("LastRowOffset");
+            }
+        }
+
+        public int IconsBackgroundSize {
+            get {
+                switch (ScreenWidth) {
+                    case 1366:
+                        return 15;
+
+                    case 1920:
+                    default:
+                        return 20;
+                }
+            }
+        }
+
+      
+
+        public int IconsSize {
+            get {
+                switch (ScreenWidth) {
+                    case 1366:
+                        return 10;
+
+                    case 1920:
+                    default:
+                        return 15;
+                }
+            }
+        }
+
+        public int FirstColumnOffset {
+            get {
+                switch (ScreenWidth) {
+                    case 1366:
+                        return 400;
+
+                    case 1920:
+                    default:
+                        return 560;
+                }
+            }
+        }
+
+        public int LastRowOffset {
+            get {
+                switch (ScreenWidth) {
+                    case 1366:
+                        return 68;
+
+                    case 1920:
+                    default:
+                        return 100;
+                }
+            }
+        }
+
         private Visibility _chaosRecipeOverlayVisible = Visibility.Collapsed;
         public Visibility ChaosRecipeOverlayVisible {
             get {
@@ -348,9 +434,9 @@ namespace Menagerie.ViewModels {
             App.Current.Dispatcher.Invoke(delegate {
                 if (!offer.IsOutgoing) {
                     if (Offers.Count >= 8) {
-                        OverflowOffers.Enqueue(new Offer(offer));
+                        OverflowOffers.Enqueue(new Offer(offer, ScreenWidth));
                     } else {
-                        Offers.Add(new Offer(offer));
+                        Offers.Add(new Offer(offer, ScreenWidth));
                     }
                 } else {
                     if (OutgoingOffers.Count >= 8) {
@@ -359,10 +445,10 @@ namespace Menagerie.ViewModels {
                         buffer.RemoveAt(buffer.Count - 1);
                         OutgoingOffers.Clear();
                         buffer.ForEach(o => OutgoingOffers.Add(o));
-                        OutgoingOffers.Add(new Offer(offer));
+                        OutgoingOffers.Add(new Offer(offer, ScreenWidth));
                         ReorderOutgoingOffers();
                     } else {
-                        OutgoingOffers.Add(new Offer(offer));
+                        OutgoingOffers.Add(new Offer(offer, ScreenWidth));
                         ReorderOutgoingOffers();
                     }
                 }
