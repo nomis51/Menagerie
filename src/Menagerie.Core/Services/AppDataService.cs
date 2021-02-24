@@ -38,7 +38,7 @@ namespace Menagerie.Core.Services {
                     CurrentLeague = "Standard",
                     OnlyShowOffersOfCurrentLeague = true,
                     FilterSoldOffers = true,
-                    BusyWhisper = "I'm busy right now, I'll whisper you for the \"{item}\" when I'm ready",
+                    BusyWhisper = "I'm busy right now in {location}, I'll whisper you for the \"{item}\" when I'm ready",
                     SoldWhisper = "I'm sorry, my \"{item}\" has already been sold",
                     StillInterestedWhisper = "Are you still interested in my \"{item}\" listed for {price}?",
                     ThanksWhisper = "Thank you and have fun!",

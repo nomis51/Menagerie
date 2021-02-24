@@ -71,9 +71,12 @@ namespace Menagerie.Core {
 
                 case ChatEventEnum.AreaJoined:
                     var area = (AreaChangedEvent)evt;
+
                     if (area.Name.ToLower().IndexOf("hideout") == -1) {
                         AppService.Instance.StashApiUpdated();
                     }
+
+                    AppService.Instance.SetCurrentArea(area);
                     break;
 
                 default:
@@ -287,13 +290,16 @@ namespace Menagerie.Core {
                         evt = new JoinEvent(aline.Substring(startIndex, endIndex - startIndex));
                     }
                 } else if (line.ToLower().IndexOf(AREA_JOINED) != -1) {
-                    string name = line.Substring(AREA_JOINED.Length + 1);
-                    string type = "Unknown";
+                    string name = aline.Substring(line.IndexOf(AREA_JOINED) + AREA_JOINED.Length);
+                    name = name.Substring(0, name.Length - 1);
+                    name = Regex.Replace(name, " Level [0-9]+", "");
+                    string type = name.ToLower().IndexOf("hideout") != -1 ? "Hideout" : "Unknown";
 
                     foreach (var area in Areas) {
-                        if (name.IndexOf(area.Name) != -1) {
+                        if (area.Name.IndexOf(name) != -1) {
                             name = area.Name;
                             type = area.Type;
+                            break;
                         }
                     }
 

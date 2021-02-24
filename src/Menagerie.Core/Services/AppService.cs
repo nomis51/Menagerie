@@ -70,6 +70,8 @@ namespace Menagerie.Core.Services {
         private PoeNinjaService _poeNinjaService;
         private PriceCheckingService _priceCheckingService;
 
+        private Area _currentArea;
+
         private AppService() {
             _appDataService = new AppDataService();
             _chatService = new ChatService();
@@ -100,6 +102,17 @@ namespace Menagerie.Core.Services {
 
         private void Shortcut_GoToHideout() {
             SendHideoutChatCommand();
+        }
+
+        public void SetCurrentArea(AreaChangedEvent evt) {
+            _currentArea = new Area() {
+                Name = evt.Name,
+                Type = evt.Type
+            };
+        }
+
+        public Area GetCurrentArea() {
+            return _currentArea;
         }
 
         public void SetOverlayHandle(IntPtr handle) {
@@ -393,10 +406,15 @@ namespace Menagerie.Core.Services {
         }
 
         public string ReplaceVars(string msg, Offer offer) {
-            return msg.Replace("{item}", offer.ItemName)
+            Area currentArea = GetCurrentArea();
+
+            msg = msg.Replace("{item}", offer.ItemName)
                 .Replace("{price}", $"{offer.Price} {offer.Currency}")
                 .Replace("{league}", offer.League)
                 .Replace("{player}", offer.PlayerName);
+
+
+            return currentArea != null ? msg.Replace("{location}", $"{currentArea.Name} ({currentArea.Type})") : msg.Replace("{location}","Unknown location");
         }
 
         public void SendTradeChatCommand(string player) {
