@@ -29,12 +29,14 @@ namespace Menagerie.Core {
         private const string AREA_JOINED = "you have entered ";
         private const int MAX_OFFER_LINE_BUFFER = 20;
         private const int MAX_BUFFER_LIFE_MINS = 5;
+        private const string LOCATIONS_FILE = @".\Data\locations.json";
         #endregion
 
         #region Members
         private List<string> LastOffersLines = new List<string>();
         private List<DateTime> LastOffersTimes = new List<DateTime>();
         private static int Id = -1;
+        private List<Area> Areas = new List<Area>();
         #endregion
 
         #region Constructors
@@ -68,7 +70,13 @@ namespace Menagerie.Core {
                     break;
 
                 case ChatEventEnum.AreaJoined:
-                    AppService.Instance.StashApiUpdated();
+                    var area = (AreaChangedEvent)evt;
+
+                    if (area.Name.ToLower().IndexOf("hideout") == -1) {
+                        AppService.Instance.StashApiUpdated();
+                    }
+
+                    AppService.Instance.SetCurrentArea(area);
                     break;
 
                 default:
@@ -281,20 +289,37 @@ namespace Menagerie.Core {
                         startIndex += "] : ".Length;
                         evt = new JoinEvent(aline.Substring(startIndex, endIndex - startIndex));
                     }
-                } else if (line.ToLower().IndexOf(AREA_JOINED) != -1 && line.ToLower().IndexOf("hideout") == -1) {
-                    evt = new ChatEvent() { EvenType = ChatEventEnum.AreaJoined };
-                 }
+                } else if (line.ToLower().IndexOf(AREA_JOINED) != -1) {
+                    string name = aline.Substring(line.IndexOf(AREA_JOINED) + AREA_JOINED.Length);
+                    name = name.Substring(0, name.Length - 1);
+                    name = Regex.Replace(name, " Level [0-9]+", "");
+                    string type = name.ToLower().IndexOf("hideout") != -1 ? "Hideout" : "Unknown";
+
+                    foreach (var area in Areas) {
+                        if (area.Name.IndexOf(name) != -1) {
+                            name = area.Name;
+                            type = area.Type;
+                            break;
+                        }
+                    }
+
+                    evt = new AreaChangedEvent() {
+                        EvenType = ChatEventEnum.AreaJoined,
+                        Name = name,
+                        Type = type
+                    };
+                }
             }
 
             return evt;
         }
 
         private int NextId() {
-            if(Id == -1) {
+            if (Id == -1) {
                 Id = AppService.Instance.GetLastOfferId();
             }
 
-            return ++Id; 
+            return ++Id;
         }
 
         private void CleanBuffer() {
@@ -482,9 +507,21 @@ namespace Menagerie.Core {
             }
         }
 
+        private void LoadLocations() {
+            log.Trace("Loading locations");
+
+            try {
+                var str = File.ReadAllText(LOCATIONS_FILE);
+                Areas = JsonConvert.DeserializeObject<List<Area>>(str);
+            } catch (Exception e) {
+                log.Error("Error while reading locations", e);
+            }
+        }
+
         public void Start() {
             log.Trace("Starting ParsingService");
             DoCleanBuffer();
+            LoadLocations();
         }
         #endregion
     }
