@@ -237,6 +237,8 @@
                            Text=" {league} = To display the league name"></TextBlock>
                 <TextBlock Foreground="#a0aec0"
                            Text=" {player} = To display the player name"></TextBlock>
+                <TextBlock Foreground="#a0aec0" TextWrapping="WrapWithOverflow"
+                           Text=" {location} = To display your current location, if available. (e.g. Azurite Mine (Delve))"></TextBlock>
             </StackPanel>
         </Grid>
         <!-- API -->
