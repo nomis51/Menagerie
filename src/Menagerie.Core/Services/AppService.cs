@@ -190,8 +190,13 @@ namespace Menagerie.Core.Services {
             Task.Run(() => {
                 _parsingService.ParseClientLine(line);
 
-                var chatScanWords = GetConfig().ChatScanWords;
+                if(line.IndexOf("$") == -1) {
+                    return;
+                }
+
                 string loweredLine = line.ToLower().Substring(line.IndexOf("]") + 1);
+
+                var chatScanWords = GetConfig().ChatScanWords;
 
                 foreach (var word in chatScanWords) {
                     if (loweredLine.IndexOf(word) != -1) {
