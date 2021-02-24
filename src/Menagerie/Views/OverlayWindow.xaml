@@ -20,10 +20,11 @@
                              WindowState="Maximized">
     <Window.Resources>
         <converters:Base64ImageConverter x:Key="Base64ImageConverter" />
+        <converters:GridLengthConverter x:Key="GridLengthConverter" />
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="560"></ColumnDefinition>
+            <ColumnDefinition Width="{Binding FirstColumnOffset}"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="200"></ColumnDefinition>
             <ColumnDefinition Width="20"></ColumnDefinition>
@@ -31,7 +32,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="25"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="100"></RowDefinition>
+            <RowDefinition Height="{Binding LastRowOffset}"></RowDefinition>
             <RowDefinition Height="20"></RowDefinition>
         </Grid.RowDefinitions>
         <!-- Notifications -->
@@ -247,8 +248,8 @@
             <TextBox x:Name="txtSearchOffer"
                      TextChanged="txtSearchOffer_TextChanged"></TextBox>
         </DockPanel>
-        <Ellipse Width="20"
-                 Height="20"
+        <Ellipse Width="{Binding IconsBackgroundSize}"
+                 Height="{Binding IconsBackgroundSize}"
                  Fill="{DynamicResource {x:Static adonisUi:Brushes.Layer1BackgroundBrush}}"
                  Grid.Row="2"
                  Grid.Column="0"
@@ -268,8 +269,8 @@
                 ToolTip="Clear all offers"
                 Click="btnClearOffers_Click">
             <Button.Content>
-                <fa5:ImageAwesome Width="15"
-                                  Height="15"
+                <fa5:ImageAwesome Width="{Binding IconsSize}"
+                                  Height="{Binding IconsSize}"
                                   Icon="Solid_Trash"
                                   Foreground="#a0aec0"
                                   HorizontalAlignment="Center" />
@@ -290,8 +291,8 @@
                 <DataTemplate>
                     <Grid Name="grdOffer"
                           Background="{DynamicResource {x:Static adonisUi:Brushes.Layer1BackgroundBrush}}"
-                          Width="90"
-                          Height="80"
+                          Width="{Binding IncomingTileWidth}"
+                          Height="{Binding IncomingTileHeight}"
                           Margin="2"
                           MouseDown="grdOffer_MouseDown"
                           Tag="{Binding Id}"
@@ -299,9 +300,9 @@
                           ToolTipService.ShowDuration="60000">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="3"></RowDefinition>
-                            <RowDefinition Height="15"></RowDefinition>
-                            <RowDefinition Height="*"></RowDefinition>
-                            <RowDefinition Height="20"></RowDefinition>
+                            <RowDefinition Height="{Binding IncomingTileFirstRowOffset}"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="{Binding IncomingTileLastRowOffset}"></RowDefinition>
                             <RowDefinition Height="3"></RowDefinition>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
@@ -316,8 +317,8 @@
                                           Grid.Column="2"
                                           HorizontalAlignment="Right"
                                           VerticalAlignment="Bottom"
-                                          Width="15"
-                                          Height="15"
+                                          Width="{Binding IconsSize}"
+                                          Height="{Binding IconsSize}"
                                           Icon="Solid_UserCircle"
                                           Foreground="Lime" />
                         <fa5:ImageAwesome Visibility="{Binding PossibleScamVisible}"
@@ -360,7 +361,7 @@
                                        FontWeight="Bold"
                                        Foreground="#a0aec0"
                                        Background="{DynamicResource {x:Static adonisUi:Brushes.Layer0BackgroundBrush}}"
-                                       FontSize="12"
+                                       FontSize="10"
                                        Text="{Binding ItemNameText}"
                                        HorizontalAlignment="Center"
                                        VerticalAlignment="Center"></TextBlock>
@@ -397,8 +398,8 @@
                                 Style="{StaticResource TransparentStyleBlue}"
                                 Visibility="{Binding IsBusyButtonVisible}">
                             <Button.Content>
-                                <fa5:ImageAwesome Width="15"
-                                                  Height="15"
+                                <fa5:ImageAwesome Width="{Binding TilesIconSize}"
+                                                  Height="{Binding TilesIconSize}"
                                                   Icon="Solid_Clock"
                                                   Foreground="#a0aec0"
                                                   HorizontalAlignment="Center" />
@@ -411,8 +412,8 @@
                                 Grid.Column="2"
                                 Style="{StaticResource TransparentStyleRed}">
                             <Button.Content>
-                                <fa5:ImageAwesome Width="15"
-                                                  Height="15"
+                                <fa5:ImageAwesome Width="{Binding TilesIconSize}"
+                                                  Height="{Binding TilesIconSize}"
                                                   Icon="Solid_TimesCircle"
                                                   Foreground="#a0aec0"
                                                   HorizontalAlignment="Center" />
@@ -426,8 +427,8 @@
                                 Style="{StaticResource TransparentStyleGreen}"
                                 Visibility="{Binding IsReInviteButtonVisible}">
                             <Button.Content>
-                                <fa5:ImageAwesome Width="15"
-                                                  Height="15"
+                                <fa5:ImageAwesome Width="{Binding TilesIconSize}"
+                                                  Height="{Binding TilesIconSize}"
                                                   Icon="Solid_UserPlus"
                                                   Foreground="#a0aec0"
                                                   HorizontalAlignment="Center" />
@@ -568,8 +569,8 @@
                                 Grid.ColumnSpan="2"
                                 Style="{StaticResource TransparentStyleBlue}">
                             <Button.Content>
-                                <fa5:ImageAwesome Width="15"
-                                                  Height="15"
+                                <fa5:ImageAwesome Width="{Binding IconsSize}"
+                                                  Height="{Binding IconsSize}"
                                                   Icon="Solid_Home"
                                                   Foreground="#a0aec0"
                                                   HorizontalAlignment="Center" />
@@ -583,8 +584,8 @@
                                 Grid.ColumnSpan="2"
                                 Style="{StaticResource TransparentStyleOrange}">
                             <Button.Content>
-                                <fa5:ImageAwesome Width="15"
-                                                  Height="15"
+                                <fa5:ImageAwesome Width="{Binding IconsSize}"
+                                                  Height="{Binding IconsSize}"
                                                   Icon="Solid_DollarSign"
                                                   Foreground="#a0aec0"
                                                   HorizontalAlignment="Center" />
@@ -598,8 +599,8 @@
                                 Grid.ColumnSpan="2"
                                 Style="{StaticResource TransparentStyleRed}">
                             <Button.Content>
-                                <fa5:ImageAwesome Width="15"
-                                                  Height="15"
+                                <fa5:ImageAwesome Width="{Binding IconsSize}"
+                                                  Height="{Binding IconsSize}"
                                                   Icon="Solid_SignOutAlt"
                                                   Foreground="#a0aec0"
                                                   HorizontalAlignment="Center" />

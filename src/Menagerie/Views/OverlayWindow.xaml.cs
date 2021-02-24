@@ -71,6 +71,8 @@ namespace Menagerie {
                 base.OnSourceInitialized(e);
                 var wih = new WindowInteropHelper(this);
                 IntPtr hWnd = wih.Handle;
+                vm.ScreenWidth = screenRect.Width;
+                vm.ScreenHeight = screenRect.Height;
                 MoveWindow(hWnd, screenRect.Left, screenRect.Top, screenRect.Width, screenRect.Height, false);
             }
         }
