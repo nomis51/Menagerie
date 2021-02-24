@@ -247,26 +247,6 @@ namespace Menagerie.Models {
                     size = 16;
                 }
 
-                switch (ScreenWidth) {
-                    case 1366:
-                        switch (size) {
-                            case 14:
-                                return 11;
-
-                            case 16:
-                                return 13;
-
-                            case 20:
-                                return 15;
-
-                        }
-                        break;
-
-                    case 1920:
-                    default:
-                        return size;
-                }
-
                 return size;
             }
         }
@@ -338,119 +318,10 @@ namespace Menagerie.Models {
             }
         }
 
-        private int ScreenWidth = 1920;
-
-        public int IncomingTileBottomMargin {
-            get {
-                switch (ScreenWidth) {
-                    case 1366:
-                        return 80;
-
-                    case 1920:
-                    default:
-                        return 80;
-                }
-            }
-        }
-
-        public int IncomingTileHeight {
-            get {
-                switch (ScreenWidth) {
-                    case 1366:
-                        return 85;
-
-                    case 1920:
-                    default:
-                        return 80;
-                }
-            }
-        }
-
-        public int IncomingTileWidth {
-            get {
-                switch (ScreenWidth) {
-                    case 1366:
-                        return 75;
-
-                    case 1920:
-                    default:
-                        return 90;
-                }
-            }
-        }
-
-        public int IncomingTileFirstRowOffset {
-            get {
-                switch (ScreenWidth) {
-                    case 1366:
-                        return 12;
-
-                    case 1920:
-                    default:
-                        return 15;
-                }
-            }
-        }
-
-
-
-        public int IncomingTileLastRowOffset {
-            get {
-                switch (ScreenWidth) {
-                    case 1366:
-                        return 17;
-
-                    case 1920:
-                    default:
-                        return 20;
-                }
-            }
-        }
-
-        public int IconsSize {
-            get {
-                switch (ScreenWidth) {
-                    case 1366:
-                        return 10;
-
-                    case 1920:
-                    default:
-                        return 15;
-                }
-            }
-        }
-
-        public int TileTextSize {
-            get {
-                switch (ScreenWidth) {
-                    case 1366:
-                        return 10;
-
-                    case 1920:
-                    default:
-                        return 14;
-                }
-            }
-        }
-
-        public int TilesIconSize {
-            get {
-                switch (ScreenWidth) {
-                    case 1366:
-                        return 12;
-
-                    case 1920:
-                    default:
-                        return 15;
-                }
-            }
-        }
-
 
         public Offer() { }
 
-        public Offer(Core.Models.Offer offer, int screenWidth = 1920) {
-            this.ScreenWidth = screenWidth;
+        public Offer(Core.Models.Offer offer) {
             this.Id = offer.Id;
             this.ItemName = offer.ItemName;
             this.EscapedName = offer.EscapedName;

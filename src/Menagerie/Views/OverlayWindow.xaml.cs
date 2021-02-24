@@ -35,6 +35,11 @@ namespace Menagerie {
         private readonly System.Drawing.Rectangle screenRect;
         private bool WinMoved = false;
 
+        private Point DragStart;
+        private Vector DragStartOffet;
+
+
+
         public OverlayViewModel vm;
 
         public OverlayWindow(Forms.Screen screen) {
@@ -61,6 +66,17 @@ namespace Menagerie {
 
         private void OverlayWindow_Loaded(object sender, RoutedEventArgs e) {
             WindowState = WindowState.Maximized;
+
+            var config = vm.Config;
+
+            grdOffers_tt.X = config.IncomingOffersGridOffset.X;
+            grdOffers_tt.Y = config.IncomingOffersGridOffset.Y;
+
+            grdIncomingControls_tt.X = config.IncomingOffersControlsGridOffset.X;
+            grdIncomingControls_tt.Y = config.IncomingOffersControlsGridOffset.Y;
+
+            grdOutgoingControls_tt.X = config.OutgoingOffersGridOffset.X;
+            grdOutgoingControls_tt.Y = config.OutgoingOffersGridOffset.Y;
         }
 
         private void OverlayWindow_SourceInitialized(object sender, EventArgs e) {
@@ -71,8 +87,6 @@ namespace Menagerie {
                 base.OnSourceInitialized(e);
                 var wih = new WindowInteropHelper(this);
                 IntPtr hWnd = wih.Handle;
-                vm.ScreenWidth = screenRect.Width;
-                vm.ScreenHeight = screenRect.Height;
                 MoveWindow(hWnd, screenRect.Left, screenRect.Top, screenRect.Width, screenRect.Height, false);
             }
         }
@@ -260,6 +274,103 @@ namespace Menagerie {
 
         private void grdChaosRecipe_MouseLeave(object sender, MouseEventArgs e) {
             grdChaosRecipe.Opacity = 0.7;
+        }
+
+        private void grdOffers_MouseDown(object sender, MouseButtonEventArgs e) {
+            if (!vm.IsOverlayMovable) {
+                return;
+            }
+
+            DragStart = e.GetPosition(winOverlay);
+            DragStartOffet = new Vector(grdOffers_tt.X, grdOffers_tt.Y);
+            grdOffers.CaptureMouse();
+        }
+
+        private void grdOffers_MouseMove(object sender, MouseEventArgs e) {
+            if (!vm.IsOverlayMovable) {
+                return;
+            }
+
+            if (grdOffers.IsMouseCaptured) {
+                Vector offset = Point.Subtract(e.GetPosition(winOverlay), DragStart);
+
+                grdOffers_tt.X = DragStartOffet.X + offset.X;
+                grdOffers_tt.Y = DragStartOffet.Y + offset.Y;
+            }
+        }
+
+        private void grdOffers_MouseUp(object sender, MouseButtonEventArgs e) {
+            if (!vm.IsOverlayMovable) {
+                return;
+            }
+
+            grdOffers.ReleaseMouseCapture();
+        }
+
+        private void grdIncomingControls_MouseDown(object sender, MouseButtonEventArgs e) {
+            if (!vm.IsOverlayMovable) {
+                return;
+            }
+
+            DragStart = e.GetPosition(winOverlay);
+            DragStartOffet = new Vector(grdIncomingControls_tt.X, grdIncomingControls_tt.Y);
+            grdIncomingControls.CaptureMouse();
+        }
+
+        private void grdIncomingControls_MouseUp(object sender, MouseButtonEventArgs e) {
+            if (!vm.IsOverlayMovable) {
+                return;
+            }
+
+            grdIncomingControls.ReleaseMouseCapture();
+        }
+
+        private void grdIncomingControls_MouseMove(object sender, MouseEventArgs e) {
+            if (!vm.IsOverlayMovable) {
+                return;
+            }
+
+            if (grdIncomingControls.IsMouseCaptured) {
+                Vector offset = Point.Subtract(e.GetPosition(winOverlay), DragStart);
+
+                grdIncomingControls_tt.X = DragStartOffet.X + offset.X;
+                grdIncomingControls_tt.Y = DragStartOffet.Y + offset.Y;
+            }
+        }
+
+        private void grdOutgoingControls_MouseDown(object sender, MouseButtonEventArgs e) {
+            if (!vm.IsOverlayMovable) {
+                return;
+            }
+
+            DragStart = e.GetPosition(winOverlay);
+            DragStartOffet = new Vector(grdOutgoingControls_tt.X, grdOutgoingControls_tt.Y);
+            grdOutgoingControls.CaptureMouse();
+        }
+
+        private void grdOutgoingControls_MouseMove(object sender, MouseEventArgs e) {
+            if (!vm.IsOverlayMovable) {
+                return;
+            }
+
+            if (grdOutgoingControls.IsMouseCaptured) {
+                Vector offset = Point.Subtract(e.GetPosition(winOverlay), DragStart);
+
+                grdOutgoingControls_tt.X = DragStartOffet.X + offset.X;
+                grdOutgoingControls_tt.Y = DragStartOffet.Y + offset.Y;
+            }
+        }
+
+        private void grdOutgoingControls_MouseUp(object sender, MouseButtonEventArgs e) {
+            if (!vm.IsOverlayMovable) {
+                return;
+            }
+
+            grdOutgoingControls.ReleaseMouseCapture();
+        }
+
+        private void btnMoveOverlay_Click(object sender, RoutedEventArgs e) {
+            vm.ToggleMovableOveralay(grdOffers_tt, grdIncomingControls_tt,grdOutgoingControls_tt);
         }
     }
 }
