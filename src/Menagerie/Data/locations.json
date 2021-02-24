@@ -744,11 +744,11 @@
 		"type": "Act"
 	},
 	{
-		"name": "The Crypt Level",
+		"name": "The Crypt",
 		"type": "Act"
 	},
 	{
-		"name": "The Chamber of Sins Level",
+		"name": "The Chamber of Sins",
 		"type": "Act"
 	},
 	{
@@ -796,11 +796,7 @@
 		"type": "Act"
 	},
 	{
-		"name": "The Solaris Temple Level",
-		"type": "Act"
-	},
-	{
-		"name": "The Solaris Temple Level",
+		"name": "The Solaris Temple",
 		"type": "Act"
 	},
 	{
@@ -812,7 +808,7 @@
 		"type": "Act"
 	},
 	{
-		"name": "The Lunaris Temple Level",
+		"name": "The Lunaris Temple",
 		"type": "Act"
 	},
 	{
