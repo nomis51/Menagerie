@@ -372,7 +372,7 @@ namespace Menagerie {
         }
 
         private void btnMoveOverlay_Click(object sender, RoutedEventArgs e) {
-            vm.ToggleMovableOveralay(grdOffers_tt, grdIncomingControls_tt,grdOutgoingControls_tt);
+            vm.ToggleMovableOveralay(grdOffers_tt, grdIncomingControls_tt, grdOutgoingControls_tt);
         }
 
         private void grdChaosRecipe_MouseDown(object sender, MouseButtonEventArgs e) {
@@ -404,6 +404,18 @@ namespace Menagerie {
             }
 
             grdChaosRecipe.ReleaseMouseCapture();
+        }
+
+        private void btnChangeChaosRecipeOrientation_Click(object sender, RoutedEventArgs e) {
+            if (vm.IsOverlayMovable) {
+                if (vm.DockChaosRecipeOverlayVisible == Visibility.Visible) {
+                    vm.DockChaosRecipeOverlayVisible = Visibility.Hidden;
+                    vm.StackChaosRecipeOverlayVisible = Visibility.Visible;
+                } else {
+                    vm.StackChaosRecipeOverlayVisible = Visibility.Hidden;
+                    vm.DockChaosRecipeOverlayVisible = Visibility.Visible;
+                }
+            }
         }
     }
 }

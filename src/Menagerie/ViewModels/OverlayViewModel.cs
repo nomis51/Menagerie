@@ -98,6 +98,44 @@ namespace Menagerie.ViewModels {
             }
         }
 
+        public int ChaosRecipeGridWidth {
+            get {
+                return DockChaosRecipeOverlayVisible == Visibility.Visible ? 530 : 60;
+            }
+        }
+
+        public int ChaosRecipeGridHeight {
+            get {
+                return DockChaosRecipeOverlayVisible == Visibility.Visible ? 40 : 380;
+            }
+        }
+
+        private Visibility _stackChaosRecipeOverlayVisible = Visibility.Hidden;
+        public Visibility StackChaosRecipeOverlayVisible {
+            get {
+                return _stackChaosRecipeOverlayVisible;
+            }
+            set {
+                _stackChaosRecipeOverlayVisible = value;
+                OnPropertyChanged("StackChaosRecipeOverlayVisible");
+                OnPropertyChanged("ChaosRecipeGridHeight");
+                OnPropertyChanged("ChaosRecipeGridWidth");
+            }
+        }
+
+        private Visibility _dockChaosRecipeOverlayVisible = Visibility.Visible;
+        public Visibility DockChaosRecipeOverlayVisible {
+            get {
+                return _dockChaosRecipeOverlayVisible;
+            }
+            set {
+                _dockChaosRecipeOverlayVisible = value;
+                OnPropertyChanged("DockChaosRecipeOverlayVisible");
+                OnPropertyChanged("ChaosRecipeGridHeight");
+                OnPropertyChanged("ChaosRecipeGridWidth");
+            }
+        }
+
 
         private Visibility _chaosRecipeOverlayVisible = Visibility.Collapsed;
         public Visibility ChaosRecipeOverlayVisible {

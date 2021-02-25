@@ -91,6 +91,8 @@
               Grid.RowSpan="2"
               VerticalAlignment="Top"
               HorizontalAlignment="Center"
+              MaxHeight="{Binding ChaosRecipeGridHeight}"
+              MaxWidth="{Binding ChaosRecipeGridWidth}"
               Background="{DynamicResource {x:Static adonisUi:Brushes.Layer1BackgroundBrush}}"
               Opacity="0.7"
               MouseEnter="grdChaosRecipe_MouseEnter"
@@ -110,7 +112,9 @@
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
+            
             <DockPanel Grid.Row="0"
+                       Visibility="{Binding DockChaosRecipeOverlayVisible}"
                        Grid.Column="0">
                 <DockPanel Visibility="{Binding AmuletsVisible}">
                     <Image Margin="5,5,5,5"
@@ -243,7 +247,174 @@
                                VerticalAlignment="Center"
                                Text="{Binding ChaosRecipe.NbSets}"></TextBlock>
                 </DockPanel>
+
+                <Button x:Name="btnChangeDockChaosRecipeOrientation"
+                        BorderThickness="0"
+                        Background="Transparent"
+                        Style="{StaticResource TransparentStyleTransparent}"
+                        Cursor="Hand"
+                        ToolTip="Change chaos recipe overlay orientation"
+                        Click="btnChangeChaosRecipeOrientation_Click">
+                    <Button.Content>
+                        <fa5:ImageAwesome Width="20"
+                                          Height="20"
+                                          Icon="Solid_ArrowsAlt"
+                                          Foreground="White"
+                                          HorizontalAlignment="Center" />
+                    </Button.Content>
+                </Button>
             </DockPanel>
+
+            <StackPanel Visibility="{Binding StackChaosRecipeOverlayVisible}" Grid.Row="0"
+                       Grid.Column="0">
+                <DockPanel Visibility="{Binding AmuletsVisible}">
+                    <Image Margin="5,5,5,5"
+                           Height="30"
+                           Source="/Assets/ChaosRecipe/amulet.png"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"></Image>
+                    <TextBlock Margin="0,0,5,0"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Foreground="White"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Text="{Binding ChaosRecipe.NbAmulets}"></TextBlock>
+                </DockPanel>
+                <DockPanel  Visibility="{Binding RingsVisible}">
+                    <Image Margin="5,5,5,5"
+                           Height="30"
+                           Source="/Assets/ChaosRecipe/ring.png"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"></Image>
+                    <TextBlock Margin="0,0,5,0"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Foreground="White"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Text="{Binding ChaosRecipe.NbRingSets}"></TextBlock>
+                </DockPanel>
+                <DockPanel  Visibility="{Binding BeltsVisible}">
+                    <Image Margin="5,5,5,5"
+                           Height="30"
+                           Source="/Assets/ChaosRecipe/belt.png"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"></Image>
+                    <TextBlock Margin="0,0,5,0"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Foreground="White"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Text="{Binding ChaosRecipe.NbBelts}"></TextBlock>
+                </DockPanel>
+                <DockPanel Visibility="{Binding HelmetsVisible}">
+                    <Image Margin="5,5,5,5"
+                           Height="30"
+                           Source="/Assets/ChaosRecipe/helmet.png"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"></Image>
+                    <TextBlock Margin="0,0,5,0"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Foreground="White"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Text="{Binding ChaosRecipe.NbHelmets}"></TextBlock>
+                </DockPanel>
+                <DockPanel Visibility="{Binding BootsVisible}">
+                    <Image Margin="5,5,5,5"
+                           Height="30"
+                           Source="/Assets/ChaosRecipe/boot.png"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"></Image>
+                    <TextBlock Margin="0,0,5,0"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Foreground="White"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Text="{Binding ChaosRecipe.NbBoots}"></TextBlock>
+                </DockPanel>
+                <DockPanel Visibility="{Binding GlovesVisible}">
+                    <Image Margin="5,5,5,5"
+                           Height="30"
+                           Source="/Assets/ChaosRecipe/glove.png"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"></Image>
+                    <TextBlock Margin="0,0,5,0"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Foreground="White"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Text="{Binding ChaosRecipe.NbGloves}"></TextBlock>
+                </DockPanel>
+                <DockPanel Visibility="{Binding BodyArmoursVisible}">
+                    <Image Margin="5,5,5,5"
+                           Height="30"
+                           Source="/Assets/ChaosRecipe/body-armour.png"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"></Image>
+                    <TextBlock Margin="0,0,5,0"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Foreground="White"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Text="{Binding ChaosRecipe.NbBodyArmours}"></TextBlock>
+                </DockPanel>
+                <DockPanel Visibility="{Binding WeaponsVisible}">
+                    <Image Margin="5,5,5,5"
+                           Height="30"
+                           Source="/Assets/ChaosRecipe/hand.png"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"></Image>
+                    <TextBlock Margin="0,0,5,0"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Foreground="White"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Text="{Binding ChaosRecipe.NbWeaponSets}"></TextBlock>
+                </DockPanel>
+                <Separator Height="5"
+                           Foreground="#a0aec0"
+                           Width="Auto"></Separator>
+                <DockPanel>
+                    <TextBlock Margin="5,5,5,5"
+                               FontSize="14"
+                               FontWeight="Bold"
+                               Foreground="White"
+                               Text="Sets"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"></TextBlock>
+                    <TextBlock Margin="0,0,5,0"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Foreground="White"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Text="{Binding ChaosRecipe.NbSets}"></TextBlock>
+                </DockPanel>
+
+                <Button x:Name="btnChangeStackChaosRecipeOrientation"
+                        BorderThickness="0"
+                        Background="Transparent"
+                        Style="{StaticResource TransparentStyleTransparent}"
+                        Cursor="Hand"
+                        ToolTip="Change chaos recipe overlay orientation"
+                        Click="btnChangeChaosRecipeOrientation_Click">
+                    <Button.Content>
+                        <fa5:ImageAwesome Width="20"
+                                          Height="20"
+                                          Icon="Solid_ArrowsAlt"
+                                          Foreground="White"
+                                          HorizontalAlignment="Center" />
+                    </Button.Content>
+                </Button>
+            </StackPanel>
         </Grid>
 
         <!-- Incoming offers -->
