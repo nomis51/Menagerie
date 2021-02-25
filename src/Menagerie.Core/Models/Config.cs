@@ -25,6 +25,8 @@ namespace Menagerie.Core.Models {
         public Point IncomingOffersGridOffset { get; set; }
         public Point IncomingOffersControlsGridOffset { get; set; }
         public Point OutgoingOffersGridOffset { get; set; }
+        public Point ChaosRecipeGridOffset { get; set; }
+        public bool ChaosRecipeOveralyDockMode {get;set;}
 
     }
 }

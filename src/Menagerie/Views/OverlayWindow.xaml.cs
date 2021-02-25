@@ -77,6 +77,15 @@ namespace Menagerie {
 
             grdOutgoingControls_tt.X = config.OutgoingOffersGridOffset.X;
             grdOutgoingControls_tt.Y = config.OutgoingOffersGridOffset.Y;
+
+            grdChaosRecipe_tt.X = config.ChaosRecipeGridOffset.X;
+            grdChaosRecipe_tt.Y = config.ChaosRecipeGridOffset.Y;
+
+            if (config.ChaosRecipeOveralyDockMode) {
+                SetChaosRecipeOverlayDockMode();
+            } else {
+                SetChaosRecipeOverlayStackMode();
+            }
         }
 
         private void OverlayWindow_SourceInitialized(object sender, EventArgs e) {
@@ -372,7 +381,7 @@ namespace Menagerie {
         }
 
         private void btnMoveOverlay_Click(object sender, RoutedEventArgs e) {
-            vm.ToggleMovableOveralay(grdOffers_tt, grdIncomingControls_tt, grdOutgoingControls_tt);
+            vm.ToggleMovableOveralay(grdOffers_tt, grdIncomingControls_tt, grdOutgoingControls_tt, grdChaosRecipe_tt, vm.DockChaosRecipeOverlayVisible == Visibility.Visible);
         }
 
         private void grdChaosRecipe_MouseDown(object sender, MouseButtonEventArgs e) {
@@ -406,15 +415,28 @@ namespace Menagerie {
             grdChaosRecipe.ReleaseMouseCapture();
         }
 
+        private void SetChaosRecipeOverlayDockMode() {
+            vm.StackChaosRecipeOverlayVisible = Visibility.Hidden;
+            vm.DockChaosRecipeOverlayVisible = Visibility.Visible;
+        }
+
+        private void SetChaosRecipeOverlayStackMode() {
+            vm.DockChaosRecipeOverlayVisible = Visibility.Hidden;
+            vm.StackChaosRecipeOverlayVisible = Visibility.Visible;
+        }
+
+        private void ChangeChaosRecipeOverlayOrientation() {
+            if (vm.DockChaosRecipeOverlayVisible == Visibility.Visible) {
+                SetChaosRecipeOverlayStackMode();
+
+            } else {
+                SetChaosRecipeOverlayDockMode();
+            }
+        }
+
         private void btnChangeChaosRecipeOrientation_Click(object sender, RoutedEventArgs e) {
             if (vm.IsOverlayMovable) {
-                if (vm.DockChaosRecipeOverlayVisible == Visibility.Visible) {
-                    vm.DockChaosRecipeOverlayVisible = Visibility.Hidden;
-                    vm.StackChaosRecipeOverlayVisible = Visibility.Visible;
-                } else {
-                    vm.StackChaosRecipeOverlayVisible = Visibility.Hidden;
-                    vm.DockChaosRecipeOverlayVisible = Visibility.Visible;
-                }
+                ChangeChaosRecipeOverlayOrientation();
             }
         }
     }

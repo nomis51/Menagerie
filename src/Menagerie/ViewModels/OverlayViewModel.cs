@@ -895,7 +895,7 @@ namespace Menagerie.ViewModels {
             return Config == null ? "" : Config.CurrentLeague;
         }
 
-        public void ToggleMovableOveralay(TranslateTransform grdOffers, TranslateTransform grdOffersControls, TranslateTransform grdOutgoingOffers) {
+        public void ToggleMovableOveralay(TranslateTransform grdOffers, TranslateTransform grdOffersControls, TranslateTransform grdOutgoingOffers, TranslateTransform grdChaosRecipe, bool chaosRecipeDockMode = true) {
             _isOverlayMovable = !_isOverlayMovable;
             OnPropertyChanged("IncomingOffersGridColor");
             OnPropertyChanged("IncomingOffersControlsGridColor");
@@ -906,6 +906,8 @@ namespace Menagerie.ViewModels {
                 config.IncomingOffersGridOffset = new System.Drawing.Point((int)grdOffers.X, (int)grdOffers.Y);
                 config.IncomingOffersControlsGridOffset = new System.Drawing.Point((int)grdOffersControls.X, (int)grdOffersControls.Y);
                 config.OutgoingOffersGridOffset = new System.Drawing.Point((int)grdOutgoingOffers.X, (int)grdOutgoingOffers.Y);
+                config.ChaosRecipeGridOffset = new System.Drawing.Point((int)grdChaosRecipe.X, (int)grdChaosRecipe.Y);
+                config.ChaosRecipeOveralyDockMode = chaosRecipeDockMode;
                 AppService.Instance.SetConfig(config);
             }
         }

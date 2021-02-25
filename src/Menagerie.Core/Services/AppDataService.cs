@@ -116,7 +116,8 @@ namespace Menagerie.Core.Services {
                     ChaosRecipeTabIndex = 3,
                     ChaosRecipeRefreshRate = 1,
                     ChaosRecipeMaxSets = 3,
-                    ChaosRecipeEnabled = false
+                    ChaosRecipeEnabled = false,
+                    ChaosRecipeOveralyDockMode = true
                 });
             }
         }
