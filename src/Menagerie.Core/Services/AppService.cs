@@ -4,6 +4,7 @@ using Menagerie.Core.Models.PoeApi.Stash;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -71,6 +72,7 @@ namespace Menagerie.Core.Services {
         private PriceCheckingService _priceCheckingService;
 
         private Area _currentArea;
+        private AppVersion _appVersion = new AppVersion();
 
         private AppService() {
             _appDataService = new AppDataService();
@@ -102,6 +104,14 @@ namespace Menagerie.Core.Services {
 
         private void Shortcut_GoToHideout() {
             SendHideoutChatCommand();
+        }
+
+        public void SetAppVersion(int major, int minor, int build) {
+            _appVersion = new AppVersion(major, minor, build);
+        }
+
+        public AppVersion GetAppVersion() {
+            return _appVersion;
         }
 
         public void SetCurrentArea(AreaChangedEvent evt) {
@@ -190,7 +200,7 @@ namespace Menagerie.Core.Services {
             Task.Run(() => {
                 _parsingService.ParseClientLine(line);
 
-                if(line.IndexOf("$") == -1) {
+                if (line.IndexOf("$") == -1) {
                     return;
                 }
 
@@ -419,7 +429,7 @@ namespace Menagerie.Core.Services {
                 .Replace("{player}", offer.PlayerName);
 
 
-            return currentArea != null ? msg.Replace("{location}", $"{currentArea.Name} ({currentArea.Type})") : msg.Replace("{location}","Unknown location");
+            return currentArea != null ? msg.Replace("{location}", $"{currentArea.Name} ({currentArea.Type})") : msg.Replace("{location}", "Unknown location");
         }
 
         public void SendTradeChatCommand(string player) {

@@ -7,6 +7,7 @@ using LiteDB;
 using System.Linq.Expressions;
 using log4net;
 using Menagerie.Core.Extensions;
+using System.IO;
 
 namespace Menagerie.Core.Services {
     public class AppDataService : IService {
@@ -31,27 +32,87 @@ namespace Menagerie.Core.Services {
         #endregion
 
         private void EnsureDefaultData() {
-            if (GetDocument<Config>(COLLECTION_CONFIG) == null) {
-                log.Trace("Creating initial db data");
-                InsertDocument<Config>(COLLECTION_CONFIG, new Config() {
-                    PlayerName = "",
-                    CurrentLeague = "Standard",
-                    OnlyShowOffersOfCurrentLeague = true,
-                    FilterSoldOffers = true,
-                    BusyWhisper = "I'm busy right now in {location}, I'll whisper you for the \"{item}\" when I'm ready",
-                    SoldWhisper = "I'm sorry, my \"{item}\" has already been sold",
-                    StillInterestedWhisper = "Are you still interested in my \"{item}\" listed for {price}?",
-                    ThanksWhisper = "Thank you and have fun!",
-                    AutoThanks = true,
-                    AutoWhisper = false,
-                    AutoWhisperOutOfLeague = false,
-                    OutOfLeagueWhisper = "Sorry, I'm busy in another league",
-                    PoeNinjaUpdateRate = 30,
-                    ChaosRecipeTabIndex = 3,
-                    ChaosRecipeRefreshRate = 1,
-                    ChaosRecipeMaxSets = 3,
-                    ChaosRecipeEnabled = false
-                });
+            if (GetDocument<Config>(COLLECTION_CONFIG) != null) {
+                log.Trace("Looking for previous version db data");
+                bool foundConfig = false;
+                var currentVersion = AppService.Instance.GetAppVersion();
+                string appFolderPath = "app-";
+
+                AppVersion highestVersion = new AppVersion(currentVersion.Major, currentVersion.Minor, currentVersion.Build);
+                string highestVersionPath = "";
+
+
+                foreach (var dir in Directory.EnumerateDirectories("..")) {
+                    int appFolderPathIndex = dir.IndexOf(appFolderPath);
+
+                    if (appFolderPathIndex == -1) {
+                        continue;
+                    }
+
+                    string versionStr = dir.Substring(appFolderPathIndex + appFolderPath.Length);
+
+                    try {
+                        if (versionStr != currentVersion.ToString()) {
+                            string dbFile = $"{dir}\\Menagerie.db";
+
+                            if (File.Exists(dbFile)) {
+                                var versionSplits = versionStr.Split('.');
+
+                                if (versionSplits.Length < 3) {
+                                    continue;
+                                }
+
+                                int major = Convert.ToInt32(versionSplits[0]);
+                                int minor = Convert.ToInt32(versionSplits[1]);
+                                int build = Convert.ToInt32(versionSplits[2]);
+
+                                if (major > highestVersion.Major || (major == highestVersion.Major && minor > highestVersion.Minor) || (major == highestVersion.Major && minor == highestVersion.Minor && build > highestVersion.Build)) {
+                                    highestVersion.Major = major;
+                                    highestVersion.Minor = minor;
+                                    highestVersion.Build = build;
+                                    highestVersionPath = dbFile;
+                                    foundConfig = true;
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        log.Error(e);
+                        continue;
+                    }
+                }
+
+                if (foundConfig) {
+                    try {
+                        File.Copy(highestVersionPath, "Menagerie.db");
+                    } catch (Exception e) {
+                        log.Error(e);
+                        foundConfig = false;
+                    }
+
+                }
+
+                if (!foundConfig) {
+                    log.Trace("Creating initial db data");
+                    InsertDocument<Config>(COLLECTION_CONFIG, new Config() {
+                        PlayerName = "",
+                        CurrentLeague = "Standard",
+                        OnlyShowOffersOfCurrentLeague = true,
+                        FilterSoldOffers = true,
+                        BusyWhisper = "I'm busy right now in {location}, I'll whisper you for the \"{item}\" when I'm ready",
+                        SoldWhisper = "I'm sorry, my \"{item}\" has already been sold",
+                        StillInterestedWhisper = "Are you still interested in my \"{item}\" listed for {price}?",
+                        ThanksWhisper = "Thank you and have fun!",
+                        AutoThanks = true,
+                        AutoWhisper = false,
+                        AutoWhisperOutOfLeague = false,
+                        OutOfLeagueWhisper = "Sorry, I'm busy in another league",
+                        PoeNinjaUpdateRate = 30,
+                        ChaosRecipeTabIndex = 3,
+                        ChaosRecipeRefreshRate = 1,
+                        ChaosRecipeMaxSets = 3,
+                        ChaosRecipeEnabled = false
+                    });
+                }
             }
         }
 

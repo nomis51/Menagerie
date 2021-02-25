@@ -98,7 +98,7 @@ namespace Menagerie.ViewModels {
             }
         }
 
-       
+
         private Visibility _chaosRecipeOverlayVisible = Visibility.Collapsed;
         public Visibility ChaosRecipeOverlayVisible {
             get {
@@ -182,7 +182,9 @@ namespace Menagerie.ViewModels {
         private string GetAppVersion() {
             Assembly assembly = Assembly.GetExecutingAssembly();
             System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
-            return $"{fvi.FileMajorPart}.{fvi.FileMinorPart}.{fvi.FileBuildPart}";
+            string version = $"{fvi.FileMajorPart}.{fvi.FileMinorPart}.{fvi.FileBuildPart}";
+            AppService.Instance.SetAppVersion(fvi.FileMajorPart, fvi.FileMinorPart, fvi.FileBuildPart);
+            return version;
         }
 
         public Visibility IsOffersFilterVisible {
@@ -855,7 +857,7 @@ namespace Menagerie.ViewModels {
             return Config == null ? "" : Config.CurrentLeague;
         }
 
-        public void ToggleMovableOveralay(TranslateTransform grdOffers, TranslateTransform grdOffersControls, TranslateTransform grdOutgoingOffers ) {
+        public void ToggleMovableOveralay(TranslateTransform grdOffers, TranslateTransform grdOffersControls, TranslateTransform grdOutgoingOffers) {
             _isOverlayMovable = !_isOverlayMovable;
             OnPropertyChanged("IncomingOffersGridColor");
             OnPropertyChanged("IncomingOffersControlsGridColor");
