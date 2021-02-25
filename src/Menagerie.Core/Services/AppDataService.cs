@@ -27,92 +27,97 @@ namespace Menagerie.Core.Services {
         #region Constructors
         public AppDataService() {
             log.Trace("Initializing AppDataService");
+
+            if (!File.Exists(DB_FILE_PATH)) {
+                CopyOldConfig();
+            }
+
             _db = new LiteDatabase(DB_FILE_PATH);
         }
         #endregion
 
-        private void EnsureDefaultData() {
-            if (GetDocument<Config>(COLLECTION_CONFIG) != null) {
-                log.Trace("Looking for previous version db data");
-                bool foundConfig = false;
-                var currentVersion = AppService.Instance.GetAppVersion();
-                string appFolderPath = "app-";
+        private void CopyOldConfig() {
+            log.Trace("Looking for previous version db data");
+            bool foundConfig = false;
+            var currentVersion = AppService.Instance.GetAppVersion();
+            string appFolderPath = "app-";
 
-                AppVersion highestVersion = new AppVersion(currentVersion.Major, currentVersion.Minor, currentVersion.Build);
-                string highestVersionPath = "";
+            AppVersion highestVersion = new AppVersion(currentVersion.Major, currentVersion.Minor, currentVersion.Build);
+            string highestVersionPath = "";
 
 
-                foreach (var dir in Directory.EnumerateDirectories("..")) {
-                    int appFolderPathIndex = dir.IndexOf(appFolderPath);
+            foreach (var dir in Directory.EnumerateDirectories("..")) {
+                int appFolderPathIndex = dir.IndexOf(appFolderPath);
 
-                    if (appFolderPathIndex == -1) {
-                        continue;
-                    }
+                if (appFolderPathIndex == -1) {
+                    continue;
+                }
 
-                    string versionStr = dir.Substring(appFolderPathIndex + appFolderPath.Length);
+                string versionStr = dir.Substring(appFolderPathIndex + appFolderPath.Length);
 
-                    try {
-                        if (versionStr != currentVersion.ToString()) {
-                            string dbFile = $"{dir}\\Menagerie.db";
+                try {
+                    if (versionStr != currentVersion.ToString()) {
+                        string dbFile = $"{dir}\\Menagerie.db";
 
-                            if (File.Exists(dbFile)) {
-                                var versionSplits = versionStr.Split('.');
+                        if (File.Exists(dbFile)) {
+                            var versionSplits = versionStr.Split('.');
 
-                                if (versionSplits.Length < 3) {
-                                    continue;
-                                }
+                            if (versionSplits.Length < 3) {
+                                continue;
+                            }
 
-                                int major = Convert.ToInt32(versionSplits[0]);
-                                int minor = Convert.ToInt32(versionSplits[1]);
-                                int build = Convert.ToInt32(versionSplits[2]);
+                            int major = Convert.ToInt32(versionSplits[0]);
+                            int minor = Convert.ToInt32(versionSplits[1]);
+                            int build = Convert.ToInt32(versionSplits[2]);
 
-                                if (major > highestVersion.Major || (major == highestVersion.Major && minor > highestVersion.Minor) || (major == highestVersion.Major && minor == highestVersion.Minor && build > highestVersion.Build)) {
-                                    highestVersion.Major = major;
-                                    highestVersion.Minor = minor;
-                                    highestVersion.Build = build;
-                                    highestVersionPath = dbFile;
-                                    foundConfig = true;
-                                }
+                            if (major > highestVersion.Major || (major == highestVersion.Major && minor > highestVersion.Minor) || (major == highestVersion.Major && minor == highestVersion.Minor && build > highestVersion.Build)) {
+                                highestVersion.Major = major;
+                                highestVersion.Minor = minor;
+                                highestVersion.Build = build;
+                                highestVersionPath = dbFile;
+                                foundConfig = true;
                             }
                         }
-                    } catch (Exception e) {
-                        log.Error(e);
-                        continue;
                     }
+                } catch (Exception e) {
+                    log.Error(e);
+                    continue;
+                }
+            }
+
+            if (foundConfig) {
+                try {
+                    File.Copy(highestVersionPath, "Menagerie.db");
+                } catch (Exception e) {
+                    log.Error(e);
+                    foundConfig = false;
                 }
 
-                if (foundConfig) {
-                    try {
-                        File.Copy(highestVersionPath, "Menagerie.db");
-                    } catch (Exception e) {
-                        log.Error(e);
-                        foundConfig = false;
-                    }
+            }
+        }
 
-                }
-
-                if (!foundConfig) {
-                    log.Trace("Creating initial db data");
-                    InsertDocument<Config>(COLLECTION_CONFIG, new Config() {
-                        PlayerName = "",
-                        CurrentLeague = "Standard",
-                        OnlyShowOffersOfCurrentLeague = true,
-                        FilterSoldOffers = true,
-                        BusyWhisper = "I'm busy right now in {location}, I'll whisper you for the \"{item}\" when I'm ready",
-                        SoldWhisper = "I'm sorry, my \"{item}\" has already been sold",
-                        StillInterestedWhisper = "Are you still interested in my \"{item}\" listed for {price}?",
-                        ThanksWhisper = "Thank you and have fun!",
-                        AutoThanks = true,
-                        AutoWhisper = false,
-                        AutoWhisperOutOfLeague = false,
-                        OutOfLeagueWhisper = "Sorry, I'm busy in another league",
-                        PoeNinjaUpdateRate = 30,
-                        ChaosRecipeTabIndex = 3,
-                        ChaosRecipeRefreshRate = 1,
-                        ChaosRecipeMaxSets = 3,
-                        ChaosRecipeEnabled = false
-                    });
-                }
+        private void EnsureDefaultData() {
+            if (GetDocument<Config>(COLLECTION_CONFIG) == null) {
+                log.Trace("Creating initial db data");
+                InsertDocument<Config>(COLLECTION_CONFIG, new Config() {
+                    PlayerName = "",
+                    CurrentLeague = "Standard",
+                    OnlyShowOffersOfCurrentLeague = true,
+                    FilterSoldOffers = true,
+                    BusyWhisper = "I'm busy right now in {location}, I'll whisper you for the \"{item}\" when I'm ready",
+                    SoldWhisper = "I'm sorry, my \"{item}\" has already been sold",
+                    StillInterestedWhisper = "Are you still interested in my \"{item}\" listed for {price}?",
+                    ThanksWhisper = "Thank you and have fun!",
+                    AutoThanks = true,
+                    AutoWhisper = false,
+                    AutoWhisperOutOfLeague = false,
+                    OutOfLeagueWhisper = "Sorry, I'm busy in another league",
+                    PoeNinjaUpdateRate = 30,
+                    ChaosRecipeTabIndex = 3,
+                    ChaosRecipeRefreshRate = 1,
+                    ChaosRecipeMaxSets = 3,
+                    ChaosRecipeEnabled = false
+                });
             }
         }
 
