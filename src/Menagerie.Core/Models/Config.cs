@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 
 namespace Menagerie.Core.Models {
     public class Config : DbModel {
@@ -21,5 +22,9 @@ namespace Menagerie.Core.Models {
         public int ChaosRecipeMaxSets { get; set; }
         public string POESESSID { get; set; }
         public bool ChaosRecipeEnabled { get; set; }
+        public Point IncomingOffersGridOffset { get; set; }
+        public Point IncomingOffersControlsGridOffset { get; set; }
+        public Point OutgoingOffersGridOffset { get; set; }
+
     }
 }

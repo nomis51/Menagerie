@@ -20,6 +20,9 @@ using System.Drawing;
 using System.Windows.Forms;
 using Windows.UI.Notifications;
 using System.Xml;
+using Brush = System.Windows.Media.Brush;
+using Brushes = System.Windows.Media.Brushes;
+using System.Windows.Media;
 
 namespace Menagerie.ViewModels {
     public class OverlayViewModel : INotifyPropertyChanged {
@@ -95,92 +98,7 @@ namespace Menagerie.ViewModels {
             }
         }
 
-        private int _screenWidth = 1920;
-        private int _screenHeight = 1080;
-        public int ScreenWidth {
-            get {
-                return _screenWidth;
-            }
-            set {
-                _screenWidth = value;
-                OnPropertyChanged("ScreenWidth");
-                OnPropertyChanged("Offers");
-                OnPropertyChanged("FirstColumnOffset");
-                OnPropertyChanged("IconsSize");
-                OnPropertyChanged("IconsBackgroundSize");
-                OnPropertyChanged("IncomingTileHeight");
-                OnPropertyChanged("IncomingTileWidth");
-                OnPropertyChanged("IncomingTileFirstRowOffset");
-                OnPropertyChanged("IncomingTileLastRowOffset");
-                OnPropertyChanged("TilesIconSize");
-                OnPropertyChanged("TileTextSize");
-            }
-        }
-        public int ScreenHeight {
-            get {
-                return _screenHeight;
-            }
-            set {
-                _screenHeight = value;
-                OnPropertyChanged("ScreenHeight");
-                OnPropertyChanged("LastRowOffset");
-            }
-        }
-
-        public int IconsBackgroundSize {
-            get {
-                switch (ScreenWidth) {
-                    case 1366:
-                        return 15;
-
-                    case 1920:
-                    default:
-                        return 20;
-                }
-            }
-        }
-
-      
-
-        public int IconsSize {
-            get {
-                switch (ScreenWidth) {
-                    case 1366:
-                        return 10;
-
-                    case 1920:
-                    default:
-                        return 15;
-                }
-            }
-        }
-
-        public int FirstColumnOffset {
-            get {
-                switch (ScreenWidth) {
-                    case 1366:
-                        return 400;
-
-                    case 1920:
-                    default:
-                        return 560;
-                }
-            }
-        }
-
-        public int LastRowOffset {
-            get {
-                switch (ScreenWidth) {
-                    case 1366:
-                        return 68;
-
-                    case 1920:
-                    default:
-                        return 100;
-                }
-            }
-        }
-
+       
         private Visibility _chaosRecipeOverlayVisible = Visibility.Collapsed;
         public Visibility ChaosRecipeOverlayVisible {
             get {
@@ -282,6 +200,32 @@ namespace Menagerie.ViewModels {
         public CoreModels.Config Config {
             get {
                 return AppService.Instance.GetConfig();
+            }
+        }
+
+
+        private bool _isOverlayMovable = false;
+        public bool IsOverlayMovable {
+            get {
+                return _isOverlayMovable;
+            }
+        }
+
+        public Brush IncomingOffersGridColor {
+            get {
+                return _isOverlayMovable ? Brushes.Blue : Brushes.Transparent;
+            }
+        }
+
+        public Brush OutgoingOffersGridColor {
+            get {
+                return _isOverlayMovable ? Brushes.Green : Brushes.Transparent;
+            }
+        }
+
+        public Brush IncomingOffersControlsGridColor {
+            get {
+                return _isOverlayMovable ? Brushes.Red : Brushes.Transparent;
             }
         }
 
@@ -434,9 +378,9 @@ namespace Menagerie.ViewModels {
             App.Current.Dispatcher.Invoke(delegate {
                 if (!offer.IsOutgoing) {
                     if (Offers.Count >= 8) {
-                        OverflowOffers.Enqueue(new Offer(offer, ScreenWidth));
+                        OverflowOffers.Enqueue(new Offer(offer));
                     } else {
-                        Offers.Add(new Offer(offer, ScreenWidth));
+                        Offers.Add(new Offer(offer));
                     }
                 } else {
                     if (OutgoingOffers.Count >= 8) {
@@ -445,10 +389,10 @@ namespace Menagerie.ViewModels {
                         buffer.RemoveAt(buffer.Count - 1);
                         OutgoingOffers.Clear();
                         buffer.ForEach(o => OutgoingOffers.Add(o));
-                        OutgoingOffers.Add(new Offer(offer, ScreenWidth));
+                        OutgoingOffers.Add(new Offer(offer));
                         ReorderOutgoingOffers();
                     } else {
-                        OutgoingOffers.Add(new Offer(offer, ScreenWidth));
+                        OutgoingOffers.Add(new Offer(offer));
                         ReorderOutgoingOffers();
                     }
                 }
@@ -909,6 +853,21 @@ namespace Menagerie.ViewModels {
         public string GetCurrentLeague() {
             log.Trace("Getting current league");
             return Config == null ? "" : Config.CurrentLeague;
+        }
+
+        public void ToggleMovableOveralay(TranslateTransform grdOffers, TranslateTransform grdOffersControls, TranslateTransform grdOutgoingOffers ) {
+            _isOverlayMovable = !_isOverlayMovable;
+            OnPropertyChanged("IncomingOffersGridColor");
+            OnPropertyChanged("IncomingOffersControlsGridColor");
+            OnPropertyChanged("OutgoingOffersGridColor");
+
+            if (!_isOverlayMovable) {
+                var config = Config;
+                config.IncomingOffersGridOffset = new System.Drawing.Point((int)grdOffers.X, (int)grdOffers.Y);
+                config.IncomingOffersControlsGridOffset = new System.Drawing.Point((int)grdOffersControls.X, (int)grdOffersControls.Y);
+                config.OutgoingOffersGridOffset = new System.Drawing.Point((int)grdOutgoingOffers.X, (int)grdOutgoingOffers.Y);
+                AppService.Instance.SetConfig(config);
+            }
         }
     }
 }

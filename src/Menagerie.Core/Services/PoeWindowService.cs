@@ -36,7 +36,8 @@ namespace Menagerie.Core.Services {
         #region Constants
         private static readonly ILog log = LogManager.GetLogger(typeof(PoeWindowService));
         private readonly List<string> PoeProcesses = new List<string>() {
-            "PathOfExile_x64"
+            "PathOfExile_x64",
+            "PathOfExile_x64Steam"
         };
         #endregion
 
