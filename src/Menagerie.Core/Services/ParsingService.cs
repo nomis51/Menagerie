@@ -296,7 +296,7 @@ namespace Menagerie.Core {
                     string type = name.ToLower().IndexOf("hideout") != -1 ? "Hideout" : "Unknown";
 
                     foreach (var area in Areas) {
-                        if (area.Name.IndexOf(name) != -1) {
+                        if (area.Name == name) {
                             name = area.Name;
                             type = area.Type;
                             break;
