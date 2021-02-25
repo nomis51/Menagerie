@@ -269,7 +269,9 @@ namespace Menagerie {
         }
 
         private void grdChaosRecipe_MouseEnter(object sender, MouseEventArgs e) {
-            grdChaosRecipe.Opacity = 0.1;
+            if (!vm.IsOverlayMovable) {
+                grdChaosRecipe.Opacity = 0.1;
+            }
         }
 
         private void grdChaosRecipe_MouseLeave(object sender, MouseEventArgs e) {
@@ -371,6 +373,37 @@ namespace Menagerie {
 
         private void btnMoveOverlay_Click(object sender, RoutedEventArgs e) {
             vm.ToggleMovableOveralay(grdOffers_tt, grdIncomingControls_tt,grdOutgoingControls_tt);
+        }
+
+        private void grdChaosRecipe_MouseDown(object sender, MouseButtonEventArgs e) {
+            if (!vm.IsOverlayMovable) {
+                return;
+            }
+
+            DragStart = e.GetPosition(winOverlay);
+            DragStartOffet = new Vector(grdChaosRecipe_tt.X, grdChaosRecipe_tt.Y);
+            grdChaosRecipe.CaptureMouse();
+        }
+
+        private void grdChaosRecipe_MouseMove(object sender, MouseEventArgs e) {
+            if (!vm.IsOverlayMovable) {
+                return;
+            }
+
+            if (grdChaosRecipe.IsMouseCaptured) {
+                Vector offset = Point.Subtract(e.GetPosition(winOverlay), DragStart);
+
+                grdChaosRecipe_tt.X = DragStartOffet.X + offset.X;
+                grdChaosRecipe_tt.Y = DragStartOffet.Y + offset.Y;
+            }
+        }
+
+        private void grdChaosRecipe_MouseUp(object sender, MouseButtonEventArgs e) {
+            if (!vm.IsOverlayMovable) {
+                return;
+            }
+
+            grdChaosRecipe.ReleaseMouseCapture();
         }
     }
 }
