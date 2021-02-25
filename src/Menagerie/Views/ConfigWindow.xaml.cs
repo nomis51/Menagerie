@@ -5,6 +5,7 @@ using Menagerie.Core.Extensions;
 using AdonisUI.Controls;
 using System.Collections.Generic;
 using System.Windows.Controls;
+using Menagerie.Core.Services;
 
 namespace Menagerie.Views {
     /// <summary>
@@ -71,6 +72,17 @@ namespace Menagerie.Views {
 
         private void itChaosRecipe_Click(object sender, RoutedEventArgs e) {
             ShowView("grdChaosRecipe");
+        }
+
+        private void btnResetDefaultOverlay_Click(object sender, RoutedEventArgs e) {
+            vm.Config.ChaosRecipeOveralyDockMode = true;
+            vm.Config.ChaosRecipeGridOffset = new System.Drawing.Point(0, 0);
+            vm.Config.OutgoingOffersGridOffset = new System.Drawing.Point(0, 0);
+            vm.Config.IncomingOffersControlsGridOffset = new System.Drawing.Point(0, 0);
+            vm.Config.IncomingOffersGridOffset = new System.Drawing.Point(0, 0);
+            vm.SaveConfig();
+
+            AppService.Instance.ResetDefaultOverlay();
         }
     }
 }

@@ -160,6 +160,8 @@
                               Margin="5,2.5,0,0"></CheckBox>
                 </DockPanel>
             </StackPanel>
+
+            <Button x:Name="btnResetDefaultOverlay" VerticalAlignment="Bottom" HorizontalAlignment="Left" Content="Reset default overlay" Click="btnResetDefaultOverlay_Click"></Button>
         </Grid>
         <!-- Whispers -->
         <Grid Visibility="Hidden"

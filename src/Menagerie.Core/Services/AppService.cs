@@ -53,6 +53,9 @@ namespace Menagerie.Core.Services {
 
         public delegate void ToggleChaosRecipeOverlayVisibilityEvent(bool show);
         public event ToggleChaosRecipeOverlayVisibilityEvent OnToggleChaosRecipeOverlayVisibility;
+
+        public delegate void ResetDefaultOverlayEvent();
+        public event ResetDefaultOverlayEvent OnResetDefaultOverlay;
         #endregion
 
         private IntPtr _overlayHandle;
@@ -104,6 +107,10 @@ namespace Menagerie.Core.Services {
 
         private void Shortcut_GoToHideout() {
             SendHideoutChatCommand();
+        }
+
+        public void ResetDefaultOverlay() {
+            OnResetDefaultOverlay();
         }
 
         public void SetAppVersion(int major, int minor, int build) {

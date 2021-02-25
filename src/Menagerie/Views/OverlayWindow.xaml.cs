@@ -53,20 +53,24 @@ namespace Menagerie {
             this.DataContext = vm;
 
 
+
             this.SourceInitialized += OverlayWindow_SourceInitialized;
             this.Loaded += OverlayWindow_Loaded;
             this.Activated += OverlayWindow_Activated;
 
             AppService.Instance.OnToggleOverlayVisibility += AppService_OnToggleOverlayVisibility;
+            AppService.Instance.OnResetDefaultOverlay += AppService_OnResetDefaultOverlay;
+        }
+
+        private void AppService_OnResetDefaultOverlay() {
+            SetOverlaysOffset();
         }
 
         private void OverlayWindow_Activated(object sender, EventArgs e) {
             vm.SetOverlayHandle(new WindowInteropHelper(this).Handle);
         }
 
-        private void OverlayWindow_Loaded(object sender, RoutedEventArgs e) {
-            WindowState = WindowState.Maximized;
-
+        private void SetOverlaysOffset() {
             var config = vm.Config;
 
             grdOffers_tt.X = config.IncomingOffersGridOffset.X;
@@ -86,6 +90,11 @@ namespace Menagerie {
             } else {
                 SetChaosRecipeOverlayStackMode();
             }
+        }
+
+        private void OverlayWindow_Loaded(object sender, RoutedEventArgs e) {
+            WindowState = WindowState.Maximized;
+            SetOverlaysOffset();
         }
 
         private void OverlayWindow_SourceInitialized(object sender, EventArgs e) {
