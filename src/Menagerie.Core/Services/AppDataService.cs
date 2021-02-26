@@ -28,17 +28,21 @@ namespace Menagerie.Core.Services {
         public AppDataService() {
             log.Trace("Initializing AppDataService");
 
-          
+            if (!File.Exists(DB_FILE_PATH)) {
+                CopyOldConfig();
+            }
+
+            _db = new LiteDatabase(DB_FILE_PATH);
         }
         #endregion
 
         private void CopyOldConfig() {
             log.Trace("Looking for previous version db data");
             bool foundConfig = false;
-            var currentVersion = AppService.Instance.GetAppVersion();
+            var currentVersion = AppService.GetAppVersion();
             string appFolderPath = "app-";
 
-            AppVersion highestVersion = new AppVersion(0,0,0);
+            AppVersion highestVersion = new AppVersion(0, 0, 0);
             string highestVersionPath = "";
 
 
@@ -155,11 +159,7 @@ namespace Menagerie.Core.Services {
 
         public void Start() {
             log.Trace("Starting AppDataService");
-            if (!File.Exists(DB_FILE_PATH)) {
-                CopyOldConfig();
-            }
 
-            _db = new LiteDatabase(DB_FILE_PATH);
 
             EnsureDefaultData();
         }
