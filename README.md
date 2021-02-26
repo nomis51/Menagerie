@@ -7,7 +7,7 @@ A Path of Exile trade manger to simplify and speed up your trading experience.
 
 ## Usage
 - Go to the [Releases](https://github.com/nomis51/Menagerie/releases/latest) page
-- Download and erxecute Setup.exe to install Menagerie
+- Download and execute Setup.exe to install Menagerie
 - Future updates will be automatically downloaded and installed by the app itself.
 
 ## Features
