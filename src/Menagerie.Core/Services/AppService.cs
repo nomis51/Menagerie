@@ -75,7 +75,7 @@ namespace Menagerie.Core.Services {
         private PriceCheckingService _priceCheckingService;
 
         private Area _currentArea;
-        private AppVersion _appVersion = new AppVersion();
+        private static AppVersion _appVersion = new AppVersion();
 
         private AppService() {
             _appDataService = new AppDataService();
@@ -113,11 +113,11 @@ namespace Menagerie.Core.Services {
             OnResetDefaultOverlay();
         }
 
-        public void SetAppVersion(int major, int minor, int build) {
+        public static void SetAppVersion(int major, int minor, int build) {
             _appVersion = new AppVersion(major, minor, build);
         }
 
-        public AppVersion GetAppVersion() {
+        public static AppVersion GetAppVersion() {
             return _appVersion;
         }
 

@@ -38,8 +38,6 @@ namespace Menagerie {
         private Point DragStart;
         private Vector DragStartOffet;
 
-
-
         public OverlayViewModel vm;
 
         public OverlayWindow(Forms.Screen screen) {
@@ -85,10 +83,12 @@ namespace Menagerie {
             grdChaosRecipe_tt.X = config.ChaosRecipeGridOffset.X;
             grdChaosRecipe_tt.Y = config.ChaosRecipeGridOffset.Y;
 
-            if (config.ChaosRecipeOveralyDockMode) {
-                SetChaosRecipeOverlayDockMode();
-            } else {
-                SetChaosRecipeOverlayStackMode();
+            if (config.ChaosRecipeEnabled) {
+                if (config.ChaosRecipeOveralyDockMode) {
+                    SetChaosRecipeOverlayDockMode();
+                } else {
+                    SetChaosRecipeOverlayStackMode();
+                }
             }
         }
 

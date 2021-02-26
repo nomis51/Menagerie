@@ -221,7 +221,7 @@ namespace Menagerie.ViewModels {
             Assembly assembly = Assembly.GetExecutingAssembly();
             System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
             string version = $"{fvi.FileMajorPart}.{fvi.FileMinorPart}.{fvi.FileBuildPart}";
-            AppService.Instance.SetAppVersion(fvi.FileMajorPart, fvi.FileMinorPart, fvi.FileBuildPart);
+            AppService.SetAppVersion(fvi.FileMajorPart, fvi.FileMinorPart, fvi.FileBuildPart);
             return version;
         }
 
