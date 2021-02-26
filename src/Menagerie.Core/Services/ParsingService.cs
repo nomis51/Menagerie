@@ -36,7 +36,7 @@ namespace Menagerie.Core {
         private List<string> LastOffersLines = new List<string>();
         private List<DateTime> LastOffersTimes = new List<DateTime>();
         private static int Id = -1;
-        private List<Area> Areas = new List<Area>();
+        private Dictionary<string, Area> Areas = new Dictionary<string, Area>();
         #endregion
 
         #region Constructors
@@ -295,12 +295,9 @@ namespace Menagerie.Core {
                     name = Regex.Replace(name, " Level [0-9]+", "");
                     string type = name.ToLower().IndexOf("hideout") != -1 ? "Hideout" : "Unknown";
 
-                    foreach (var area in Areas) {
-                        if (area.Name == name) {
-                            name = area.Name;
-                            type = area.Type;
-                            break;
-                        }
+                    if (Areas.ContainsKey(name)) {
+                        name = Areas[name].Name;
+                        type = Areas[name].Type;
                     }
 
                     evt = new AreaChangedEvent() {
@@ -512,7 +509,13 @@ namespace Menagerie.Core {
 
             try {
                 var str = File.ReadAllText(LOCATIONS_FILE);
-                Areas = JsonConvert.DeserializeObject<List<Area>>(str);
+                var areas = JsonConvert.DeserializeObject<List<Area>>(str);
+
+                foreach (var area in areas) {
+                    if (!Areas.ContainsKey(area.Name)) {
+                        Areas.Add(area.Name, area);
+                    }
+                }
             } catch (Exception e) {
                 log.Error("Error while reading locations", e);
             }
