@@ -21,18 +21,14 @@ namespace Menagerie.Core.Services {
         #endregion
 
         #region Members
-        private readonly LiteDatabase _db;
+        private LiteDatabase _db;
         #endregion
 
         #region Constructors
         public AppDataService() {
             log.Trace("Initializing AppDataService");
 
-            if (!File.Exists(DB_FILE_PATH)) {
-                CopyOldConfig();
-            }
-
-            _db = new LiteDatabase(DB_FILE_PATH);
+          
         }
         #endregion
 
@@ -42,11 +38,12 @@ namespace Menagerie.Core.Services {
             var currentVersion = AppService.Instance.GetAppVersion();
             string appFolderPath = "app-";
 
-            AppVersion highestVersion = new AppVersion(currentVersion.Major, currentVersion.Minor, currentVersion.Build);
+            AppVersion highestVersion = new AppVersion(0,0,0);
             string highestVersionPath = "";
 
 
             foreach (var dir in Directory.EnumerateDirectories("..")) {
+                log.Trace(dir);
                 int appFolderPathIndex = dir.IndexOf(appFolderPath);
 
                 if (appFolderPathIndex == -1) {
@@ -158,6 +155,12 @@ namespace Menagerie.Core.Services {
 
         public void Start() {
             log.Trace("Starting AppDataService");
+            if (!File.Exists(DB_FILE_PATH)) {
+                CopyOldConfig();
+            }
+
+            _db = new LiteDatabase(DB_FILE_PATH);
+
             EnsureDefaultData();
         }
     }
