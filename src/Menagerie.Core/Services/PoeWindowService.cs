@@ -26,6 +26,16 @@ namespace Menagerie.Core.Services {
         [DllImport("psapi.dll")]
         static extern uint GetModuleFileNameEx(IntPtr hProcess, IntPtr hModule, [Out] StringBuilder lpBaseName, [In][MarshalAs(UnmanagedType.U4)] int nSize);
 
+        [DllImport("psapi.dll")]
+        static extern uint GetProcessImageFileNameA(IntPtr hProcess, [Out] StringBuilder lpBaseName, [In][MarshalAs(UnmanagedType.U4)] int nSize);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, ExactSpelling = true, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool QueryFullProcessImageNameW(IntPtr hProcess, int flags, StringBuilder text, ref int count);
+
+        [DllImport("kernel32.dll")]
+        static extern int GetLastError();
+
         [DllImport("user32.dll", EntryPoint = "FindWindow")]
         public static extern IntPtr FindWindowByCaption(IntPtr ZeroOnly, string lpWindowName);
 
@@ -85,37 +95,65 @@ namespace Menagerie.Core.Services {
 
                 foreach (var proc in processes) {
                     if (PoeProcesses.Contains(proc.ProcessName) && !proc.HasExited) {
-                        log.Trace("PoE process found");
+                        log.Trace($"PoE process found");
                         this.Process = proc;
 
-                        AppService.Instance.PoeWindowReady();
-                        Focus();
+                        bool clientFileFound = false;
 
                         try {
                             // 64 bits
                             log.Trace("Trying to get 64bits location");
+                            log.Trace($"PoE location {proc.MainModule.FileName}");
                             this._clientFilePath = $"{proc.MainModule.FileName.Substring(0, proc.MainModule.FileName.LastIndexOf("\\"))}\\logs\\Client.txt";
-                            log.Trace($"32bits Client file location: {_clientFilePath}");
-                        } catch (Win32Exception) {
-                            //32 bits
-                            log.Trace("Failed trying to get 64bits location");
-                            log.Trace("Trying to get 32bits location");
-                            StringBuilder filename = new StringBuilder(1024);
-                            GetModuleFileNameEx(proc.Handle, IntPtr.Zero, filename, 2014);
-                            _clientFilePath = $"{filename.ToString().Substring(0, filename.ToString().LastIndexOf("\\"))}\\logs\\Client.txt";
                             log.Trace($"64bits Client file location: {_clientFilePath}");
+                            clientFileFound = true;
+                        } catch (Win32Exception) {
+                            try {
+                                //32 bits
+                                log.Trace("Failed trying to get 64bits location");
+                                log.Trace("Trying to get 32bits location");
+                                int size = 1024;
+                                StringBuilder filename = new StringBuilder(size);
+                                var result = QueryFullProcessImageNameW(proc.Handle, 0, filename, ref size);
+
+                                if (!result || size == 0) {
+                                    log.Error($"Error while reading executable file path. Returned size was {size}");
+                                    // See https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes
+                                    var lastError = GetLastError();
+                                    throw new Exception($"GetLastError() = {lastError}");
+                                }
+
+                                log.Trace($"PoE location {filename}");
+                                _clientFilePath = $"{filename.ToString().Substring(0, filename.ToString().LastIndexOf("\\"))}\\logs\\Client.txt";
+                                log.Trace($"32bits Client file location: {_clientFilePath}");
+                                clientFileFound = true;
+                            } catch (Win32Exception) {
+                                log.Trace("Failed trying to get 32bits location");
+                            } catch (Exception e) {
+                                log.Error("Error while getting 32bits PoE process location", e);
+                            }
                         } catch (Exception e) {
-                            log.Error("Error while getting PoE process location", e);
+                            log.Error("Error while getting 64bits PoE process location", e);
                         }
 
+                        if (!clientFileFound) {
+                            Process = null;
+                            _clientFilePath = null;
+                            break;
+                        }
+
+                        AppService.Instance.PoeWindowReady();
+                        Focus();
+
                         AppService.Instance.ClientFileReady();
-                        break;
                     }
                 }
 
-                log.Trace("Unable to find any known PoE processes");
-                log.Trace("Waiting 5 seconds before retry");
-                await Task.Delay(5000);
+                if (!ClientFileExists() || Process == null) {
+                    log.Trace("Unable to find any known PoE processes");
+                    log.Trace("Waiting 5 seconds before retry");
+                    await Task.Delay(5000);
+                }
             }
 
             log.Trace("PoE process and client file found");
