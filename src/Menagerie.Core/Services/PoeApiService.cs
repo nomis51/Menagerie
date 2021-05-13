@@ -187,7 +187,8 @@ namespace Menagerie.Core.Services {
             SearchResult result = await _httpService.ReadResponse<SearchResult>(response);
 
             if (result == null || result.Error != null) {
-                throw new Exception("Error while getting trade request results");
+                log.Error("Error while getting trade request results");
+                return null;
             }
 
             result.League = league;
@@ -254,7 +255,8 @@ namespace Menagerie.Core.Services {
             FetchResult result = await _httpService.ReadResponse<FetchResult>(response);
 
             if (result == null) {
-                throw new Exception("Error while getting trade results");
+                log.Error("Error while getting trade results");
+                return null;
             }
 
             return result;
