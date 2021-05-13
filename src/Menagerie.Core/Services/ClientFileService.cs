@@ -68,7 +68,7 @@ namespace Menagerie.Core.Services {
                 var file = File.Open(AppService.Instance.GetClientFilePath(), FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 EndOfFile = file.Length - 1;
                 file.Close();
-            }catch(Exception e) {
+            } catch (Exception e) {
                 log.Error("Error while getting Client.txt EOF", e);
             }
         }
@@ -89,7 +89,7 @@ namespace Menagerie.Core.Services {
 
             try {
                 file = File.Open(AppService.Instance.GetClientFilePath(), FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            }catch(Exception e) {
+            } catch (Exception e) {
                 log.Error("Error while opening Client.txt file to read new lines", e);
                 return new List<string>();
             }
