@@ -64,9 +64,13 @@ namespace Menagerie.Core.Services {
 
         private void SetEndOfFile() {
             log.Trace("Setting EOF");
-            var file = File.Open(AppService.Instance.GetClientFilePath(), FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            EndOfFile = file.Length - 1;
-            file.Close();
+            try {
+                var file = File.Open(AppService.Instance.GetClientFilePath(), FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                EndOfFile = file.Length - 1;
+                file.Close();
+            }catch(Exception e) {
+                log.Error("Error while getting Client.txt EOF", e);
+            }
         }
 
         private List<string> ReadNewLines() {
@@ -81,7 +85,15 @@ namespace Menagerie.Core.Services {
                 return lines;
             }
 
-            var file = File.Open(AppService.Instance.GetClientFilePath(), FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            FileStream file;
+
+            try {
+                file = File.Open(AppService.Instance.GetClientFilePath(), FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            }catch(Exception e) {
+                log.Error("Error while opening Client.txt file to read new lines", e);
+                return new List<string>();
+            }
+
             file.Position = currentPosition;
             StreamReader reader = new StreamReader(file);
 
