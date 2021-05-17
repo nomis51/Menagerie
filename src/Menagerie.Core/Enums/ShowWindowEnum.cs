@@ -1,4 +1,7 @@
 ﻿namespace Menagerie.Core.Enums {
+    /// <summary>
+    /// WinAPI Window states
+    /// </summary>
     public enum ShowWindowEnum {
         Hide = 0,
         ShowNormal = 1, ShowMinimized = 2, ShowMaximized = 3,
