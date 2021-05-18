@@ -3,7 +3,6 @@ using Menagerie.Core.Abstractions;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using Menagerie.Core.Extensions;
 
 namespace Menagerie.Core.Services {
@@ -53,13 +52,12 @@ namespace Menagerie.Core.Services {
 
             Thread t = new Thread(() => {
                 try {
-                    Clipboard.SetDataObject(value, true, 10, 100);
+                    TextCopy.ClipboardService.SetText(value);
                     result = true;
                 } catch (Exception e) {
                     log.Error("Error while settings clipboard value", e);
                 }
             });
-            t.SetApartmentState(ApartmentState.STA);
             t.Start();
             t.Join();
 
@@ -73,12 +71,11 @@ namespace Menagerie.Core.Services {
 
             Thread t = new Thread(delegate () {
                 try {
-                    text = Clipboard.GetText();
+                    text = TextCopy.ClipboardService.GetText();
                 } catch (Exception e) {
                     log.Error("Error while getting clipboard value", e);
                 }
             });
-            t.SetApartmentState(ApartmentState.STA);
             t.Start();
             t.Join();
 
