@@ -4,7 +4,6 @@ using Menagerie.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using WindowsInput.Native;
 using Winook;
 using Menagerie.Core.Extensions;
 

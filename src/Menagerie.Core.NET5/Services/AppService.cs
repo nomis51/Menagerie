@@ -1,17 +1,16 @@
-﻿using Menagerie.Core.Abstractions;
+﻿using Desktop.Robot;
+using Menagerie.Core.Abstractions;
 using Menagerie.Core.Models;
 using Menagerie.Core.Models.PoeApi.Stash;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using WindowsInput.Native;
 using Winook;
 
-namespace Menagerie.Core.Services {
+namespace Menagerie.Core.Services
+{
     public class AppService : IService {
         #region Singleton
         private static object _lockInstance = new object();
@@ -97,7 +96,7 @@ namespace Menagerie.Core.Services {
         private void SetShortcuts() {
             _shortcutService.RegisterShortcut(new Shortcut() {
                 Direction = KeyDirection.Down,
-                Key = VirtualKeyCode.F5,
+                Key = Key.F5,
                 Alt = false,
                 Control = false,
                 Shift = false,
@@ -379,15 +378,15 @@ namespace Menagerie.Core.Services {
             return await _poeApiService.GetLeagues();
         }
 
-        public void KeyPress(VirtualKeyCode key) {
+        public void KeyPress(Key key) {
             _keyboardService.KeyPress(key);
         }
 
-        public void KeyUp(VirtualKeyCode key) {
+        public void KeyUp(Key key) {
             _keyboardService.KeyUp(key);
         }
 
-        public void KeyDown(VirtualKeyCode key) {
+        public void KeyDown(Key key) {
             _keyboardService.KeyDown(key);
         }
 
@@ -395,7 +394,7 @@ namespace Menagerie.Core.Services {
             _keyboardService.ClearSpecialKeys();
         }
 
-        public void ModifiedKeyStroke(VirtualKeyCode modifier, VirtualKeyCode key) {
+        public void ModifiedKeyStroke(Key modifier, Key key) {
             _keyboardService.ModifiedKeyStroke(modifier, key);
         }
 
@@ -404,11 +403,11 @@ namespace Menagerie.Core.Services {
         }
 
         public void SendCtrlA() {
-            ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_A);
+            ModifiedKeyStroke(Key.Control, Key.A);
         }
 
         public void SendCtrlC() {
-            ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_C);
+            ModifiedKeyStroke(Key.Control, Key.C);
         }
 
         public void SendBackspace() {
@@ -416,7 +415,7 @@ namespace Menagerie.Core.Services {
         }
 
         public void SendCtrlV() {
-            ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_V);
+            ModifiedKeyStroke(Key.Control, Key.A);
         }
 
         public void SendEscape() {

@@ -2,10 +2,10 @@
 using Menagerie.Core.Abstractions;
 using System.Threading;
 using System.Threading.Tasks;
-using WindowsInput.Native;
 using Menagerie.Core.Extensions;
 using System;
 using System.Runtime.InteropServices;
+using Desktop.Robot;
 
 namespace Menagerie.Core.Services {
     public class GameService : IService {
@@ -64,12 +64,12 @@ namespace Menagerie.Core.Services {
             }
 
             AppService.Instance.ClearSpecialKeys();
-            AppService.Instance.ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_F);
+            AppService.Instance.ModifiedKeyStroke(Key.Control, Key.F);
 
             try {
                 AppService.Instance.SetClipboard(searchText);
                 AppService.Instance.ClearSpecialKeys();
-                AppService.Instance.ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_V);
+                AppService.Instance.ModifiedKeyStroke(Key.Control, Key.V);
             } catch (Exception e) {
                 log.Error("Error highlighting stash ", e);
             }

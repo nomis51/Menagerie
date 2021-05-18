@@ -1,9 +1,9 @@
 ﻿using log4net;
 using Menagerie.Core.Abstractions;
 using System;
-using WindowsInput.Native;
 using Menagerie.Core.Extensions;
 using System.Threading;
+using Desktop.Robot;
 
 namespace Menagerie.Core.Services {
     public class ChatService : IService {
@@ -47,9 +47,8 @@ namespace Menagerie.Core.Services {
 
         private void ClearSpecialKeys() {
             log.Trace("Clearing special keys");
-           AppService.Instance.KeyUp(VirtualKeyCode.CONTROL);
-           AppService.Instance.KeyUp(VirtualKeyCode.SHIFT);
-           AppService.Instance.KeyUp(VirtualKeyCode.MENU);
+           AppService.Instance.KeyUp(Key.Control);
+           AppService.Instance.KeyUp(Key.Shift);
         }
         #endregion
 
