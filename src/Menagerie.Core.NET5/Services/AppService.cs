@@ -11,14 +11,21 @@ using Winook;
 
 namespace Menagerie.Core.Services
 {
-    public class AppService : IService {
+    public class AppService : IService
+    {
         #region Singleton
+
         private static object _lockInstance = new object();
         private static AppService _instance;
-        public static AppService Instance {
-            get {
-                lock (_lockInstance) {
-                    if (_instance == null) {
+
+        public static AppService Instance
+        {
+            get
+            {
+                lock (_lockInstance)
+                {
+                    if (_instance == null)
+                    {
                         _instance = new AppService();
                     }
                 }
@@ -26,35 +33,47 @@ namespace Menagerie.Core.Services
                 return _instance;
             }
         }
+
         #endregion
 
         #region Events
+
         public delegate void NewOfferEvent(Offer offer);
+
         public event NewOfferEvent OnNewOffer;
 
         public delegate void NewChatEventEvent(Enums.ChatEventEnum evt);
+
         public event NewChatEventEvent OnNewChatEvent;
 
         public delegate void NewPlayerJoinedEvent(string playerName);
+
         public event NewPlayerJoinedEvent OnNewPlayerJoined;
 
         public delegate void ToggleOverlayVisibilityEvent(bool show);
+
         public event ToggleOverlayVisibilityEvent OnToggleOverlayVisibility;
 
         public delegate void OfferScamEvent(PriceCheckResult result, Offer offer);
+
         public event OfferScamEvent OnOfferScam;
 
         public delegate void NewTradeChatLineEvent(TradeChatLine line);
+
         public event NewTradeChatLineEvent OnNewTradeChatLine;
 
         public delegate void NewChaosRecipeResultEvent(ChaosRecipeResult result);
+
         public event NewChaosRecipeResultEvent OnNewChaosRecipeResult;
 
         public delegate void ToggleChaosRecipeOverlayVisibilityEvent(bool show);
+
         public event ToggleChaosRecipeOverlayVisibilityEvent OnToggleChaosRecipeOverlayVisibility;
 
         public delegate void ResetDefaultOverlayEvent();
+
         public event ResetDefaultOverlayEvent OnResetDefaultOverlay;
+
         #endregion
 
         private IntPtr _overlayHandle;
@@ -64,7 +83,6 @@ namespace Menagerie.Core.Services
         private ClipboardService _clipboardService;
         private CurrencyService _currencyService;
         private GameService _gameService;
-        private ParsingService _parsingService;
         private PoeApiService _poeApiService;
         private PoeWindowService _poeWindowService;
         private KeyboardService _keyboardService;
@@ -76,14 +94,14 @@ namespace Menagerie.Core.Services
         private Area _currentArea;
         private static AppVersion _appVersion = new AppVersion();
 
-        private AppService() {
+        private AppService()
+        {
             _appDataService = new AppDataService();
             _chatService = new ChatService();
             _clientFileService = new ClientFileService();
             _clipboardService = new ClipboardService();
             _currencyService = new CurrencyService();
             _gameService = new GameService();
-            _parsingService = new ParsingService();
             _poeWindowService = new PoeWindowService();
             _poeApiService = new PoeApiService();
             _keyboardService = new KeyboardService();
@@ -93,8 +111,10 @@ namespace Menagerie.Core.Services
             _priceCheckingService = new PriceCheckingService();
         }
 
-        private void SetShortcuts() {
-            _shortcutService.RegisterShortcut(new Shortcut() {
+        private void SetShortcuts()
+        {
+            _shortcutService.RegisterShortcut(new Shortcut()
+            {
                 Direction = KeyDirection.Down,
                 Key = Key.F5,
                 Alt = false,
@@ -104,109 +124,137 @@ namespace Menagerie.Core.Services
             });
         }
 
-        private void Shortcut_GoToHideout() {
+        private void Shortcut_GoToHideout()
+        {
             SendHideoutChatCommand();
         }
 
-        public void ResetDefaultOverlay() {
-            OnResetDefaultOverlay();
+        public void ResetDefaultOverlay()
+        {
+            OnResetDefaultOverlay?.Invoke();
         }
 
-        public static void SetAppVersion(int major, int minor, int build) {
+        public static void SetAppVersion(int major, int minor, int build)
+        {
             _appVersion = new AppVersion(major, minor, build);
         }
 
-        public static AppVersion GetAppVersion() {
+        public static AppVersion GetAppVersion()
+        {
             return _appVersion;
         }
 
-        public void SetCurrentArea(AreaChangedEvent evt) {
-            _currentArea = new Area() {
-                Name = evt.Name,
-                Type = evt.Type
+        public void SetCurrentArea(string area, string type)
+        {
+            _currentArea = new Area()
+            {
+                Name = area,
+                Type = type
             };
         }
 
-        public Area GetCurrentArea() {
+        public Area GetCurrentArea()
+        {
             return _currentArea;
         }
 
-        public void SetOverlayHandle(IntPtr handle) {
+        public void SetOverlayHandle(IntPtr handle)
+        {
             _overlayHandle = handle;
         }
 
-        public bool EnsurePoeAlive() {
+        public bool EnsurePoeAlive()
+        {
             return _poeWindowService.EnsurePoeWindowAlive();
         }
 
-        public IntPtr GetOverlayHandle() {
+        public IntPtr GetOverlayHandle()
+        {
             return _overlayHandle;
         }
 
-        public bool FocusGame() {
+        public bool FocusGame()
+        {
             return _poeWindowService.Focus();
         }
 
-        public bool GameFocused() {
+        public bool GameFocused()
+        {
             return _poeWindowService.Focused;
         }
 
-        public void HideOverlay() {
-            OnToggleOverlayVisibility(true);
+        public void HideOverlay()
+        {
+            OnToggleOverlayVisibility?.Invoke(true);
         }
 
-        public void ShowOverlay() {
-            OnToggleOverlayVisibility(false);
+        public void ShowOverlay()
+        {
+            OnToggleOverlayVisibility?.Invoke(false);
         }
 
-        public void ShowChaosRecipeOverlay() {
-            OnToggleChaosRecipeOverlayVisibility(true);
+        public void ShowChaosRecipeOverlay()
+        {
+            OnToggleChaosRecipeOverlayVisibility?.Invoke(true);
         }
 
-        public void HideChaosRecipeOverlay() {
-            OnToggleChaosRecipeOverlayVisibility(false);
+        public void HideChaosRecipeOverlay()
+        {
+            OnToggleChaosRecipeOverlayVisibility?.Invoke(false);
         }
 
-        public void ClientFileReady() {
-            _clientFileService.StartWatching();
+        public void ClientFileReady()
+        {
+            _clientFileService.StartWatching(GetClientFilePath());
         }
 
-        public void EnsureNotHighlightingItem() {
-            string text = _clipboardService.GetClipboard();
+        public void EnsureNotHighlightingItem()
+        {
+            var text = _clipboardService.GetClipboard();
 
             Thread.Sleep(100);
             SendCtrlA();
             SendCtrlC();
 
-            string newText = _clipboardService.GetClipboard();
+            var newText = _clipboardService.GetClipboard();
 
-            if (text == newText) {
+            if (text == newText)
+            {
                 return;
             }
 
-            if (newText.IndexOf("--") != -1 || newText.IndexOf("\n") != -1) {
+            if (newText.IndexOf("--", StringComparison.Ordinal) != -1 ||
+                newText.IndexOf("\n", StringComparison.Ordinal) != -1)
+            {
                 SendEscape();
             }
         }
 
-        public void NewTradeChatLine(TradeChatLine line) {
-            OnNewTradeChatLine(line);
+        public void NewTradeChatLine(TradeChatLine line)
+        {
+            OnNewTradeChatLine?.Invoke(line);
         }
 
-        public void PoeWindowReady() {
+        public void PoeWindowReady()
+        {
             _keyboardService.HookProcess(_poeWindowService.ProcessId);
             SetShortcuts();
         }
 
-        public void HandleKeyboardInput(KeyboardMessageEventArgs evt) {
+        public void HandleKeyboardInput(KeyboardMessageEventArgs evt)
+        {
             _shortcutService.HandleShortcut(evt);
         }
 
-        public void NewClientFileLine(string line) {
-            Task.Run(() => {
-                _parsingService.ParseClientLine(line);
+        // TODO: handle chat logEntries for chat scan
+        public void NewClientFileLine(string line)
+        {
+            Task.Run(() =>
+            {
+                //    _parsingService.ParseClientLine(line);
 
-                if (line.IndexOf("$") == -1) {
+                if (line.IndexOf("$") == -1)
+                {
                     return;
                 }
 
@@ -214,117 +262,146 @@ namespace Menagerie.Core.Services
 
                 var chatScanWords = GetConfig().ChatScanWords;
 
-                foreach (var word in chatScanWords) {
-                    if (loweredLine.IndexOf(word) != -1) {
-                        _parsingService.ParseTradeChatLine(line, chatScanWords);
+                foreach (var word in chatScanWords)
+                {
+                    if (loweredLine.IndexOf(word) != -1)
+                    {
+                        //   _parsingService.ParseTradeChatLine(line, chatScanWords);
                         break;
                     }
                 }
             });
         }
 
-        public string GetClientFilePath() {
+        public string GetClientFilePath()
+        {
             return _poeWindowService.ClientFilePath;
         }
 
-        public void NewClipboardText(string text) {
-            Task.Run(() => {
-                _parsingService.ParseClipboardLine(text);
-            });
+        public void NewClipboardText(string text)
+        {
+            Task.Run(() => { _clientFileService.LogService.Parse(text); });
         }
 
-        public void StashApiUpdated() {
+        public void StashApiUpdated()
+        {
             _poeApiService.StashApiReady();
         }
 
-        public void NewChaosRecipeResult(ChaosRecipeResult result) {
-            OnNewChaosRecipeResult(result);
+        public void NewChaosRecipeResult(ChaosRecipeResult result)
+        {
+            OnNewChaosRecipeResult?.Invoke(result);
         }
 
-        public int GetLastOfferId() {
-            try {
+        public int GetLastOfferId()
+        {
+            try
+            {
                 return _appDataService.GetDocuments<Offer>(AppDataService.COLLECTION_TRADES, t => true)
                     .Select(t => t.Id)
                     .Max();
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 return 0;
             }
         }
 
-        public TradeRequest CreateTradeRequest(Offer offer) {
+        public TradeRequest CreateTradeRequest(Offer offer)
+        {
             return _poeApiService.CreateTradeRequest(offer);
         }
 
-        public async Task<SearchResult> GetTradeRequestResults(TradeRequest request, string league) {
+        public async Task<SearchResult> GetTradeRequestResults(TradeRequest request, string league)
+        {
             return await _poeApiService.GetTradeRequestResults(request, league);
         }
 
-        public PriceCheckResult GetTradeResults(SearchResult search, int nbResults = 10) {
+        public PriceCheckResult GetTradeResults(SearchResult search, int nbResults = 10)
+        {
             return _poeApiService.GetTradeResults(search, nbResults);
         }
 
-        public async Task<PriceCheckResult> PriceCheck(Offer offer, int nbResults = 10) {
+        public async Task<PriceCheckResult> PriceCheck(Offer offer, int nbResults = 10)
+        {
             return await _priceCheckingService.PriceCheck(offer, nbResults);
         }
 
-        public double GetChaosValueOfCurrency(string currency) {
+        public double GetChaosValueOfCurrency(string currency)
+        {
             return _poeNinjaService.GetCurrencyChaosValue(currency);
         }
 
-        public double GetChaosValueOfRealNameCurrency(string currency) {
+        public double GetChaosValueOfRealNameCurrency(string currency)
+        {
             return _currencyService.GetChaosValue(currency);
         }
 
-        public string GetCurrencyRealName(string currency) {
+        public string GetCurrencyRealName(string currency)
+        {
             return _currencyService.GetRealName(currency);
         }
 
-        public void SavePoeNinjaCaches(PoeNinjaCaches caches) {
+        public void SavePoeNinjaCaches(PoeNinjaCaches caches)
+        {
             _appDataService.DeleteAllDocument(AppDataService.COLLECTION_POE_NINJA_CACHES);
             _appDataService.InsertDocument<PoeNinjaCaches>(AppDataService.COLLECTION_POE_NINJA_CACHES, caches);
         }
 
-        public PoeNinjaCaches GetPoeNinjaCaches() {
+        public PoeNinjaCaches GetPoeNinjaCaches()
+        {
             return _appDataService.GetDocument<PoeNinjaCaches>(AppDataService.COLLECTION_POE_NINJA_CACHES);
         }
 
-        public bool IsPoeNinjaCacheReady() {
+        public bool IsPoeNinjaCacheReady()
+        {
             return _poeNinjaService.CacheReady;
         }
 
-        public string GetCurrencyImageLink(string currencyName) {
+        public string GetCurrencyImageLink(string currencyName)
+        {
             return _currencyService.GetCurrencyImageLink(currencyName);
         }
 
-        public void SaveImage(AppImage image) {
+        public void SaveImage(AppImage image)
+        {
             _appDataService.InsertDocument(AppDataService.COLLECTION_IMAGES, image);
         }
 
-        public AppImage GetImage(string link) {
+        public AppImage GetImage(string link)
+        {
             return _appDataService.GetDocument<AppImage>(AppDataService.COLLECTION_IMAGES, e => e.Link == link);
         }
 
-        public void NewOffer(Offer offer) {
+        public void NewOffer(Offer offer)
+        {
             var config = GetConfig();
 
-            if (config.FilterSoldOffers && _tradeService.IsAlreadySold(offer)) {
+            if (config.FilterSoldOffers && _tradeService.IsAlreadySold(offer))
+            {
                 return;
             }
 
-            if (config.OnlyShowOffersOfCurrentLeague && !offer.IsOutgoing && offer.League != GetConfig().CurrentLeague) {
+            if (config.OnlyShowOffersOfCurrentLeague && !offer.IsOutgoing && offer.League != GetConfig().CurrentLeague)
+            {
                 return;
             }
 
-            if (!string.IsNullOrEmpty(config.PlayerName) && !offer.IsOutgoing) {
-                Task.Run(() => {
-                    try {
+            if (!string.IsNullOrEmpty(config.PlayerName) && !offer.IsOutgoing)
+            {
+                Task.Run(() =>
+                {
+                    try
+                    {
                         var priceCheck = _poeApiService.VerifyScam(offer);
 
-                        if (priceCheck != null) {
+                        if (priceCheck != null)
+                        {
                             OnOfferScam(priceCheck, offer);
                         }
-                    } catch (Exception e) {
-
+                    }
+                    catch (Exception e)
+                    {
                     }
                 });
             }
@@ -332,101 +409,126 @@ namespace Menagerie.Core.Services
             OnNewOffer(offer);
         }
 
-        public void OfferCompleted(Offer offer) {
+        public void OfferCompleted(Offer offer)
+        {
             _tradeService.AddSoldOffer(offer);
         }
 
-        public List<Offer> GetCompletedTrades() {
+        public List<Offer> GetCompletedTrades()
+        {
             return _appDataService.GetDocuments<Offer>(AppDataService.COLLECTION_TRADES)
                 .OrderBy(t => t.Time)
                 .ToList();
         }
 
-        public void NewPlayerJoined(string playerName) {
-            OnNewPlayerJoined(playerName);
+        public void NewPlayerJoined(string playerName)
+        {
+            OnNewPlayerJoined?.Invoke(playerName);
         }
 
-        public void NewChatEvent(Enums.ChatEventEnum evt) {
-            OnNewChatEvent(evt);
+        public void NewChatEvent(Enums.ChatEventEnum evt)
+        {
+            OnNewChatEvent?.Invoke(evt);
         }
 
-        public Config GetConfig() {
+        public Config GetConfig()
+        {
             return _appDataService.GetDocument<Config>(AppDataService.COLLECTION_CONFIG);
         }
 
-        public void SetConfig(Config config) {
+        public void SetConfig(Config config)
+        {
             var currentConfig = GetConfig();
 
             _appDataService.UpdateDocument<Config>(AppDataService.COLLECTION_CONFIG, config);
 
-            if (currentConfig == null || currentConfig.CurrentLeague != config.CurrentLeague) {
+            if (currentConfig == null || currentConfig.CurrentLeague != config.CurrentLeague)
+            {
                 _poeApiService.UpdateCacheItemsCache();
             }
 
-            if (config.ChaosRecipeEnabled) {
+            if (config.ChaosRecipeEnabled)
+            {
                 ShowChaosRecipeOverlay();
-            } else {
+            }
+            else
+            {
                 HideChaosRecipeOverlay();
             }
         }
 
-        public void SaveTrade(Offer offer) {
+        public void SaveTrade(Offer offer)
+        {
             _appDataService.InsertDocument<Offer>(AppDataService.COLLECTION_TRADES, offer);
         }
 
-        public async Task<List<string>> GetLeagues() {
+        public async Task<List<string>> GetLeagues()
+        {
             return await _poeApiService.GetLeagues();
         }
 
-        public void KeyPress(Key key) {
+        public void KeyPress(Key key)
+        {
             _keyboardService.KeyPress(key);
         }
 
-        public void KeyUp(Key key) {
+        public void KeyUp(Key key)
+        {
             _keyboardService.KeyUp(key);
         }
 
-        public void KeyDown(Key key) {
+        public void KeyDown(Key key)
+        {
             _keyboardService.KeyDown(key);
         }
 
-        public void ClearSpecialKeys() {
+        public void ClearSpecialKeys()
+        {
             _keyboardService.ClearSpecialKeys();
         }
 
-        public void ModifiedKeyStroke(Key modifier, Key key) {
+        public void ModifiedKeyStroke(Key modifier, Key key)
+        {
             _keyboardService.ModifiedKeyStroke(modifier, key);
         }
 
-        public void SendEnter() {
+        public void SendEnter()
+        {
             _keyboardService.SendEnter();
         }
 
-        public void SendCtrlA() {
+        public void SendCtrlA()
+        {
             ModifiedKeyStroke(Key.Control, Key.A);
         }
 
-        public void SendCtrlC() {
+        public void SendCtrlC()
+        {
             ModifiedKeyStroke(Key.Control, Key.C);
         }
 
-        public void SendBackspace() {
+        public void SendBackspace()
+        {
             _keyboardService.SendBackspace();
         }
 
-        public void SendCtrlV() {
-            ModifiedKeyStroke(Key.Control, Key.A);
+        public void SendCtrlV()
+        {
+            ModifiedKeyStroke(Key.Control, Key.V);
         }
 
-        public void SendEscape() {
+        public void SendEscape()
+        {
             _keyboardService.SendEscape();
         }
 
-        public bool SetClipboard(string text) {
+        public bool SetClipboard(string text)
+        {
             return _clipboardService.SetClipboard(text);
         }
 
-        public string ReplaceVars(string msg, Offer offer) {
+        public string ReplaceVars(string msg, Offer offer)
+        {
             Area currentArea = GetCurrentArea();
 
             msg = msg.Replace("{item}", offer.ItemName)
@@ -435,38 +537,48 @@ namespace Menagerie.Core.Services
                 .Replace("{player}", offer.PlayerName);
 
 
-            return currentArea != null ? msg.Replace("{location}", $"{currentArea.Name} ({currentArea.Type})") : msg.Replace("{location}", "Unknown location");
+            return currentArea != null
+                ? msg.Replace("{location}", $"{currentArea.Name} ({currentArea.Type})")
+                : msg.Replace("{location}", "Unknown location");
         }
 
-        public void SendTradeChatCommand(string player) {
+        public void SendTradeChatCommand(string player)
+        {
             _chatService.SendTradeCommand(player);
         }
 
-        public void SendHideoutChatCommand(string player) {
+        public void SendHideoutChatCommand(string player)
+        {
             _chatService.SendHideoutCommand(player);
         }
 
-        public void SendHideoutChatCommand() {
+        public void SendHideoutChatCommand()
+        {
             _chatService.SendHideoutCommand();
         }
 
-        public void SendChatMessage(string msg, int delay = 0) {
+        public void SendChatMessage(string msg, int delay = 0)
+        {
             _chatService.SendChatMessage(msg, delay);
         }
 
-        public void SendKickChatCommand(string player) {
+        public void SendKickChatCommand(string player)
+        {
             _chatService.SendKickCommand(player);
         }
 
-        public void SendInviteChatCommand(string player) {
+        public void SendInviteChatCommand(string player)
+        {
             _chatService.SendInviteCommand(player);
         }
 
-        public void HightlightStash(string text) {
+        public void HightlightStash(string text)
+        {
             _gameService.HightlightStash(text);
         }
 
-        public void Start() {
+        public void Start()
+        {
             _appDataService.Start();
             _chatService.Start();
             _clientFileService.Start();
@@ -474,7 +586,6 @@ namespace Menagerie.Core.Services
             _currencyService.Start();
             _gameService.Start();
             _keyboardService.Start();
-            _parsingService.Start();
             _poeWindowService.Start();
             _shortcutService.Start();
             _tradeService.Start();

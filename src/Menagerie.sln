@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Menagerie.Core.NET5", "Mena
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menagerie.Test.LinuxHook", "Menagerie.Test.LinuxHook\Menagerie.Test.LinuxHook.csproj", "{466D5E09-38F7-44AF-B905-4230974166D6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menagerie.NET5", "Menagerie.NET5\Menagerie.NET5.csproj", "{69FEB7D7-FF83-4F55-A32D-0555F501FCB1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{466D5E09-38F7-44AF-B905-4230974166D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{466D5E09-38F7-44AF-B905-4230974166D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{466D5E09-38F7-44AF-B905-4230974166D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69FEB7D7-FF83-4F55-A32D-0555F501FCB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69FEB7D7-FF83-4F55-A32D-0555F501FCB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69FEB7D7-FF83-4F55-A32D-0555F501FCB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69FEB7D7-FF83-4F55-A32D-0555F501FCB1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
