@@ -116,7 +116,7 @@ namespace Menagerie.Core.Services
             _shortcutService.RegisterShortcut(new Shortcut()
             {
                 Direction = KeyDirection.Down,
-                Key = Key.F5,
+                Key = (Key)116, // F5
                 Alt = false,
                 Control = false,
                 Shift = false,
