@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using PoeLogsParser.Enums;
+using PoeLogsParser.Models;
 using Winook;
 
 namespace Menagerie.Core.Services
@@ -116,7 +118,7 @@ namespace Menagerie.Core.Services
             _shortcutService.RegisterShortcut(new Shortcut()
             {
                 Direction = KeyDirection.Down,
-                Key = (Key)116, // F5
+                Key = (Key) 116, // F5
                 Alt = false,
                 Control = false,
                 Shift = false,
@@ -246,31 +248,76 @@ namespace Menagerie.Core.Services
             _shortcutService.HandleShortcut(evt);
         }
 
-        // TODO: handle chat logEntries for chat scan
-        public void NewClientFileLine(string line)
+        public void ChatScan(ChatMessageLogEntry entry)
         {
             Task.Run(() =>
             {
-                //    _parsingService.ParseClientLine(line);
-
-                if (line.IndexOf("$") == -1)
-                {
-                    return;
-                }
-
-                string loweredLine = line.ToLower().Substring(line.IndexOf("]") + 1);
-
                 var chatScanWords = GetConfig().ChatScanWords;
 
-                foreach (var word in chatScanWords)
+                foreach (var word in chatScanWords.Where(word =>
+                    entry.Message.Contains(word) || entry.Player.Contains(word)))
                 {
-                    if (loweredLine.IndexOf(word) != -1)
-                    {
-                        //   _parsingService.ParseTradeChatLine(line, chatScanWords);
-                        break;
-                    }
+                    var line = HighlightScannedChatMessage(entry, chatScanWords);
+                    NewTradeChatLine(line);
                 }
             });
+        }
+
+        private TradeChatLine HighlightScannedChatMessage(ChatMessageLogEntry entry, List<string> words)
+        {
+            var tradeChatLine = new TradeChatLine(entry);
+            var tradeWords = new List<TradeChatWords>();
+
+            var message = entry.Message;
+
+            foreach (var word in words)
+            {
+                var index = 0;
+
+                while ((index = message.IndexOf(word, StringComparison.Ordinal)) != -1)
+                {
+                    if (index == -1) continue;
+                    var endIndex = index + word.Length;
+
+                    if (endIndex > message.Length) continue;
+                    tradeWords.Add(new TradeChatWords()
+                    {
+                        Highlighted = true,
+                        Words = message.Substring(index, endIndex - index),
+                        Index = index
+                    });
+
+                    message = $"{message[..index]}~{message[endIndex..]}";
+                }
+            }
+
+            var currentIndex = 0;
+            while (currentIndex < message.Length)
+            {
+                var nextIndex = message.IndexOf('~', currentIndex);
+
+                if (nextIndex == -1)
+                {
+                    tradeWords.Add(new TradeChatWords()
+                    {
+                        Words = message[currentIndex..],
+                        Index = currentIndex
+                    });
+                    break;
+                }
+
+                tradeWords.Add(new TradeChatWords()
+                {
+                    Words = message.Substring(currentIndex, nextIndex - currentIndex),
+                    Index = currentIndex
+                });
+
+                currentIndex = nextIndex + 1;
+            }
+
+            tradeChatLine.Words = tradeWords.OrderBy(w => w.Index).ToList();
+
+            return tradeChatLine;
         }
 
         public string GetClientFilePath()

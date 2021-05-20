@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Menagerie.Core.Extensions;
 using log4net;
+using log4net.Repository.Hierarchy;
 using Newtonsoft.Json;
 using PoeLogsParser.Models;
 using PoeLogsParser.Models.Abstractions;
@@ -54,7 +55,13 @@ namespace Menagerie.Core.Services
             _logService.NewTradeLogEntry += LogServiceOnNewTradeLogEntry;
             _logService.NewAreaChangeLogEntry += LogServiceOnNewAreaChangeLogEntry;
             _logService.NewPlayerJoinedAreaLogEntry += LogServiceOnNewPlayerJoinedAreaLogEntry;
+            _logService.NewChatMessageLogEntry += LogServiceOnNewChatMessageLogEntry;
             _logService.NewLogEntry += LogServiceOnNewLogEntry;
+        }
+
+        private void LogServiceOnNewChatMessageLogEntry(ChatMessageLogEntry logEntry)
+        {
+            AppService.Instance.ChatScan(logEntry);
         }
 
         private void LoadLocations()
