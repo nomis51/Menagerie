@@ -243,7 +243,7 @@ namespace Menagerie
 
             int id = (int) ((Button) sender).Tag;
             var offer = vm.GetOffer(id);
-
+            
             if (offer.State != OfferState.Initial)
             {
                 return;
@@ -260,7 +260,7 @@ namespace Menagerie
             int id = (int) ((Button) sender).Tag;
             var offer = vm.GetOffer(id);
 
-            if (offer.State != OfferState.HideoutJoined)
+            if (offer.State == OfferState.HideoutJoined)
             {
                 return;
             }
