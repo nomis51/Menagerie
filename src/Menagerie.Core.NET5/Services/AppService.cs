@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using PoeLogsParser.Enums;
 using PoeLogsParser.Models;
 using Winook;
 
@@ -246,6 +247,8 @@ namespace Menagerie.Core.Services
 
         public void ChatScan(ChatMessageLogEntry entry)
         {
+            if (!entry.Types.Contains(LogEntryType.Trade)) return;
+
             Task.Run(() =>
             {
                 var chatScanWords = GetConfig().ChatScanWords;

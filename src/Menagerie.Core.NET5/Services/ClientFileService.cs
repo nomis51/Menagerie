@@ -83,6 +83,7 @@ namespace Menagerie.Core.Services
 
         private static void LogServiceOnNewLogEntry(ILogEntry logEntry)
         {
+            var g = 0;
             // TODO: deal with generic logEntries
         }
 
