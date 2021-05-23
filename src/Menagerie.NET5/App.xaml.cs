@@ -17,6 +17,7 @@ namespace Menagerie
         private static readonly ILog Log = LogManager.GetLogger(typeof(App));
 
         private readonly SplashWindow _splash;
+        private readonly OverlayWindow _overlay;
 
         public App()
         {
@@ -27,6 +28,7 @@ namespace Menagerie
             (new UpdateService()).CheckUpdates();
 
             _splash = new SplashWindow();
+            _overlay = new OverlayWindow();
             _splash.Show();
 
             Task.Run(() =>
