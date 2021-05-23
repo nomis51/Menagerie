@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 
-namespace Menagerie.Core.Models {
-    public class Config : DbModel {
+namespace Menagerie.Core.Models
+{
+    public class Config : DbModel
+    {
         public string PlayerName { get; set; }
         public string CurrentLeague { get; set; }
         public bool OnlyShowOffersOfCurrentLeague { get; set; }
@@ -26,7 +28,6 @@ namespace Menagerie.Core.Models {
         public Point IncomingOffersControlsGridOffset { get; set; }
         public Point OutgoingOffersGridOffset { get; set; }
         public Point ChaosRecipeGridOffset { get; set; }
-        public bool ChaosRecipeOveralyDockMode {get;set;}
-
+        public bool ChaosRecipeOveralyDockMode { get; set; }
     }
 }

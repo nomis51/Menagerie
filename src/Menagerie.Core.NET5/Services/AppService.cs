@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using PoeLogsParser.Enums;
 using PoeLogsParser.Models;
 using Winook;
 
@@ -17,19 +16,16 @@ namespace Menagerie.Core.Services
     {
         #region Singleton
 
-        private static object _lockInstance = new object();
+        private static readonly object LockInstance = new object();
         private static AppService _instance;
 
         public static AppService Instance
         {
             get
             {
-                lock (_lockInstance)
+                lock (LockInstance)
                 {
-                    if (_instance == null)
-                    {
-                        _instance = new AppService();
-                    }
+                    _instance ??= new AppService();
                 }
 
                 return _instance;
@@ -79,22 +75,22 @@ namespace Menagerie.Core.Services
         #endregion
 
         private IntPtr _overlayHandle;
-        private AppDataService _appDataService;
-        private ChatService _chatService;
-        private ClientFileService _clientFileService;
-        private ClipboardService _clipboardService;
-        private CurrencyService _currencyService;
-        private GameService _gameService;
-        private PoeApiService _poeApiService;
-        private PoeWindowService _poeWindowService;
-        private KeyboardService _keyboardService;
-        private ShortcutService _shortcutService;
-        private TradeService _tradeService;
-        private PoeNinjaService _poeNinjaService;
-        private PriceCheckingService _priceCheckingService;
+        private readonly AppDataService _appDataService;
+        private readonly ChatService _chatService;
+        private readonly ClientFileService _clientFileService;
+        private readonly ClipboardService _clipboardService;
+        private readonly CurrencyService _currencyService;
+        private readonly GameService _gameService;
+        private readonly PoeApiService _poeApiService;
+        private readonly PoeWindowService _poeWindowService;
+        private readonly KeyboardService _keyboardService;
+        private readonly ShortcutService _shortcutService;
+        private readonly TradeService _tradeService;
+        private readonly PoeNinjaService _poeNinjaService;
+        private readonly PriceCheckingService _priceCheckingService;
 
         private Area _currentArea;
-        private static AppVersion _appVersion = new AppVersion();
+        private static AppVersion _appVersion = new();
 
         private AppService()
         {
@@ -155,7 +151,7 @@ namespace Menagerie.Core.Services
             };
         }
 
-        public Area GetCurrentArea()
+        private Area GetCurrentArea()
         {
             return _currentArea;
         }
@@ -195,12 +191,12 @@ namespace Menagerie.Core.Services
             OnToggleOverlayVisibility?.Invoke(false);
         }
 
-        public void ShowChaosRecipeOverlay()
+        private void ShowChaosRecipeOverlay()
         {
             OnToggleChaosRecipeOverlayVisibility?.Invoke(true);
         }
 
-        public void HideChaosRecipeOverlay()
+        private void HideChaosRecipeOverlay()
         {
             OnToggleChaosRecipeOverlayVisibility?.Invoke(false);
         }
@@ -212,13 +208,13 @@ namespace Menagerie.Core.Services
 
         public void EnsureNotHighlightingItem()
         {
-            var text = _clipboardService.GetClipboard();
+            var text = ClipboardService.GetClipboard();
 
             Thread.Sleep(100);
             SendCtrlA();
             SendCtrlC();
 
-            var newText = _clipboardService.GetClipboard();
+            var newText = ClipboardService.GetClipboard();
 
             if (text == newText)
             {
@@ -232,7 +228,7 @@ namespace Menagerie.Core.Services
             }
         }
 
-        public void NewTradeChatLine(TradeChatLine line)
+        private void NewTradeChatLine(TradeChatLine line)
         {
             OnNewTradeChatLine?.Invoke(line);
         }
@@ -254,7 +250,7 @@ namespace Menagerie.Core.Services
             {
                 var chatScanWords = GetConfig().ChatScanWords;
 
-                foreach (var word in chatScanWords.Where(word =>
+                foreach (var unused in chatScanWords.Where(word =>
                     entry.Message.Contains(word) || entry.Player.Contains(word)))
                 {
                     var line = HighlightScannedChatMessage(entry, chatScanWords);
@@ -263,7 +259,7 @@ namespace Menagerie.Core.Services
             });
         }
 
-        private TradeChatLine HighlightScannedChatMessage(ChatMessageLogEntry entry, List<string> words)
+        private static TradeChatLine HighlightScannedChatMessage(ChatMessageLogEntry entry, IEnumerable<string> words)
         {
             var tradeChatLine = new TradeChatLine(entry);
             var tradeWords = new List<TradeChatWords>();
@@ -272,7 +268,7 @@ namespace Menagerie.Core.Services
 
             foreach (var word in words)
             {
-                var index = 0;
+                int index;
 
                 while ((index = message.IndexOf(word, StringComparison.Ordinal)) != -1)
                 {
@@ -320,7 +316,7 @@ namespace Menagerie.Core.Services
             return tradeChatLine;
         }
 
-        public string GetClientFilePath()
+        private string GetClientFilePath()
         {
             return _poeWindowService.ClientFilePath;
         }
@@ -340,23 +336,9 @@ namespace Menagerie.Core.Services
             OnNewChaosRecipeResult?.Invoke(result);
         }
 
-        public int GetLastOfferId()
-        {
-            try
-            {
-                return _appDataService.GetDocuments<Offer>(AppDataService.COLLECTION_TRADES, t => true)
-                    .Select(t => t.Id)
-                    .Max();
-            }
-            catch (Exception e)
-            {
-                return 0;
-            }
-        }
-
         public TradeRequest CreateTradeRequest(Offer offer)
         {
-            return _poeApiService.CreateTradeRequest(offer);
+            return PoeApiService.CreateTradeRequest(offer);
         }
 
         public async Task<SearchResult> GetTradeRequestResults(TradeRequest request, string league)
@@ -371,7 +353,7 @@ namespace Menagerie.Core.Services
 
         public async Task<PriceCheckResult> PriceCheck(Offer offer, int nbResults = 10)
         {
-            return await _priceCheckingService.PriceCheck(offer, nbResults);
+            return await PriceCheckingService.PriceCheck(offer, nbResults);
         }
 
         public double GetChaosValueOfCurrency(string currency)
@@ -381,18 +363,18 @@ namespace Menagerie.Core.Services
 
         public double GetChaosValueOfRealNameCurrency(string currency)
         {
-            return _currencyService.GetChaosValue(currency);
+            return CurrencyService.GetChaosValue(currency);
         }
 
         public string GetCurrencyRealName(string currency)
         {
-            return _currencyService.GetRealName(currency);
+            return CurrencyService.GetRealName(currency);
         }
 
         public void SavePoeNinjaCaches(PoeNinjaCaches caches)
         {
             _appDataService.DeleteAllDocument(AppDataService.COLLECTION_POE_NINJA_CACHES);
-            _appDataService.InsertDocument<PoeNinjaCaches>(AppDataService.COLLECTION_POE_NINJA_CACHES, caches);
+            _appDataService.InsertDocument(AppDataService.COLLECTION_POE_NINJA_CACHES, caches);
         }
 
         public PoeNinjaCaches GetPoeNinjaCaches()
@@ -444,16 +426,17 @@ namespace Menagerie.Core.Services
 
                         if (priceCheck != null)
                         {
-                            OnOfferScam(priceCheck, offer);
+                            OnOfferScam?.Invoke(priceCheck, offer);
                         }
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
+                        // ignored
                     }
                 });
             }
 
-            OnNewOffer(offer);
+            OnNewOffer?.Invoke(offer);
         }
 
         public void OfferCompleted(Offer offer)
@@ -487,7 +470,7 @@ namespace Menagerie.Core.Services
         {
             var currentConfig = GetConfig();
 
-            _appDataService.UpdateDocument<Config>(AppDataService.COLLECTION_CONFIG, config);
+            _appDataService.UpdateDocument(AppDataService.COLLECTION_CONFIG, config);
 
             if (currentConfig == null || currentConfig.CurrentLeague != config.CurrentLeague)
             {
@@ -506,7 +489,7 @@ namespace Menagerie.Core.Services
 
         public void SaveTrade(Offer offer)
         {
-            _appDataService.InsertDocument<Offer>(AppDataService.COLLECTION_TRADES, offer);
+            _appDataService.InsertDocument(AppDataService.COLLECTION_TRADES, offer);
         }
 
         public async Task<List<string>> GetLeagues()
@@ -549,7 +532,7 @@ namespace Menagerie.Core.Services
             ModifiedKeyStroke(Key.Control, Key.A);
         }
 
-        public void SendCtrlC()
+        private void SendCtrlC()
         {
             ModifiedKeyStroke(Key.Control, Key.C);
         }
@@ -564,19 +547,19 @@ namespace Menagerie.Core.Services
             ModifiedKeyStroke(Key.Control, Key.V);
         }
 
-        public void SendEscape()
+        private void SendEscape()
         {
             _keyboardService.SendEscape();
         }
 
         public bool SetClipboard(string text)
         {
-            return _clipboardService.SetClipboard(text);
+            return ClipboardService.SetClipboard(text);
         }
 
         public string ReplaceVars(string msg, Offer offer)
         {
-            Area currentArea = GetCurrentArea();
+            var currentArea = GetCurrentArea();
 
             msg = msg.Replace("{item}", offer.ItemName)
                 .Replace("{price}", $"{offer.Price} {offer.Currency}")
@@ -589,39 +572,39 @@ namespace Menagerie.Core.Services
                 : msg.Replace("{location}", "Unknown location");
         }
 
-        public void SendTradeChatCommand(string player)
+        public static void SendTradeChatCommand(string player)
         {
-            _chatService.SendTradeCommand(player);
+            ChatService.SendTradeCommand(player);
         }
 
-        public void SendHideoutChatCommand(string player)
+        private static void SendHideoutChatCommand(string player)
         {
-            _chatService.SendHideoutCommand(player);
+            ChatService.SendHideoutCommand(player);
         }
 
-        public void SendHideoutChatCommand()
+        private static void SendHideoutChatCommand()
         {
-            _chatService.SendHideoutCommand();
+            ChatService.SendHideoutCommand();
         }
 
-        public void SendChatMessage(string msg, int delay = 0)
+        public static void SendChatMessage(string msg, int delay = 0)
         {
-            _chatService.SendChatMessage(msg, delay);
+            ChatService.SendChatMessage(msg, delay);
         }
 
-        public void SendKickChatCommand(string player)
+        public static void SendKickChatCommand(string player)
         {
-            _chatService.SendKickCommand(player);
+            ChatService.SendKickCommand(player);
         }
 
-        public void SendInviteChatCommand(string player)
+        public static void SendInviteChatCommand(string player)
         {
-            _chatService.SendInviteCommand(player);
+            ChatService.SendInviteCommand(player);
         }
 
-        public void HightlightStash(string text)
+        public static void HighlightStash(string text)
         {
-            _gameService.HightlightStash(text);
+            GameService.HighlightStash(text);
         }
 
         public void Start()

@@ -4,11 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Menagerie.Core.Extensions;
 using log4net;
-using log4net.Repository.Hierarchy;
 using Newtonsoft.Json;
 using PoeLogsParser.Models;
 using PoeLogsParser.Models.Abstractions;
@@ -27,14 +24,13 @@ namespace Menagerie.Core.Services
 
         #region Members
 
-        private LogService _logService;
         private readonly Dictionary<string, Area> _areas = new Dictionary<string, Area>();
 
         #endregion
 
         #region Props
 
-        public LogService LogService => _logService;
+        public LogService LogService { get; private set; }
 
         #endregion
 
@@ -51,15 +47,15 @@ namespace Menagerie.Core.Services
 
         public void StartWatching(string logFilePath)
         {
-            _logService = new LogService(logFilePath);
-            _logService.NewTradeLogEntry += LogServiceOnNewTradeLogEntry;
-            _logService.NewAreaChangeLogEntry += LogServiceOnNewAreaChangeLogEntry;
-            _logService.NewPlayerJoinedAreaLogEntry += LogServiceOnNewPlayerJoinedAreaLogEntry;
-            _logService.NewChatMessageLogEntry += LogServiceOnNewChatMessageLogEntry;
-            _logService.NewLogEntry += LogServiceOnNewLogEntry;
+            LogService = new LogService(logFilePath);
+            LogService.NewTradeLogEntry += LogServiceOnNewTradeLogEntry;
+            LogService.NewAreaChangeLogEntry += LogServiceOnNewAreaChangeLogEntry;
+            LogService.NewPlayerJoinedAreaLogEntry += LogServiceOnNewPlayerJoinedAreaLogEntry;
+            LogService.NewChatMessageLogEntry += LogServiceOnNewChatMessageLogEntry;
+            LogService.NewLogEntry += LogServiceOnNewLogEntry;
         }
 
-        private void LogServiceOnNewChatMessageLogEntry(ChatMessageLogEntry logEntry)
+        private static void LogServiceOnNewChatMessageLogEntry(ChatMessageLogEntry logEntry)
         {
             AppService.Instance.ChatScan(logEntry);
         }
@@ -85,12 +81,12 @@ namespace Menagerie.Core.Services
             }
         }
 
-        private void LogServiceOnNewLogEntry(ILogEntry logEntry)
+        private static void LogServiceOnNewLogEntry(ILogEntry logEntry)
         {
             // TODO: deal with generic logEntries
         }
 
-        private void LogServiceOnNewPlayerJoinedAreaLogEntry(PlayerJoinedAreaLogEntry logEntry)
+        private static void LogServiceOnNewPlayerJoinedAreaLogEntry(PlayerJoinedAreaLogEntry logEntry)
         {
             AppService.Instance.NewPlayerJoined(logEntry.Player);
         }
@@ -107,7 +103,7 @@ namespace Menagerie.Core.Services
             AppService.Instance.SetCurrentArea(logEntry.Area, type);
         }
 
-        private void LogServiceOnNewTradeLogEntry(TradeLogEntry logEntry)
+        private static void LogServiceOnNewTradeLogEntry(TradeLogEntry logEntry)
         {
             AppService.Instance.NewOffer(new Offer(logEntry));
         }

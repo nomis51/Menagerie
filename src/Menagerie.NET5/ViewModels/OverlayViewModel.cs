@@ -546,7 +546,7 @@ namespace Menagerie.ViewModels {
 
                 // EnsureNotHighlighted(index);
 
-                AppService.Instance.SendTradeChatCommand(OutgoingOffers[index].PlayerName);
+                AppService.SendTradeChatCommand(OutgoingOffers[index].PlayerName);
             } else {
                 if (!Offers[index].PlayerInvited) {
                     return;
@@ -557,7 +557,7 @@ namespace Menagerie.ViewModels {
 
                 //   EnsureNotHighlighted(index, true);
 
-                AppService.Instance.SendTradeChatCommand(Offers[index].PlayerName);
+                AppService.SendTradeChatCommand(Offers[index].PlayerName);
             }
         }
 
@@ -574,7 +574,7 @@ namespace Menagerie.ViewModels {
 
             //   EnsureNotHighlighted(index, true);
 
-            AppService.Instance.SendHideoutChatCommand(OutgoingOffers[index].PlayerName);
+            AppService.SendHideoutChatCommand(OutgoingOffers[index].PlayerName);
         }
 
         public void SendBusyWhisper(int id) {
@@ -591,7 +591,7 @@ namespace Menagerie.ViewModels {
 
             //    EnsureNotHighlighted(index);
 
-            AppService.Instance.SendChatMessage($"@{Offers[index].PlayerName} {AppService.Instance.ReplaceVars(AppService.Instance.GetConfig().BusyWhisper, new CoreModels.Offer() { ItemName = Offers[index].ItemName, PlayerName = Offers[index].PlayerName, Price = Offers[index].Price, Currency = Offers[index].Currency, League = Offers[index].League })}");
+            AppService.SendChatMessage($"@{Offers[index].PlayerName} {AppService.Instance.ReplaceVars(AppService.Instance.GetConfig().BusyWhisper, new CoreModels.Offer() { ItemName = Offers[index].ItemName, PlayerName = Offers[index].PlayerName, Price = Offers[index].Price, Currency = Offers[index].Currency, League = Offers[index].League })}");
         }
 
         public void SendReInvite(int id) {
@@ -609,9 +609,9 @@ namespace Menagerie.ViewModels {
             Thread t = new Thread(delegate () {
                 //     EnsureNotHighlighted(index);
 
-                AppService.Instance.SendKickChatCommand(Offers[index].PlayerName);
+                AppService.SendKickChatCommand(Offers[index].PlayerName);
                 Thread.Sleep(100);
-                AppService.Instance.SendInviteChatCommand(Offers[index].PlayerName);
+                AppService.SendInviteChatCommand(Offers[index].PlayerName);
             });
 
             t.SetApartmentState(ApartmentState.STA);
@@ -635,7 +635,7 @@ namespace Menagerie.ViewModels {
 
             //    EnsureNotHighlighted(index);
 
-            AppService.Instance.SendInviteChatCommand(Offers[index].PlayerName);
+            AppService.SendInviteChatCommand(Offers[index].PlayerName);
         }
 
         public void SendKick(int id, bool sayThanks = false) {
@@ -657,11 +657,11 @@ namespace Menagerie.ViewModels {
 
             Thread t = new Thread(delegate () {
                 //  EnsureNotHighlighted(index);
-                AppService.Instance.SendKickChatCommand(playerName);
+                AppService.SendKickChatCommand(playerName);
 
                 if (sayThanks) {
                     Thread.Sleep(250);
-                    AppService.Instance.SendChatMessage($"@{playerName} {AppService.Instance.ReplaceVars(AppService.Instance.GetConfig().ThanksWhisper, new CoreModels.Offer() { ItemName = Offers[index].ItemName, PlayerName = Offers[index].PlayerName, Price = Offers[index].Price, Currency = Offers[index].Currency, League = Offers[index].League })}");
+                    AppService.SendChatMessage($"@{playerName} {AppService.Instance.ReplaceVars(AppService.Instance.GetConfig().ThanksWhisper, new CoreModels.Offer() { ItemName = Offers[index].ItemName, PlayerName = Offers[index].PlayerName, Price = Offers[index].Price, Currency = Offers[index].Currency, League = Offers[index].League })}");
                 }
 
                 RemoveOffer(id);
@@ -688,12 +688,12 @@ namespace Menagerie.ViewModels {
                 var config = AppService.Instance.GetConfig();
 
                 if (!string.IsNullOrEmpty(config.PlayerName)) {
-                    AppService.Instance.SendKickChatCommand(config.PlayerName);
+                    AppService.SendKickChatCommand(config.PlayerName);
                 }
 
                 if (sayThanks) {
                     Thread.Sleep(100);
-                    AppService.Instance.SendChatMessage($"@{playerName} {(AppService.Instance.ReplaceVars(config.ThanksWhisper, new CoreModels.Offer() { ItemName = Offers[index].ItemName, PlayerName = Offers[index].PlayerName, Price = Offers[index].Price, Currency = Offers[index].Currency, League = Offers[index].League }))}");
+                    AppService.SendChatMessage($"@{playerName} {(AppService.Instance.ReplaceVars(config.ThanksWhisper, new CoreModels.Offer() { ItemName = Offers[index].ItemName, PlayerName = Offers[index].PlayerName, Price = Offers[index].Price, Currency = Offers[index].Currency, League = Offers[index].League }))}");
                 }
 
                 RemoveOffer(id, true);
@@ -746,7 +746,7 @@ namespace Menagerie.ViewModels {
 
             //    EnsureNotHighlighted(index);
 
-            AppService.Instance.SendChatMessage($"@{Offers[index].PlayerName} {AppService.Instance.ReplaceVars(AppService.Instance.GetConfig().StillInterestedWhisper, new CoreModels.Offer() { ItemName = Offers[index].ItemName, PlayerName = Offers[index].PlayerName, Price = Offers[index].Price, Currency = Offers[index].Currency, League = Offers[index].League })}");
+            AppService.SendChatMessage($"@{Offers[index].PlayerName} {AppService.Instance.ReplaceVars(AppService.Instance.GetConfig().StillInterestedWhisper, new CoreModels.Offer() { ItemName = Offers[index].ItemName, PlayerName = Offers[index].PlayerName, Price = Offers[index].Price, Currency = Offers[index].Currency, League = Offers[index].League })}");
         }
 
         public void SendSoldWhisper(int id) {
@@ -762,7 +762,7 @@ namespace Menagerie.ViewModels {
 
             //    EnsureNotHighlighted(index);
 
-            AppService.Instance.SendChatMessage($"@{Offers[index].PlayerName} {AppService.Instance.ReplaceVars(AppService.Instance.GetConfig().SoldWhisper, new CoreModels.Offer() { ItemName = Offers[index].ItemName, PlayerName = Offers[index].PlayerName, Price = Offers[index].Price, Currency = Offers[index].Currency, League = Offers[index].League })}");
+            AppService.SendChatMessage($"@{Offers[index].PlayerName} {AppService.Instance.ReplaceVars(AppService.Instance.GetConfig().SoldWhisper, new CoreModels.Offer() { ItemName = Offers[index].ItemName, PlayerName = Offers[index].PlayerName, Price = Offers[index].Price, Currency = Offers[index].Currency, League = Offers[index].League })}");
 
             var offer = Offers[index];
             AppService.Instance.OfferCompleted(new CoreModels.Offer() {
@@ -817,7 +817,7 @@ namespace Menagerie.ViewModels {
 
             Offers[index].IsHighlighted = true;
 
-            AppService.Instance.HightlightStash(Offers[index].EscapedName);
+            AppService.HighlightStash(Offers[index].EscapedName);
         }
 
         public void ResetFilter(bool applyToOutgoing = true) {

@@ -9,18 +9,22 @@ namespace Menagerie.Core.Helpers
     public class LinuxKeyboardHook
     {
         #region Events
+
         public delegate void NewKeyboardEvent();
+
         public event NewKeyboardEvent NewKeyboard;
+
         #endregion
 
         #region Members
+
         private bool _isHooked = false;
+
         #endregion
 
 
         public LinuxKeyboardHook()
         {
-
         }
 
         private void OnNewKeyboardEvent()
@@ -44,7 +48,8 @@ namespace Menagerie.Core.Helpers
             string readMessage = "";
             try
             {
-                FileStream stream = new FileStream("/dev/input/event0", FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                FileStream stream = new FileStream("/dev/input/event0", FileMode.Open, FileAccess.Read,
+                    FileShare.ReadWrite);
                 byte[] buffer = new byte[24];
 
                 while (_isHooked)
@@ -53,14 +58,14 @@ namespace Menagerie.Core.Helpers
 
                     // parse timeval (8 bytes)
                     int offset = 8;
-                    short type = BitConverter.ToInt16(new byte[] { buffer[offset], buffer[++offset] }, 0);
-                    short code = BitConverter.ToInt16(new byte[] { buffer[++offset], buffer[++offset] }, 0);
+                    short type = BitConverter.ToInt16(new byte[] {buffer[offset], buffer[++offset]}, 0);
+                    short code = BitConverter.ToInt16(new byte[] {buffer[++offset], buffer[++offset]}, 0);
                     int value = BitConverter.ToInt32(
-                        new byte[] { buffer[++offset], buffer[++offset], buffer[++offset], buffer[++offset] }, 0);
+                        new byte[] {buffer[++offset], buffer[++offset], buffer[++offset], buffer[++offset]}, 0);
 
                     if (value == 1 && code != 28)
                     {
-                        var key = (((KEY_CODE)code).ToString()).Replace("KEY_", "");
+                        var key = (((KEY_CODE) code).ToString()).Replace("KEY_", "");
                         key = key.Replace("MINUS", "-");
                         key = key.Replace("EQUAL", "=");
                         key = key.Replace("SEMICOLON", ";");
@@ -79,7 +84,6 @@ namespace Menagerie.Core.Helpers
             }
             catch (Exception ex)
             {
-
             }
         }
 
