@@ -14,41 +14,39 @@ namespace Menagerie
     /// </summary>
     public partial class App : Application
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(App));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(App));
 
-        private OverlayWindow overlay;
-        private SplashWindow splash;
+        private readonly SplashWindow _splash;
 
         public App()
         {
             InitializeComponent();
 
-            log.Trace("Initializing App", null);
+            Log.Trace("Initializing App", null);
 
             (new UpdateService()).CheckUpdates();
 
-            splash = new SplashWindow();
-            overlay = new OverlayWindow();
-            splash.Show();
+            _splash = new SplashWindow();
+            _splash.Show();
 
             Task.Run(() =>
             {
                 AppService.Instance.Start();
 
-                App.Current.Dispatcher.Invoke(delegate { splash.Close(); });
+                Current.Dispatcher.Invoke(delegate { _splash.Close(); });
             });
         }
 
         private void Overlay_Loaded(object sender, RoutedEventArgs e)
         {
-            log.Trace("Closing splash window");
-            splash.Close();
+            Log.Trace("Closing splash window");
+            _splash.Close();
         }
 
         private void Application_DispatcherUnhandledException(object sender,
             System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            log.Error("UI error: " + e.Exception.Message + Environment.NewLine + e.Exception.InnerException +
+            Log.Error("UI error: " + e.Exception.Message + Environment.NewLine + e.Exception.InnerException +
                       Environment.NewLine + e.Exception.StackTrace);
 
             // Prevent default unhandled exception processing

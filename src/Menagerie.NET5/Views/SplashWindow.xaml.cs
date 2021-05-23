@@ -16,41 +16,32 @@ namespace Menagerie.Views
     /// </summary>
     public partial class SplashWindow : Window
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(SplashWindow));
-
-        public SplashViewModel vm;
+        private static readonly ILog Log = LogManager.GetLogger(typeof(SplashWindow));
 
         public SplashWindow()
         {
             InitializeComponent();
 
-            log.Trace("Initializing SplashWindow");
+            Log.Trace("Initializing SplashWindow");
 
-            vm = new SplashViewModel();
-            DataContext = vm;
+            DataContext = new SplashViewModel();
 
             SetLogo();
         }
 
         private void SetLogo()
         {
-            log.Trace("Setting logo");
+            Log.Trace("Setting logo");
             imgLogo.Source = ImageSourceFromBitmap(new Bitmap("Assets/menagerie-logo-splash.png"));
         }
 
-        private ImageSource ImageSourceFromBitmap(Bitmap bmp)
+        private static ImageSource ImageSourceFromBitmap(Bitmap bmp)
         {
-            log.Trace("Converting bitmap to imageSource");
+            Log.Trace("Converting bitmap to imageSource");
 
             var handle = bmp.GetHbitmap();
-            try
-            {
-                return Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty,
-                    BitmapSizeOptions.FromEmptyOptions());
-            }
-            finally
-            {
-            }
+            return Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty,
+                BitmapSizeOptions.FromEmptyOptions());
         }
     }
 }

@@ -1,32 +1,32 @@
 ﻿using log4net;
 using Menagerie.ViewModels;
-using System.Windows;
 using Menagerie.Core.Extensions;
 using AdonisUI.Controls;
 using System.Windows.Media;
 
-namespace Menagerie.Views {
+namespace Menagerie.Views
+{
     /// <summary>
     /// Logique d'interaction pour StatsWindow.xaml
     /// </summary>
-    public partial class StatsWindow : AdonisWindow {
-        public StatsViewModel vm;
+    public partial class StatsWindow : AdonisWindow
+    {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(StatsWindow));
 
-        private readonly static ILog log = LogManager.GetLogger(typeof(StatsWindow));
-
-        public StatsWindow() {
+        public StatsWindow()
+        {
             InitializeComponent();
 
-            log.Trace("Initializing StatsWindow");
+            Log.Trace("Initializing StatsWindow");
 
-            vm = new StatsViewModel();
-            DataContext = vm;
+            DataContext = new StatsViewModel();
 
             SetupCharts();
         }
 
-        private void SetupCharts() {
-            log.Trace("Setup charts");
+        private void SetupCharts()
+        {
+            Log.Trace("Setup charts");
             chCurrencies.DataTooltip.Background = Brushes.Black;
             chCurrencies.AxisY[0].MinValue = 0;
             chCurrencies.AxisX[0].MinValue = 0;

@@ -577,7 +577,7 @@ namespace Menagerie.Core.Services
             ChatService.SendTradeCommand(player);
         }
 
-        private static void SendHideoutChatCommand(string player)
+        public static void SendHideoutChatCommand(string player)
         {
             ChatService.SendHideoutCommand(player);
         }
