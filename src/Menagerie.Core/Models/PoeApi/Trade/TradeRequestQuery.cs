@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Menagerie.Core.Models {
-    public class TradeRequestQuery {
+namespace Menagerie.Core.Models
+{
+    public class TradeRequestQuery
+    {
         public TradeRequestQueryStatus Status { get; set; } = new TradeRequestQueryStatus();
         public string Term { get; set; }
         public TradeRequestType Name { get; set; } = null;

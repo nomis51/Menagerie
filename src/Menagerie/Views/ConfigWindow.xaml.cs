@@ -7,80 +7,95 @@ using System.Collections.Generic;
 using System.Windows.Controls;
 using Menagerie.Core.Services;
 
-namespace Menagerie.Views {
+namespace Menagerie.Views
+{
     /// <summary>
     /// Logique d'interaction pour ConfigWindow.xaml
     /// </summary>
-    public partial class ConfigWindow : AdonisWindow {
-        private static readonly ILog log = LogManager.GetLogger(typeof(ConfigWindow));
+    public partial class ConfigWindow : AdonisWindow
+    {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(ConfigWindow));
 
-        public ConfigViewModel vm;
+        private readonly ConfigViewModel _vm;
 
-        private List<Grid> views = new List<Grid>();
+        private readonly List<Grid> _views = new();
 
-        public ConfigWindow() {
+        public ConfigWindow()
+        {
             InitializeComponent();
 
-            log.Trace("Initializing ConfigWindow");
+            Log.Trace("Initializing ConfigWindow");
 
-            vm = new ConfigViewModel();
-            DataContext = vm;
+            _vm = new ConfigViewModel();
+            DataContext = _vm;
 
             SetupViews();
             ShowView("grdGeneral");
         }
 
-        private void SetupViews() {
-            views.Add(grdApi);
-            views.Add(grdGeneral);
-            views.Add(grdWhispers);
-            views.Add(grdChatScan);
-            views.Add(grdChaosRecipe);
+        private void SetupViews()
+        {
+            _views.Add(grdApi);
+            _views.Add(grdGeneral);
+            _views.Add(grdWhispers);
+            _views.Add(grdChatScan);
+            _views.Add(grdChaosRecipe);
         }
-        private void ShowView(string name) {
-            foreach (var v in views) {
+
+        private void ShowView(string name)
+        {
+            foreach (var v in _views)
+            {
                 v.Visibility = v.Name == name ? Visibility.Visible : Visibility.Hidden;
             }
         }
 
-        private void btnCancel_Click(object sender, RoutedEventArgs e) {
-            log.Trace("Cancel button clicked");
+        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            Log.Trace("Cancel button clicked");
             Close();
         }
 
-        private void btnSave_Click(object sender, RoutedEventArgs e) {
-            log.Trace("Save button clicked");
-            vm.SaveConfig();
+        private void btnSave_Click(object sender, RoutedEventArgs e)
+        {
+            Log.Trace("Save button clicked");
+            _vm.SaveConfig();
             Close();
         }
 
-        private void itGeneral_Click(object sender, RoutedEventArgs e) {
+        private void itGeneral_Click(object sender, RoutedEventArgs e)
+        {
             ShowView("grdGeneral");
         }
 
-        private void itApi_Click(object sender, RoutedEventArgs e) {
+        private void itApi_Click(object sender, RoutedEventArgs e)
+        {
             ShowView("grdApi");
         }
 
-        private void itWhispers_Click(object sender, RoutedEventArgs e) {
+        private void itWhispers_Click(object sender, RoutedEventArgs e)
+        {
             ShowView("grdWhispers");
         }
 
-        private void itChatScan_Click(object sender, RoutedEventArgs e) {
+        private void itChatScan_Click(object sender, RoutedEventArgs e)
+        {
             ShowView("grdChatScan");
         }
 
-        private void itChaosRecipe_Click(object sender, RoutedEventArgs e) {
+        private void itChaosRecipe_Click(object sender, RoutedEventArgs e)
+        {
             ShowView("grdChaosRecipe");
         }
 
-        private void btnResetDefaultOverlay_Click(object sender, RoutedEventArgs e) {
-            vm.Config.ChaosRecipeOveralyDockMode = true;
-            vm.Config.ChaosRecipeGridOffset = new System.Drawing.Point(0, 0);
-            vm.Config.OutgoingOffersGridOffset = new System.Drawing.Point(0, 0);
-            vm.Config.IncomingOffersControlsGridOffset = new System.Drawing.Point(0, 0);
-            vm.Config.IncomingOffersGridOffset = new System.Drawing.Point(0, 0);
-            vm.SaveConfig();
+        private void btnResetDefaultOverlay_Click(object sender, RoutedEventArgs e)
+        {
+            _vm.Config.ChaosRecipeOveralyDockMode = true;
+            _vm.Config.ChaosRecipeGridOffset = new System.Drawing.Point(0, 0);
+            _vm.Config.OutgoingOffersGridOffset = new System.Drawing.Point(0, 0);
+            _vm.Config.IncomingOffersControlsGridOffset = new System.Drawing.Point(0, 0);
+            _vm.Config.IncomingOffersGridOffset = new System.Drawing.Point(0, 0);
+            _vm.SaveConfig();
 
             AppService.Instance.ResetDefaultOverlay();
         }

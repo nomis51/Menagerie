@@ -2,84 +2,112 @@
 using Menagerie.Core.Abstractions;
 using System.Threading;
 using System.Threading.Tasks;
-using WindowsInput.Native;
 using Menagerie.Core.Extensions;
 using System;
 using System.Runtime.InteropServices;
+using Desktop.Robot;
 
-namespace Menagerie.Core.Services {
-    public class GameService : IService {
+namespace Menagerie.Core.Services
+{
+    public class GameService : IService
+    {
         #region WinAPI
+
         [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
         private static extern IntPtr GetForegroundWindow();
+
         #endregion
 
         #region Constants
-        private static readonly ILog log = LogManager.GetLogger(typeof(GameService));
+
+        private static readonly ILog Log = LogManager.GetLogger(typeof(GameService));
+
         #endregion
 
         #region Members
-        private bool GameFocused = false;
+
+        private bool _gameFocused;
+
         #endregion
 
         #region Constructors
-        public GameService() {
-            log.Trace("Initializing GameService");
+
+        public GameService()
+        {
+            Log.Trace("Initializing GameService");
         }
+
         #endregion
 
         #region Private methods
-        private bool IsOverlayFocused() {
-            IntPtr activeHandle = GetForegroundWindow();
-            IntPtr overlayHandle = AppService.Instance.GetOverlayHandle();
+
+        private static bool IsOverlayFocused()
+        {
+            var activeHandle = GetForegroundWindow();
+            var overlayHandle = AppService.Instance.GetOverlayHandle();
             return activeHandle == overlayHandle;
         }
 
-        private void VerifyGameFocused() {
-            log.Trace("Verifying game focus");
-            while (true) {
-                bool poeWinFocused = AppService.Instance.GameFocused();
+        private void VerifyGameFocused()
+        {
+            Log.Trace("Verifying game focus");
+            while (true)
+            {
+                var poeWinFocused = AppService.Instance.GameFocused();
 
-                if (!poeWinFocused && GameFocused && !IsOverlayFocused()) {
-                    log.Trace("Game isn't focused");
-                    GameFocused = false;
-                    AppService.Instance.HideOverlay();
-                    AppService.Instance.EnsurePoeAlive();
-                } else if (poeWinFocused && !GameFocused) {
-                    log.Trace("Game is focused");
-                    GameFocused = true;
-                    AppService.Instance.ShowOverlay();
+                switch (poeWinFocused)
+                {
+                    case false when _gameFocused && !IsOverlayFocused():
+                        Log.Trace("Game isn't focused");
+                        _gameFocused = false;
+                        AppService.Instance.HideOverlay();
+                        AppService.Instance.EnsurePoeAlive();
+                        break;
+                    case true when !_gameFocused:
+                        Log.Trace("Game is focused");
+                        _gameFocused = true;
+                        AppService.Instance.ShowOverlay();
+                        break;
                 }
 
                 Thread.Sleep(500);
             }
+            // ReSharper disable once FunctionNeverReturns
         }
+
         #endregion
 
         #region Public methods
-        public void HightlightStash(string searchText) {
-            log.Trace($"Highlighting stash {searchText}");
-            if (!AppService.Instance.FocusGame()) {
+
+        public static void HighlightStash(string searchText)
+        {
+            Log.Trace($"Highlighting stash {searchText}");
+            if (!AppService.Instance.FocusGame())
+            {
                 return;
             }
 
             AppService.Instance.ClearSpecialKeys();
-            AppService.Instance.ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_F);
+            AppService.Instance.ModifiedKeyStroke(Key.Control, Key.F);
 
-            try {
+            try
+            {
                 AppService.Instance.SetClipboard(searchText);
                 AppService.Instance.ClearSpecialKeys();
-                AppService.Instance.ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_V);
-            } catch (Exception e) {
-                log.Error("Error highlighting stash ", e);
+                AppService.Instance.ModifiedKeyStroke(Key.Control, Key.V);
             }
-
+            catch (Exception e)
+            {
+                Log.Error("Error highlighting stash ", e);
+            }
         }
 
-        public void Start() {
-            log.Trace("Starting GameService");
-            Task.Run(() => VerifyGameFocused());
+        public void Start()
+        {
+            Log.Trace("Starting GameService");
+            Task.Run(VerifyGameFocused);
         }
+
         #endregion
     }
 }

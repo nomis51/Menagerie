@@ -1,15 +1,20 @@
-﻿using Squirrel;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using GitHubAutoUpdater;
 
-namespace Menagerie.Services {
-    public class UpdateService {
+namespace Menagerie.Services
+{
+    public class UpdateService
+    {
+        private readonly Updater _updater;
 
-        public UpdateService() {}
+        public UpdateService()
+        {
+            _updater = new Updater("nomis51/Menagerie", "{app_name}-{tag_name}.zip");
+        }
 
-        public async Task CheckUpdates() {
-            using (var updateManager = await UpdateManager.GitHubUpdateManager("https://github.com/nomis51/Menagerie")) {
-                await updateManager.UpdateApp();
-            }
+        public void CheckUpdates()
+        {
+            _updater.CheckUpdate();
         }
     }
 }

@@ -7,7 +7,260 @@
     <projectFile>Menagerie.NET5/Menagerie.NET5.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dad710c1-392f-4d6a-ba3d-108c3f78cb03" name="Default Changelist" comment="" />
+    <list default="true" id="dad710c1-392f-4d6a-ba3d-108c3f78cb03" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Menagerie/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Menagerie/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Menagerie/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Menagerie/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Abstractions/IService.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Enums/ChatEventEnum.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Enums/ShowWindowEnum.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Extensions/ILogExtensions.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Extensions/ObjectExtensions.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Extensions/SteppedIterator.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Extensions/TimeSpanExtensions.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Helpers/LinuxKeyboardHook.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Menagerie.Core.NET5.csproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/AppImage.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/AppVersion.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/Area.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/AreaChangedEvent.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/Config.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/DbModel.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/FilterGroup.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Fetch/FetchResult.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Fetch/FetchResultAccount.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Fetch/FetchResultAccountStatus.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Fetch/FetchResultElement.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Fetch/FetchResultElementItem.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Fetch/FetchResultElementItemProperty.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Fetch/FetchResultElementListing.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Fetch/FetchResultElementListingPrice.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Filters/AlternateQualityGemFilter.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Filters/ArmourFilters.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Filters/HeistFilters.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Filters/MapFilters.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Filters/MiscFilters.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Filters/SocketFilters.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Filters/SocketFiltersSockets.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Filters/TradeFilters.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Filters/TradeFiltersAccount.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Filters/TradeFiltersOption.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Filters/WeaponFilters.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/ItemCache.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Price/PriceCheckResult.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Price/PricingResult.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Search/SearchResult.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Search/SearchResultError.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Stash/ChaosRecipeResult.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Stash/StashItem.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Stash/StashTab.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Stash/StashTabColor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Stash/StashTabsResult.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Trade/FilterBoolean.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Trade/FilterBoolean.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Trade/FilterRange.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Trade/FilterRange.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Trade/StatFilterValue.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Trade/StatFilterValue.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Trade/TradeRequest.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Trade/TradeRequestQuery.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Trade/TradeRequestQueryFilters.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Trade/TradeRequestQueryFiltersTypeFilters.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Trade/TradeRequestQueryStat.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Trade/TradeRequestQueryStatFilter.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Trade/TradeRequestQueryStatus.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Trade/TradeRequestSort.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Trade/TradeRequestType.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Trade/TypeFilters.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Trade/TypeFilters.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Trade/TypeFiltersCategory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Trade/TypeFiltersCategory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Trade/TypeFiltersRarity.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Trade/TypeFiltersRarity.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeNinja/PoeNinjaCache.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeNinja/PoeNinjaCaches.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeNinja/PoeNinjaCurrency.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeNinja/PoeNinjaExchange.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeNinja/PoeNinjaItem.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeNinja/PoeNinjaResult.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeNinja/PoeNinjaResultLanguage.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeNinja/PoeNinjaSparkLine.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/Shortcut.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/TradeChatLine.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/TradeChatWords.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/Trades/ChatEvent.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/Trades/JoinEvent.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Models/Trades/Offer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Services/AppDataService.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Services/AppService.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Services/ChatService.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Services/ClientFileService.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Services/ClipboardService.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Services/CurrencyService.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Services/GameService.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Services/HttpService.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Services/KeyboardService.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Services/PoeApiService.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Services/PoeNinjaService.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Services/PoeWindowService.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Services/PriceCheckingService.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Services/ShortcutService.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core.NET5/Services/TradeService.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Abstractions/IService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Abstractions/IService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Enums/ChatEventEnum.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Enums/ChatEventEnum.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Enums/ShowWindowEnum.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Enums/ShowWindowEnum.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Extensions/ILogExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Extensions/ILogExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Extensions/ObjectExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Extensions/ObjectExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Extensions/SteppedIterator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Extensions/SteppedIterator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Extensions/TimeSpanExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Extensions/TimeSpanExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Menagerie.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Menagerie.Core.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/AppImage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/AppImage.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/AppVersion.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/AppVersion.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/Area.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/Area.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/AreaChangedEvent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/AreaChangedEvent.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/Config.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/Config.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/DbModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/DbModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/FilterGroup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/FilterGroup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Fetch/FetchResult.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Fetch/FetchResult.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Fetch/FetchResultAccount.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Fetch/FetchResultAccount.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Fetch/FetchResultAccountStatus.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Fetch/FetchResultAccountStatus.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Fetch/FetchResultElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Fetch/FetchResultElement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Fetch/FetchResultElementItem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Fetch/FetchResultElementItem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Fetch/FetchResultElementItemProperty.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Fetch/FetchResultElementItemProperty.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Fetch/FetchResultElementListing.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Fetch/FetchResultElementListing.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Fetch/FetchResultElementListingPrice.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Fetch/FetchResultElementListingPrice.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Filters/AlternateQualityGemFilter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Filters/AlternateQualityGemFilter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Filters/ArmourFilters.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Filters/ArmourFilters.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Filters/HeistFilters.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Filters/HeistFilters.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Filters/MapFilters.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Filters/MapFilters.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Filters/MiscFilters.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Filters/MiscFilters.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Filters/SocketFilters.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Filters/SocketFilters.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Filters/SocketFiltersSockets.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Filters/SocketFiltersSockets.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Filters/TradeFilters.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Filters/TradeFilters.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Filters/TradeFiltersAccount.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Filters/TradeFiltersAccount.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Filters/TradeFiltersOption.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Filters/TradeFiltersOption.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Filters/WeaponFilters.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Filters/WeaponFilters.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/ItemCache.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/ItemCache.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Price/PriceCheckResult.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Price/PriceCheckResult.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Price/PricingResult.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Price/PricingResult.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Search/SearchResult.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Search/SearchResult.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Search/SearchResultError.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Search/SearchResultError.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Stash/ChaosRecipeResult.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Stash/ChaosRecipeResult.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Stash/StashItem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Stash/StashItem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Stash/StashTab.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Stash/StashTab.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Stash/StashTabColor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Stash/StashTabColor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Stash/StashTabsResult.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Stash/StashTabsResult.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Trade/TradeRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Trade/TradeRequest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Trade/TradeRequestQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Trade/TradeRequestQuery.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Trade/TradeRequestQueryFilters.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Trade/TradeRequestQueryFilters.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Trade/TradeRequestQueryFiltersTypeFilters.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Trade/TradeRequestQueryFiltersTypeFilters.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Trade/TradeRequestQueryStat.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Trade/TradeRequestQueryStat.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Trade/TradeRequestQueryStatFilter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Trade/TradeRequestQueryStatFilter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Trade/TradeRequestQueryStatus.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Trade/TradeRequestQueryStatus.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Trade/TradeRequestSort.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Trade/TradeRequestSort.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Trade/TradeRequestType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeApi/Trade/TradeRequestType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeNinja/PoeNinjaCache.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeNinja/PoeNinjaCache.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeNinja/PoeNinjaCaches.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeNinja/PoeNinjaCaches.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeNinja/PoeNinjaCurrency.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeNinja/PoeNinjaCurrency.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeNinja/PoeNinjaExchange.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeNinja/PoeNinjaExchange.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeNinja/PoeNinjaItem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeNinja/PoeNinjaItem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeNinja/PoeNinjaResult.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeNinja/PoeNinjaResult.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeNinja/PoeNinjaResultLanguage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeNinja/PoeNinjaResultLanguage.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/PoeNinja/PoeNinjaSparkLine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/PoeNinja/PoeNinjaSparkLine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/Shortcut.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/Shortcut.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/TradeChatLine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/TradeChatLine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/TradeChatWords.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/TradeChatWords.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/Trades/ChatEvent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/Trades/ChatEvent.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/Trades/JoinEvent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/Trades/JoinEvent.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/Trades/Offer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/Trades/Offer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Properties/launchSettings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/AppDataService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/AppDataService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/AppService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/AppService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/ChatService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/ChatService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/ClientFileService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/ClientFileService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/ClipboardService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/ClipboardService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/CurrencyService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/CurrencyService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/GameService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/GameService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/HttpService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/HttpService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/KeyboardService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/KeyboardService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/ParsingService.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/PoeApiService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/PoeApiService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/PoeNinjaService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/PoeNinjaService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/PoeWindowService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/PoeWindowService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/PriceCheckingService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/PriceCheckingService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/ShortcutService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/ShortcutService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/TradeService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/TradeService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/App.xaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/App.xaml.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Assets/Audio/click.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Assets/Audio/knocking-on-door.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Assets/Audio/notif1.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Assets/Audio/notif2.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Assets/ChaosRecipe/amulet.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Assets/ChaosRecipe/belt.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Assets/ChaosRecipe/body-armour.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Assets/ChaosRecipe/boot.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Assets/ChaosRecipe/glove.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Assets/ChaosRecipe/hand.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Assets/ChaosRecipe/helmet.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Assets/ChaosRecipe/ring.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Assets/FontAwesome.otf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Assets/logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Assets/menagerie-logo-splash.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Assets/menagerie-logo.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Assets/menagerie.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Assets/poe-ninja.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Controls/TradeChatNotificationControl.xaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Controls/TradeChatNotificationControl.xaml.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Converters/Base64ImageConverter.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Converters/BoolConverter.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Converters/BoolToVisibilityConverter.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Data/locations.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Helpers/HighlightTermBehavior.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/ImagePathConverter.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Menagerie.NET5.csproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Models/Offer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Models/StatsOffer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Services/AudioService.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Services/NotificationService.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Services/UpdateService.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/ViewModels/ConfigViewModel.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/ViewModels/OverlayViewModel.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/ViewModels/SplashViewModel.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/ViewModels/StatsViewModel.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Views/ConfigWindow.xaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Views/ConfigWindow.xaml.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Views/OverlayWindow.xaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Views/OverlayWindow.xaml.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Views/SplashWindow.xaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Views/SplashWindow.xaml.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Views/StatsWindow.xaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Views/StatsWindow.xaml.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/Views/Styles.xaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/log4net.config" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.NET5/menagerie-logo.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Test.LinuxHook/Menagerie.Test.LinuxHook.csproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Test.LinuxHook/Program.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.sln" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/App.config" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/App.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/App.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/ImagePathConverter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/ImagePathConverter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Menagerie.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Menagerie.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Models/Offer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Models/Offer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Models/StatsOffer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Models/StatsOffer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Properties/AssemblyInfo.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Properties/Resources.Designer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Properties/Resources.resx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Properties/Settings.Designer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Properties/Settings.settings" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Services/AudioService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Services/AudioService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Services/NotificationService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Services/NotificationService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Services/UpdateService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Services/UpdateService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/ViewModels/ConfigViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/ViewModels/ConfigViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/ViewModels/SplashViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/ViewModels/SplashViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/ViewModels/StatsViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/ViewModels/StatsViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Views/ConfigWindow.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/ConfigWindow.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Views/SplashWindow.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/SplashWindow.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Views/StatsWindow.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/StatsWindow.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/menagerie.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/packages.config" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -30,6 +283,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/AB3CA1C3-03C2-44D6-B901-46AD120D8164/235/XamlReader.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0D0CB169-A5E1-4C1E-A547-BA1218E2ECB3/e0/3ed68d6e/CulturePreservingExecutionContext.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/E6E6B40B-308C-4FE1-9C93-7C26C144C865/325/AssemblyConfigurationAttribute.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Menagerie.Core/Services/PoeWindowService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/AB3CA1C3-03C2-44D6-B901-46AD120D8164/1A/Application.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/E6E6B40B-308C-4FE1-9C93-7C26C144C865/1B2/ExecutionContext.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/E6E6B40B-308C-4FE1-9C93-7C26C144C865/2C5/AsyncVoidMethodBuilder.cs" root0="SKIP_HIGHLIGHTING" />
@@ -38,9 +292,6 @@
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
-      <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Trade/TradeRequestQueryStat.cs" />
-      <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Trade/FilterBoolean.cs" />
-      <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Trade/FilterRange.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Trade/StatFilterValue.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Trade/TradeRequestSort.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Trade/TradeRequestType.cs" />
@@ -89,6 +340,9 @@
       <option value="$PROJECT_DIR$/Menagerie.NET5/ViewModels/OverlayViewModel.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Services/ClientFileService.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Services/AppService.cs" />
+      <option value="$PROJECT_DIR$/Menagerie.Core/Services/PoeNinjaService.cs" />
+      <option value="$PROJECT_DIR$/Menagerie.Core/Services/ClientFileService.cs" />
+      <option value="$PROJECT_DIR$/Menagerie.Core/Services/KeyboardService.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1slwfjGXWpB6xhw5kp9ndRW6pVV" />
@@ -109,7 +363,7 @@
     <property name="settings.editor.selected.configurable" value="preferences.keymap" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
-  <component name="RunManager" selected=".NET Project.Menagerie.NET5">
+  <component name="RunManager" selected=".NET Project.Menagerie">
     <configuration name="Menagerie" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
       <option name="PROGRAM_PARAMETERS" value="" />
@@ -136,7 +390,7 @@
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <option name="USE_MONO" value="0" />
       <option name="RUNTIME_ARGUMENTS" value="" />
-      <option name="PROJECT_PATH" value="$PROJECT_DIR$/Menagerie.NET5/Menagerie.NET5.csproj" />
+      <option name="PROJECT_PATH" value="$PROJECT_DIR$/Menagerie/Menagerie.csproj" />
       <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
       <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
       <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
@@ -192,7 +446,7 @@
       <workItem from="1621460658616" duration="3566000" />
       <workItem from="1621548260956" duration="5916000" />
       <workItem from="1621725078856" duration="5185000" />
-      <workItem from="1621777000757" duration="3341000" />
+      <workItem from="1621777000757" duration="4053000" />
     </task>
     <servers />
   </component>

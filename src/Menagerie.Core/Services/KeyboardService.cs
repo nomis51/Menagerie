@@ -1,115 +1,148 @@
 ﻿using log4net;
 using Menagerie.Core.Abstractions;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using WindowsInput;
-using WindowsInput.Native;
 using Winook;
 using Menagerie.Core.Extensions;
+using System.Runtime.InteropServices;
+using Desktop.Robot;
 
-namespace Menagerie.Core.Services {
-    public class KeyboardService : IService {
+namespace Menagerie.Core.Services
+{
+    public class KeyboardService : IService
+    {
         #region Constants
-        private static readonly ILog log = LogManager.GetLogger(typeof(KeyboardService));
+
+        private static readonly ILog Log = LogManager.GetLogger(typeof(KeyboardService));
+
         #endregion
 
         #region Members
-        private InputSimulator _input = new InputSimulator();
-        private KeyboardHook _keyboardHook;
-        private MouseHook _mouseHook;
+
+        private KeyboardHook _windowsKeyboardHook;
+
+        private readonly Robot _robot;
+
         #endregion
 
         #region Constructors
-        public KeyboardService() {
-            log.Trace("Initializing KeyboardService");
+
+        public KeyboardService()
+        {
+            Log.Trace("Initializing KeyboardService");
+            _robot = new Robot();
         }
+
         #endregion
 
         #region Public methods
-        public void HookProcess(int processId) {
-            log.Trace($"Hooking process {processId}");
 
-            if (processId != 0) {
-                if (_keyboardHook != null) {
-                    _keyboardHook.MessageReceived -= KeyboardHook_MessageReceived;
-                    _keyboardHook = null;
-                }
+        public void HookProcess(int processId)
+        {
+            Log.Trace($"Hooking process {processId}");
 
-                try {
-                    _keyboardHook = new KeyboardHook(processId);
-                    _keyboardHook.MessageReceived += KeyboardHook_MessageReceived;
-                    _keyboardHook.InstallAsync().Wait();
-                } catch (Exception e) {
-                    log.Error($"Error while hooking process {processId}", e);
-                 }
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) return;
+            if (processId == 0) return;
+            if (_windowsKeyboardHook != null)
+            {
+                _windowsKeyboardHook.MessageReceived -= WindowsKeyboardHook_MessageReceived;
+                _windowsKeyboardHook = null;
+            }
+
+            try
+            {
+                _windowsKeyboardHook = new KeyboardHook(processId);
+                _windowsKeyboardHook.MessageReceived += WindowsKeyboardHook_MessageReceived;
+                _windowsKeyboardHook.InstallAsync().Wait();
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Error while hooking process {processId}", e);
             }
         }
 
-        private void KeyboardHook_MessageReceived(object sender, KeyboardMessageEventArgs e) {
+        private static void LinuxKeyboardHook_NewKeyboard()
+        {
+        }
+
+        private static void WindowsKeyboardHook_MessageReceived(object sender, KeyboardMessageEventArgs e)
+        {
             AppService.Instance.HandleKeyboardInput(e);
         }
 
-        public void KeyPress(VirtualKeyCode key) {
-            log.Trace($"Sending key press {(int)key}");
-            _input.Keyboard.KeyPress(key);
+        public void KeyPress(Key key)
+        {
+            Log.Trace($"Sending key press {(int) key}");
+            _robot.KeyPress(key);
         }
 
-        public void KeyUp(VirtualKeyCode key) {
-            log.Trace($"Sending key up {(int)key}");
-            _input.Keyboard.KeyUp(key);
+        public void KeyUp(Key key)
+        {
+            Log.Trace($"Sending key up {(int) key}");
+            _robot.KeyUp(key);
         }
 
-        public void KeyDown(VirtualKeyCode key) {
-            log.Trace($"Sending key down {(int)key}");
-            _input.Keyboard.KeyDown(key);
+        public void KeyDown(Key key)
+        {
+            Log.Trace($"Sending key down {(int) key}");
+            _robot.KeyDown(key);
         }
 
-        public void ClearSpecialKeys() {
-            log.Trace($"Clearing special keys");
-            KeyUp(VirtualKeyCode.CONTROL);
-            KeyUp(VirtualKeyCode.SHIFT);
-            KeyUp(VirtualKeyCode.MENU);
+        public void ClearSpecialKeys()
+        {
+            Log.Trace($"Clearing special keys");
+            KeyUp(Key.Control);
+            KeyUp(Key.Shift);
         }
 
-        public void ModifiedKeyStroke(VirtualKeyCode modifier, VirtualKeyCode key) {
-            log.Trace($"Sending modified key strokes for {(int)key} with {(int)modifier}");
-            _input.Keyboard.ModifiedKeyStroke(modifier, key);
+        public void ModifiedKeyStroke(Key modifier, Key key)
+        {
+            Log.Trace($"Sending modified key strokes for {(int) key} with {(int) modifier}");
+            _robot.KeyDown(modifier);
+            _robot.KeyPress(key);
+            _robot.KeyUp(modifier);
         }
 
-        public void SendEnter() {
-            log.Trace("Sending Enter key press");
-            _input.Keyboard.KeyPress(VirtualKeyCode.RETURN);
+        public void SendEnter()
+        {
+            Log.Trace("Sending Enter key press");
+            _robot.KeyPress(Key.Enter);
         }
 
-        public void SendCtrlA() {
-            log.Trace("Sending Ctrl + A");
-            ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_A);
+        public void SendCtrlA()
+        {
+            Log.Trace("Sending Ctrl + A");
+            ModifiedKeyStroke(Key.Control, Key.A);
         }
 
-        public void SendBackspace() {
-            log.Trace("Sending Backspace key press");
-            _input.Keyboard.KeyPress(VirtualKeyCode.BACK);
+        public void SendBackspace()
+        {
+            Log.Trace("Sending Backspace key press");
+            _robot.KeyPress(Key.Backspace);
         }
 
-        public void SendEscape() {
-            log.Trace("Sending Escape key press");
-            _input.Keyboard.KeyPress(VirtualKeyCode.ESCAPE);
+        public void SendEscape()
+        {
+            Log.Trace("Sending Escape key press");
+            _robot.KeyPress(Key.Esc);
         }
 
-        public void SendCtrlV() {
-            log.Trace("Sending Ctrl + V");
-            ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_V);
+        public void SendCtrlV()
+        {
+            Log.Trace("Sending Ctrl + V");
+            ModifiedKeyStroke(Key.Control, Key.V);
         }
 
-        public void SendCtrlC() {
-            log.Trace("Sending Ctrl + C");
-            ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_C);
+        public void SendCtrlC()
+        {
+            Log.Trace("Sending Ctrl + C");
+            ModifiedKeyStroke(Key.Control, Key.C);
         }
 
-        public void Start() {
-            log.Trace("Starting KeyboardService");
+        public void Start()
+        {
+            Log.Trace("Starting KeyboardService");
         }
+
         #endregion
     }
 }

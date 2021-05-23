@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Menagerie.Core.Abstractions {
+namespace Menagerie.Core.Abstractions
+{
     /// <summary>
     /// What define a Service in Menagerie
     /// </summary>
-   public interface IService {
+    public interface IService
+    {
         void Start();
     }
 }

@@ -9,42 +9,39 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Menagerie.Core.Extensions;
 
-namespace Menagerie.Views {
+namespace Menagerie.Views
+{
     /// <summary>
     /// Logique d'interaction pour SplashWindow.xaml
     /// </summary>
-    public partial class SplashWindow : Window {
-        private static readonly ILog log = LogManager.GetLogger(typeof(SplashWindow));
+    public partial class SplashWindow : Window
+    {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(SplashWindow));
 
-        public SplashViewModel vm;
-
-        public SplashWindow() {
+        public SplashWindow()
+        {
             InitializeComponent();
 
-            log.Trace("Initializing SplashWindow");
+            Log.Trace("Initializing SplashWindow");
 
-            vm = new SplashViewModel();
-            DataContext = vm;
+            DataContext = new SplashViewModel();
 
             SetLogo();
         }
 
-        private void SetLogo() {
-            log.Trace("Setting logo");
-            imgLogo.Source = ImageSourceFromBitmap(Properties.Resources.menagerie_logo_splash);
+        private void SetLogo()
+        {
+            Log.Trace("Setting logo");
+            imgLogo.Source = ImageSourceFromBitmap(new Bitmap("Assets/menagerie-logo-splash.png"));
         }
 
-        [DllImport("gdi32.dll", EntryPoint = "DeleteObject")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool DeleteObject([In] IntPtr hObject);
-
-        private ImageSource ImageSourceFromBitmap(Bitmap bmp) {
-            log.Trace("Converting bitmap to imageSource");
+        private static ImageSource ImageSourceFromBitmap(Bitmap bmp)
+        {
+            Log.Trace("Converting bitmap to imageSource");
 
             var handle = bmp.GetHbitmap();
-            try {
-                return Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-            } finally { DeleteObject(handle); }
+            return Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty,
+                BitmapSizeOptions.FromEmptyOptions());
         }
     }
 }

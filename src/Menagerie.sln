@@ -3,15 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30621.155
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menagerie", "Menagerie\Menagerie.csproj", "{ABFF3A80-0C91-413B-AEE8-E7314C4168ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Menagerie.Core", "Menagerie.Core\Menagerie.Core.csproj", "{AE49F62A-5CDF-449E-95EC-8ABE2CB101D1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Menagerie.Core", "Menagerie.Core\Menagerie.Core.csproj", "{78E189A9-BA72-48C5-A475-6967A55B65B1}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Menagerie.Core.NET5", "Menagerie.Core.NET5\Menagerie.Core.NET5.csproj", "{AE49F62A-5CDF-449E-95EC-8ABE2CB101D1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menagerie.Test.LinuxHook", "Menagerie.Test.LinuxHook\Menagerie.Test.LinuxHook.csproj", "{466D5E09-38F7-44AF-B905-4230974166D6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menagerie.NET5", "Menagerie.NET5\Menagerie.NET5.csproj", "{69FEB7D7-FF83-4F55-A32D-0555F501FCB1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menagerie", "Menagerie\Menagerie.csproj", "{69FEB7D7-FF83-4F55-A32D-0555F501FCB1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,22 +13,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{ABFF3A80-0C91-413B-AEE8-E7314C4168ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ABFF3A80-0C91-413B-AEE8-E7314C4168ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ABFF3A80-0C91-413B-AEE8-E7314C4168ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ABFF3A80-0C91-413B-AEE8-E7314C4168ED}.Release|Any CPU.Build.0 = Release|Any CPU
-		{78E189A9-BA72-48C5-A475-6967A55B65B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{78E189A9-BA72-48C5-A475-6967A55B65B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{78E189A9-BA72-48C5-A475-6967A55B65B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{78E189A9-BA72-48C5-A475-6967A55B65B1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AE49F62A-5CDF-449E-95EC-8ABE2CB101D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AE49F62A-5CDF-449E-95EC-8ABE2CB101D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE49F62A-5CDF-449E-95EC-8ABE2CB101D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE49F62A-5CDF-449E-95EC-8ABE2CB101D1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{466D5E09-38F7-44AF-B905-4230974166D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{466D5E09-38F7-44AF-B905-4230974166D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{466D5E09-38F7-44AF-B905-4230974166D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{466D5E09-38F7-44AF-B905-4230974166D6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{69FEB7D7-FF83-4F55-A32D-0555F501FCB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{69FEB7D7-FF83-4F55-A32D-0555F501FCB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69FEB7D7-FF83-4F55-A32D-0555F501FCB1}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -38,7 +38,6 @@
         <!-- Notifications -->
         <tb:TaskbarIcon x:Name="trayIcon"
                         Visibility="Visible"
-                        IconSource="/Assets/menagerie-logo.ico"
                         TrayContextMenuOpen="trayIcon_TrayContextMenuOpen"
                         MenuActivation="LeftOrRightClick">
             <tb:TaskbarIcon.ContextMenu>
@@ -584,7 +583,7 @@
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
                                    Stretch="Uniform"
-                                   Source="{Binding CurrencyImageLink, Converter={StaticResource Base64ImageConverter}}" />
+                                   Source="{Binding CurrencyImageLink}" />
                             <Button Name="btnBusy"
                                     Tag="{Binding Id}"
                                     Click="btnBusy_Click"
