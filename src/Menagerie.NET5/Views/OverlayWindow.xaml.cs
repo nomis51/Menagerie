@@ -259,12 +259,6 @@ namespace Menagerie
             AudioService.Instance.PlayClick();
 
             var id = (int) ((Button) sender).Tag;
-            var offer = _vm.GetOffer(id);
-
-            if (offer.State == OfferState.HideoutJoined)
-            {
-                return;
-            }
 
             _vm.SendTradeRequest(id, true);
         }
