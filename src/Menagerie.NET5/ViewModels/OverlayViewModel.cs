@@ -693,10 +693,10 @@ namespace Menagerie.ViewModels
             {
                 var config = AppService.Instance.GetConfig();
 
-                if (!string.IsNullOrEmpty(config.PlayerName))
-                {
-                    AppService.SendKickChatCommand(config.PlayerName);
-                }
+                //if (!string.IsNullOrEmpty(config.PlayerName))
+                //{
+                //   AppService.SendKickChatCommand(config.PlayerName);
+                //}
 
                 if (sayThanks)
                 {
