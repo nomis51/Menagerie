@@ -167,6 +167,7 @@ namespace Menagerie.Core.Services
                     Focus();
 
                     AppService.Instance.ClientFileReady();
+                    break;
                 }
 
                 if (ClientFileExists() && _process != null) continue;
