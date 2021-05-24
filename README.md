@@ -4,6 +4,7 @@ A Path of Exile trade manger to simplify and speed up your trading experience.
 
 ## Requirements
 - [.NET Framework 4.7.2+](https://dotnet.microsoft.com/download/dotnet-framework)
+- If you are using the release version [1.4.0+](https://github.com/nomis51/Menagerie/releases/tag/v1.4.0), you'll need [.NET 5.0](https://dotnet.microsoft.com/download/dotnet/5.0) instead
 
 ## Usage
 - Go to the [Releases](https://github.com/nomis51/Menagerie/releases/latest) page
@@ -37,6 +38,8 @@ A Path of Exile trade manger to simplify and speed up your trading experience.
 - Switch league, configure the app or quit with the system tray icon :
 
 ![blur-2020-12-30 19_53_33-YoloCursorOverlay](https://user-images.githubusercontent.com/25111613/103388931-d06b8c80-4ad9-11eb-94db-2a26386b9e75.png)
+
+- Message translator (See [release 1.4.0](https://github.com/nomis51/Menagerie/releases/tag/v1.4.0) for more infos)
 
 ## Showcase
 
