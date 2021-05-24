@@ -14,8 +14,6 @@ namespace Menagerie.Services
         {
             Task.Run(async () =>
             {
-                OnNewUpdateInstalled();
-                
                 using var updateManager =
                     await UpdateManager.GitHubUpdateManager("https://github.com/nomis51/Menagerie");
                 var infos = await updateManager.CheckForUpdate();
