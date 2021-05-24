@@ -39,7 +39,7 @@
         <Button x:Name="btnTranslateInput"
                 Grid.Row="3"
                 Grid.Column="0"
-                Margin="40,0,0,0"
+                Margin="8,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Bottom"
                 BorderThickness="0"
@@ -52,7 +52,7 @@
                 <fa5:ImageAwesome Width="20"
                                   Height="20"
                                   Icon="Solid_At"
-                                  Foreground="White"
+                                  Foreground="#a0aec0"
                                   HorizontalAlignment="Center" />
             </Button.Content>
         </Button>
@@ -90,7 +90,7 @@
                         <fa5:ImageAwesome Width="15"
                                           Height="15"
                                           Icon="Solid_Share"
-                                          Foreground="White"
+                                          Foreground="#a0aec0"
                                           HorizontalAlignment="Center" />
                     </Button.Content>
                 </Button>

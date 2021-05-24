@@ -309,14 +309,14 @@ namespace Menagerie.Core.Services
 
             var parsedSecondBlock = JsonConvert.DeserializeObject<List<object>>(secondBlock);
 
+            if (parsedSecondBlock == null) return null;
             if (parsedSecondBlock is {Count: < 2})
             {
                 return null;
             }
 
-            if (parsedSecondBlock == null) return null;
             var thirdBlock = parsedSecondBlock[1];
-            var textLang = parsedSecondBlock[2] != null ? (string) (parsedSecondBlock[2]) : "";
+            var textLang = parsedSecondBlock.Count >= 3 && parsedSecondBlock[2] != null ? (string) (parsedSecondBlock[2]) : "";
 
             try
             {

@@ -9,8 +9,7 @@
   <component name="ChangeListManager">
     <list default="true" id="dad710c1-392f-4d6a-ba3d-108c3f78cb03" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Menagerie/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Menagerie/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/AppService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/AppService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/TranslateService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/TranslateService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,9 +92,9 @@
       <option value="$PROJECT_DIR$/Menagerie/Views/Styles.xaml" />
       <option value="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" />
       <option value="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml.cs" />
-      <option value="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml" />
       <option value="$PROJECT_DIR$/Menagerie.Core/Services/AppService.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core/Services/TranslateService.cs" />
+      <option value="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1slwfjGXWpB6xhw5kp9ndRW6pVV" />
