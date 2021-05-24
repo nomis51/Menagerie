@@ -84,24 +84,12 @@
     <Content Include="Assets\ChaosRecipe\ring.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Remove="Assets\logo.png" />
-    <Content Include="Assets\logo.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <None Remove="Assets\menagerie.png" />
-    <Content Include="Assets\menagerie.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Remove="Assets\menagerie-logo.ico" />
     <Content Include="Assets\menagerie-logo.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Remove="Assets\menagerie-logo-splash.png" />
     <Content Include="Assets\menagerie-logo-splash.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <None Remove="Assets\poe-ninja.png" />
-    <Content Include="Assets\poe-ninja.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Remove="Data\locations.json" />

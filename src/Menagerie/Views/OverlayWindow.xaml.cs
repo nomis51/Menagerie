@@ -34,7 +34,7 @@ namespace Menagerie
         private static readonly ILog Log = LogManager.GetLogger(typeof(OverlayWindow));
 
         private readonly Rectangle _screenRect;
-        private bool _winMoved = false;
+        private bool _winMoved;
 
         private Point _dragStart;
         private Vector _dragStartOffset;
@@ -57,6 +57,8 @@ namespace Menagerie
             SourceInitialized += OverlayWindow_SourceInitialized;
             Loaded += OverlayWindow_Loaded;
             Activated += OverlayWindow_Activated;
+
+            trayIcon.Icon = new Icon("Assets/menagerie-logo.ico");
 
             AppService.Instance.OnToggleOverlayVisibility += AppService_OnToggleOverlayVisibility;
             AppService.Instance.OnResetDefaultOverlay += AppService_OnResetDefaultOverlay;

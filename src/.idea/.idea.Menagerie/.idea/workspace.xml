@@ -10,7 +10,7 @@
     <list default="true" id="dad710c1-392f-4d6a-ba3d-108c3f78cb03" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Menagerie/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Menagerie/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Menagerie/Menagerie.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Menagerie.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie/Services/UpdateService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Services/UpdateService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,8 +43,6 @@
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
-      <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Trade/TradeRequestSort.cs" />
-      <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/Trade/TradeRequestType.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/ItemCache.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeNinja/PoeNinjaCache.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeNinja/PoeNinjaCaches.cs" />
@@ -94,6 +92,8 @@
       <option value="$PROJECT_DIR$/Menagerie.Core/Services/ClientFileService.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core/Services/KeyboardService.cs" />
       <option value="$PROJECT_DIR$/Menagerie/Services/UpdateService.cs" />
+      <option value="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml" />
+      <option value="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1slwfjGXWpB6xhw5kp9ndRW6pVV" />
@@ -198,7 +198,7 @@
       <workItem from="1621548260956" duration="5916000" />
       <workItem from="1621725078856" duration="5185000" />
       <workItem from="1621777000757" duration="4305000" />
-      <workItem from="1621814216989" duration="710000" />
+      <workItem from="1621814216989" duration="1349000" />
     </task>
     <servers />
   </component>
