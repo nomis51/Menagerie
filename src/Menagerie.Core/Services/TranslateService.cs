@@ -9,6 +9,7 @@ using Menagerie.Core.Abstractions;
 using Menagerie.Core.Extensions;
 using Menagerie.Core.Models.Translator;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Menagerie.Core.Services
 {
@@ -16,9 +17,9 @@ namespace Menagerie.Core.Services
     {
         #region Constants
 
-        private static readonly ILog log = LogManager.GetLogger(typeof(TranslateService));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(TranslateService));
 
-        private static readonly Dictionary<string, string> LANGAGES = new Dictionary<string, string>()
+        private static readonly Dictionary<string, string> Languages = new Dictionary<string, string>()
         {
             {"auto", "Automatic"},
             {"en", "English"},
@@ -128,16 +129,16 @@ namespace Menagerie.Core.Services
             {"zu", "Zulu"}
         };
 
-        private Dictionary<string, string> MAPPED_LANGAGES = new Dictionary<string, string>();
-        private const string GOOGLE_TRANSLATE_URL = "https://translate.google.com";
-        private const string GOOGLE_TRANSLATE_BATCH_EXEC_PATH = "/_/TranslateWebserverUi/data/batchexecute?";
+        private readonly Dictionary<string, string> _mappedLanguages = new Dictionary<string, string>();
+        private const string GoogleTranslateUrl = "https://translate.google.com";
+        private const string GoogleTranslateBatchExecPath = "/_/TranslateWebserverUi/data/batchexecute?";
 
         #endregion
 
         #region Members
 
-        private HttpService _httpService;
-        private HttpService _urlEncodedHttpService;
+        private readonly HttpService _httpService;
+        private readonly HttpService _urlEncodedHttpService;
 
         #endregion
 
@@ -145,70 +146,58 @@ namespace Menagerie.Core.Services
 
         public TranslateService()
         {
-            log.Trace("Initializing TranslateService");
+            Log.Trace("Initializing TranslateService");
 
-            _httpService = new HttpService(new Uri(GOOGLE_TRANSLATE_URL));
-            _urlEncodedHttpService = new HttpService(new Uri(GOOGLE_TRANSLATE_URL));
+            _httpService = new HttpService(new Uri(GoogleTranslateUrl));
+            _urlEncodedHttpService = new HttpService(new Uri(GoogleTranslateUrl));
             _urlEncodedHttpService.Client.DefaultRequestHeaders.Remove("User-Agent");
             _urlEncodedHttpService.Client.DefaultRequestHeaders.Remove("X-Powered-By");
             _urlEncodedHttpService.Client.DefaultRequestHeaders.Remove("Accept");
             _urlEncodedHttpService.Client.DefaultRequestHeaders.TryAddWithoutValidation("Accept", "*/*");
 
-            MapLangages();
+            MapLanguages();
         }
 
         #endregion
 
-        private void MapLangages()
+        private void MapLanguages()
         {
-            foreach (var l in LANGAGES)
+            foreach (var (key, value) in Languages.Where(l => !_mappedLanguages.ContainsKey(l.Value)))
             {
-                if (!MAPPED_LANGAGES.ContainsKey(l.Value))
-                {
-                    MAPPED_LANGAGES.Add(l.Value, l.Key);
-                }
+                _mappedLanguages.Add(value, key);
             }
         }
 
-        private string GetCode(string langage)
+        private string GetCode(string language)
         {
-            if (string.IsNullOrEmpty(langage))
+            if (string.IsNullOrEmpty(language))
             {
                 return null;
             }
 
-            if (LANGAGES.ContainsKey(langage))
+            if (Languages.ContainsKey(language))
             {
-                return langage;
+                return language;
             }
 
-            if (MAPPED_LANGAGES.ContainsKey(langage))
-            {
-                return MAPPED_LANGAGES[langage];
-            }
-
-            return null;
+            return _mappedLanguages.ContainsKey(language) ? _mappedLanguages[language] : null;
         }
 
-        private bool IsSupported(string langage)
+        private bool IsSupported(string language)
         {
-            return GetCode(langage) != null;
+            return GetCode(language) != null;
         }
 
-        private string Extract(string key, string result)
+        private static string Extract(string key, string result)
         {
             var matches = Regex.Match(result, $"\"{key}\":\".*?\"");
 
-            if (matches.Success)
-            {
-                var temp = matches.Value.Replace($"\"{key}\":\"", "");
-                return temp.Substring(0, temp.Length - 1);
-            }
-
-            return "";
+            if (!matches.Success) return "";
+            var temp = matches.Value.Replace($"\"{key}\":\"", "");
+            return temp[..^1];
         }
 
-        private string GenerateBatchExecuteBody(string text, TranslateOptions options)
+        private static string GenerateBatchExecuteBody(string text, TranslateOptions options)
         {
             return ($"[[[\"MkEWBc\",\"[[" + $"\\\"{text}\\\"," + $"\\\"{options.From}\\\"," + $"\\\"{options.To}\\\"," +
                     "true],[null]]\",null,\"generic\"]]]");
@@ -216,8 +205,8 @@ namespace Menagerie.Core.Services
 
         private async Task<GoogleTranslateSession> GetSession(TranslateOptions options)
         {
-            bool gotFromOption = !string.IsNullOrEmpty(options.From);
-            bool gotToOption = !string.IsNullOrEmpty(options.To);
+            var gotFromOption = !string.IsNullOrEmpty(options.From);
+            var gotToOption = !string.IsNullOrEmpty(options.To);
 
             if (gotFromOption && !IsSupported(options.From))
             {
@@ -265,11 +254,10 @@ namespace Menagerie.Core.Services
         private async Task<string> GetBatchExecuteResponse(string text, TranslateOptions options,
             GoogleTranslateSession gtSession)
         {
-            string url = $"{GOOGLE_TRANSLATE_BATCH_EXEC_PATH}{gtSession.ToQueryString()}";
+            var url = $"{GoogleTranslateBatchExecPath}{gtSession.ToQueryString()}";
             var body = GenerateBatchExecuteBody(text, options);
 
-            Dictionary<string, string> values = new Dictionary<string, string>();
-            values.Add("f.req", body);
+            var values = new Dictionary<string, string> {{"f.req", body}};
 
             var batchResult = await _urlEncodedHttpService.Client.PostAsync(url, new FormUrlEncodedContent(values));
 
@@ -281,19 +269,24 @@ namespace Menagerie.Core.Services
             return await batchResult.Content.ReadAsStringAsync();
         }
 
-        private Tuple<string, string, string> ReadGoogleTranslateResponse(string obfResponse)
+        public static IEnumerable<string> GetLanguages()
+        {
+            return Languages.Values.Skip(1).ToList();
+        }
+
+        private static Tuple<string, string, string> ReadGoogleTranslateResponse(string obfResponse)
         {
             // Yeah... we love obfuscated responses...
-            obfResponse = obfResponse.Substring(obfResponse.IndexOf("[["));
+            obfResponse = obfResponse[obfResponse.IndexOf("[[", StringComparison.Ordinal)..];
 
-            int endOfFirstBlock = obfResponse.IndexOf(",null,null,null,\"generic\"]");
+            var endOfFirstBlock = obfResponse.IndexOf(",null,null,null,\"generic\"]", StringComparison.Ordinal);
 
             if (endOfFirstBlock == -1)
             {
                 return null;
             }
 
-            string firstBlock = obfResponse.Substring(1, endOfFirstBlock + ",null,null,null,\"generic\"]".Length);
+            var firstBlock = obfResponse.Substring(1, endOfFirstBlock + ",null,null,null,\"generic\"]".Length);
 
             if (string.IsNullOrEmpty(firstBlock))
             {
@@ -304,9 +297,11 @@ namespace Menagerie.Core.Services
 
             var parsedFirstBlock = JsonConvert.DeserializeObject<List<string>>(firstBlock);
 
-            if (parsedFirstBlock.Count < 3)
+            switch (parsedFirstBlock)
             {
-                return null;
+                case {Count: < 3}:
+                case null:
+                    return null;
             }
 
             var secondBlock = parsedFirstBlock[2];
@@ -314,60 +309,53 @@ namespace Menagerie.Core.Services
 
             var parsedSecondBlock = JsonConvert.DeserializeObject<List<object>>(secondBlock);
 
-            if (parsedSecondBlock.Count < 2)
+            if (parsedSecondBlock is {Count: < 2})
             {
                 return null;
             }
 
+            if (parsedSecondBlock == null) return null;
             var thirdBlock = parsedSecondBlock[1];
-            string textLang = parsedSecondBlock[2] != null ? (string) (parsedSecondBlock[2]) : "";
+            var textLang = parsedSecondBlock[2] != null ? (string) (parsedSecondBlock[2]) : "";
 
             try
             {
-                var array = (Newtonsoft.Json.Linq.JArray) ((Newtonsoft.Json.Linq.JArray) thirdBlock)[0][0][5];
-                string translatedText = "";
+                var array = (JArray) ((JArray) thirdBlock)[0][0]?[5];
+                var translatedText = "";
 
-                for (int i = 0; i < array.Count; ++i)
-                {
-                    var element = array[i];
-
-                    try
+                if (array != null)
+                    foreach (var element in array)
                     {
-                        translatedText += (string) (element[0]) + " ";
+                        try
+                        {
+                            translatedText += (string) (element[0]) + " ";
+                        }
+                        catch (Exception)
+                        {
+                            translatedText += (string) element + " ";
+                        }
                     }
-                    catch (Exception)
-                    {
-                        translatedText += (string) element + " ";
-                    }
-                }
 
-                string translationLang = (string) ((Newtonsoft.Json.Linq.JArray) thirdBlock)[1];
+                var translationLang = (string) ((JArray) thirdBlock)[1];
 
-                return new Tuple<string, string, string>(translatedText,
-                    LANGAGES.ContainsKey(textLang) ? LANGAGES[textLang] : textLang.ToUpper(),
-                    LANGAGES.ContainsKey(translationLang) ? LANGAGES[translationLang] : translationLang.ToUpper());
+                if (translationLang != null)
+                    return new Tuple<string, string, string>(translatedText,
+                        Languages.ContainsKey(textLang) ? Languages[textLang] : textLang.ToUpper(),
+                        Languages.ContainsKey(translationLang)
+                            ? Languages[translationLang]
+                            : translationLang.ToUpper());
             }
             catch (Exception e)
             {
-                log.Error(e);
+                Log.Error(e);
             }
 
             return null;
         }
 
-        public List<string> GetLangages()
+        public string LanguageToCode(string lang)
         {
-            return LANGAGES.Values.Skip(1).ToList();
-        }
-
-        public string LangageToCode(string lang)
-        {
-            return MAPPED_LANGAGES.ContainsKey(lang) ? MAPPED_LANGAGES[lang] : null;
-        }
-
-        public string CodeToLangage(string code)
-        {
-            return LANGAGES.ContainsKey(code) ? LANGAGES[code] : null;
+            return _mappedLanguages.ContainsKey(lang) ? _mappedLanguages[lang] : null;
         }
 
         public async Task Translate(ChatMessageTranslation translation, TranslateOptions options)
@@ -386,10 +374,10 @@ namespace Menagerie.Core.Services
                 return;
             }
 
-            var result = ReadGoogleTranslateResponse(obfResponse);
-            translation.TranslatedMessage = result.Item1;
-            translation.OriginalLang = string.IsNullOrEmpty(result.Item2) ? LANGAGES[options.From] : result.Item2;
-            translation.TranslationLang = result.Item3;
+            var (item1, item2, item3) = ReadGoogleTranslateResponse(obfResponse);
+            translation.TranslatedMessage = item1;
+            translation.OriginalLang = string.IsNullOrEmpty(item2) ? Languages[options.From] : item2;
+            translation.TranslationLang = item3;
 
             AppService.Instance.TextTranslated(translation);
         }

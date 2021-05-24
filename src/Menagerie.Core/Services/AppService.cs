@@ -161,12 +161,12 @@ namespace Menagerie.Core.Services
             var playerName = !notWhisper ? text.Substring(1, playerIndex - 1) : "";
             var msg = !notWhisper ? text[(playerIndex + 1)..] : isLocalMessage ? text : text[1..];
 
-            var toLang = _translateService.LangageToCode(targetLanguage);
-            var fromLang = _translateService.LangageToCode(sourceLanguage);
+            var toLang = _translateService.LanguageToCode(targetLanguage);
+            var fromLang = _translateService.LanguageToCode(sourceLanguage);
 
             if (_translationTable.ContainsKey(playerName))
             {
-                toLang = _translateService.LangageToCode(_translationTable[playerName]);
+                toLang = _translateService.LanguageToCode(_translationTable[playerName]);
             }
 
             if (string.IsNullOrEmpty(toLang))
@@ -644,9 +644,9 @@ namespace Menagerie.Core.Services
                 : msg.Replace("{location}", "Unknown location");
         }
 
-        public List<string> GetAvailableTranslationLanguages()
+        public IEnumerable<string> GetAvailableTranslationLanguages()
         {
-            return _translateService.GetLangages();
+            return TranslateService.GetLanguages();
         }
 
         public static void SendTradeChatCommand(string player)
