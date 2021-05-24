@@ -72,6 +72,51 @@ namespace Menagerie
         private void OverlayWindow_Activated(object sender, EventArgs e)
         {
             OverlayViewModel.SetOverlayHandle(new WindowInteropHelper(this).Handle);
+
+            cboSourceLang.Items.Add("Auto");
+            
+            foreach (var lang in AppService.Instance.GetAvailableTranslationLanguages())
+            {
+                cboTargetLang.Items.Add(lang);
+                cboSourceLang.Items.Add(lang);
+            }
+        }
+
+        private void btnSendVirtualChatMessageInput_Click(object sender, RoutedEventArgs e)
+        {
+            var message = txtChatMessageInput.Text;
+
+            if (string.IsNullOrEmpty(message) || message.Trim().Length == 0) return;
+
+            OverlayViewModel.SendTranslatedMessage(message, (string) cboTargetLang.SelectedValue,
+                (string) cboSourceLang.SelectedValue, true);
+            HideTranslateInput();
+        }
+
+        private void btnTranslateInput_Click(object sender, RoutedEventArgs e)
+        {
+            var visible = stackChatMessageInput.Visibility == Visibility.Visible;
+
+            if (visible)
+            {
+                HideTranslateInput();
+            }
+            else
+            {
+                ShowTranslateInput();
+            }
+        }
+
+        private void ShowTranslateInput()
+        {
+            txtChatMessageInput.Text = "";
+            _vm.ShowTranslateInputControl();
+        }
+
+        private void HideTranslateInput()
+        {
+            txtChatMessageInput.Text = "";
+            _vm.HideTranslateInputControl();
         }
 
         private void SetOverlaysOffset()
@@ -110,7 +155,7 @@ namespace Menagerie
         private void OverlayWindow_SourceInitialized(object sender, EventArgs e)
         {
             NotificationService.Instance.Setup(trayIcon);
-            _vm.CheckUpdates();
+            OverlayViewModel.CheckUpdates();
 
             if (_winMoved) return;
             _winMoved = true;

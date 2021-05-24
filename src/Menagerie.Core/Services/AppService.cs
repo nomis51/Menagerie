@@ -5,6 +5,7 @@ using Menagerie.Core.Models.PoeApi.Stash;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Menagerie.Core.Models.Translator;
@@ -78,6 +79,10 @@ namespace Menagerie.Core.Services
 
         public event TextTranslatedEvent OnTextTranslated;
 
+        public delegate void ShowTranslateInputControlEvent();
+
+        public event ShowTranslateInputControlEvent ShowTranslateInputControl;
+
         #endregion
 
         private IntPtr _overlayHandle;
@@ -129,16 +134,35 @@ namespace Menagerie.Core.Services
                 Shift = false,
                 Action = Shortcut_GoToHideout
             });
+
+            _shortcutService.RegisterShortcut(new Shortcut()
+            {
+                Direction = KeyDirection.Down,
+                Key = (Key) 84, // T
+                Alt = false,
+                Control = true,
+                Shift = true,
+                Action = DoShowTranslateInputControl
+            });
         }
 
-        public void TranslateMessage(string text, string targetLanguage = "", bool notWhisper = false)
+        private void DoShowTranslateInputControl()
         {
-            var msgTag = text[..1];
+            OnShowTranslateInputControl();
+        }
+
+        public void TranslateMessage(string text, string targetLanguage = "", string sourceLanguage = "",
+            bool notWhisper = false)
+        {
+            var messageMatch = Regex.Match(text, "\\$%@#");
+            var isLocalMessage = !messageMatch.Success || (messageMatch.Success && messageMatch.Index != 0);
+            var msgTag = isLocalMessage ? "" : text[..1];
             var playerIndex = text.IndexOf(" ", 1, StringComparison.Ordinal);
             var playerName = !notWhisper ? text.Substring(1, playerIndex - 1) : "";
-            var msg = !notWhisper ? text[(playerIndex + 1)..] : text.Substring(1);
+            var msg = !notWhisper ? text[(playerIndex + 1)..] : isLocalMessage ? text : text[1..];
 
             var toLang = _translateService.LangageToCode(targetLanguage);
+            var fromLang = _translateService.LangageToCode(sourceLanguage);
 
             if (_translationTable.ContainsKey(playerName))
             {
@@ -160,7 +184,12 @@ namespace Menagerie.Core.Services
                 Time = DateTime.Now
             };
 
-            _ = _translateService.Translate(translation, new TranslateOptions() {To = toLang});
+            if (!string.IsNullOrEmpty(fromLang))
+            {
+                translation.OriginalLang = fromLang;
+            }
+
+            _ = _translateService.Translate(translation, new TranslateOptions() {To = toLang, From = fromLang});
         }
 
         private static void Shortcut_GoToHideout()
@@ -615,6 +644,11 @@ namespace Menagerie.Core.Services
                 : msg.Replace("{location}", "Unknown location");
         }
 
+        public List<string> GetAvailableTranslationLanguages()
+        {
+            return _translateService.GetLangages();
+        }
+
         public static void SendTradeChatCommand(string player)
         {
             ChatService.SendTradeCommand(player);
@@ -702,6 +736,11 @@ namespace Menagerie.Core.Services
             _poeApiService.Start();
             _priceCheckingService.Start();
             _translateService.Start();
+        }
+
+        private void OnShowTranslateInputControl()
+        {
+            ShowTranslateInputControl?.Invoke();
         }
     }
 }

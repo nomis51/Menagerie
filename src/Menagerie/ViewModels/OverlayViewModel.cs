@@ -20,6 +20,7 @@ using System.Drawing;
 using Brush = System.Windows.Media.Brush;
 using Brushes = System.Windows.Media.Brushes;
 using System.Windows.Media;
+using Menagerie.Core.Models.Translator;
 
 namespace Menagerie.ViewModels
 {
@@ -186,21 +187,8 @@ namespace Menagerie.ViewModels
             }
         }
 
-        public void ShowNewUpdateInstalledMessage()
-        {
-            AppVersion = $"New update installed! Please restart the application. {AppVersion}";
-            OnPropertyChanged("AppVersion");
-        }
+        public Visibility TranslateInputControlVisible { get; set; } = Visibility.Hidden;
 
-        private static string GetAppVersion()
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            var fvi =
-                System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
-            var version = $"{fvi.FileMajorPart}.{fvi.FileMinorPart}.{fvi.FileBuildPart}";
-            AppService.SetAppVersion(fvi.FileMajorPart, fvi.FileMinorPart, fvi.FileBuildPart);
-            return version;
-        }
 
         public Visibility IsOffersFilterVisible => Offers.Count > 1 ? Visibility.Visible : Visibility.Hidden;
 
@@ -230,11 +218,50 @@ namespace Menagerie.ViewModels
             AppService.Instance.OnNewTradeChatLine += AppService_OnNewTradeChatLine;
             AppService.Instance.OnNewChaosRecipeResult += AppService_OnNewChaosRecipeResult;
             AppService.Instance.OnToggleChaosRecipeOverlayVisibility += AppService_OnToggleChaosRecipeOverlayVisibility;
+            AppService.Instance.ShowTranslateInputControl += AppService_OnShowTranslateInputControl;
 
             UpdateService.NewUpdateInstalled += UpdateServiceOnNewUpdateInstalled;
         }
 
-        public void CheckUpdates()
+        private void AppService_OnShowTranslateInputControl()
+        {
+            ShowTranslateInputControl();
+        }
+
+        public void ShowTranslateInputControl()
+        {
+            TranslateInputControlVisible = Visibility.Visible;
+            OnPropertyChanged("TranslateInputControlVisible");
+        }
+
+        public void HideTranslateInputControl()
+        {
+            TranslateInputControlVisible = Visibility.Hidden;
+            OnPropertyChanged("TranslateInputControlVisible");
+        }
+
+        public void ShowNewUpdateInstalledMessage()
+        {
+            AppVersion = $"New update installed! Please restart the application. {AppVersion}";
+            OnPropertyChanged("AppVersion");
+        }
+
+        public static void SendTranslatedMessage(string message, string targetLanguage = "",string sourceLanguage = "", bool notWhisper = false)
+        {
+            AppService.Instance.TranslateMessage(message, targetLanguage, sourceLanguage, notWhisper);
+        }
+
+        private static string GetAppVersion()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var fvi =
+                System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
+            var version = $"{fvi.FileMajorPart}.{fvi.FileMinorPart}.{fvi.FileBuildPart}";
+            AppService.SetAppVersion(fvi.FileMajorPart, fvi.FileMinorPart, fvi.FileBuildPart);
+            return version;
+        }
+
+        public static void CheckUpdates()
         {
             UpdateService.CheckUpdates();
         }

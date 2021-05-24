@@ -320,7 +320,7 @@ namespace Menagerie.Core.Services
             }
 
             var thirdBlock = parsedSecondBlock[1];
-            string textLang = (string) (parsedSecondBlock[2]);
+            string textLang = parsedSecondBlock[2] != null ? (string) (parsedSecondBlock[2]) : "";
 
             try
             {
@@ -388,7 +388,7 @@ namespace Menagerie.Core.Services
 
             var result = ReadGoogleTranslateResponse(obfResponse);
             translation.TranslatedMessage = result.Item1;
-            translation.OriginalLang = result.Item2;
+            translation.OriginalLang = string.IsNullOrEmpty(result.Item2) ? LANGAGES[options.From] : result.Item2;
             translation.TranslationLang = result.Item3;
 
             AppService.Instance.TextTranslated(translation);
