@@ -77,7 +77,8 @@
                          ToolTip="Messate to translate..."
                          Width="550"
                          Height="50"
-                         FontSize="24" />
+                         FontSize="24"
+                         KeyDown="TxtChatMessageInput_OnKeyDown"/>
                 <Button Name="btnSendVirtualChatMessageInput"
                         Width="50"
                         BorderThickness="0"
@@ -90,6 +91,22 @@
                         <fa5:ImageAwesome Width="15"
                                           Height="15"
                                           Icon="Solid_Share"
+                                          Foreground="#a0aec0"
+                                          HorizontalAlignment="Center" />
+                    </Button.Content>
+                </Button>
+                <Button Name="btnCloseTranslateInputControl"
+                        Width="50"
+                        BorderThickness="0"
+                        Background="{DynamicResource {x:Static adonisUi:Brushes.Layer1BackgroundBrush}}"
+                        Style="{StaticResource TransparentStyleRedSolid}"
+                        Cursor="Hand"
+                        ToolTip="Close"
+                        Click="BtnCloseTranslateInputControl_OnClick">
+                    <Button.Content>
+                        <fa5:ImageAwesome Width="15"
+                                          Height="15"
+                                          Icon="Solid_Times"
                                           Foreground="#a0aec0"
                                           HorizontalAlignment="Center" />
                     </Button.Content>

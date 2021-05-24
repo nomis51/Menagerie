@@ -238,6 +238,7 @@ namespace Menagerie.ViewModels
         {
             TranslateInputControlVisible = Visibility.Hidden;
             OnPropertyChanged("TranslateInputControlVisible");
+            AppService.Instance.FocusGame();
         }
 
         public void ShowNewUpdateInstalledMessage()

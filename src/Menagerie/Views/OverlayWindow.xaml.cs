@@ -74,7 +74,7 @@ namespace Menagerie
             OverlayViewModel.SetOverlayHandle(new WindowInteropHelper(this).Handle);
 
             cboSourceLang.Items.Add("Auto");
-            
+
             foreach (var lang in AppService.Instance.GetAvailableTranslationLanguages())
             {
                 cboTargetLang.Items.Add(lang);
@@ -110,6 +110,7 @@ namespace Menagerie
         private void ShowTranslateInput()
         {
             txtChatMessageInput.Text = "";
+            txtChatMessageInput.Focus();
             _vm.ShowTranslateInputControl();
         }
 
@@ -576,6 +577,24 @@ namespace Menagerie
             if (_vm.IsOverlayMovable)
             {
                 ChangeChaosRecipeOverlayOrientation();
+            }
+        }
+
+        private void BtnCloseTranslateInputControl_OnClick(object sender, RoutedEventArgs e)
+        {
+            HideTranslateInput();
+        }
+
+        private void TxtChatMessageInput_OnKeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.Escape:
+                    HideTranslateInput();
+                    break;
+                case Key.Enter:
+                    btnSendVirtualChatMessageInput_Click(sender, null);
+                    break;
             }
         }
     }
