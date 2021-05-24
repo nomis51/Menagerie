@@ -6,6 +6,9 @@ A Path of Exile trade manger to simplify and speed up your trading experience.
 - [.NET Framework 4.7.2+](https://dotnet.microsoft.com/download/dotnet-framework)
 - If you are using the release version [1.4.0+](https://github.com/nomis51/Menagerie/releases/tag/v1.4.0), you'll need [.NET 5.0](https://dotnet.microsoft.com/download/dotnet/5.0) instead
 
+## Discord
+- https://discord.gg/yAqNKpGZ2j
+
 ## Usage
 - Go to the [Releases](https://github.com/nomis51/Menagerie/releases/latest) page
 - Download and execute Setup.exe to install Menagerie
