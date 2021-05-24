@@ -110,6 +110,7 @@ namespace Menagerie
         private void OverlayWindow_SourceInitialized(object sender, EventArgs e)
         {
             NotificationService.Instance.Setup(trayIcon);
+            _vm.CheckUpdates();
 
             if (_winMoved) return;
             _winMoved = true;

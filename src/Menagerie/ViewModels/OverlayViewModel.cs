@@ -175,17 +175,7 @@ namespace Menagerie.ViewModels
 
         public Visibility WeaponsVisible => ChaosRecipe.NeedWeapons ? Visibility.Visible : Visibility.Hidden;
 
-        public string AppVersion => $"Version {GetAppVersion()}";
-
-        public Icon MenagerieIcon
-        {
-            get
-            {
-                // TODO: fix load icon
-                //return Properties.Resources.menagerie_logo;
-                return new Icon("");
-            }
-        }
+        public string AppVersion { get; set; } = $"Version {GetAppVersion()}";
 
         public string CurrentLeague
         {
@@ -194,6 +184,12 @@ namespace Menagerie.ViewModels
                 var config = AppService.Instance.GetConfig();
                 return $"League: {(config != null ? config.CurrentLeague : "Standard")}";
             }
+        }
+
+        public void ShowNewUpdateInstalledMessage()
+        {
+            AppVersion = $"New update installed! Please restart the application. {AppVersion}";
+            OnPropertyChanged("AppVersion");
         }
 
         private static string GetAppVersion()
@@ -234,6 +230,18 @@ namespace Menagerie.ViewModels
             AppService.Instance.OnNewTradeChatLine += AppService_OnNewTradeChatLine;
             AppService.Instance.OnNewChaosRecipeResult += AppService_OnNewChaosRecipeResult;
             AppService.Instance.OnToggleChaosRecipeOverlayVisibility += AppService_OnToggleChaosRecipeOverlayVisibility;
+
+            UpdateService.NewUpdateInstalled += UpdateServiceOnNewUpdateInstalled;
+        }
+
+        public void CheckUpdates()
+        {
+            UpdateService.CheckUpdates();
+        }
+
+        private static void UpdateServiceOnNewUpdateInstalled()
+        {
+            NotificationService.Instance.ShowNewUpdateInstalledNotification();
         }
 
         private void AppService_OnToggleChaosRecipeOverlayVisibility(bool show)

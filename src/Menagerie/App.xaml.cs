@@ -25,8 +25,6 @@ namespace Menagerie
 
             Log.Trace("Initializing App", null);
 
-            UpdateService.CheckUpdates();
-
             _splash = new SplashWindow();
             _overlay = new OverlayWindow();
             _splash.Show();

@@ -8,8 +8,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dad710c1-392f-4d6a-ba3d-108c3f78cb03" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Menagerie/Controls/NewUpdateInstalledControl.xaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Menagerie/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Menagerie/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie/Menagerie.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Menagerie.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/App.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/App.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Services/NotificationService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Services/NotificationService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Services/UpdateService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Services/UpdateService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -29,26 +33,22 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/0D0CB169-A5E1-4C1E-A547-BA1218E2ECB3/DE/DispatcherOperation.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/E6E6B40B-308C-4FE1-9C93-7C26C144C865/1A1/ThreadPool.CoreCLR.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/74C228B5-4DD0-4B9A-B507-46351A36C5BA/A/ReleaseEntry.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/AB3CA1C3-03C2-44D6-B901-46AD120D8164/235/XamlReader.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0D0CB169-A5E1-4C1E-A547-BA1218E2ECB3/e0/3ed68d6e/CulturePreservingExecutionContext.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/E6E6B40B-308C-4FE1-9C93-7C26C144C865/325/AssemblyConfigurationAttribute.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/74C228B5-4DD0-4B9A-B507-46351A36C5BA/B/ReleaseExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Menagerie.Core/Services/PoeWindowService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/AB3CA1C3-03C2-44D6-B901-46AD120D8164/1A/Application.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/E6E6B40B-308C-4FE1-9C93-7C26C144C865/1B2/ExecutionContext.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/E6E6B40B-308C-4FE1-9C93-7C26C144C865/2C5/AsyncVoidMethodBuilder.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/E6E6B40B-308C-4FE1-9C93-7C26C144C865/1D0/Task.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/E6E6B40B-308C-4FE1-9C93-7C26C144C865/1A2/ThreadPool.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/0D0CB169-A5E1-4C1E-A547-BA1218E2ECB3/DE/DispatcherOperation.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/E6E6B40B-308C-4FE1-9C93-7C26C144C865/1A1/ThreadPool.CoreCLR.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0D0CB169-A5E1-4C1E-A547-BA1218E2ECB3/e0/3ed68d6e/CulturePreservingExecutionContext.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/E6E6B40B-308C-4FE1-9C93-7C26C144C865/325/AssemblyConfigurationAttribute.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/E6E6B40B-308C-4FE1-9C93-7C26C144C865/1B2/ExecutionContext.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/E6E6B40B-308C-4FE1-9C93-7C26C144C865/1D0/Task.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
-      <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeApi/ItemCache.cs" />
-      <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeNinja/PoeNinjaCache.cs" />
-      <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeNinja/PoeNinjaCaches.cs" />
-      <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeNinja/PoeNinjaCurrency.cs" />
-      <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeNinja/PoeNinjaItem.cs" />
-      <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeNinja/PoeNinjaResult.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeNinja/PoeNinjaResultLanguage.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeNinja/PoeNinjaSparkLine.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/Trades/ChatEvent.cs" />
@@ -91,9 +91,15 @@
       <option value="$PROJECT_DIR$/Menagerie.Core/Services/PoeNinjaService.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core/Services/ClientFileService.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core/Services/KeyboardService.cs" />
+      <option value="$PROJECT_DIR$/Menagerie/App.xaml.cs" />
       <option value="$PROJECT_DIR$/Menagerie/Services/UpdateService.cs" />
+      <option value="$PROJECT_DIR$/Menagerie/Controls/NewUpdateInstalled.xaml" />
       <option value="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml" />
+      <option value="$PROJECT_DIR$/Menagerie/Services/NotificationService.cs" />
+      <option value="$PROJECT_DIR$/Menagerie/Controls/NewUpdateInstalledControl.xaml" />
+      <option value="$PROJECT_DIR$/Menagerie/Controls/NewUpdateInstalledControl.xaml.cs" />
       <option value="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml.cs" />
+      <option value="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1slwfjGXWpB6xhw5kp9ndRW6pVV" />
@@ -111,6 +117,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="preferences.keymap" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
@@ -198,7 +205,8 @@
       <workItem from="1621548260956" duration="5916000" />
       <workItem from="1621725078856" duration="5185000" />
       <workItem from="1621777000757" duration="4305000" />
-      <workItem from="1621814216989" duration="1349000" />
+      <workItem from="1621814216989" duration="3704000" />
+      <workItem from="1621860343059" duration="641000" />
     </task>
     <servers />
   </component>

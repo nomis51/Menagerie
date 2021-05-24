@@ -31,6 +31,25 @@ namespace Menagerie.Services
             _ready = true;
         }
 
+        public void ShowNewUpdateInstalledNotification()
+        {
+            if (!_ready) return;
+            Task.Run(() => AudioService.Instance.PlayNotification2());
+
+            if (!NotificationRunning)
+            {
+                Task.Run(() =>
+                {
+                    Application.Current.Dispatcher.Invoke(delegate
+                    {
+                        _trayIcon.ShowCustomBalloon(
+                            new NewUpdateInstalled(_trayIcon.CloseBalloon),
+                            System.Windows.Controls.Primitives.PopupAnimation.Slide, 60000);
+                    });
+                });
+            }
+        }
+
         public void ShowTradeChatMatchNotification(TradeChatLine line)
         {
             if (!_ready) return;
