@@ -7,13 +7,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Menagerie.Core.Models.Translator;
 using PoeLogsParser.Enums;
 using PoeLogsParser.Models;
 using Winook;
 
 namespace Menagerie.Core.Services
 {
-    public class AppService : IService
+    public sealed class AppService : IService
     {
         #region Singleton
 
@@ -73,6 +74,10 @@ namespace Menagerie.Core.Services
 
         public event ResetDefaultOverlayEvent OnResetDefaultOverlay;
 
+        public delegate void TextTranslatedEvent(ChatMessageTranslation translation);
+
+        public event TextTranslatedEvent OnTextTranslated;
+
         #endregion
 
         private IntPtr _overlayHandle;
@@ -89,9 +94,11 @@ namespace Menagerie.Core.Services
         private readonly TradeService _tradeService;
         private readonly PoeNinjaService _poeNinjaService;
         private readonly PriceCheckingService _priceCheckingService;
+        private readonly TranslateService _translateService;
 
         private Area _currentArea;
         private static AppVersion _appVersion = new();
+        private readonly Dictionary<string, string> _translationTable = new Dictionary<string, string>();
 
         private AppService()
         {
@@ -108,6 +115,7 @@ namespace Menagerie.Core.Services
             _tradeService = new TradeService();
             _poeNinjaService = new PoeNinjaService();
             _priceCheckingService = new PriceCheckingService();
+            _translateService = new TranslateService();
         }
 
         private void SetShortcuts()
@@ -123,7 +131,39 @@ namespace Menagerie.Core.Services
             });
         }
 
-        private void Shortcut_GoToHideout()
+        public void TranslateMessage(string text, string targetLanguage = "", bool notWhisper = false)
+        {
+            var msgTag = text[..1];
+            var playerIndex = text.IndexOf(" ", 1, StringComparison.Ordinal);
+            var playerName = !notWhisper ? text.Substring(1, playerIndex - 1) : "";
+            var msg = !notWhisper ? text[(playerIndex + 1)..] : text.Substring(1);
+
+            var toLang = _translateService.LangageToCode(targetLanguage);
+
+            if (_translationTable.ContainsKey(playerName))
+            {
+                toLang = _translateService.LangageToCode(_translationTable[playerName]);
+            }
+
+            if (string.IsNullOrEmpty(toLang))
+            {
+                toLang = "en";
+            }
+
+            var translation = new ChatMessageTranslation()
+            {
+                MessageTag = msgTag,
+                OriginalMessage = msg,
+                PlayerName = playerName,
+                UserInitiated = true,
+                TranslationLang = toLang,
+                Time = DateTime.Now
+            };
+
+            _ = _translateService.Translate(translation, new TranslateOptions() {To = toLang});
+        }
+
+        private static void Shortcut_GoToHideout()
         {
             SendHideoutChatCommand();
         }
@@ -610,6 +650,42 @@ namespace Menagerie.Core.Services
             GameService.HighlightStash(text);
         }
 
+        private void OnOnTextTranslated(ChatMessageTranslation translation)
+        {
+            OnTextTranslated?.Invoke(translation);
+        }
+
+        public void TextTranslated(ChatMessageTranslation translation)
+        {
+            switch (translation.UserInitiated)
+            {
+                case false when translation.OriginalLang == "English":
+                    return;
+                case false when !_translationTable.ContainsKey(translation.PlayerName):
+                    _translationTable.Add(translation.PlayerName, translation.OriginalLang);
+                    break;
+                case false:
+                {
+                    if (!string.Equals(_translationTable[translation.PlayerName], translation.OriginalLang,
+                        StringComparison.Ordinal))
+                    {
+                        _translationTable[translation.PlayerName] = translation.OriginalLang;
+                    }
+
+                    break;
+                }
+            }
+
+            if (translation.UserInitiated)
+            {
+                SendChatMessage($"{translation.MessageTag}{translation.PlayerName} {translation.TranslatedMessage}");
+            }
+            else
+            {
+                OnOnTextTranslated(translation);
+            }
+        }
+
         public void Start()
         {
             _appDataService.Start();
@@ -625,6 +701,7 @@ namespace Menagerie.Core.Services
             _poeNinjaService.Start();
             _poeApiService.Start();
             _priceCheckingService.Start();
+            _translateService.Start();
         }
     }
 }

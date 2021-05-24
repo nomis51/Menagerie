@@ -8,13 +8,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dad710c1-392f-4d6a-ba3d-108c3f78cb03" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Menagerie/Controls/NewUpdateInstalledControl.xaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Menagerie.Core/Models/Translator/ChatMessageTranslation.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Menagerie.Core/Models/Translator/GoogleTranslateSession.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Menagerie.Core/Models/Translator/TranslateOptions.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Menagerie.Core/Services/TranslateService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Menagerie/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Menagerie/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie/App.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/App.xaml.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie/Services/NotificationService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Services/NotificationService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/AppService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/AppService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Menagerie/Services/UpdateService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Services/UpdateService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,11 +49,6 @@
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
-      <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeNinja/PoeNinjaResultLanguage.cs" />
-      <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/PoeNinja/PoeNinjaSparkLine.cs" />
-      <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/Trades/ChatEvent.cs" />
-      <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/Trades/JoinEvent.cs" />
-      <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/AppImage.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/AppVersion.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/Area.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/AreaChangedEvent.cs" />
@@ -92,7 +87,6 @@
       <option value="$PROJECT_DIR$/Menagerie.Core/Services/ClientFileService.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core/Services/KeyboardService.cs" />
       <option value="$PROJECT_DIR$/Menagerie/App.xaml.cs" />
-      <option value="$PROJECT_DIR$/Menagerie/Services/UpdateService.cs" />
       <option value="$PROJECT_DIR$/Menagerie/Controls/NewUpdateInstalled.xaml" />
       <option value="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml" />
       <option value="$PROJECT_DIR$/Menagerie/Services/NotificationService.cs" />
@@ -100,6 +94,12 @@
       <option value="$PROJECT_DIR$/Menagerie/Controls/NewUpdateInstalledControl.xaml.cs" />
       <option value="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml.cs" />
       <option value="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" />
+      <option value="$PROJECT_DIR$/Menagerie.Core/Models/Translator/GoogleTranslateSession.cs" />
+      <option value="$PROJECT_DIR$/Menagerie.Core/Models/Translator/TranslateOptions.cs" />
+      <option value="$PROJECT_DIR$/Menagerie.Core/Services/TranslateService.cs" />
+      <option value="$PROJECT_DIR$/Menagerie.Core/Models/Translator/ChatMessageTranslation.cs" />
+      <option value="$PROJECT_DIR$/Menagerie.Core/Services/AppService.cs" />
+      <option value="$PROJECT_DIR$/Menagerie/Services/UpdateService.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1slwfjGXWpB6xhw5kp9ndRW6pVV" />
