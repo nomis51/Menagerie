@@ -9,10 +9,7 @@
   <component name="ChangeListManager">
     <list default="true" id="dad710c1-392f-4d6a-ba3d-108c3f78cb03" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Menagerie/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Menagerie/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie/Views/Styles.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/Styles.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Menagerie.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Menagerie.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,33 +112,16 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="settings.editor.selected.configurable" value="RiderNuGetOptionsPageId" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RunManager" selected=".NET Project.Menagerie">
     <configuration name="Menagerie" type="DotNetProject" factoryName=".NET Project">
-      <option name="EXE_PATH" value="" />
+      <option name="EXE_PATH" value="$PROJECT_DIR$/Menagerie/bin/Release/net5.0-windows/Menagerie.exe" />
       <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="PASS_PARENT_ENVS" value="1" />
-      <option name="USE_EXTERNAL_CONSOLE" value="0" />
-      <option name="USE_MONO" value="0" />
-      <option name="RUNTIME_ARGUMENTS" value="" />
-      <option name="PROJECT_PATH" value="$PROJECT_DIR$/Menagerie/Menagerie.csproj" />
-      <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
-      <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
-      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
-      <option name="PROJECT_KIND" value="Console" />
-      <option name="PROJECT_TFM" value="" />
-      <method v="2">
-        <option name="Build" />
-      </method>
-    </configuration>
-    <configuration name="Menagerie.NET5" type="DotNetProject" factoryName=".NET Project">
-      <option name="EXE_PATH" value="" />
-      <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Menagerie/bin/Release/net5.0-windows" />
       <option name="PASS_PARENT_ENVS" value="1" />
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <option name="USE_MONO" value="0" />
@@ -151,25 +131,7 @@
       <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
       <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
       <option name="PROJECT_KIND" value="DotNetCore" />
-      <option name="PROJECT_TFM" value="" />
-      <method v="2">
-        <option name="Build" />
-      </method>
-    </configuration>
-    <configuration name="Menagerie.Test.LinuxHook" type="DotNetProject" factoryName=".NET Project">
-      <option name="EXE_PATH" value="" />
-      <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="PASS_PARENT_ENVS" value="1" />
-      <option name="USE_EXTERNAL_CONSOLE" value="0" />
-      <option name="USE_MONO" value="0" />
-      <option name="RUNTIME_ARGUMENTS" value="" />
-      <option name="PROJECT_PATH" value="$PROJECT_DIR$/Menagerie.Test.LinuxHook/Menagerie.Test.LinuxHook.csproj" />
-      <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
-      <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
-      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
-      <option name="PROJECT_KIND" value="DotNetCore" />
-      <option name="PROJECT_TFM" value="" />
+      <option name="PROJECT_TFM" value="net5.0-windows7.0" />
       <method v="2">
         <option name="Build" />
       </method>
@@ -189,6 +151,10 @@
         <option name="Build" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue=".NET Launch Settings Profile.Menagerie.Core" />
+      <item itemvalue=".NET Project.Menagerie" />
+    </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">

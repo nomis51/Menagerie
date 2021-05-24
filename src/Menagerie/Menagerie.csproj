@@ -4,8 +4,16 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
-    <AssemblyVersion>2.0.0</AssemblyVersion>
-    <FileVersion>2.0.0</FileVersion>
+    <AssemblyVersion>1.4.0</AssemblyVersion>
+    <FileVersion>1.4.0</FileVersion>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageVersion>1.4.0</PackageVersion>
+    <Title>Menagerie</Title>
+    <Authors>nomis51</Authors>
+    <PackageProjectUrl>https://github.com/nomis51/Menagerie</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/nomis51/Menagerie/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageIconUrl>https://github.com/nomis51/Menagerie/blob/master/src/Menagerie/menagerie-logo.ico</PackageIconUrl>
+    <RepositoryUrl>https://github.com/nomis51/Menagerie</RepositoryUrl>
   </PropertyGroup>
 
   <PropertyGroup>
