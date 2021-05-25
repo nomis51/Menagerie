@@ -8,13 +8,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dad710c1-392f-4d6a-ba3d-108c3f78cb03" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Menagerie.Core/Models/ItemsScan/MapModifier.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Menagerie.Core/Services/ItemService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Menagerie/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Menagerie/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/Config.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/Config.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/AppService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/AppService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/ClipboardService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/ClipboardService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/KeyboardService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/KeyboardService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/ItemService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/ItemService.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,8 +93,8 @@
       <option value="$PROJECT_DIR$/Menagerie.Core/Models/Config.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core/Services/KeyboardService.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core/Services/ClipboardService.cs" />
-      <option value="$PROJECT_DIR$/Menagerie.Core/Services/ItemService.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core/Services/AppService.cs" />
+      <option value="$PROJECT_DIR$/Menagerie.Core/Services/ItemService.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1slwfjGXWpB6xhw5kp9ndRW6pVV" />
@@ -177,7 +172,7 @@
       <workItem from="1621814216989" duration="3704000" />
       <workItem from="1621860343059" duration="641000" />
       <workItem from="1621897023434" duration="5692000" />
-      <workItem from="1621967497339" duration="5265000" />
+      <workItem from="1621967497339" duration="5973000" />
     </task>
     <servers />
   </component>

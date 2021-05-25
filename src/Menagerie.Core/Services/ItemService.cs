@@ -202,21 +202,53 @@ namespace Menagerie.Core.Services
             var itemName = "";
             var itemType = "";
             var nbStatsFound = 0;
+            var isMap = false;
 
             for (var i = 0; i < dataParts.Length; ++i)
             {
-                if (dataParts[i].Contains("---")) break;
-                if (dataParts[i].Contains("Rarity:") || dataParts[i].Contains("Item Class:")) continue;
+                if (isMap && dataParts[i].Contains("Map Tier:"))
+                {
+                    var tier = dataParts[i][dataParts[i].LastIndexOf(" ", StringComparison.Ordinal)..];
+                    itemName += $" Tier:{tier}";
 
-                if (nbStatsFound is 0)
-                {
-                    itemName = dataParts[i];
-                    ++nbStatsFound;
+                    if (!string.IsNullOrEmpty(itemType))
+                    {
+                        itemType += $" Tier:{tier}";
+                    }
+                    
+                    break;
                 }
-                else if (nbStatsFound is 1)
+                
+                if (dataParts[i].Contains("---"))
                 {
-                    itemType = dataParts[i];
-                    ++nbStatsFound;
+                    if (!isMap) break;
+                    
+                    continue;
+                }
+                
+                if (dataParts[i].Contains("Rarity:")) continue;
+                
+                if (!isMap && dataParts[i].Contains("Item Class:") && dataParts[i].Contains("Map"))
+                {
+                    isMap = true;
+                    continue;
+                } 
+                
+                if (dataParts[i].Contains("Item Class:"))
+                {
+                    continue;
+                }
+
+                switch (nbStatsFound)
+                {
+                    case 0:
+                        itemName = dataParts[i];
+                        ++nbStatsFound;
+                        break;
+                    case 1:
+                        itemType = dataParts[i];
+                        ++nbStatsFound;
+                        break;
                 }
             }
 
