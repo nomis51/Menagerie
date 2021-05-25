@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 
 namespace Menagerie.Core.Models
@@ -29,5 +30,7 @@ namespace Menagerie.Core.Models
         public Point OutgoingOffersGridOffset { get; set; }
         public Point ChaosRecipeGridOffset { get; set; }
         public bool ChaosRecipeOveralyDockMode { get; set; }
+        public List<string> GoodMapModifiers { get; set; }
+        public List<string> BadMapModifiers { get; set; }
     }
 }

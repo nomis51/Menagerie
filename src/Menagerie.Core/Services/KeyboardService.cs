@@ -60,10 +60,6 @@ namespace Menagerie.Core.Services
             }
         }
 
-        private static void LinuxKeyboardHook_NewKeyboard()
-        {
-        }
-
         private static void WindowsKeyboardHook_MessageReceived(object sender, KeyboardMessageEventArgs e)
         {
             AppService.Instance.HandleKeyboardInput(e);

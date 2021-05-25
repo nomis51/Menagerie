@@ -8,7 +8,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dad710c1-392f-4d6a-ba3d-108c3f78cb03" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Menagerie.Core/Models/ItemsScan/MapModifier.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Menagerie.Core/Services/ItemService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Menagerie/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Menagerie/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/Config.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/Config.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/AppService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/AppService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/ClipboardService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/ClipboardService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/KeyboardService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/KeyboardService.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,10 +49,6 @@
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
-      <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/Area.cs" />
-      <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/AreaChangedEvent.cs" />
-      <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/Config.cs" />
-      <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/DbModel.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/FilterGroup.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/Shortcut.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Models/TradeChatWords.cs" />
@@ -78,7 +80,6 @@
       <option value="$PROJECT_DIR$/Menagerie.Core.NET5/Services/AppService.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core/Services/PoeNinjaService.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core/Services/ClientFileService.cs" />
-      <option value="$PROJECT_DIR$/Menagerie.Core/Services/KeyboardService.cs" />
       <option value="$PROJECT_DIR$/Menagerie/App.xaml.cs" />
       <option value="$PROJECT_DIR$/Menagerie/Controls/NewUpdateInstalled.xaml" />
       <option value="$PROJECT_DIR$/Menagerie/Services/NotificationService.cs" />
@@ -88,12 +89,17 @@
       <option value="$PROJECT_DIR$/Menagerie.Core/Models/Translator/TranslateOptions.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core/Models/Translator/ChatMessageTranslation.cs" />
       <option value="$PROJECT_DIR$/Menagerie/Services/UpdateService.cs" />
-      <option value="$PROJECT_DIR$/Menagerie.Core/Services/AppService.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core/Services/TranslateService.cs" />
       <option value="$PROJECT_DIR$/Menagerie/Views/Styles.xaml" />
       <option value="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml" />
       <option value="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml.cs" />
       <option value="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" />
+      <option value="$PROJECT_DIR$/Menagerie.Core/Models/ItemsScan/MapModifier.cs" />
+      <option value="$PROJECT_DIR$/Menagerie.Core/Models/Config.cs" />
+      <option value="$PROJECT_DIR$/Menagerie.Core/Services/KeyboardService.cs" />
+      <option value="$PROJECT_DIR$/Menagerie.Core/Services/ClipboardService.cs" />
+      <option value="$PROJECT_DIR$/Menagerie.Core/Services/ItemService.cs" />
+      <option value="$PROJECT_DIR$/Menagerie.Core/Services/AppService.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1slwfjGXWpB6xhw5kp9ndRW6pVV" />
@@ -170,6 +176,8 @@
       <workItem from="1621777000757" duration="4305000" />
       <workItem from="1621814216989" duration="3704000" />
       <workItem from="1621860343059" duration="641000" />
+      <workItem from="1621897023434" duration="5692000" />
+      <workItem from="1621967497339" duration="5265000" />
     </task>
     <servers />
   </component>

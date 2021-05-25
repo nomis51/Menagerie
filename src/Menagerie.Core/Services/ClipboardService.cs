@@ -17,6 +17,7 @@ namespace Menagerie.Core.Services
 
         #region Members
 
+        private static object Lock = new();
         private string _lastText = "";
         private bool _firstTextSkipped;
 
@@ -61,49 +62,43 @@ namespace Menagerie.Core.Services
 
         #region Public methods
 
-        public static bool SetClipboard(string value)
+        public bool SetClipboard(string value, int delay = 0)
         {
             Log.Trace("Setting clipboard value");
-            var result = false;
 
-            var t = new Thread(() =>
+            lock (Lock)
             {
                 try
                 {
+                    Thread.Sleep(delay);
                     TextCopy.ClipboardService.SetText(value);
-                    result = true;
+
+                    return true;
                 }
                 catch (Exception e)
                 {
                     Log.Error("Error while settings clipboard value", e);
                 }
-            });
-            t.Start();
-            t.Join();
 
-            return result;
+                return false;
+            }
         }
 
-        #endregion
 
-        public static string GetClipboard()
+        public string GetClipboard(int delay = 0)
         {
             Log.Trace("Getting clipboard value");
             var text = "";
 
-            var t = new Thread(delegate()
+            try
             {
-                try
-                {
-                    text = TextCopy.ClipboardService.GetText();
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Error while getting clipboard value", e);
-                }
-            });
-            t.Start();
-            t.Join();
+                Thread.Sleep(delay);
+                text = TextCopy.ClipboardService.GetText();
+            }
+            catch (Exception e)
+            {
+                Log.Error("Error while getting clipboard value", e);
+            }
 
             return text;
         }
@@ -113,5 +108,7 @@ namespace Menagerie.Core.Services
             Log.Trace("Starting ClipboardService");
             Listen();
         }
+
+        #endregion
     }
 }

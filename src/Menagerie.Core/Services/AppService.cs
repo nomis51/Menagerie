@@ -4,6 +4,7 @@ using Menagerie.Core.Models;
 using Menagerie.Core.Models.PoeApi.Stash;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -100,6 +101,7 @@ namespace Menagerie.Core.Services
         private readonly PoeNinjaService _poeNinjaService;
         private readonly PriceCheckingService _priceCheckingService;
         private readonly TranslateService _translateService;
+        private readonly ItemService _itemService;
 
         private Area _currentArea;
         private static AppVersion _appVersion = new();
@@ -121,6 +123,7 @@ namespace Menagerie.Core.Services
             _poeNinjaService = new PoeNinjaService();
             _priceCheckingService = new PriceCheckingService();
             _translateService = new TranslateService();
+            _itemService = new ItemService();
         }
 
         private void SetShortcuts()
@@ -144,6 +147,49 @@ namespace Menagerie.Core.Services
                 Shift = true,
                 Action = DoShowTranslateInputControl
             });
+
+            _shortcutService.RegisterShortcut(new Shortcut()
+            {
+                Direction = KeyDirection.Down,
+                Key = (Key) 70, // F
+                Alt = false,
+                Control = true,
+                Shift = false,
+                Action = () => SearchItemInStash()
+            });
+
+            _shortcutService.RegisterShortcut(new Shortcut()
+            {
+                Direction = KeyDirection.Down,
+                Key = (Key) 70, // F
+                Alt = false,
+                Control = true,
+                Shift = true,
+                Action = () => SearchItemInStash(true)
+            });
+        }
+
+        private void SearchItemInStash(bool useTypeInstead = false)
+        {
+            ClearSpecialKeys();
+            FocusGame();
+            SendCtrlC();
+
+            var data = _clipboardService.GetClipboard(100);
+
+            if (string.IsNullOrEmpty(data)) return;
+
+            var (itemName, itemType) = _itemService.ParseItemNameAndType(data);
+
+            var value = useTypeInstead && !string.IsNullOrEmpty(itemType) ? itemType : itemName;
+            
+            if (string.IsNullOrEmpty(value)) return;
+
+            if (!_clipboardService.SetClipboard(value)) return;
+
+            FocusGame();
+            SendCtrlA();
+            SendCtrlV();
         }
 
         private void DoShowTranslateInputControl()
@@ -278,13 +324,13 @@ namespace Menagerie.Core.Services
 
         public void EnsureNotHighlightingItem()
         {
-            var text = ClipboardService.GetClipboard();
+            var text = _clipboardService.GetClipboard();
 
             Thread.Sleep(100);
             SendCtrlA();
             SendCtrlC();
 
-            var newText = ClipboardService.GetClipboard();
+            var newText = _clipboardService.GetClipboard();
 
             if (text == newText)
             {
@@ -599,6 +645,11 @@ namespace Menagerie.Core.Services
             _keyboardService.SendEnter();
         }
 
+        public void SendCtrlF()
+        {
+            ModifiedKeyStroke(Key.Control, Key.F);
+        }
+
         public void SendCtrlA()
         {
             ModifiedKeyStroke(Key.Control, Key.A);
@@ -626,7 +677,7 @@ namespace Menagerie.Core.Services
 
         public bool SetClipboard(string text)
         {
-            return ClipboardService.SetClipboard(text);
+            return _clipboardService.SetClipboard(text);
         }
 
         public string ReplaceVars(string msg, Offer offer)
@@ -720,6 +771,11 @@ namespace Menagerie.Core.Services
             }
         }
 
+        private void OnShowTranslateInputControl()
+        {
+            ShowTranslateInputControl?.Invoke();
+        }
+
         public void Start()
         {
             _appDataService.Start();
@@ -736,11 +792,7 @@ namespace Menagerie.Core.Services
             _poeApiService.Start();
             _priceCheckingService.Start();
             _translateService.Start();
-        }
-
-        private void OnShowTranslateInputControl()
-        {
-            ShowTranslateInputControl?.Invoke();
+            _itemService.Start();
         }
     }
 }
