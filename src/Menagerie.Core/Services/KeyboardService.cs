@@ -1,6 +1,7 @@
 ﻿using log4net;
 using Menagerie.Core.Abstractions;
 using System;
+using System.Drawing;
 using Winook;
 using Menagerie.Core.Extensions;
 using System.Runtime.InteropServices;
@@ -63,6 +64,11 @@ namespace Menagerie.Core.Services
         private static void WindowsKeyboardHook_MessageReceived(object sender, KeyboardMessageEventArgs e)
         {
             AppService.Instance.HandleKeyboardInput(e);
+        }
+
+        public Point GetMousePosition()
+        {
+            return _robot.GetMousePosition();
         }
 
         public void KeyPress(Key key)

@@ -35,6 +35,9 @@
             <RowDefinition Height="100" />
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
+        <!-- Map modifiers popup -->
+      
+
         <!-- Translation -->
         <Button x:Name="btnTranslateInput"
                 Grid.Row="3"
@@ -78,7 +81,7 @@
                          Width="550"
                          Height="50"
                          FontSize="24"
-                         KeyDown="TxtChatMessageInput_OnKeyDown"/>
+                         KeyDown="TxtChatMessageInput_OnKeyDown" />
                 <Button Name="btnSendVirtualChatMessageInput"
                         Width="50"
                         BorderThickness="0"

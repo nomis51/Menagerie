@@ -9,7 +9,11 @@
   <component name="ChangeListManager">
     <list default="true" id="dad710c1-392f-4d6a-ba3d-108c3f78cb03" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Menagerie/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Menagerie/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/ItemService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/ItemService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/AppService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/AppService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/KeyboardService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/KeyboardService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,6 +41,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/E6E6B40B-308C-4FE1-9C93-7C26C144C865/1A2/ThreadPool.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/0D0CB169-A5E1-4C1E-A547-BA1218E2ECB3/DE/DispatcherOperation.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/E6E6B40B-308C-4FE1-9C93-7C26C144C865/1A1/ThreadPool.CoreCLR.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Menagerie/obj/Release/net5.0-windows/Views/OverlayWindow.g.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0D0CB169-A5E1-4C1E-A547-BA1218E2ECB3/e0/3ed68d6e/CulturePreservingExecutionContext.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/E6E6B40B-308C-4FE1-9C93-7C26C144C865/325/AssemblyConfigurationAttribute.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/E6E6B40B-308C-4FE1-9C93-7C26C144C865/1B2/ExecutionContext.cs" root0="SKIP_HIGHLIGHTING" />
@@ -86,15 +91,15 @@
       <option value="$PROJECT_DIR$/Menagerie/Services/UpdateService.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core/Services/TranslateService.cs" />
       <option value="$PROJECT_DIR$/Menagerie/Views/Styles.xaml" />
-      <option value="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml" />
-      <option value="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml.cs" />
-      <option value="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core/Models/ItemsScan/MapModifier.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core/Models/Config.cs" />
-      <option value="$PROJECT_DIR$/Menagerie.Core/Services/KeyboardService.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core/Services/ClipboardService.cs" />
-      <option value="$PROJECT_DIR$/Menagerie.Core/Services/AppService.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core/Services/ItemService.cs" />
+      <option value="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml.cs" />
+      <option value="$PROJECT_DIR$/Menagerie.Core/Services/KeyboardService.cs" />
+      <option value="$PROJECT_DIR$/Menagerie.Core/Services/AppService.cs" />
+      <option value="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" />
+      <option value="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1slwfjGXWpB6xhw5kp9ndRW6pVV" />
@@ -172,7 +177,7 @@
       <workItem from="1621814216989" duration="3704000" />
       <workItem from="1621860343059" duration="641000" />
       <workItem from="1621897023434" duration="5692000" />
-      <workItem from="1621967497339" duration="5973000" />
+      <workItem from="1621967497339" duration="7816000" />
     </task>
     <servers />
   </component>

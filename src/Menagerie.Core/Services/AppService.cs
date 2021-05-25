@@ -5,10 +5,12 @@ using Menagerie.Core.Models.PoeApi.Stash;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Menagerie.Core.Models.ItemsScan;
 using Menagerie.Core.Models.Translator;
 using PoeLogsParser.Enums;
 using PoeLogsParser.Models;
@@ -83,6 +85,10 @@ namespace Menagerie.Core.Services
         public delegate void ShowTranslateInputControlEvent();
 
         public event ShowTranslateInputControlEvent ShowTranslateInputControl;
+
+        public delegate void MapModifiersVerifiedEvent(List<MapModifier> modifiers);
+
+        public event MapModifiersVerifiedEvent MapModifiersVerified;
 
         #endregion
 
@@ -167,6 +173,38 @@ namespace Menagerie.Core.Services
                 Shift = true,
                 Action = () => SearchItemInStash(true)
             });
+
+            _shortcutService.RegisterShortcut(new Shortcut()
+            {
+                Direction = KeyDirection.Down,
+                Key = (Key) 70, // F
+                Alt = true,
+                Control = false,
+                Shift = false,
+                Action = VerifyMapModifiers
+            });
+        }
+
+        private void VerifyMapModifiers()
+        {
+            ClearSpecialKeys();
+            FocusGame();
+            SendCtrlC();
+
+            var data = _clipboardService.GetClipboard(100);
+
+            if (string.IsNullOrEmpty(data)) return;
+
+            var mods = _itemService.FindMapModifiers(data);
+
+            if (!mods.Any()) return;
+            
+            OnMapModifiersVerified(mods);
+        }
+
+        public Point GetMousePosition()
+        {
+            return _keyboardService.GetMousePosition();
         }
 
         private void SearchItemInStash(bool useTypeInstead = false)
@@ -182,7 +220,7 @@ namespace Menagerie.Core.Services
             var (itemName, itemType) = _itemService.ParseItemNameAndType(data);
 
             var value = useTypeInstead && !string.IsNullOrEmpty(itemType) ? itemType : itemName;
-            
+
             if (string.IsNullOrEmpty(value)) return;
 
             if (!_clipboardService.SetClipboard(value)) return;
@@ -774,6 +812,11 @@ namespace Menagerie.Core.Services
         private void OnShowTranslateInputControl()
         {
             ShowTranslateInputControl?.Invoke();
+        }
+
+        private void OnMapModifiersVerified(List<MapModifier> modifiers)
+        {
+            MapModifiersVerified?.Invoke(modifiers);
         }
 
         public void Start()

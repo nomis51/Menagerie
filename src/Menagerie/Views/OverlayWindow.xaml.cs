@@ -52,8 +52,7 @@ namespace Menagerie
 
             _vm = new OverlayViewModel();
             DataContext = _vm;
-
-
+            
             SourceInitialized += OverlayWindow_SourceInitialized;
             Loaded += OverlayWindow_Loaded;
             Activated += OverlayWindow_Activated;

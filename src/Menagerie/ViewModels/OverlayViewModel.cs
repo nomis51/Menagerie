@@ -20,6 +20,7 @@ using System.Drawing;
 using Brush = System.Windows.Media.Brush;
 using Brushes = System.Windows.Media.Brushes;
 using System.Windows.Media;
+using Menagerie.Core.Models.ItemsScan;
 using Menagerie.Core.Models.Translator;
 
 namespace Menagerie.ViewModels
@@ -208,6 +209,22 @@ namespace Menagerie.ViewModels
 
         public Brush IncomingOffersControlsGridColor => _isOverlayMovable ? Brushes.Red : Brushes.Transparent;
 
+        private Visibility _mapModifiersPopupVisible = Visibility.Hidden;
+
+        public Visibility MapModifiersPopupVisible
+        {
+            get => _mapModifiersPopupVisible;
+            set
+            {
+                _mapModifiersPopupVisible = value;
+                OnPropertyChanged("MapModifiersPopupVisible");
+            }
+        }
+
+        public int MapModifiersPopupX { get; set; }
+        public int MapModifiersPopupY { get; set; }
+        public ObservableCollection<MapModifier> MapModifiers { get; set; } = new ObservableCollection<MapModifier>();
+
         public OverlayViewModel()
         {
             Log.Trace("Initializing OverlayViewModel");
@@ -219,8 +236,21 @@ namespace Menagerie.ViewModels
             AppService.Instance.OnNewChaosRecipeResult += AppService_OnNewChaosRecipeResult;
             AppService.Instance.OnToggleChaosRecipeOverlayVisibility += AppService_OnToggleChaosRecipeOverlayVisibility;
             AppService.Instance.ShowTranslateInputControl += AppService_OnShowTranslateInputControl;
+            AppService.Instance.MapModifiersVerified += AppService_OnMapModifiersVerified;
 
             UpdateService.NewUpdateInstalled += UpdateServiceOnNewUpdateInstalled;
+        }
+
+        private void AppService_OnMapModifiersVerified(List<MapModifier> modifiers)
+        {
+            MapModifiersPopupVisible = Visibility.Visible;
+            MapModifiers.Clear();
+            modifiers.ForEach(mod => MapModifiers.Add(mod));
+            var position = AppService.Instance.GetMousePosition();
+            MapModifiersPopupX = position.X < 100 ? position.X + 50 : position.X - 50;
+            MapModifiersPopupY = position.Y;
+            OnPropertyChanged("MapModifiersPopupX");
+            OnPropertyChanged("MapModifiersPopupY");
         }
 
         private void AppService_OnShowTranslateInputControl()
@@ -247,7 +277,8 @@ namespace Menagerie.ViewModels
             OnPropertyChanged("AppVersion");
         }
 
-        public static void SendTranslatedMessage(string message, string targetLanguage = "",string sourceLanguage = "", bool notWhisper = false)
+        public static void SendTranslatedMessage(string message, string targetLanguage = "", string sourceLanguage = "",
+            bool notWhisper = false)
         {
             AppService.Instance.TranslateMessage(message, targetLanguage, sourceLanguage, notWhisper);
         }
