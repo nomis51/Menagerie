@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Menagerie</id>
+    <version>#{version}</version>
+    <title>Menagerie</title>
+    <authors>nomis51</authors>
+    <owners>nomis51</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <projectUrl>https://github.com/nomis51/Menagerie</projectUrl>
+    <icon>lib\net45\Assets\menagerie-logo-splash.png</icon>
+    <description>A Path of Exile trade manger to simplify and speed up your trading experience</description>
+    <!-- <readme>lib\net45\README.md</readme> -->
+  </metadata>
+  <files>
+    <file src="files\**" target="lib\net45" />
+    <file src="..\Menagerie\bin\Release\net5.0-windows\Assets\**" target="lib\net45\Assets" />
+    <file src="..\Menagerie\bin\Release\net5.0-windows\Data\**" target="lib\net45\Data" />
+    <file src="..\Menagerie\bin\Release\net5.0-windows\ref\**" target="lib\net45\ref" />
+    <file src="..\Menagerie\bin\Release\net5.0-windows\runtimes\win\**" target="lib\net45\runtimes\win" />
+    <file src="..\Menagerie\bin\Release\net5.0-windows\runtimes\win-arm64\**" target="lib\net45\runtimes\win-arm64" />
+    <file src="..\Menagerie\bin\Release\net5.0-windows\runtimes\win-x64\**" target="lib\net45\runtimes\win-x64" />
+    <file src="..\Menagerie\bin\Release\net5.0-windows\runtimes\win-x86\**" target="lib\net45\runtimes\win-x86" />
+    <file src="..\Menagerie\bin\Release\net5.0-windows\winook.support\**" target="lib\net45\winook.support" />
+  </files>
+</package>
+

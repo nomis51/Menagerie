@@ -8,30 +8,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dad710c1-392f-4d6a-ba3d-108c3f78cb03" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Menagerie/AppBootstrapper.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Menagerie/AppMapper.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Menagerie/Models/Abstractions/IReactiveProperty.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Menagerie/Models/ChaosRecipeResult.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Menagerie/Models/Config.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Menagerie/Models/MapModifier.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Menagerie/Models/PriceCheckResult.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Menagerie/Models/PricingResult.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Menagerie/Models/ReactiveProperty.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MenagerieTemplate.nuspec" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package.ps1" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Menagerie/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Menagerie/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie/App.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/App.xaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie/App.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/App.xaml.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Menagerie/Menagerie.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Menagerie.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie/Models/Offer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Models/Offer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie/ViewModels/ConfigViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/ViewModels/ConfigViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie/ViewModels/SplashViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/ViewModels/SplashViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie/ViewModels/StatsViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/ViewModels/StatsViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie/Views/ConfigWindow.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/ConfigView.xaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie/Views/ConfigWindow.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/ConfigView.xaml.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/OverlayView.xaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie/Views/OverlayWindow.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/OverlayView.xaml.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie/Views/StatsWindow.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/StatsView.xaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie/Views/StatsWindow.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/StatsView.xaml.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -198,7 +178,7 @@
       <workItem from="1621897023434" duration="5692000" />
       <workItem from="1621967497339" duration="13185000" />
       <workItem from="1622041751311" duration="17825000" />
-      <workItem from="1622136244949" duration="4092000" />
+      <workItem from="1622136244949" duration="5515000" />
     </task>
     <servers />
   </component>
