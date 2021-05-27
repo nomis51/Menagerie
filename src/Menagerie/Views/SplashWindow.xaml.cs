@@ -14,11 +14,11 @@ namespace Menagerie.Views
     /// <summary>
     /// Logique d'interaction pour SplashWindow.xaml
     /// </summary>
-    public partial class SplashWindow : Window
+    public partial class SplashView : Window
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(SplashWindow));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(SplashView));
 
-        public SplashWindow()
+        public SplashView()
         {
             InitializeComponent();
 

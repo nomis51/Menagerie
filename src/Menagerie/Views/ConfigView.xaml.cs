@@ -10,13 +10,13 @@ using Menagerie.Core.Services;
 namespace Menagerie.Views
 {
     /// <summary>
-    /// Logique d'interaction pour ConfigWindow.xaml
+    /// Logique d'interaction pour ConfigView.xaml
     /// </summary>
     public partial class ConfigView : AdonisWindow
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(ConfigView));
 
-        private readonly ConfigViewModel _vm;
+        private ConfigViewModel _vm => (ConfigViewModel) DataContext;
 
         private readonly List<Grid> _views = new();
 
@@ -25,8 +25,6 @@ namespace Menagerie.Views
             InitializeComponent();
 
             Log.Trace("Initializing ConfigWindow");
-
-            _vm = (ConfigViewModel) DataContext;
 
             SetupViews();
             ShowView("grdGeneral");
@@ -89,11 +87,11 @@ namespace Menagerie.Views
 
         private void btnResetDefaultOverlay_Click(object sender, RoutedEventArgs e)
         {
-            _vm.Config.Value.ChaosRecipeOveralyDockMode = true;
-            _vm.Config.Value.ChaosRecipeGridOffset = new System.Drawing.Point(0, 0);
-            _vm.Config.Value.OutgoingOffersGridOffset = new System.Drawing.Point(0, 0);
-            _vm.Config.Value.IncomingOffersControlsGridOffset = new System.Drawing.Point(0, 0);
-            _vm.Config.Value.IncomingOffersGridOffset = new System.Drawing.Point(0, 0);
+            _vm.Config.ChaosRecipeOveralyDockMode = true;
+            _vm.Config.ChaosRecipeGridOffset = new System.Drawing.Point(0, 0);
+            _vm.Config.OutgoingOffersGridOffset = new System.Drawing.Point(0, 0);
+            _vm.Config.IncomingOffersControlsGridOffset = new System.Drawing.Point(0, 0);
+            _vm.Config.IncomingOffersGridOffset = new System.Drawing.Point(0, 0);
 
             _vm.SaveConfig();
 

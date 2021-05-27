@@ -8,10 +8,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dad710c1-392f-4d6a-ba3d-108c3f78cb03" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/MenagerieTemplate.nuspec" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/package.ps1" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Menagerie/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Menagerie/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie/Menagerie.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Menagerie.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/AppBootstrapper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/AppBootstrapper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/ViewModels/ConfigViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/ViewModels/ConfigViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Views/ConfigView.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/ConfigView.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Views/ConfigView.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/ConfigView.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Views/OverlayView.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/OverlayView.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Views/OverlayView.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/OverlayView.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Views/SplashWindow.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/SplashWindow.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Views/SplashWindow.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/SplashWindow.xaml.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,6 +38,7 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/BAF720B7-AEF1-477F-A9A5-36C8626D6872/36/PropertyChangedBase.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/74C228B5-4DD0-4B9A-B507-46351A36C5BA/A/ReleaseEntry.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/AB3CA1C3-03C2-44D6-B901-46AD120D8164/336/TextChangedEventArgs.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/AB3CA1C3-03C2-44D6-B901-46AD120D8164/235/XamlReader.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/74C228B5-4DD0-4B9A-B507-46351A36C5BA/B/ReleaseExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Menagerie.Core/Services/PoeWindowService.cs" root0="FORCE_HIGHLIGHTING" />
@@ -47,9 +54,6 @@
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
-      <option value="$PROJECT_DIR$/Menagerie.Core/Services/ClientFileService.cs" />
-      <option value="$PROJECT_DIR$/Menagerie/Controls/NewUpdateInstalled.xaml" />
-      <option value="$PROJECT_DIR$/Menagerie/Services/NotificationService.cs" />
       <option value="$PROJECT_DIR$/Menagerie/Controls/NewUpdateInstalledControl.xaml" />
       <option value="$PROJECT_DIR$/Menagerie/Controls/NewUpdateInstalledControl.xaml.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core/Models/Translator/GoogleTranslateSession.cs" />
@@ -83,21 +87,24 @@
       <option value="$PROJECT_DIR$/Menagerie.Core/Services/AppService.cs" />
       <option value="$PROJECT_DIR$/Menagerie/Models/Offer.cs" />
       <option value="$PROJECT_DIR$/Menagerie/Models/ChaosRecipeSettings.cs" />
-      <option value="$PROJECT_DIR$/Menagerie/Views/OverlayView.xaml" />
       <option value="$PROJECT_DIR$/Menagerie/App.xaml.cs" />
-      <option value="$PROJECT_DIR$/Menagerie/AppBootstrapper.cs" />
       <option value="$PROJECT_DIR$/Menagerie/ViewModels/SplashViewModel.cs" />
-      <option value="$PROJECT_DIR$/Menagerie/ViewModels/ConfigViewModel.cs" />
       <option value="$PROJECT_DIR$/Menagerie/Views/ConfigWindow.xaml" />
       <option value="$PROJECT_DIR$/Menagerie/Views/ConfigWindow.xaml.cs" />
-      <option value="$PROJECT_DIR$/Menagerie/Views/ConfigView.xaml" />
-      <option value="$PROJECT_DIR$/Menagerie/Views/ConfigView.xaml.cs" />
-      <option value="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" />
       <option value="$PROJECT_DIR$/Menagerie/Views/StatsView.xaml.cs" />
       <option value="$PROJECT_DIR$/Menagerie/Views/StatsView.xaml" />
       <option value="$PROJECT_DIR$/Menagerie/ViewModels/StatsViewModel.cs" />
-      <option value="$PROJECT_DIR$/Menagerie/Views/OverlayView.xaml.cs" />
       <option value="$PROJECT_DIR$/Menagerie/AppMapper.cs" />
+      <option value="$PROJECT_DIR$/Menagerie/Views/SplashWindow.xaml" />
+      <option value="$PROJECT_DIR$/Menagerie/Views/SplashWindow.xaml.cs" />
+      <option value="$PROJECT_DIR$/Menagerie/Views/ConfigView.xaml.cs" />
+      <option value="$PROJECT_DIR$/Menagerie/WindowManager.cs" />
+      <option value="$PROJECT_DIR$/Menagerie/AppBootstrapper.cs" />
+      <option value="$PROJECT_DIR$/Menagerie/ViewModels/ConfigViewModel.cs" />
+      <option value="$PROJECT_DIR$/Menagerie/Views/ConfigView.xaml" />
+      <option value="$PROJECT_DIR$/Menagerie/Views/OverlayView.xaml" />
+      <option value="$PROJECT_DIR$/Menagerie/Views/OverlayView.xaml.cs" />
+      <option value="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1slwfjGXWpB6xhw5kp9ndRW6pVV" />
@@ -178,7 +185,7 @@
       <workItem from="1621897023434" duration="5692000" />
       <workItem from="1621967497339" duration="13185000" />
       <workItem from="1622041751311" duration="17825000" />
-      <workItem from="1622136244949" duration="5515000" />
+      <workItem from="1622136244949" duration="9651000" />
     </task>
     <servers />
   </component>

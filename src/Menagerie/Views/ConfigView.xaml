@@ -130,7 +130,7 @@
                     <Label Content="POESESSID:"
                            Foreground="#a0aec0"
                            ToolTip="Required for the Chaos Recipe" />
-                    <TextBox Text="{Binding Config.Value.POESESSID, Mode=TwoWay}" />
+                    <TextBox Text="{Binding Config.POESESSID, Mode=TwoWay}" />
                     <Label Content="(a restart is required)"
                            Foreground="#a0aec0" />
                 </StackPanel>
@@ -138,25 +138,25 @@
                     <Label Content="Player name:"
                            Foreground="#a0aec0"
                            ToolTip="Required to automatically leave party when an outgoing trade is completed and for the Chaos Recipe" />
-                    <TextBox Text="{Binding Config.Value.PlayerName, Mode=TwoWay}" />
+                    <TextBox Text="{Binding Config.PlayerName, Mode=TwoWay}" />
                 </StackPanel>
                 <StackPanel Margin="5">
                     <Label Content="League:"
                            Foreground="#a0aec0"
                            ToolTip="Required to automatically filter offers out of your league" />
-                    <ComboBox ItemsSource="{Binding Leagues}"
-                              SelectedItem="{Binding Config.Value.CurrentLeague, UpdateSourceTrigger=PropertyChanged}" />
+                    <ComboBox x:Name="Leagues"
+                              SelectedItem="{Binding Config.CurrentLeague, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
                 <DockPanel Margin="5">
                     <Label Content="Ignore offers out of your league:"
                            Foreground="#a0aec0" />
-                    <CheckBox IsChecked="{Binding Config.Value.OnlyShowOffersOfCurrentLeague, Mode=TwoWay}"
+                    <CheckBox IsChecked="{Binding Config.OnlyShowOffersOfCurrentLeague, Mode=TwoWay}"
                               Margin="5,2.5,0,0" />
                 </DockPanel>
                 <DockPanel Margin="5">
                     <Label Content="Filter sold offers:"
                            Foreground="#a0aec0" />
-                    <CheckBox IsChecked="{Binding Config.Value.FilterSoldOffers, Mode=TwoWay}"
+                    <CheckBox IsChecked="{Binding Config.FilterSoldOffers, Mode=TwoWay}"
                               Margin="5,2.5,0,0" />
                 </DockPanel>
             </StackPanel>
@@ -180,44 +180,44 @@
                 <StackPanel Margin="5">
                     <Label Content="Sold whisper:"
                            Foreground="#a0aec0" />
-                    <TextBox Text="{Binding Config.Value.SoldWhisper, Mode=TwoWay}" />
+                    <TextBox Text="{Binding Config.SoldWhisper, Mode=TwoWay}" />
                 </StackPanel>
                 <StackPanel Margin="5">
                     <Label Content="Still interested whisper:"
                            Foreground="#a0aec0" />
-                    <TextBox Text="{Binding Config.Value.StillInterestedWhisper, Mode=TwoWay}" />
+                    <TextBox Text="{Binding Config.StillInterestedWhisper, Mode=TwoWay}" />
                 </StackPanel>
                 <StackPanel Margin="5">
                     <Label Content="Busy whisper:"
                            Foreground="#a0aec0" />
-                    <TextBox Text="{Binding Config.Value.BusyWhisper, Mode=TwoWay}" />
+                    <TextBox Text="{Binding Config.BusyWhisper, Mode=TwoWay}" />
                 </StackPanel>
                 <StackPanel Margin="5">
                     <Label Content="Thanks whisper:"
                            Foreground="#a0aec0" />
-                    <TextBox Text="{Binding Config.Value.ThanksWhisper, Mode=TwoWay}" />
+                    <TextBox Text="{Binding Config.ThanksWhisper, Mode=TwoWay}" />
                 </StackPanel>
                 <StackPanel Margin="5">
                     <Label Content="Out of league whisper:"
                            Foreground="#a0aec0" />
-                    <TextBox Text="{Binding Config.Value.OutOfLeagueWhisper, Mode=TwoWay}" />
+                    <TextBox Text="{Binding Config.OutOfLeagueWhisper, Mode=TwoWay}" />
                 </StackPanel>
                 <DockPanel Margin="5">
                     <Label Content="Auto whisper Thanks:"
                            Foreground="#a0aec0" />
-                    <CheckBox IsChecked="{Binding Config.Value.AutoThanks, Mode=TwoWay}"
+                    <CheckBox IsChecked="{Binding Config.AutoThanks, Mode=TwoWay}"
                               Margin="5,2.5,0,0" />
                 </DockPanel>
                 <DockPanel Margin="5">
                     <Label Content="Auto whisper Out of League:"
                            Foreground="#a0aec0" />
-                    <CheckBox IsChecked="{Binding Config.Value.AutoWhisperOutOfLeague, Mode=TwoWay}"
+                    <CheckBox IsChecked="{Binding Config.AutoWhisperOutOfLeague, Mode=TwoWay}"
                               Margin="5,2.5,0,0" />
                 </DockPanel>
                 <DockPanel Margin="5">
                     <Label Content="Auto whisper Outgoing offers:"
                            Foreground="#a0aec0" />
-                    <CheckBox IsChecked="{Binding Config.Value.AutoWhisper, Mode=TwoWay}"
+                    <CheckBox IsChecked="{Binding Config.AutoWhisper, Mode=TwoWay}"
                               Margin="5,2.5,0,0" />
                 </DockPanel>
             </StackPanel>
@@ -255,7 +255,7 @@
                 <StackPanel Margin="5">
                     <Label Content="PoE Ninja cache update rate (in minutes):"
                            Foreground="#a0aec0" />
-                    <TextBox Text="{Binding Config.Value.PoeNinjaUpdateRate, Mode=TwoWay}"
+                    <TextBox Text="{Binding Config.PoeNinjaUpdateRate, Mode=TwoWay}"
                              Width="150"
                              HorizontalAlignment="Left" />
                 </StackPanel>
@@ -300,7 +300,7 @@
                            Foreground="#a0aec0"
                            Margin="5" />
                     <DockPanel>
-                        <CheckBox IsChecked="{Binding Config.Value.ChaosRecipeEnabled}"
+                        <CheckBox IsChecked="{Binding Config.ChaosRecipeEnabled}"
                                   Margin="5" />
                         <Label Content="(a restart is required)"
                                Foreground="#a0aec0" />
@@ -312,12 +312,12 @@
                 <StackPanel Margin="5">
                     <Label Content="Chaos Recipe tab:"
                            Foreground="#a0aec0" />
-                    <TextBox Text="{Binding Config.Value.ChaosRecipeTabIndex, Mode=TwoWay}" />
+                    <TextBox Text="{Binding Config.ChaosRecipeTabIndex, Mode=TwoWay}" />
                 </StackPanel>
                 <StackPanel Margin="5">
                     <Label Content="Chaos Recipe refresh rate (in minutes):"
                            Foreground="#a0aec0" />
-                    <TextBox Text="{Binding Config.Value.ChaosRecipeRefreshRate, Mode=TwoWay}" />
+                    <TextBox Text="{Binding Config.ChaosRecipeRefreshRate, Mode=TwoWay}" />
                 </StackPanel>
             </StackPanel>
         </Grid>
