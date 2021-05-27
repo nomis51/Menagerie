@@ -1,12 +1,7 @@
-﻿using log4net;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 using Menagerie.Core.Extensions;
 using LiveCharts;
 using LiveCharts.Defaults;
@@ -14,61 +9,15 @@ using LiveCharts.Wpf;
 using Menagerie.Core.Services;
 using Menagerie.Core.Models;
 using System.Windows;
+using Caliburn.Micro;
+using ILog = log4net.ILog;
+using LogManager = log4net.LogManager;
 using StatsOffer = Menagerie.Models.StatsOffer;
 
 namespace Menagerie.ViewModels
 {
-    public class StatsViewModel : INotifyPropertyChanged
+    public class StatsViewModel : Screen
     {
-        #region Updater
-
-        private ICommand mUpdater;
-
-        public ICommand UpdateCommand
-        {
-            get
-            {
-                if (mUpdater == null)
-                    mUpdater = new Updater();
-                return mUpdater;
-            }
-            set { mUpdater = value; }
-        }
-
-        private class Updater : ICommand
-        {
-            #region ICommand Members
-
-            public bool CanExecute(object parameter)
-            {
-                return true;
-            }
-
-            public event EventHandler CanExecuteChanged;
-
-            public void Execute(object parameter)
-            {
-            }
-
-            #endregion
-        }
-
-        #endregion
-
-        #region INotifyPropertyChanged Members
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
-        #endregion
-
         private readonly static ILog log = LogManager.GetLogger(typeof(StatsViewModel));
 
         public SeriesCollection Trades { get; set; } = new SeriesCollection()
@@ -125,7 +74,7 @@ namespace Menagerie.ViewModels
             if (trades.Count == 0)
             {
                 _noData = true;
-                OnPropertyChanged("NoDataVisible");
+                NotifyOfPropertyChange(() => NoDataVisible);
                 return;
             }
 

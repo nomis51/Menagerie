@@ -12,8 +12,11 @@
                 <ResourceDictionary Source="pack://application:,,,/AdonisUI.ClassicTheme;component/Resources.xaml"/>
 
                 <ResourceDictionary Source="Views/Styles.xaml" />
+                
+                <ResourceDictionary>
+                    <local:AppBootstrapper x:Key="Bootstrapper" />
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
             </ResourceDictionary>
-
     </Application.Resources>
 </Application>

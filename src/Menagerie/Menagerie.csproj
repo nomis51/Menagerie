@@ -23,6 +23,8 @@
   <ItemGroup>
     <PackageReference Include="AdonisUI" Version="1.16.0" />
     <PackageReference Include="AdonisUI.ClassicTheme" Version="1.16.0" />
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="Caliburn.Micro" Version="4.0.173" />
     <PackageReference Include="ControlzEx" Version="4.4.0" />
     <PackageReference Include="DeltaCompressionDotNet" Version="1.1.0" />
     <PackageReference Include="FontAwesome5" Version="2.0.8" />

@@ -22,7 +22,7 @@ namespace Menagerie
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml
     /// </summary>
-    public partial class OverlayWindow : AdonisWindow
+    public partial class OverlayView : AdonisWindow
     {
         #region WinAPI
 
@@ -31,7 +31,7 @@ namespace Menagerie
 
         #endregion
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof(OverlayWindow));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(OverlayView));
 
         private readonly Rectangle _screenRect;
         private bool _winMoved;
@@ -39,9 +39,9 @@ namespace Menagerie
         private Point _dragStart;
         private Vector _dragStartOffset;
 
-        private readonly OverlayViewModel _vm;
+        private OverlayViewModel _vm => (OverlayViewModel) DataContext;
 
-        public OverlayWindow()
+        public OverlayView()
         {
             InitializeComponent();
 
@@ -50,9 +50,6 @@ namespace Menagerie
             _screenRect = new Rectangle(0, 0, (int) SystemParameters.FullPrimaryScreenWidth,
                 (int) SystemParameters.FullPrimaryScreenHeight);
 
-            _vm = new OverlayViewModel();
-            DataContext = _vm;
-            
             SourceInitialized += OverlayWindow_SourceInitialized;
             Loaded += OverlayWindow_Loaded;
             Activated += OverlayWindow_Activated;
@@ -191,7 +188,7 @@ namespace Menagerie
                     Thread.Sleep(1000);
                 }
 
-                Application.Current.Dispatcher.Invoke(delegate { (new StatsWindow()).Show(); });
+                Application.Current.Dispatcher.Invoke(delegate { (new StatsView()).Show(); });
             });
         }
 
@@ -278,9 +275,6 @@ namespace Menagerie
                         break;
                     case OfferState.HideoutJoined:
                         break;
-                    default:
-                        // ReSharper disable once CA2208
-                        throw new ArgumentOutOfRangeException();
                 }
             }
         }
@@ -326,14 +320,15 @@ namespace Menagerie
             Log.Trace("Clear offers button clicked");
             AudioService.Instance.PlayClick();
 
-            _vm.ClearOffers();
+            _vm.RemoveAllOffers();
         }
 
         private void btnClearOutgoingOffers_Click(object sender, RoutedEventArgs e)
         {
             Log.Trace("Clear outgoing offers button clicked");
             AudioService.Instance.PlayClick();
-            _vm.ClearOutgoingOffers();
+
+            _vm.RemoveAllOffers(true);
         }
 
         private void txtSearchOutgoingOffer_TextChanged(object sender, TextChangedEventArgs e)
@@ -379,14 +374,9 @@ namespace Menagerie
             Application.Current.Shutdown(0);
         }
 
-        private void trayIcon_TrayContextMenuOpen(object sender, RoutedEventArgs e)
-        {
-            _vm.Notify("CurrentLeague");
-        }
-
         private void grdChaosRecipe_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (!_vm.IsOverlayMovable)
+            if (!_vm.OverlayMovable.Value)
             {
                 grdChaosRecipe.Opacity = 0.1;
             }
@@ -399,10 +389,7 @@ namespace Menagerie
 
         private void grdOffers_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (!_vm.IsOverlayMovable)
-            {
-                return;
-            }
+            if (!_vm.OverlayMovable.Value) return;
 
             _dragStart = e.GetPosition(winOverlay);
             _dragStartOffset = new Vector(grdOffers_tt.X, grdOffers_tt.Y);
@@ -411,10 +398,7 @@ namespace Menagerie
 
         private void grdOffers_MouseMove(object sender, MouseEventArgs e)
         {
-            if (!_vm.IsOverlayMovable)
-            {
-                return;
-            }
+            if (!_vm.OverlayMovable.Value) return;
 
             if (!grdOffers.IsMouseCaptured) return;
             var offset = Point.Subtract(e.GetPosition(winOverlay), _dragStart);
@@ -425,20 +409,14 @@ namespace Menagerie
 
         private void grdOffers_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (!_vm.IsOverlayMovable)
-            {
-                return;
-            }
+            if (!_vm.OverlayMovable.Value) return;
 
             grdOffers.ReleaseMouseCapture();
         }
 
         private void grdIncomingControls_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (!_vm.IsOverlayMovable)
-            {
-                return;
-            }
+            if (!_vm.OverlayMovable.Value) return;
 
             _dragStart = e.GetPosition(winOverlay);
             _dragStartOffset = new Vector(grdIncomingControls_tt.X, grdIncomingControls_tt.Y);
@@ -447,20 +425,14 @@ namespace Menagerie
 
         private void grdIncomingControls_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (!_vm.IsOverlayMovable)
-            {
-                return;
-            }
+            if (!_vm.OverlayMovable.Value) return;
 
             grdIncomingControls.ReleaseMouseCapture();
         }
 
         private void grdIncomingControls_MouseMove(object sender, MouseEventArgs e)
         {
-            if (!_vm.IsOverlayMovable)
-            {
-                return;
-            }
+            if (!_vm.OverlayMovable.Value) return;
 
             if (!grdIncomingControls.IsMouseCaptured) return;
             var offset = Point.Subtract(e.GetPosition(winOverlay), _dragStart);
@@ -471,10 +443,7 @@ namespace Menagerie
 
         private void grdOutgoingControls_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (!_vm.IsOverlayMovable)
-            {
-                return;
-            }
+            if (!_vm.OverlayMovable.Value) return;
 
             _dragStart = e.GetPosition(winOverlay);
             _dragStartOffset = new Vector(grdOutgoingControls_tt.X, grdOutgoingControls_tt.Y);
@@ -483,10 +452,7 @@ namespace Menagerie
 
         private void grdOutgoingControls_MouseMove(object sender, MouseEventArgs e)
         {
-            if (!_vm.IsOverlayMovable)
-            {
-                return;
-            }
+            if (!_vm.OverlayMovable.Value) return;
 
             if (!grdOutgoingControls.IsMouseCaptured) return;
             var offset = Point.Subtract(e.GetPosition(winOverlay), _dragStart);
@@ -497,10 +463,7 @@ namespace Menagerie
 
         private void grdOutgoingControls_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (!_vm.IsOverlayMovable)
-            {
-                return;
-            }
+            if (!_vm.OverlayMovable.Value) return;
 
             grdOutgoingControls.ReleaseMouseCapture();
         }
@@ -508,15 +471,12 @@ namespace Menagerie
         private void btnMoveOverlay_Click(object sender, RoutedEventArgs e)
         {
             _vm.ToggleMovableOverlay(grdOffers_tt, grdIncomingControls_tt, grdOutgoingControls_tt, grdChaosRecipe_tt,
-                _vm.DockChaosRecipeOverlayVisible == Visibility.Visible);
+                _vm.DockChaosRecipeOverlayVisibility.Value == Visibility.Visible);
         }
 
         private void grdChaosRecipe_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (!_vm.IsOverlayMovable)
-            {
-                return;
-            }
+            if (!_vm.OverlayMovable.Value) return;
 
             _dragStart = e.GetPosition(winOverlay);
             _dragStartOffset = new Vector(grdChaosRecipe_tt.X, grdChaosRecipe_tt.Y);
@@ -525,10 +485,7 @@ namespace Menagerie
 
         private void grdChaosRecipe_MouseMove(object sender, MouseEventArgs e)
         {
-            if (!_vm.IsOverlayMovable)
-            {
-                return;
-            }
+            if (!_vm.OverlayMovable.Value) return;
 
             if (!grdChaosRecipe.IsMouseCaptured) return;
             var offset = Point.Subtract(e.GetPosition(winOverlay), _dragStart);
@@ -539,29 +496,26 @@ namespace Menagerie
 
         private void grdChaosRecipe_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (!_vm.IsOverlayMovable)
-            {
-                return;
-            }
+            if (!_vm.OverlayMovable.Value) return;
 
             grdChaosRecipe.ReleaseMouseCapture();
         }
 
         private void SetChaosRecipeOverlayDockMode()
         {
-            _vm.StackChaosRecipeOverlayVisible = Visibility.Hidden;
-            _vm.DockChaosRecipeOverlayVisible = Visibility.Visible;
+            _vm.StackChaosRecipeOverlayVisibility.Value = Visibility.Hidden;
+            _vm.DockChaosRecipeOverlayVisibility.Value = Visibility.Visible;
         }
 
         private void SetChaosRecipeOverlayStackMode()
         {
-            _vm.DockChaosRecipeOverlayVisible = Visibility.Hidden;
-            _vm.StackChaosRecipeOverlayVisible = Visibility.Visible;
+            _vm.DockChaosRecipeOverlayVisibility.Value = Visibility.Hidden;
+            _vm.StackChaosRecipeOverlayVisibility.Value = Visibility.Visible;
         }
 
         private void ChangeChaosRecipeOverlayOrientation()
         {
-            if (_vm.DockChaosRecipeOverlayVisible == Visibility.Visible)
+            if (_vm.DockChaosRecipeOverlayVisibility.Value == Visibility.Visible)
             {
                 SetChaosRecipeOverlayStackMode();
             }
@@ -573,7 +527,7 @@ namespace Menagerie
 
         private void btnChangeChaosRecipeOrientation_Click(object sender, RoutedEventArgs e)
         {
-            if (_vm.IsOverlayMovable)
+            if (_vm.OverlayMovable.Value)
             {
                 ChangeChaosRecipeOverlayOrientation();
             }

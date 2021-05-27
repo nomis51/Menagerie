@@ -16,31 +16,13 @@ namespace Menagerie
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(App));
 
-        private readonly SplashWindow _splash;
-        private readonly OverlayWindow _overlay;
-
         public App()
         {
             InitializeComponent();
 
             Log.Trace("Initializing App", null);
 
-            _splash = new SplashWindow();
-            _overlay = new OverlayWindow();
-            _splash.Show();
-
-            Task.Run(() =>
-            {
-                AppService.Instance.Start();
-
-                Current.Dispatcher.Invoke(delegate { _splash.Close(); });
-            });
-        }
-
-        private void Overlay_Loaded(object sender, RoutedEventArgs e)
-        {
-            Log.Trace("Closing splash window");
-            _splash.Close();
+            Task.Run(() => { AppService.Instance.Start(); });
         }
 
         private void Application_DispatcherUnhandledException(object sender,

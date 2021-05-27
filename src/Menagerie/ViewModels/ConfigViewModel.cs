@@ -1,6 +1,4 @@
-﻿using log4net;
-using Menagerie.Core.Models;
-using Menagerie.Core.Services;
+﻿using Menagerie.Core.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -9,124 +7,47 @@ using Menagerie.Core.Extensions;
 using System.Windows.Controls;
 using System.Collections.Generic;
 using System.Linq;
+using Caliburn.Micro;
+using Menagerie.Models;
+using ILog = log4net.ILog;
+using LogManager = log4net.LogManager;
+using CoreModels = Menagerie.Core.Models;
 
 namespace Menagerie.ViewModels
 {
-    public class ConfigViewModel : INotifyPropertyChanged
+    public class ConfigViewModel : Screen
     {
-        #region Updater
-
-        private ICommand mUpdater;
-
-        public ICommand UpdateCommand
-        {
-            get
-            {
-                if (mUpdater == null)
-                    mUpdater = new Updater();
-                return mUpdater;
-            }
-            set { mUpdater = value; }
-        }
-
-        private class Updater : ICommand
-        {
-            #region ICommand Members
-
-            public bool CanExecute(object parameter)
-            {
-                return true;
-            }
-
-            public event EventHandler CanExecuteChanged;
-
-            public void Execute(object parameter)
-            {
-            }
-
-            #endregion
-        }
-
-        #endregion
-
-        #region INotifyPropertyChanged Members
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
-        #endregion
-
         private static readonly ILog Log = LogManager.GetLogger(typeof(ConfigViewModel));
 
-        private Config _config;
+        #region Props
 
-        public Config Config
-        {
-            get => _config;
-            private set
-            {
-                _config = value;
-                OnPropertyChanged("Config");
-            }
-        }
+        public ReactiveProperty<Config> Config { get; set; }
+        public ReactiveProperty<BindableCollection<string>> Leagues { get; set; }
 
         public string ChatScanWords
         {
-            get => string.Join(" ", _config.ChatScanWords);
-            set
-            {
-                _config.ChatScanWords = value.Split(' ').Select(w => w.ToLower()).ToList();
-                OnPropertyChanged("Config");
-            }
+            get => string.Join(" ", Config.Value.ChatScanWords);
+            set { Config.Value.ChatScanWords = value.Split(' ').Select(w => w.ToLower()).ToList(); }
         }
 
-        private ObservableCollection<string> _leagues = new();
+        #endregion
 
-        public ObservableCollection<string> Leagues
-        {
-            get => _leagues;
-            set
-            {
-                _leagues = value;
-                OnPropertyChanged("Leagues");
-            }
-        }
 
         public ConfigViewModel()
         {
             Log.Trace("Intializing ConfigViewModel");
-            GetLeagues();
-            GetConfig();
+
+            Config = new ReactiveProperty<Config>("Config", this, AppMapper.Instance.Map<CoreModels.Config, Config>(AppService.Instance.GetConfig()));
+
+            BindableCollection<string> leagues = new();
+            leagues.AddRange(AppService.Instance.GetLeagues().Result);
+            Leagues = new ReactiveProperty<BindableCollection<string>>("Leagues", this, leagues);
         }
 
         public void SaveConfig()
         {
             Log.Trace("Saving config");
-            AppService.Instance.SetConfig(Config);
-        }
-
-        private void GetConfig()
-        {
-            Log.Trace("Getting config");
-            Config = AppService.Instance.GetConfig();
-        }
-
-        private void GetLeagues()
-        {
-            Log.Trace("Getting leagues");
-            var leagues = AppService.Instance.GetLeagues().Result;
-
-            foreach (var league in leagues)
-            {
-                Leagues.Add(league);
-            }
+            AppService.Instance.SetConfig(AppMapper.Instance.Map<Config, CoreModels.Config>(Config.Value));
         }
     }
 }

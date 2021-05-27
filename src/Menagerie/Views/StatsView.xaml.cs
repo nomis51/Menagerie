@@ -9,11 +9,11 @@ namespace Menagerie.Views
     /// <summary>
     /// Logique d'interaction pour StatsWindow.xaml
     /// </summary>
-    public partial class StatsWindow : AdonisWindow
+    public partial class StatsView : AdonisWindow
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(StatsWindow));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(StatsView));
 
-        public StatsWindow()
+        public StatsView()
         {
             InitializeComponent();
 

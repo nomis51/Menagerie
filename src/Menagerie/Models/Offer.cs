@@ -1,204 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using Menagerie.Core.Extensions;
+using Point = System.Drawing.Point;
 
 namespace Menagerie.Models
 {
-    public class Offer : INotifyPropertyChanged
+    public class Offer
     {
-        #region INotifyPropertyChanged Members
+        public int Id { get; set; }
+        public string ItemName { get; set; }
+        public string EscapedName { get; set; }
+        public string PlayerName { get; set; }
+        public DateTime Time { get; set; }
+        public string Currency { get; set; }
+        public double Price { get; set; }
+        public string CurrencyImageLink { get; set; }
+        public string League { get; set; }
+        public bool IsOutgoing { get; set; } = false;
+        public string StashTab { get; set; } = "";
+        public Point Position { get; set; }
+        public string Notes { get; set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion
-
-        private int _id;
-
-        public int Id
-        {
-            get => _id;
-            set
-            {
-                _id = value;
-                OnPropertyChanged("Id");
-            }
-        }
-
-        private string _itemName;
-
-        public string ItemName
-        {
-            get => _itemName;
-            set
-            {
-                this._itemName = value;
-                this.OnPropertyChanged("ItemName");
-            }
-        }
-
-        private string _escapedName;
-
-        public string EscapedName
-        {
-            get => this._escapedName;
-            set
-            {
-                _escapedName = value;
-                this.OnPropertyChanged("EscapedName");
-            }
-        }
-
-        private string _playerName;
-
-        public string PlayerName
-        {
-            get => _playerName;
-            set
-            {
-                _playerName = value;
-                OnPropertyChanged("PlayerName");
-            }
-        }
-
-        private string _stashTab;
-
-        public string StashTab
-        {
-            get => _stashTab;
-            set
-            {
-                _stashTab = value;
-                OnPropertyChanged("StashTab");
-            }
-        }
-
-        private System.Drawing.Point _position;
-
-        public System.Drawing.Point Position
-        {
-            get => _position;
-            set
-            {
-                _position = value;
-                OnPropertyChanged("Position");
-            }
-        }
-
-        private string _notes;
-
-        public string Notes
-        {
-            get => _notes;
-            set
-            {
-                _notes = value;
-                OnPropertyChanged("Notes");
-            }
-        }
-
-        private DateTime _time;
-
-        public DateTime Time
-        {
-            get => _time;
-            set
-            {
-                _time = value;
-                OnPropertyChanged("Time");
-            }
-        }
-
-        private string _currency;
-
-        public string Currency
-        {
-            get => _currency;
-            set
-            {
-                _currency = value;
-                OnPropertyChanged("Currency");
-            }
-        }
-
-        private double _price;
-
-        public double Price
-        {
-            get => _price;
-            set
-            {
-                _price = value;
-                OnPropertyChanged("Price");
-            }
-        }
-
-        private string _currencyImageLink;
-
-        public string CurrencyImageLink
-        {
-            get => _currencyImageLink;
-            set
-            {
-                _currencyImageLink = value;
-                OnPropertyChanged("CurrencyImageLink");
-            }
-        }
-
-        private string _league;
-
-        public string League
-        {
-            get => _league;
-            set
-            {
-                _league = value;
-                OnPropertyChanged("League");
-            }
-        }
-
-        public Core.Models.PriceCheckResult PriceCheck { get; set; }
-        public bool PossibleScam { get; set; } = false;
-
-        public Visibility PossibleScamVisible => PossibleScam ? Visibility.Visible : Visibility.Hidden;
-
-        public OfferState State { get; set; }
-
-        public Visibility IsBusyButtonVisible => PlayerNotInvited ? Visibility.Visible : Visibility.Hidden;
-
-        public Visibility IsReInviteButtonVisible => PlayerInvited ? Visibility.Visible : Visibility.Hidden;
-
-        public Visibility IsInviteBorderVisible => PlayerInvited ? Visibility.Visible : Visibility.Hidden;
-
-        public Visibility IsNormalBorderVisible => PlayerNotInvited ? Visibility.Visible : Visibility.Hidden;
-
-        public Visibility IsTradeBorderVisible =>
-            State == OfferState.TradeRequestSent ? Visibility.Visible : Visibility.Hidden;
-
-        public bool PlayerInvited => State is OfferState.PlayerInvited or OfferState.TradeRequestSent;
-
-        public bool PlayerNotInvited => !PlayerInvited;
-
-        public bool TradeRequestSent => State == OfferState.TradeRequestSent;
-
-        public bool HideoutJoined => State == OfferState.HideoutJoined;
-
-        public bool TradeDone => State == OfferState.Done;
-
-        public bool PlayerJoined { get; set; } = false;
-
+        public PriceCheckResult PriceCheck { get; set; }
         public string PriceText => $"{Price}x";
-
-        public Visibility PlayerJoinedIconVisible => PlayerJoined ? Visibility.Visible : Visibility.Hidden;
+        public OfferState State { get; set; }
+        public bool PlayerInvited => State is OfferState.PlayerInvited or OfferState.TradeRequestSent;
+        public bool PlayerNotInvited => !PlayerInvited;
+        public bool TradeRequestSent => State == OfferState.TradeRequestSent;
+        public bool HideoutJoined => State == OfferState.HideoutJoined;
+        public bool TradeDone => State == OfferState.Done;
+        public bool PlayerJoined { get; set; } = false;
+        public bool PossibleScam { get; set; }
 
         public double PriceFontSize
         {
@@ -221,13 +53,10 @@ namespace Menagerie.Models
         }
 
         private int MaxNameLength => (IsOutgoing ? 16 : 12);
-
         public string ItemNameText => ItemName.Length > MaxNameLength ? ItemName[..MaxNameLength] + "..." : ItemName;
 
         public string PlayerNameText =>
             PlayerName.Length > MaxNameLength ? PlayerName[..MaxNameLength] + "..." : PlayerName;
-
-        public bool IsOutgoing { get; set; }
 
         public bool IsHighlighted { get; set; } = false;
 
@@ -260,46 +89,14 @@ namespace Menagerie.Models
             }
         }
 
-        public Visibility AnyNotes => !string.IsNullOrEmpty(Notes) ? Visibility.Visible : Visibility.Hidden;
-
-        private List<string> _tradeChatScanWords = new List<string>();
-
-        public string TradeChatScanWords
-        {
-            get => string.Join(" ", _tradeChatScanWords);
-            set
-            {
-                _tradeChatScanWords = value.Split(' ').ToList();
-                OnPropertyChanged("TradeChatScanWords");
-            }
-        }
-
-
-        public Offer()
-        {
-        }
-
-        public Offer(Core.Models.Offer offer)
-        {
-            this.Id = offer.Id;
-            this.ItemName = offer.ItemName;
-            this.EscapedName = offer.EscapedName;
-            this.PlayerName = offer.PlayerName;
-            this.Time = offer.Time;
-            this.Currency = offer.Currency;
-            this.CurrencyImageLink = offer.CurrencyImageLink;
-            this.Price = offer.Price;
-            this.League = offer.League;
-            this.IsOutgoing = offer.IsOutgoing;
-            StashTab = offer.StashTab;
-            Position = offer.Position;
-            Notes = offer.Notes;
-        }
-
-        private string ElapsedTime()
-        {
-            return (DateTime.Now - Time).ToReadableString();
-        }
+        public Visibility PossibleScamVisibility => PossibleScam ? Visibility.Visible : Visibility.Hidden;
+        public Visibility IsBusyButtonVisibility => PlayerNotInvited ? Visibility.Visible : Visibility.Hidden;
+        public Visibility IsReInviteButtonVisibility => PlayerInvited ? Visibility.Visible : Visibility.Hidden;
+        public Visibility IsInviteBorderVisibility => PlayerInvited ? Visibility.Visible : Visibility.Hidden;
+        public Visibility IsNormalBorderVisibility => PlayerNotInvited ? Visibility.Visible : Visibility.Hidden;
+        public Visibility IsTradeBorderVisibility => State == OfferState.TradeRequestSent ? Visibility.Visible : Visibility.Hidden;
+        public Visibility PlayerJoinedIconVisibility => PlayerJoined ? Visibility.Visible : Visibility.Hidden;
+        public Visibility AnyNotesVisibility => !string.IsNullOrEmpty(Notes) ? Visibility.Visible : Visibility.Hidden;
     }
 
     public enum OfferState

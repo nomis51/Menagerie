@@ -12,22 +12,21 @@ namespace Menagerie.Views
     /// <summary>
     /// Logique d'interaction pour ConfigWindow.xaml
     /// </summary>
-    public partial class ConfigWindow : AdonisWindow
+    public partial class ConfigView : AdonisWindow
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(ConfigWindow));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(ConfigView));
 
         private readonly ConfigViewModel _vm;
 
         private readonly List<Grid> _views = new();
 
-        public ConfigWindow()
+        public ConfigView()
         {
             InitializeComponent();
 
             Log.Trace("Initializing ConfigWindow");
 
-            _vm = new ConfigViewModel();
-            DataContext = _vm;
+            _vm = (ConfigViewModel) DataContext;
 
             SetupViews();
             ShowView("grdGeneral");
@@ -90,11 +89,12 @@ namespace Menagerie.Views
 
         private void btnResetDefaultOverlay_Click(object sender, RoutedEventArgs e)
         {
-            _vm.Config.ChaosRecipeOveralyDockMode = true;
-            _vm.Config.ChaosRecipeGridOffset = new System.Drawing.Point(0, 0);
-            _vm.Config.OutgoingOffersGridOffset = new System.Drawing.Point(0, 0);
-            _vm.Config.IncomingOffersControlsGridOffset = new System.Drawing.Point(0, 0);
-            _vm.Config.IncomingOffersGridOffset = new System.Drawing.Point(0, 0);
+            _vm.Config.Value.ChaosRecipeOveralyDockMode = true;
+            _vm.Config.Value.ChaosRecipeGridOffset = new System.Drawing.Point(0, 0);
+            _vm.Config.Value.OutgoingOffersGridOffset = new System.Drawing.Point(0, 0);
+            _vm.Config.Value.IncomingOffersControlsGridOffset = new System.Drawing.Point(0, 0);
+            _vm.Config.Value.IncomingOffersGridOffset = new System.Drawing.Point(0, 0);
+
             _vm.SaveConfig();
 
             AppService.Instance.ResetDefaultOverlay();
