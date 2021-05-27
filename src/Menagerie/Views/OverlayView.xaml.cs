@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 using AdonisUI.Controls;
 using Point = System.Windows.Point;
 
-namespace Menagerie
+namespace Menagerie.Views
 {
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml
@@ -340,7 +340,7 @@ namespace Menagerie
             }
             else
             {
-                _vm.FilterOffers(txtSearchOutgoingOffer.Text);
+                _vm.FilterOffers(txtSearchOutgoingOffer.Text, true);
             }
         }
 
@@ -391,7 +391,7 @@ namespace Menagerie
         {
             if (!_vm.OverlayMovable.Value) return;
 
-            _dragStart = e.GetPosition(winOverlay);
+            _dragStart = e.GetPosition(this);
             _dragStartOffset = new Vector(grdOffers_tt.X, grdOffers_tt.Y);
             grdOffers.CaptureMouse();
         }
@@ -401,7 +401,7 @@ namespace Menagerie
             if (!_vm.OverlayMovable.Value) return;
 
             if (!grdOffers.IsMouseCaptured) return;
-            var offset = Point.Subtract(e.GetPosition(winOverlay), _dragStart);
+            var offset = Point.Subtract(e.GetPosition(this), _dragStart);
 
             grdOffers_tt.X = _dragStartOffset.X + offset.X;
             grdOffers_tt.Y = _dragStartOffset.Y + offset.Y;
@@ -418,7 +418,7 @@ namespace Menagerie
         {
             if (!_vm.OverlayMovable.Value) return;
 
-            _dragStart = e.GetPosition(winOverlay);
+            _dragStart = e.GetPosition(this);
             _dragStartOffset = new Vector(grdIncomingControls_tt.X, grdIncomingControls_tt.Y);
             grdIncomingControls.CaptureMouse();
         }
@@ -435,7 +435,7 @@ namespace Menagerie
             if (!_vm.OverlayMovable.Value) return;
 
             if (!grdIncomingControls.IsMouseCaptured) return;
-            var offset = Point.Subtract(e.GetPosition(winOverlay), _dragStart);
+            var offset = Point.Subtract(e.GetPosition(this), _dragStart);
 
             grdIncomingControls_tt.X = _dragStartOffset.X + offset.X;
             grdIncomingControls_tt.Y = _dragStartOffset.Y + offset.Y;
@@ -445,7 +445,7 @@ namespace Menagerie
         {
             if (!_vm.OverlayMovable.Value) return;
 
-            _dragStart = e.GetPosition(winOverlay);
+            _dragStart = e.GetPosition(this);
             _dragStartOffset = new Vector(grdOutgoingControls_tt.X, grdOutgoingControls_tt.Y);
             grdOutgoingControls.CaptureMouse();
         }
@@ -455,7 +455,7 @@ namespace Menagerie
             if (!_vm.OverlayMovable.Value) return;
 
             if (!grdOutgoingControls.IsMouseCaptured) return;
-            var offset = Point.Subtract(e.GetPosition(winOverlay), _dragStart);
+            var offset = Point.Subtract(e.GetPosition(this), _dragStart);
 
             grdOutgoingControls_tt.X = _dragStartOffset.X + offset.X;
             grdOutgoingControls_tt.Y = _dragStartOffset.Y + offset.Y;
@@ -478,7 +478,7 @@ namespace Menagerie
         {
             if (!_vm.OverlayMovable.Value) return;
 
-            _dragStart = e.GetPosition(winOverlay);
+            _dragStart = e.GetPosition(this);
             _dragStartOffset = new Vector(grdChaosRecipe_tt.X, grdChaosRecipe_tt.Y);
             grdChaosRecipe.CaptureMouse();
         }
@@ -488,7 +488,7 @@ namespace Menagerie
             if (!_vm.OverlayMovable.Value) return;
 
             if (!grdChaosRecipe.IsMouseCaptured) return;
-            var offset = Point.Subtract(e.GetPosition(winOverlay), _dragStart);
+            var offset = Point.Subtract(e.GetPosition(this), _dragStart);
 
             grdChaosRecipe_tt.X = _dragStartOffset.X + offset.X;
             grdChaosRecipe_tt.Y = _dragStartOffset.Y + offset.Y;

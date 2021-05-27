@@ -10,6 +10,7 @@ using CoreModels = Menagerie.Core.Models;
 using Menagerie.Core.Extensions;
 using Menagerie.Services;
 using System.Reflection;
+using System.Threading.Tasks;
 using Brush = System.Windows.Media.Brush;
 using Brushes = System.Windows.Media.Brushes;
 using System.Windows.Media;
@@ -71,8 +72,8 @@ namespace Menagerie.ViewModels
         public Visibility BeltsVisibility => ChaosRecipe.Value.NeedBelts ? Visibility.Visible : Visibility.Hidden;
         public Visibility WeaponsVisibility => ChaosRecipe.Value.NeedWeapons ? Visibility.Visible : Visibility.Hidden;
         public Visibility TranslateInputControlVisibility { get; set; } = Visibility.Hidden;
-        public Visibility IsOffersFilterVisibility => IncomingOffers.Value.Count > 1 ? Visibility.Visible : Visibility.Hidden;
-        public Visibility IsOutgoingOffersFilterVisibility => OutgoingOffers.Value.Count > 1 ? Visibility.Visible : Visibility.Hidden;
+        public Visibility IsOffersFilterVisibility => IncomingOffers.Value.Count > 1 || _fullIncomingOffers != null ? Visibility.Visible : Visibility.Hidden;
+        public Visibility IsOutgoingOffersFilterVisibility => OutgoingOffers.Value.Count > 1 || _fullOutgoingOffers != null ? Visibility.Visible : Visibility.Hidden;
 
         #endregion
 
@@ -120,8 +121,20 @@ namespace Menagerie.ViewModels
                 },
                 AdditionalReactivePropertiesToNotify = new List<IReactiveProperty>() {MapModifiers}
             };
-            IncomingOffers = new ReactiveProperty<BindableCollection<Offer>>("IncomingOffers", this, new());
-            OutgoingOffers = new ReactiveProperty<BindableCollection<Offer>>("OutgoingOffers", this, new());
+            IncomingOffers = new ReactiveProperty<BindableCollection<Offer>>("IncomingOffers", this, new())
+            {
+                AdditionalPropertiesToNotify = new List<string>()
+                {
+                    "IsOffersFilterVisibility"
+                }
+            };
+            OutgoingOffers = new ReactiveProperty<BindableCollection<Offer>>("OutgoingOffers", this, new())
+            {
+                AdditionalPropertiesToNotify = new List<string>()
+                {
+                    "IsOutgoingOffersFilterVisibility"
+                }
+            };
             ChaosRecipe = new ReactiveProperty<ChaosRecipeResult>("ChaosRecipe", this, new ChaosRecipeResult())
             {
                 AdditionalPropertiesToNotify = new List<string>()
@@ -272,9 +285,7 @@ namespace Menagerie.ViewModels
         public void ShowConfigWindow()
         {
             Log.Trace("Showing config window");
-            _configWin = new ConfigView();
-            _configWin.Closed += ConfigWin_Closed;
-            _configWin.Show();
+            AppBootstrapper.WindowManager.ShowWindowAsync(new ConfigViewModel());
         }
 
         private void ConfigWin_Closed(object sender, EventArgs e)
@@ -698,10 +709,12 @@ namespace Menagerie.ViewModels
             if (applyToOutgoing)
             {
                 OutgoingOffers.Value = offers;
+                _fullOutgoingOffers = null;
             }
             else
             {
                 IncomingOffers.Value = offers;
+                _fullIncomingOffers = null;
             }
         }
 
@@ -713,11 +726,11 @@ namespace Menagerie.ViewModels
 
             searchText = searchText.ToLower().Trim();
 
+            ResetFilter(applyToOutgoing);
+
             var results = OutgoingOffers.Value.ToList().FindAll(o => o.ItemName.ToLower().Contains(searchText) || o.PlayerName.ToLower().Contains(searchText));
 
             if (!results.Any()) return;
-
-            ResetFilter(applyToOutgoing);
 
             Offer[] fullOffers;
 
@@ -732,11 +745,12 @@ namespace Menagerie.ViewModels
                 fullOffers = _fullIncomingOffers;
             }
 
-            var offers = (applyToOutgoing ? OutgoingOffers : IncomingOffers).Value;
-            offers.ToList().CopyTo(fullOffers, 0);
+            var offers = applyToOutgoing ? OutgoingOffers : IncomingOffers;
+            offers.Value.ToList().CopyTo(fullOffers, 0);
 
-            offers = new BindableCollection<Offer>();
-            offers.AddRange(results);
+            offers.Value = new BindableCollection<Offer>();
+            offers.Value.AddRange(results);
+            offers.Notify();
         }
 
         public void SetCurrentLeague(string league)

@@ -1,5 +1,4 @@
-﻿<adonisControls:AdonisWindow x:Class="Menagerie.OverlayView"
-                             Name="winOverlay"
+﻿<adonisControls:AdonisWindow x:Class="Menagerie.Views.OverlayView"
                              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -17,7 +16,7 @@
                              Background="Transparent"
                              Topmost="True"
                              ShowInTaskbar="False"
-                             Visibility="Hidden"
+                             Visibility="Visible"
                              Title="Overlay"
                              WindowState="Maximized">
     <Window.Resources>
@@ -62,7 +61,7 @@
         </Button>
         <StackPanel Name="stackChatMessageInput"
                     Grid.Row="0"
-                    Visibility="{Binding TranslateInputControlVisible}"
+                    Visibility="{Binding TranslateInputControlVisibility}"
                     Grid.Column="0"
                     Grid.RowSpan="99"
                     Grid.ColumnSpan="99"
@@ -707,6 +706,7 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </Grid>
+        
         <!-- Outgoing offers -->
         <Ellipse Width="20"
                  Height="20"
