@@ -1,6 +1,7 @@
 ﻿using Menagerie.Core.Services;
 using Menagerie.Core.Extensions;
 using System.Linq;
+using System.Threading.Tasks;
 using Caliburn.Micro;
 using Menagerie.Models;
 using ILog = log4net.ILog;
@@ -31,10 +32,15 @@ namespace Menagerie.ViewModels
         {
             Log.Trace("Intializing ConfigViewModel");
 
-            Config = AppMapper.Instance.Map<CoreModels.Config, Config>(AppService.Instance.GetConfig());
+            Task.Run(() =>
+            {
+                Config = AppMapper.Instance.Map<CoreModels.Config, Config>(AppService.Instance.GetConfig());
 
-            Leagues = new();
-            Leagues.AddRange(AppService.Instance.GetLeagues().Result);
+                Leagues = new();
+                Leagues.AddRange(AppService.Instance.GetLeagues().Result);
+
+                NotifyOfPropertyChange(() => Leagues);
+            });
         }
 
         public void SaveConfig()

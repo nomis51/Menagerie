@@ -7,15 +7,7 @@
     <projectFile>Menagerie.NET5/Menagerie.NET5.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dad710c1-392f-4d6a-ba3d-108c3f78cb03" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Menagerie/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Menagerie/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/Trades/Offer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/Trades/Offer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/AppService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/AppService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie/Models/ReactiveProperty.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Models/ReactiveProperty.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie/Views/OverlayView.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/OverlayView.xaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie/Views/OverlayView.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/OverlayView.xaml.cs" afterDir="false" />
-    </list>
+    <list default="true" id="dad710c1-392f-4d6a-ba3d-108c3f78cb03" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
