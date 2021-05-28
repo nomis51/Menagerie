@@ -187,7 +187,7 @@
             <DockPanel Grid.Row="0"
                        Visibility="{Binding DockChaosRecipeOverlayVisibility.Value, Mode=OneWay}"
                        Grid.Column="0">
-                <DockPanel Visibility="{Binding AmuletsVisibility.Value, Mode=OneWay}">
+                <DockPanel Visibility="{Binding AmuletsVisibility, Mode=OneWay}">
                     <Image Margin="5,5,5,5"
                            Height="30"
                            Source="/Assets/ChaosRecipe/amulet.png"
@@ -199,10 +199,9 @@
                                Foreground="White"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
-                               cal:Bind.Model="{Binding }"
-                               Text="{Binding ChaosRecipe.NbAmulets}" />
+                               Text="{Binding ChaosRecipe.Value.NbAmulets, Mode=OneWay}" />
                 </DockPanel>
-                <DockPanel Visibility="{Binding RingsVisibility.Value, Mode=OneWay}">
+                <DockPanel Visibility="{Binding RingsVisibility, Mode=OneWay}">
                     <Image Margin="5,5,5,5"
                            Height="30"
                            Source="/Assets/ChaosRecipe/ring.png"
@@ -214,7 +213,7 @@
                                Foreground="White"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
-                               Text="{Binding ChaosRecipe.NbRingSets, Mode=OneWay}" />
+                               Text="{Binding ChaosRecipe.Value.NbRingSets, Mode=OneWay}" />
                 </DockPanel>
                 <DockPanel Visibility="{Binding BeltsVisibility, Mode=OneWay}">
                     <Image Margin="5,5,5,5"
@@ -228,7 +227,7 @@
                                Foreground="White"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
-                               Text="{Binding ChaosRecipe.NbBelts, Mode=OneWay}" />
+                               Text="{Binding ChaosRecipe.Value.NbBelts, Mode=OneWay}" />
                 </DockPanel>
                 <DockPanel Visibility="{Binding HelmetsVisibility, Mode=OneWay}">
                     <Image Margin="5,5,5,5"
@@ -242,7 +241,7 @@
                                Foreground="White"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
-                               Text="{Binding ChaosRecipe.NbHelmets, Mode=OneWay}" />
+                               Text="{Binding ChaosRecipe.Value.NbHelmets, Mode=OneWay}" />
                 </DockPanel>
                 <DockPanel Visibility="{Binding BootsVisibility, Mode=OneWay}">
                     <Image Margin="5,5,5,5"
@@ -256,7 +255,7 @@
                                Foreground="White"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
-                               Text="{Binding ChaosRecipe.NbBoots, Mode=OneWay}" />
+                               Text="{Binding ChaosRecipe.Value.NbBoots, Mode=OneWay}" />
                 </DockPanel>
                 <DockPanel Visibility="{Binding GlovesVisibility, Mode=OneWay}">
                     <Image Margin="5,5,5,5"
@@ -270,7 +269,7 @@
                                Foreground="White"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
-                               Text="{Binding ChaosRecipe.NbGloves, Mode=OneWay}" />
+                               Text="{Binding ChaosRecipe.Value.NbGloves, Mode=OneWay}" />
                 </DockPanel>
                 <DockPanel Visibility="{Binding BodyArmoursVisibility, Mode=OneWay}">
                     <Image Margin="5,5,5,5"
@@ -284,7 +283,7 @@
                                Foreground="White"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
-                               Text="{Binding ChaosRecipe.NbBodyArmours, Mode=OneWay}" />
+                               Text="{Binding ChaosRecipe.Value.NbBodyArmours, Mode=OneWay}" />
                 </DockPanel>
                 <DockPanel Visibility="{Binding WeaponsVisibility, Mode=OneWay}">
                     <Image Margin="5,5,5,5"
@@ -298,7 +297,7 @@
                                Foreground="White"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
-                               Text="{Binding ChaosRecipe.NbWeaponSets, Mode=OneWay}" />
+                               Text="{Binding ChaosRecipe.Value.NbWeaponSets, Mode=OneWay}" />
                 </DockPanel>
                 <Separator Height="5"
                            Foreground="#a0aec0"
@@ -317,7 +316,7 @@
                                Foreground="White"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
-                               Text="{Binding ChaosRecipe.NbSets, Mode=OneWay}" />
+                               Text="{Binding ChaosRecipe.Value.NbSets, Mode=OneWay}" />
                 </DockPanel>
 
                 <Button x:Name="btnChangeDockChaosRecipeOrientation"
@@ -339,7 +338,7 @@
 
             <StackPanel Visibility="{Binding StackChaosRecipeOverlayVisibility, Mode=OneWay}" Grid.Row="0"
                         Grid.Column="0">
-                <DockPanel Visibility="{Binding AmuletsVisible}">
+                <DockPanel Visibility="{Binding AmuletsVisibility}">
                     <Image Margin="5,5,5,5"
                            Height="30"
                            Source="/Assets/ChaosRecipe/amulet.png"
@@ -351,7 +350,7 @@
                                Foreground="White"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
-                               Text="{Binding ChaosRecipe.NbAmulets, Mode=OneWay}" />
+                               Text="{Binding ChaosRecipe.Value.NbAmulets, Mode=OneWay}" />
                 </DockPanel>
                 <DockPanel Visibility="{Binding RingsVisibility, Mode=OneWay}">
                     <Image Margin="5,5,5,5"
@@ -365,7 +364,7 @@
                                Foreground="White"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
-                               Text="{Binding ChaosRecipe.NbRingSets, Mode=OneWay}" />
+                               Text="{Binding ChaosRecipe.Value.NbRingSets, Mode=OneWay}" />
                 </DockPanel>
                 <DockPanel Visibility="{Binding BeltsVisibility, Mode=OneWay}">
                     <Image Margin="5,5,5,5"
@@ -379,7 +378,7 @@
                                Foreground="White"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
-                               Text="{Binding ChaosRecipe.NbBelts, Mode=OneWay}" />
+                               Text="{Binding ChaosRecipe.Value.NbBelts, Mode=OneWay}" />
                 </DockPanel>
                 <DockPanel Visibility="{Binding HelmetsVisibility, Mode=OneWay}">
                     <Image Margin="5,5,5,5"
@@ -393,7 +392,7 @@
                                Foreground="White"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
-                               Text="{Binding ChaosRecipe.NbHelmets, Mode=OneWay}" />
+                               Text="{Binding ChaosRecipe.Value.NbHelmets, Mode=OneWay}" />
                 </DockPanel>
                 <DockPanel Visibility="{Binding BootsVisibility, Mode=OneWay}">
                     <Image Margin="5,5,5,5"
@@ -407,7 +406,7 @@
                                Foreground="White"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
-                               Text="{Binding ChaosRecipe.NbBoots, Mode=OneWay}" />
+                               Text="{Binding ChaosRecipe.Value.NbBoots, Mode=OneWay}" />
                 </DockPanel>
                 <DockPanel Visibility="{Binding GlovesVisibility, Mode=OneWay}">
                     <Image Margin="5,5,5,5"
@@ -421,7 +420,7 @@
                                Foreground="White"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
-                               Text="{Binding ChaosRecipe.NbGloves, Mode=OneWay}" />
+                               Text="{Binding ChaosRecipe.Value.NbGloves, Mode=OneWay}" />
                 </DockPanel>
                 <DockPanel Visibility="{Binding BodyArmoursVisibility, Mode=OneWay}">
                     <Image Margin="5,5,5,5"
@@ -435,7 +434,7 @@
                                Foreground="White"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
-                               Text="{Binding ChaosRecipe.NbBodyArmours, Mode=OneWay}" />
+                               Text="{Binding ChaosRecipe.Value.NbBodyArmours, Mode=OneWay}" />
                 </DockPanel>
                 <DockPanel Visibility="{Binding WeaponsVisibility, Mode=OneWay}">
                     <Image Margin="5,5,5,5"
@@ -449,7 +448,7 @@
                                Foreground="White"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
-                               Text="{Binding ChaosRecipe.NbWeaponSets, Mode=OneWay}" />
+                               Text="{Binding ChaosRecipe.Value.NbWeaponSets, Mode=OneWay}" />
                 </DockPanel>
                 <Separator Height="5"
                            Foreground="#a0aec0"
@@ -468,9 +467,9 @@
                                Foreground="White"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
-                               Text="{Binding ChaosRecipe.NbSets, Mode=OneWay}" />
+                               Text="{Binding ChaosRecipe.Value.NbSets, Mode=OneWay}" />
                 </DockPanel>
-
+            
                 <Button x:Name="btnChangeStackChaosRecipeOrientation"
                         BorderThickness="0"
                         Background="Transparent"
