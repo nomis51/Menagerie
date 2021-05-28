@@ -12,7 +12,9 @@ namespace Menagerie.Core.Models
 {
     public class Offer : ChatEvent
     {
-        public int Id { get; set; }
+        private static int NextId = 0;
+
+        public int Id { get; set; } = ++NextId;
         public string ItemName { get; set; }
         public string EscapedName { get; set; }
         public string PlayerName { get; set; }

@@ -16,9 +16,6 @@ namespace Menagerie.Models
             {
                 _value = CustomSet != null ? CustomSet(value) : value;
                 Notify();
-
-                AdditionalReactivePropertiesToNotify.ForEach(prop => prop.Notify());
-                AdditionalPropertiesToNotify.ForEach(prop => _context.NotifyOfPropertyChange(prop));
             }
         }
 
@@ -42,6 +39,8 @@ namespace Menagerie.Models
         public void Notify()
         {
             _context.NotifyOfPropertyChange(Name);
+            AdditionalReactivePropertiesToNotify.ForEach(prop => prop.Notify());
+            AdditionalPropertiesToNotify.ForEach(prop => _context.NotifyOfPropertyChange(prop));
         }
     }
 }

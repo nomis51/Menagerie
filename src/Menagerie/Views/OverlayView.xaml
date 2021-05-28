@@ -505,7 +505,7 @@
                        VerticalAlignment="Top"
                        MinWidth="140"
                        Margin="0,0,30,0"
-                       Visibility="{Binding IsOffersFilterVisibility, Mode=OneWay}">
+                       Visibility="{Binding IsIncomingOffersFilterVisibility, Mode=OneWay}">
                 <TextBox x:Name="txtSearchOffer"
                          TextChanged="txtSearchOffer_TextChanged" />
             </DockPanel>

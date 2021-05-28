@@ -9,10 +9,12 @@
   <component name="ChangeListManager">
     <list default="true" id="dad710c1-392f-4d6a-ba3d-108c3f78cb03" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Menagerie/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Menagerie/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie/AppMapper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/AppMapper.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie/Models/Offer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Models/Offer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Models/Trades/Offer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Models/Trades/Offer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/AppService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/AppService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Models/ReactiveProperty.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Models/ReactiveProperty.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Menagerie/Views/OverlayView.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/OverlayView.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Menagerie/Views/OverlayView.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/OverlayView.xaml.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,7 +53,6 @@
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
-      <option value="$PROJECT_DIR$/Menagerie/Controls/NewUpdateInstalledControl.xaml" />
       <option value="$PROJECT_DIR$/Menagerie/Controls/NewUpdateInstalledControl.xaml.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core/Models/Translator/GoogleTranslateSession.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core/Models/Translator/TranslateOptions.cs" />
@@ -80,8 +81,6 @@
       <option value="$PROJECT_DIR$/Menagerie/Models/Config.cs" />
       <option value="$PROJECT_DIR$/Menagerie/Models/MapModifier.cs" />
       <option value="$PROJECT_DIR$/Menagerie/Models/Abstractions/IReactiveProperty.cs" />
-      <option value="$PROJECT_DIR$/Menagerie/Models/ReactiveProperty.cs" />
-      <option value="$PROJECT_DIR$/Menagerie.Core/Services/AppService.cs" />
       <option value="$PROJECT_DIR$/Menagerie/Models/ChaosRecipeSettings.cs" />
       <option value="$PROJECT_DIR$/Menagerie/App.xaml.cs" />
       <option value="$PROJECT_DIR$/Menagerie/ViewModels/SplashViewModel.cs" />
@@ -98,9 +97,12 @@
       <option value="$PROJECT_DIR$/Menagerie/ViewModels/ConfigViewModel.cs" />
       <option value="$PROJECT_DIR$/Menagerie/Views/ConfigView.xaml" />
       <option value="$PROJECT_DIR$/Menagerie/AppMapper.cs" />
-      <option value="$PROJECT_DIR$/Menagerie/Views/OverlayView.xaml" />
       <option value="$PROJECT_DIR$/Menagerie/Models/Offer.cs" />
       <option value="$PROJECT_DIR$/Menagerie/Views/OverlayView.xaml.cs" />
+      <option value="$PROJECT_DIR$/Menagerie.Core/Services/AppService.cs" />
+      <option value="$PROJECT_DIR$/Menagerie.Core/Models/Trades/Offer.cs" />
+      <option value="$PROJECT_DIR$/Menagerie/Views/OverlayView.xaml" />
+      <option value="$PROJECT_DIR$/Menagerie/Models/ReactiveProperty.cs" />
       <option value="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" />
     </changedPaths>
   </component>
@@ -182,7 +184,7 @@
       <workItem from="1621897023434" duration="5692000" />
       <workItem from="1621967497339" duration="13185000" />
       <workItem from="1622041751311" duration="17825000" />
-      <workItem from="1622136244949" duration="12393000" />
+      <workItem from="1622136244949" duration="15082000" />
     </task>
     <servers />
   </component>
@@ -212,16 +214,16 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs</url>
-          <line>549</line>
-          <properties documentPath="C:\Users\Simon\Documents\GitHub\Menagerie\src\Menagerie\ViewModels\OverlayViewModel.cs" initialLine="549" containingFunctionPresentation="method 'SendJoinHideoutCommand'">
+          <line>753</line>
+          <properties documentPath="C:\Users\Simon\Documents\GitHub\Menagerie\src\Menagerie\ViewModels\OverlayViewModel.cs" initialLine="753" containingFunctionPresentation="method 'FilterOffers'">
             <startOffsets>
-              <option value="21648" />
+              <option value="27980" />
             </startOffsets>
             <endOffsets>
-              <option value="21673" />
+              <option value="28009" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="18" />
+          <option name="timeStamp" value="28" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

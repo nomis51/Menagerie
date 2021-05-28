@@ -160,6 +160,8 @@ namespace Menagerie.Views
             var wih = new WindowInteropHelper(this);
             var hWnd = wih.Handle;
             MoveWindow(hWnd, _screenRect.Left, _screenRect.Top, _screenRect.Width, _screenRect.Height, false);
+
+            AppService.Instance.FocusGame();
         }
 
         private void AppService_OnToggleOverlayVisibility(bool show)
@@ -195,6 +197,7 @@ namespace Menagerie.Views
         private void btnBusy_Click(object sender, RoutedEventArgs e)
         {
             Log.Trace("Busy button clicked");
+            AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
             _vm.SendBusyWhisper((int) ((Button) sender).Tag);
         }
@@ -202,6 +205,7 @@ namespace Menagerie.Views
         private void btnRemove_Click(object sender, RoutedEventArgs e)
         {
             Log.Trace("Remove button clicked");
+            AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
 
             var id = (int) ((Button) sender).Tag;
@@ -220,6 +224,7 @@ namespace Menagerie.Views
         private void btnInvite_Click(object sender, RoutedEventArgs e)
         {
             Log.Trace("Invite button clicked");
+            AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
 
             var id = (int) ((Button) sender).Tag;
@@ -238,6 +243,7 @@ namespace Menagerie.Views
         private void grdOffer_MouseDown(object sender, MouseButtonEventArgs e)
         {
             Log.Trace("Offer clicked");
+            AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
 
             var id = (int) ((Grid) sender).Tag;
@@ -282,15 +288,10 @@ namespace Menagerie.Views
         private void btnJoinHideout_Click(object sender, RoutedEventArgs e)
         {
             Log.Trace("Join hideout button clicked");
+            AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
 
             var id = (int) ((Button) sender).Tag;
-            var offer = _vm.GetOffer(id);
-
-            if (offer.State != OfferState.Initial)
-            {
-                return;
-            }
 
             _vm.SendJoinHideoutCommand(id);
         }
@@ -298,6 +299,7 @@ namespace Menagerie.Views
         private void btnTrade_Click(object sender, RoutedEventArgs e)
         {
             Log.Trace("Trade button clicked");
+            AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
 
             var id = (int) ((Button) sender).Tag;
@@ -308,6 +310,7 @@ namespace Menagerie.Views
         private void btnLeave_Click(object sender, RoutedEventArgs e)
         {
             Log.Trace("Leave button clicked");
+            AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
 
             var id = (int) ((Button) sender).Tag;
@@ -318,6 +321,7 @@ namespace Menagerie.Views
         private void btnClearOffers_Click(object sender, RoutedEventArgs e)
         {
             Log.Trace("Clear offers button clicked");
+            AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
 
             _vm.RemoveAllOffers();
@@ -326,6 +330,7 @@ namespace Menagerie.Views
         private void btnClearOutgoingOffers_Click(object sender, RoutedEventArgs e)
         {
             Log.Trace("Clear outgoing offers button clicked");
+            AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
 
             _vm.RemoveAllOffers(true);
@@ -336,7 +341,7 @@ namespace Menagerie.Views
             Log.Trace($"Outgoing offers search bar input: {txtSearchOutgoingOffer.Text}");
             if (string.IsNullOrEmpty(txtSearchOutgoingOffer.Text))
             {
-                _vm.ResetFilter();
+                _vm.ResetFilter(true);
             }
             else
             {
@@ -349,7 +354,7 @@ namespace Menagerie.Views
             Log.Trace($"Offers offers search bar input: {txtSearchOutgoingOffer.Text}");
             if (string.IsNullOrEmpty(txtSearchOffer.Text))
             {
-                _vm.ResetFilter(false);
+                _vm.ResetFilter();
             }
             else
             {

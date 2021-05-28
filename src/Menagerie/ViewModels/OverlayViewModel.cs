@@ -72,7 +72,7 @@ namespace Menagerie.ViewModels
         public Visibility BeltsVisibility => ChaosRecipe.Value.NeedBelts ? Visibility.Visible : Visibility.Hidden;
         public Visibility WeaponsVisibility => ChaosRecipe.Value.NeedWeapons ? Visibility.Visible : Visibility.Hidden;
         public Visibility TranslateInputControlVisibility { get; set; } = Visibility.Hidden;
-        public Visibility IsOffersFilterVisibility => IncomingOffers.Value.Count > 1 || _fullIncomingOffers != null ? Visibility.Visible : Visibility.Hidden;
+        public Visibility IsIncomingOffersFilterVisibility => IncomingOffers.Value.Count > 1 || _fullIncomingOffers != null ? Visibility.Visible : Visibility.Hidden;
         public Visibility IsOutgoingOffersFilterVisibility => OutgoingOffers.Value.Count > 1 || _fullOutgoingOffers != null ? Visibility.Visible : Visibility.Hidden;
 
         #endregion
@@ -125,7 +125,7 @@ namespace Menagerie.ViewModels
             {
                 AdditionalPropertiesToNotify = new List<string>()
                 {
-                    "IsOffersFilterVisibility"
+                    "IsIncomingOffersFilterVisibility"
                 }
             };
             OutgoingOffers = new ReactiveProperty<BindableCollection<Offer>>("OutgoingOffers", this, new())
@@ -533,7 +533,6 @@ namespace Menagerie.ViewModels
 
             switch (isOutgoing)
             {
-                case true when offer.State != OfferState.HideoutJoined:
                 case false when !offer.PlayerInvited:
                     return;
                 default:
@@ -631,7 +630,7 @@ namespace Menagerie.ViewModels
         public void SendLeave(int id, bool sayThanks = false)
         {
             Log.Trace($"Sending leave command {id}");
-            var offer = GetOffer(id);
+            var offer = GetOffer(id, true);
 
             if (offer == null) return;
 
@@ -751,14 +750,14 @@ namespace Menagerie.ViewModels
         public void FilterOffers(string searchText, bool applyToOutgoing = false)
         {
             Log.Trace($"Filtering {(applyToOutgoing ? "Outgoing" : "Incoming")} offers with {searchText}");
+            
+            ResetFilter(applyToOutgoing);
 
             if (string.IsNullOrEmpty(searchText)) return;
 
             searchText = searchText.ToLower().Trim();
 
-            ResetFilter(applyToOutgoing);
-
-            var results = OutgoingOffers.Value.ToList().FindAll(o => o.ItemName.ToLower().Contains(searchText) || o.PlayerName.ToLower().Contains(searchText));
+            var results = (applyToOutgoing ? OutgoingOffers : IncomingOffers).Value.ToList().FindAll(o => o.ItemName.ToLower().Contains(searchText) || o.PlayerName.ToLower().Contains(searchText));
 
             if (!results.Any()) return;
 

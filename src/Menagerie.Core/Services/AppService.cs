@@ -571,7 +571,7 @@ namespace Menagerie.Core.Services
             {
                 return;
             }
-
+            
             if (!string.IsNullOrEmpty(config.PlayerName) && !offer.IsOutgoing)
             {
                 Task.Run(() =>
