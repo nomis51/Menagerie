@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
+using Caliburn.Micro;
 using Point = System.Drawing.Point;
 
 namespace Menagerie.Models
 {
-    public class Offer
+    public class Offer : Screen
     {
         public int Id { get; set; }
         public string ItemName { get; set; }
@@ -96,7 +97,12 @@ namespace Menagerie.Models
         public Visibility IsNormalBorderVisibility => PlayerNotInvited ? Visibility.Visible : Visibility.Hidden;
         public Visibility IsTradeBorderVisibility => State == OfferState.TradeRequestSent ? Visibility.Visible : Visibility.Hidden;
         public Visibility PlayerJoinedIconVisibility => PlayerJoined ? Visibility.Visible : Visibility.Hidden;
-        public Visibility AnyNotesVisibility => !string.IsNullOrEmpty(Notes) ? Visibility.Visible : Visibility.Hidden;
+        public Visibility NotesVisibility => !string.IsNullOrEmpty(Notes) ? Visibility.Visible : Visibility.Hidden;
+
+        public void Notify(string name)
+        {
+            NotifyOfPropertyChange(name);
+        }
     }
 
     public enum OfferState

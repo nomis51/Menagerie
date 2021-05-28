@@ -259,17 +259,17 @@ namespace Menagerie.ViewModels
 
             while (++nbTry <= 5)
             {
-                foreach (var o in IncomingOffers.Value.Where(o => o.Id == offer.Id))
+                foreach (var o in IncomingOffers.Value.Where(o => o.Id == localOffer.Id))
                 {
                     Application.Current.Dispatcher.Invoke(delegate
                     {
                         o.PriceCheck = localPriceCheckResult;
                         o.PossibleScam = true;
-                        UpdateOffer(o);
+                        UpdateOffer(o, true);
                     });
                 }
 
-                foreach (var o in _overflowIncomingOffers.Where(o => o.Id == offer.Id))
+                foreach (var o in _overflowIncomingOffers.Where(o => o.Id == localOffer.Id))
                 {
                     Application.Current.Dispatcher.Invoke(delegate
                     {
@@ -308,7 +308,7 @@ namespace Menagerie.ViewModels
                     Log.Trace($"player \"{playerName}\" joined");
 
                     offer.PlayerJoined = true;
-                    UpdateOffer(offer);
+                    UpdateOffer(offer, true);
                 }
 
                 foreach (var offer in _overflowIncomingOffers.Where(offer => offer.PlayerName == playerName))
@@ -352,7 +352,7 @@ namespace Menagerie.ViewModels
                         foreach (var o in IncomingOffers.Value.Where(o => !o.TradeRequestSent))
                         {
                             o.State = OfferState.PlayerInvited;
-                            UpdateOffer(o);
+                            UpdateOffer(o, true);
                         }
 
                         break;
@@ -482,14 +482,44 @@ namespace Menagerie.ViewModels
             return (isOutgoing ? OutgoingOffers : IncomingOffers).Value.Select(o => o.Id).ToList().IndexOf(id);
         }
 
-        private void UpdateOffer(Offer offer)
+        private void UpdateOffer(Offer offer, bool fullUpdate = false)
         {
             if (offer.IsOutgoing)
             {
+                if (fullUpdate)
+                {
+                    var buffer = new Offer[OutgoingOffers.Value.Count];
+                    OutgoingOffers.Value.CopyTo(buffer, 0);
+
+                    var temp = new BindableCollection<Offer>();
+
+                    foreach (var o in buffer)
+                    {
+                        temp.Add(o);
+                    }
+
+                    OutgoingOffers.Value = temp;
+                }
+
                 OutgoingOffers.Notify();
             }
             else
             {
+                if (fullUpdate)
+                {
+                    var buffer = new Offer[IncomingOffers.Value.Count];
+                    IncomingOffers.Value.CopyTo(buffer, 0);
+
+                    var temp = new BindableCollection<Offer>();
+
+                    foreach (var o in buffer)
+                    {
+                        temp.Add(o);
+                    }
+
+                    IncomingOffers.Value = temp;
+                }
+
                 IncomingOffers.Notify();
             }
         }
@@ -508,7 +538,7 @@ namespace Menagerie.ViewModels
                     return;
                 default:
                     offer.State = OfferState.TradeRequestSent;
-                    UpdateOffer(offer);
+                    UpdateOffer(offer, true);
                     AppService.SendTradeChatCommand(offer.PlayerName);
                     break;
             }
@@ -564,7 +594,7 @@ namespace Menagerie.ViewModels
             if (offer is not {State: OfferState.Initial}) return;
 
             offer.State = OfferState.PlayerInvited;
-            UpdateOffer(offer);
+            UpdateOffer(offer, true);
 
             AppService.SendInviteChatCommand(offer.PlayerName);
         }

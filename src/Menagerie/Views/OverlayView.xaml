@@ -546,7 +546,7 @@
             <Grid.RenderTransform>
                 <TranslateTransform x:Name="grdOffers_tt" />
             </Grid.RenderTransform>
-            <ItemsControl ItemsSource="{Binding Offers.Value, UpdateSourceTrigger=PropertyChanged}">
+            <ItemsControl ItemsSource="{Binding IncomingOffers.Value, UpdateSourceTrigger=PropertyChanged}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <DockPanel Cursor="Hand"
@@ -578,7 +578,7 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="3" />
                             </Grid.ColumnDefinitions>
-                            <fa5:ImageAwesome Visibility="{Binding PlayerJoinedIconVisible}"
+                            <fa5:ImageAwesome Visibility="{Binding PlayerJoinedIconVisibility}"
                                               Panel.ZIndex="99"
                                               Grid.Row="2"
                                               Grid.Column="2"
@@ -588,7 +588,7 @@
                                               Height="15"
                                               Icon="Solid_UserCircle"
                                               Foreground="Lime" />
-                            <fa5:ImageAwesome Visibility="{Binding PossibleScamVisible}"
+                            <fa5:ImageAwesome Visibility="{Binding PossibleScamVisibility}"
                                               Panel.ZIndex="99"
                                               Grid.Row="2"
                                               Grid.Column="1"
@@ -605,21 +605,21 @@
                                     Grid.RowSpan="999"
                                     BorderThickness="3"
                                     BorderBrush="{DynamicResource {x:Static adonisUi:Brushes.Layer0BackgroundBrush}}"
-                                    Visibility="{Binding IsNormalBorderVisible}" />
+                                    Visibility="{Binding IsNormalBorderVisibility}" />
                             <Border Grid.Row="0"
                                     Grid.Column="0"
                                     Grid.ColumnSpan="999"
                                     Grid.RowSpan="999"
                                     BorderThickness="3"
                                     BorderBrush="Green"
-                                    Visibility="{Binding IsInviteBorderVisible}" />
+                                    Visibility="{Binding IsInviteBorderVisibility}" />
                             <Border Grid.Row="0"
                                     Grid.Column="0"
                                     Grid.ColumnSpan="999"
                                     Grid.RowSpan="999"
                                     BorderThickness="3"
                                     BorderBrush="Orange"
-                                    Visibility="{Binding IsTradeBorderVisible}" />
+                                    Visibility="{Binding IsTradeBorderVisibility}" />
                             <DockPanel Background="{DynamicResource {x:Static adonisUi:Brushes.Layer0BackgroundBrush}}"
                                        Grid.Row="1"
                                        Grid.Column="1"
@@ -633,7 +633,7 @@
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center" />
                             </DockPanel>
-                            <fa5:ImageAwesome Visibility="{Binding AnyNotes}"
+                            <fa5:ImageAwesome Visibility="{Binding NotesVisibility}"
                                               Panel.ZIndex="99"
                                               Grid.Row="2"
                                               Grid.Column="1"
@@ -663,7 +663,7 @@
                                     Grid.Row="3"
                                     Grid.Column="1"
                                     Style="{StaticResource TransparentStyleBlue}"
-                                    Visibility="{Binding IsBusyButtonVisible}">
+                                    Visibility="{Binding IsBusyButtonVisibility}">
                                 <Button.Content>
                                     <fa5:ImageAwesome Width="15"
                                                       Height="15"
@@ -692,7 +692,7 @@
                                     Grid.Row="3"
                                     Grid.Column="1"
                                     Style="{StaticResource TransparentStyleGreen}"
-                                    Visibility="{Binding IsReInviteButtonVisible}">
+                                    Visibility="{Binding IsReInviteButtonVisibility}">
                                 <Button.Content>
                                     <fa5:ImageAwesome Width="15"
                                                       Height="15"
