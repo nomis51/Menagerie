@@ -91,6 +91,7 @@ namespace Menagerie.Views
 
         private void btnTranslateInput_Click(object sender, RoutedEventArgs e)
         {
+            AppService.Instance.FocusGame();
             var visible = stackChatMessageInput.Visibility == Visibility.Visible;
 
             if (visible)

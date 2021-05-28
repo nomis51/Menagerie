@@ -61,7 +61,7 @@
         </Button>
         <StackPanel Name="stackChatMessageInput"
                     Grid.Row="0"
-                    Visibility="{Binding TranslateInputControlVisibility}"
+                    Visibility="{Binding TranslateInputControlVisibility.Value, Mode=OneWay}"
                     Grid.Column="0"
                     Grid.RowSpan="99"
                     Grid.ColumnSpan="99"

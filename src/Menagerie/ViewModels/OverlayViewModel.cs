@@ -37,6 +37,7 @@ namespace Menagerie.ViewModels
         public ReactiveProperty<Visibility> DockChaosRecipeOverlayVisibility { get; set; }
         public ReactiveProperty<Visibility> ChaosRecipeOverlayVisibility { get; set; }
         public ReactiveProperty<Visibility> MapModifiersPopupVisibility { get; set; }
+        public ReactiveProperty<Visibility> TranslateInputControlVisibility { get; set; }
         public ReactiveProperty<BindableCollection<Offer>> IncomingOffers { get; set; }
         public ReactiveProperty<BindableCollection<Offer>> OutgoingOffers { get; set; }
         public ReactiveProperty<ChaosRecipeResult> ChaosRecipe { get; set; }
@@ -71,7 +72,6 @@ namespace Menagerie.ViewModels
         public Visibility AmuletsVisibility => ChaosRecipe.Value.NeedAmulets ? Visibility.Visible : Visibility.Hidden;
         public Visibility BeltsVisibility => ChaosRecipe.Value.NeedBelts ? Visibility.Visible : Visibility.Hidden;
         public Visibility WeaponsVisibility => ChaosRecipe.Value.NeedWeapons ? Visibility.Visible : Visibility.Hidden;
-        public Visibility TranslateInputControlVisibility { get; set; } = Visibility.Hidden;
         public Visibility IsIncomingOffersFilterVisibility => IncomingOffers.Value.Count > 1 || _fullIncomingOffers != null ? Visibility.Visible : Visibility.Hidden;
         public Visibility IsOutgoingOffersFilterVisibility => OutgoingOffers.Value.Count > 1 || _fullOutgoingOffers != null ? Visibility.Visible : Visibility.Hidden;
 
@@ -159,6 +159,7 @@ namespace Menagerie.ViewModels
                 }
             };
             MapModifiers = new ReactiveProperty<BindableCollection<MapModifier>>("MapModifiers", this, new BindableCollection<MapModifier>());
+            TranslateInputControlVisibility = new ReactiveProperty<Visibility>("TranslateInputControlVisibility", this, Visibility.Hidden);
 
             AppService.Instance.OnNewOffer += AppService_OnNewOffer;
             AppService.Instance.OnNewChatEvent += AppService_OnNewChatEvent;
@@ -195,12 +196,12 @@ namespace Menagerie.ViewModels
 
         public void ShowTranslateInputControl()
         {
-            TranslateInputControlVisibility = Visibility.Visible;
+            TranslateInputControlVisibility.Value = Visibility.Visible;
         }
 
         public void HideTranslateInputControl()
         {
-            TranslateInputControlVisibility = Visibility.Hidden;
+            TranslateInputControlVisibility.Value = Visibility.Hidden;
             AppService.Instance.FocusGame();
         }
 
@@ -546,7 +547,7 @@ namespace Menagerie.ViewModels
         public void SendJoinHideoutCommand(int id)
         {
             Log.Trace($"Sending join hideout command {id}");
-            var offer = GetOffer(id);
+            var offer = GetOffer(id, true);
 
             if (offer == null) return;
 

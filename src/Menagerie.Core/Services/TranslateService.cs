@@ -232,6 +232,7 @@ namespace Menagerie.Core.Services
 
             if (!response.IsSuccessStatusCode)
             {
+                Log.Error("Unable to create session: " + "HTTP " + response.StatusCode + response.Content.ReadAsStringAsync().Result);
                 return null;
             }
 
@@ -263,6 +264,7 @@ namespace Menagerie.Core.Services
 
             if (!batchResult.IsSuccessStatusCode)
             {
+                Log.Error("Unable to translate text: " + "HTTP " + batchResult.StatusCode + batchResult.Content.ReadAsStringAsync().Result);
                 return null;
             }
 
@@ -283,14 +285,14 @@ namespace Menagerie.Core.Services
 
             if (endOfFirstBlock == -1)
             {
-                return null;
+                return new Tuple<string, string, string>("", "", "");
             }
 
             var firstBlock = obfResponse.Substring(1, endOfFirstBlock + ",null,null,null,\"generic\"]".Length);
 
             if (string.IsNullOrEmpty(firstBlock))
             {
-                return null;
+                return new Tuple<string, string, string>("", "", "");
             }
 
             firstBlock = firstBlock.Replace("\\n", "");
@@ -301,7 +303,7 @@ namespace Menagerie.Core.Services
             {
                 case {Count: < 3}:
                 case null:
-                    return null;
+                    return new Tuple<string, string, string>("", "", "");
             }
 
             var secondBlock = parsedFirstBlock[2];
@@ -309,10 +311,10 @@ namespace Menagerie.Core.Services
 
             var parsedSecondBlock = JsonConvert.DeserializeObject<List<object>>(secondBlock);
 
-            if (parsedSecondBlock == null) return null;
+            if (parsedSecondBlock == null) return new Tuple<string, string, string>("", "", "");
             if (parsedSecondBlock is {Count: < 2})
             {
-                return null;
+                return new Tuple<string, string, string>("", "", "");
             }
 
             var thirdBlock = parsedSecondBlock[1];
@@ -350,7 +352,7 @@ namespace Menagerie.Core.Services
                 Log.Error(e);
             }
 
-            return null;
+            return new Tuple<string, string, string>("", "", "");
         }
 
         public string LanguageToCode(string lang)
@@ -364,6 +366,7 @@ namespace Menagerie.Core.Services
 
             if (gtSession == null)
             {
+                Log.Error("No session acquired for translation, aborting");
                 return;
             }
 
@@ -371,10 +374,18 @@ namespace Menagerie.Core.Services
 
             if (obfResponse == null)
             {
+                Log.Error("No translation response.");
                 return;
             }
 
             var (item1, item2, item3) = ReadGoogleTranslateResponse(obfResponse);
+
+            if (string.IsNullOrEmpty(item1))
+            {
+                Log.Error("Unable to read translation response: " + obfResponse);
+                return;
+            }
+
             translation.TranslatedMessage = item1;
             translation.OriginalLang = string.IsNullOrEmpty(item2) ? Languages[options.From] : item2;
             translation.TranslationLang = item3;
