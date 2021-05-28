@@ -2,19 +2,19 @@
 ![logo](https://user-images.githubusercontent.com/25111613/103430530-0f114d80-4b93-11eb-9937-884259718529.png)
 A Path of Exile trade manger to simplify and speed up your trading experience.
 
-## Requirements
+## Requirements ⚙️
 - [.NET Framework 4.7.2+](https://dotnet.microsoft.com/download/dotnet-framework)
 - If you are using the release version [1.4.0+](https://github.com/nomis51/Menagerie/releases/tag/v1.4.0), you'll need [.NET 5.0](https://dotnet.microsoft.com/download/dotnet/5.0) instead
 
-## Discord
+## Discord 💬
 - https://discord.gg/yAqNKpGZ2j
 
-## Usage
+## Usage 🕹️
 - Go to the [Releases](https://github.com/nomis51/Menagerie/releases/latest) page
 - Download and execute Setup.exe to install Menagerie
 - Future updates will be automatically downloaded and installed by the app itself.
 
-## Features
+## Features 📝
 - Handles incoming trade offers workflow (From the moment someone whisper you until the trade is completed)
 - Handles outgoing trade offers workflow (From the moment you whisper someone until the trade is completed)
 - Display offers in a simple and convenient way
@@ -34,7 +34,7 @@ A Path of Exile trade manger to simplify and speed up your trading experience.
 - Moveable parts on the overlay
 - "Translate-on-demande" feature or in-game message translator (write and send messages in different languages)
 
-## Table of contents
+## Table of contents 📜
 - [Cheatsheet (Mostly keyboard shorcuts)](https://github.com/nomis51/Menagerie/blob/master/docs/cheatsheet.md)
 - [Incoming offers](https://github.com/nomis51/Menagerie/blob/master/docs/feature-incoming-offers.md)
 - [Outgoing offers](https://github.com/nomis51/Menagerie/blob/master/docs/feature-outgoing-offers.md)
@@ -44,7 +44,7 @@ A Path of Exile trade manger to simplify and speed up your trading experience.
 - [Anti-Scam](https://github.com/nomis51/Menagerie/blob/master/docs/feature-anti-scam.md)
 - ["Translate-on-demand" or message translator](https://github.com/nomis51/Menagerie/blob/master/docs/feature-translate-on-demand.md)
 
-## Thanks to
+## Thanks to 👏
 - [PoeLogsParser](https://github.com/nomis51/poe-logs-parser) for the efficient Client.txt parsing
 - [Desktop.Robot](https://github.com/lucassklp/Desktop.Robot) for the keyboard and mouse interactions (Like sending a chat message/command in-game)
 - [AdonisUI](https://github.com/benruehl/adonis-ui) for the UI/UX experience
@@ -53,7 +53,7 @@ A Path of Exile trade manger to simplify and speed up your trading experience.
 - [FontAwesome5](https://github.com/MartinTopfstedt/FontAwesome5) for the icons
 - [Squirrel](https://github.com/Squirrel/Squirrel.Windows) for the app updates management
 
-## Todos
+## Todos ⛏️
 - Custom keyboard shortcuts
 - Languages support
 
