@@ -9,7 +9,6 @@
   <component name="ChangeListManager">
     <list default="true" id="dad710c1-392f-4d6a-ba3d-108c3f78cb03" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Menagerie/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Menagerie/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menagerie.Core/Services/TranslateService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie.Core/Services/TranslateService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Menagerie/Views/OverlayView.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/OverlayView.xaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Menagerie/Views/OverlayView.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Menagerie/Views/OverlayView.xaml.cs" afterDir="false" />
@@ -42,6 +41,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/E6E6B40B-308C-4FE1-9C93-7C26C144C865/1A2/ThreadPool.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/0D0CB169-A5E1-4C1E-A547-BA1218E2ECB3/DE/DispatcherOperation.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/E6E6B40B-308C-4FE1-9C93-7C26C144C865/1A1/ThreadPool.CoreCLR.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0CCBACCD-851B-467B-87B6-7E44C229D3AE/0e/e2b34d7b/HttpClient.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0D0CB169-A5E1-4C1E-A547-BA1218E2ECB3/e0/3ed68d6e/CulturePreservingExecutionContext.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/A417D4F3-F441-4F19-A3D4-B9CE50291EED/41/f367305d/TraceRoutedEvent.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/E6E6B40B-308C-4FE1-9C93-7C26C144C865/325/AssemblyConfigurationAttribute.cs" root0="SKIP_HIGHLIGHTING" />
@@ -98,10 +98,10 @@
       <option value="$PROJECT_DIR$/Menagerie.Core/Models/Trades/Offer.cs" />
       <option value="$PROJECT_DIR$/Menagerie/Models/ReactiveProperty.cs" />
       <option value="$PROJECT_DIR$/Menagerie/ViewModels/ConfigViewModel.cs" />
-      <option value="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" />
-      <option value="$PROJECT_DIR$/Menagerie/Views/OverlayView.xaml" />
-      <option value="$PROJECT_DIR$/Menagerie/Views/OverlayView.xaml.cs" />
       <option value="$PROJECT_DIR$/Menagerie.Core/Services/TranslateService.cs" />
+      <option value="$PROJECT_DIR$/Menagerie/Views/OverlayView.xaml" />
+      <option value="$PROJECT_DIR$/Menagerie/ViewModels/OverlayViewModel.cs" />
+      <option value="$PROJECT_DIR$/Menagerie/Views/OverlayView.xaml.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1slwfjGXWpB6xhw5kp9ndRW6pVV" />
@@ -211,82 +211,17 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Menagerie.Core/Services/TranslateService.cs</url>
-          <line>367</line>
-          <properties documentPath="C:\Users\Simon\Documents\GitHub\Menagerie\src\Menagerie.Core\Services\TranslateService.cs" initialLine="362" containingFunctionPresentation="method 'Translate'">
+          <url>file://$PROJECT_DIR$/Menagerie.Core/Services/AppService.cs</url>
+          <line>234</line>
+          <properties documentPath="C:\Users\Simon\Documents\GitHub\Menagerie\src\Menagerie.Core\Services\AppService.cs" initialLine="234" containingFunctionPresentation="method 'DoShowTranslateInputControl'">
             <startOffsets>
-              <option value="12456" />
+              <option value="7601" />
             </startOffsets>
             <endOffsets>
-              <option value="12498" />
+              <option value="7631" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="32" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Menagerie.Core/Services/TranslateService.cs</url>
-          <line>375</line>
-          <properties documentPath="C:\Users\Simon\Documents\GitHub\Menagerie\src\Menagerie.Core\Services\TranslateService.cs" initialLine="372" containingFunctionPresentation="method 'Translate'">
-            <startOffsets>
-              <option value="12676" />
-            </startOffsets>
-            <endOffsets>
-              <option value="12773" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="33" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Menagerie.Core/Services/TranslateService.cs</url>
-          <line>369</line>
-          <properties documentPath="C:\Users\Simon\Documents\GitHub\Menagerie\src\Menagerie.Core\Services\TranslateService.cs" initialLine="366" containingFunctionPresentation="method 'Translate'">
-            <startOffsets>
-              <option value="12512" />
-            </startOffsets>
-            <endOffsets>
-              <option value="12534" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="34" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Menagerie.Core/Services/TranslateService.cs</url>
-          <line>377</line>
-          <properties documentPath="C:\Users\Simon\Documents\GitHub\Menagerie\src\Menagerie.Core\Services\TranslateService.cs" initialLine="374" containingFunctionPresentation="method 'Translate'">
-            <startOffsets>
-              <option value="12787" />
-            </startOffsets>
-            <endOffsets>
-              <option value="12811" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="35" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Menagerie.Core/Services/TranslateService.cs</url>
-          <line>383</line>
-          <properties documentPath="C:\Users\Simon\Documents\GitHub\Menagerie\src\Menagerie.Core\Services\TranslateService.cs" initialLine="380" containingFunctionPresentation="method 'Translate'">
-            <startOffsets>
-              <option value="12932" />
-            </startOffsets>
-            <endOffsets>
-              <option value="13001" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="36" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Menagerie.Core/Services/TranslateService.cs</url>
-          <line>364</line>
-          <properties documentPath="C:\Users\Simon\Documents\GitHub\Menagerie\src\Menagerie.Core\Services\TranslateService.cs" initialLine="364" containingFunctionPresentation="method 'Translate'">
-            <startOffsets>
-              <option value="12290" />
-            </startOffsets>
-            <endOffsets>
-              <option value="12367" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="37" />
+          <option name="timeStamp" value="42" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

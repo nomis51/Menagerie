@@ -68,10 +68,10 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center">
             <DockPanel>
-                <ComboBox ToolTip="Source language (Optional)" Name="cboSourceLang" Width="200"
+                <ComboBox ToolTip="Source language (Optional)" Name="cboSourceLang" ItemsSource="{Binding SourceLanguages, Mode=OneTime}" Width="200"
                           HorizontalAlignment="left"
                           VerticalAlignment="Center" SelectedIndex="0" />
-                <ComboBox ToolTip="Translate the message to..." Name="cboTargetLang" Width="200"
+                <ComboBox ToolTip="Translate the message to..." Name="cboTargetLang" ItemsSource="{Binding TargetLanguages, Mode=OneTime}" Width="200"
                           HorizontalAlignment="left"
                           VerticalAlignment="Center" SelectedIndex="0" />
             </DockPanel>

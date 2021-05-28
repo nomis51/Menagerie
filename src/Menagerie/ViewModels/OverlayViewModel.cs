@@ -44,6 +44,21 @@ namespace Menagerie.ViewModels
         public ReactiveProperty<bool> OverlayMovable { get; set; }
         public ReactiveProperty<BindableCollection<MapModifier>> MapModifiers { get; set; }
 
+        public BindableCollection<string> TargetLanguages { get; set; }
+
+        public BindableCollection<string> SourceLanguages
+        {
+            get
+            {
+                if (TargetLanguages == null) return new BindableCollection<string>();
+                
+                var langs = new string[TargetLanguages.Count + 1];
+                TargetLanguages.CopyTo(langs, 1);
+                langs[0] = "Auto";
+                return new BindableCollection<string>(langs);
+            }
+        }
+
         public Config Config => AppMapper.Instance.Map<CoreModels.Config, Config>(AppService.Instance.GetConfig());
         public int ChaosRecipeGridWidth => DockChaosRecipeOverlayVisibility.Value == Visibility.Visible ? 530 : 60;
         public int ChaosRecipeGridHeight => DockChaosRecipeOverlayVisibility.Value == Visibility.Visible ? 40 : 380;
@@ -160,6 +175,9 @@ namespace Menagerie.ViewModels
             };
             MapModifiers = new ReactiveProperty<BindableCollection<MapModifier>>("MapModifiers", this, new BindableCollection<MapModifier>());
             TranslateInputControlVisibility = new ReactiveProperty<Visibility>("TranslateInputControlVisibility", this, Visibility.Hidden);
+
+            TargetLanguages = new BindableCollection<string>(AppService.Instance.GetAvailableTranslationLanguages());
+            NotifyOfPropertyChange(() => SourceLanguages);
 
             AppService.Instance.OnNewOffer += AppService_OnNewOffer;
             AppService.Instance.OnNewChatEvent += AppService_OnNewChatEvent;
@@ -751,14 +769,15 @@ namespace Menagerie.ViewModels
         public void FilterOffers(string searchText, bool applyToOutgoing = false)
         {
             Log.Trace($"Filtering {(applyToOutgoing ? "Outgoing" : "Incoming")} offers with {searchText}");
-            
+
             ResetFilter(applyToOutgoing);
 
             if (string.IsNullOrEmpty(searchText)) return;
 
             searchText = searchText.ToLower().Trim();
 
-            var results = (applyToOutgoing ? OutgoingOffers : IncomingOffers).Value.ToList().FindAll(o => o.ItemName.ToLower().Contains(searchText) || o.PlayerName.ToLower().Contains(searchText));
+            var results = (applyToOutgoing ? OutgoingOffers : IncomingOffers).Value.ToList()
+                .FindAll(o => o.ItemName.ToLower().Contains(searchText) || o.PlayerName.ToLower().Contains(searchText));
 
             if (!results.Any()) return;
 

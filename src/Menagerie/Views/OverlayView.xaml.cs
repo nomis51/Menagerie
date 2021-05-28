@@ -68,14 +68,6 @@ namespace Menagerie.Views
         private void OverlayWindow_Activated(object sender, EventArgs e)
         {
             OverlayViewModel.SetOverlayHandle(new WindowInteropHelper(this).Handle);
-
-            cboSourceLang.Items.Add("Auto");
-
-            foreach (var lang in AppService.Instance.GetAvailableTranslationLanguages())
-            {
-                cboTargetLang.Items.Add(lang);
-                cboSourceLang.Items.Add(lang);
-            }
         }
 
         private void btnSendVirtualChatMessageInput_Click(object sender, RoutedEventArgs e)
@@ -91,15 +83,16 @@ namespace Menagerie.Views
 
         private void btnTranslateInput_Click(object sender, RoutedEventArgs e)
         {
-            AppService.Instance.FocusGame();
             var visible = stackChatMessageInput.Visibility == Visibility.Visible;
 
             if (visible)
             {
+                AppService.Instance.FocusGame();
                 HideTranslateInput();
             }
             else
             {
+                Activate();
                 ShowTranslateInput();
             }
         }
@@ -107,8 +100,11 @@ namespace Menagerie.Views
         private void ShowTranslateInput()
         {
             txtChatMessageInput.Text = "";
-            txtChatMessageInput.Focus();
+
             _vm.ShowTranslateInputControl();
+
+            Task.Delay(100)
+                .ContinueWith(delegate { Application.Current.Dispatcher.Invoke(delegate { txtChatMessageInput.Focus(); }); });
         }
 
         private void HideTranslateInput()
