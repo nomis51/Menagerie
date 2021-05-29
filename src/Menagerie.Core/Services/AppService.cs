@@ -90,6 +90,10 @@ namespace Menagerie.Core.Services
 
         public event MapModifiersVerifiedEvent MapModifiersVerified;
 
+        public delegate void MouseMovedEvent();
+
+        public event MouseMovedEvent OnMouseMoved;
+        
         #endregion
 
         private IntPtr _overlayHandle;
@@ -200,6 +204,11 @@ namespace Menagerie.Core.Services
             if (!mods.Any()) return;
             
             OnMapModifiersVerified(mods);
+        }
+
+        public void MouseMoved()
+        {
+            OnMouseMoved?.Invoke();
         }
 
         public Point GetMousePosition()

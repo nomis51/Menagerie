@@ -20,6 +20,7 @@ namespace Menagerie.Core.Services
         #region Members
 
         private KeyboardHook _windowsKeyboardHook;
+        private MouseHook _windowsMouseHook;
 
         private readonly Robot _robot;
 
@@ -46,9 +47,17 @@ namespace Menagerie.Core.Services
             if (_windowsKeyboardHook != null)
             {
                 _windowsKeyboardHook.MessageReceived -= WindowsKeyboardHook_MessageReceived;
+                _windowsKeyboardHook.Dispose();
                 _windowsKeyboardHook = null;
             }
 
+            if (_windowsMouseHook != null)
+            {
+                _windowsMouseHook.MouseMove -= WindowsMouseHookOnMouseMove;
+                _windowsMouseHook.Dispose();
+                _windowsMouseHook = null;
+            }
+            
             try
             {
                 _windowsKeyboardHook = new KeyboardHook(processId);
@@ -59,6 +68,22 @@ namespace Menagerie.Core.Services
             {
                 Log.Error($"Error while hooking process {processId}", e);
             }
+            
+            try
+            {
+                _windowsMouseHook = new MouseHook(processId);
+                _windowsMouseHook.MouseMove += WindowsMouseHookOnMouseMove;
+                _windowsMouseHook.InstallAsync().Wait();
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Error while mouse hooking process {processId}", e);
+            }
+        }
+
+        private void WindowsMouseHookOnMouseMove(object? sender, MouseMessageEventArgs e)
+        {
+                AppService.Instance.MouseMoved();
         }
 
         private static void WindowsKeyboardHook_MessageReceived(object sender, KeyboardMessageEventArgs e)

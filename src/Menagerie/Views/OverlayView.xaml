@@ -22,7 +22,7 @@
     <Window.Resources>
         <converters:Base64ImageConverter x:Key="Base64ImageConverter" />
     </Window.Resources>
-    <Grid x:Name="grdOverlay" MouseMove="GrdOverlay_OnMouseMove">
+    <Grid x:Name="grdOverlay">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="560" />
             <ColumnDefinition Width="*" />
@@ -53,7 +53,10 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid>
-                            <Label FontSize="18px" FontWeight="Bold" Content="{Binding Description}" Foreground="{Binding Color}" />
+                            <Border BorderBrush="{DynamicResource {x:Static adonisUi:Brushes.Layer0BackgroundBrush}}">
+                                <Label FontSize="18px" FontWeight="Bold" Content="{Binding Description}"
+                                       Foreground="{Binding Color}" />
+                            </Border>
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

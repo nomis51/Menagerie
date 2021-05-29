@@ -58,6 +58,15 @@ namespace Menagerie.Views
 
             AppService.Instance.OnToggleOverlayVisibility += AppService_OnToggleOverlayVisibility;
             AppService.Instance.OnResetDefaultOverlay += AppService_OnResetDefaultOverlay;
+            AppService.Instance.OnMouseMoved += AppService_OnOnMouseMoved;
+        }
+
+        private void AppService_OnOnMouseMoved()
+        {
+            if (_vm.MapModifiersPopupVisibility.Value == Visibility.Visible)
+            {
+                _vm.MapModifiersPopupVisibility.Value = Visibility.Hidden;
+            }
         }
 
         private void AppService_OnResetDefaultOverlay()
@@ -550,14 +559,6 @@ namespace Menagerie.Views
                 case Key.Enter:
                     btnSendVirtualChatMessageInput_Click(sender, null);
                     break;
-            }
-        }
-
-        private void GrdOverlay_OnMouseMove(object sender, MouseEventArgs e)
-        {
-            if (_vm.MapModifiersPopupVisibility.Value == Visibility.Visible)
-            {
-                _vm.MapModifiersPopupVisibility.Value = Visibility.Hidden;
             }
         }
     }
