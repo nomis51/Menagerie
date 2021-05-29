@@ -552,5 +552,13 @@ namespace Menagerie.Views
                     break;
             }
         }
+
+        private void GrdOverlay_OnMouseMove(object sender, MouseEventArgs e)
+        {
+            if (_vm.MapModifiersPopupVisibility.Value == Visibility.Visible)
+            {
+                _vm.MapModifiersPopupVisibility.Value = Visibility.Hidden;
+            }
+        }
     }
 }

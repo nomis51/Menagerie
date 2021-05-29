@@ -102,6 +102,7 @@ namespace Menagerie.Core.Services
                             $"/{PoeNinjaApiCurrency}?league={AppService.Instance.GetConfig().CurrentLeague}&type=Currency&language=en")
                         .Result;
                     var result = HttpService.ReadResponse<PoeNinjaResult<PoeNinjaCurrency>>(response).Result;
+
                     var currencies = result.Lines.ToDictionary(line => line.CurrencyTypeName,
                         line => new List<PoeNinjaCurrency>() {line});
 

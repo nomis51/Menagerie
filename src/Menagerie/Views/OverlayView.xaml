@@ -22,7 +22,7 @@
     <Window.Resources>
         <converters:Base64ImageConverter x:Key="Base64ImageConverter" />
     </Window.Resources>
-    <Grid x:Name="grdOverlay">
+    <Grid x:Name="grdOverlay" MouseMove="GrdOverlay_OnMouseMove">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="560" />
             <ColumnDefinition Width="*" />
@@ -36,7 +36,29 @@
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
         <!-- Map modifiers popup -->
-
+        <Grid Grid.Row="0"
+              Grid.Column="0"
+              Grid.RowSpan="99"
+              Grid.ColumnSpan="99"
+              HorizontalAlignment="Center"
+              Background="{DynamicResource {x:Static adonisUi:Brushes.Layer1BackgroundBrush}}"
+              VerticalAlignment="Center"
+              Visibility="{Binding MapModifiersPopupVisibility.Value, Mode=OneWay}">
+            <ItemsControl ItemsSource="{Binding MapModifiers.Value, UpdateSourceTrigger=PropertyChanged}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel VerticalAlignment="Center" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Label FontSize="18px" FontWeight="Bold" Content="{Binding Description}" Foreground="{Binding Color}" />
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
 
         <!-- Translation -->
         <Button x:Name="btnTranslateInput"
@@ -68,10 +90,12 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center">
             <DockPanel>
-                <ComboBox ToolTip="Source language (Optional)" Name="cboSourceLang" ItemsSource="{Binding SourceLanguages, Mode=OneTime}" Width="200"
+                <ComboBox ToolTip="Source language (Optional)" Name="cboSourceLang"
+                          ItemsSource="{Binding SourceLanguages, Mode=OneTime}" Width="200"
                           HorizontalAlignment="left"
                           VerticalAlignment="Center" SelectedIndex="0" />
-                <ComboBox ToolTip="Translate the message to..." Name="cboTargetLang" ItemsSource="{Binding TargetLanguages, Mode=OneTime}" Width="200"
+                <ComboBox ToolTip="Translate the message to..." Name="cboTargetLang"
+                          ItemsSource="{Binding TargetLanguages, Mode=OneTime}" Width="200"
                           HorizontalAlignment="left"
                           VerticalAlignment="Center" SelectedIndex="0" />
             </DockPanel>
@@ -336,7 +360,7 @@
                 </Button>
             </DockPanel>
 
-            <StackPanel Visibility="{Binding StackChaosRecipeOverlayVisibility, Mode=OneWay}" Grid.Row="0"
+            <StackPanel Visibility="{Binding StackChaosRecipeOverlayVisibility.Value, Mode=OneWay}" Grid.Row="0"
                         Grid.Column="0">
                 <DockPanel Visibility="{Binding AmuletsVisibility}">
                     <Image Margin="5,5,5,5"
@@ -469,7 +493,7 @@
                                VerticalAlignment="Center"
                                Text="{Binding ChaosRecipe.Value.NbSets, Mode=OneWay}" />
                 </DockPanel>
-            
+
                 <Button x:Name="btnChangeStackChaosRecipeOrientation"
                         BorderThickness="0"
                         Background="Transparent"
@@ -705,7 +729,7 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </Grid>
-        
+
         <!-- Outgoing offers -->
         <Ellipse Width="20"
                  Height="20"

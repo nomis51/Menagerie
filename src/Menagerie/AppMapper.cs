@@ -45,6 +45,7 @@ namespace Menagerie
                 config.CreateMap<CoreModels.PoeApi.Stash.ChaosRecipeResult, ChaosRecipeResult>();
                 config.CreateMap<CoreModels.Config, Config>();
                 config.CreateMap<Config, CoreModels.Config>();
+                config.CreateMap<CoreModels.ItemsScan.MapModifier, MapModifier>();
             });
 
             Mapper = new Mapper(configuration);

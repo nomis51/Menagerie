@@ -81,6 +81,10 @@ namespace Menagerie.Core.Services
                         MissingMemberHandling = MissingMemberHandling.Ignore
                     });
                 }
+                catch (JsonSerializationException e)
+                {
+                    Log.Error("Error while deserializing response", e);
+                }
                 catch (Exception e)
                 {
                     Log.Error("Error while reading response", e);

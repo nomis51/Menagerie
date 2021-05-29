@@ -15,11 +15,13 @@ using Brush = System.Windows.Media.Brush;
 using Brushes = System.Windows.Media.Brushes;
 using System.Windows.Media;
 using Caliburn.Micro;
+using Desktop.Robot.Clicks;
 using Menagerie.Models.Abstractions;
 using Menagerie.Views;
 using ILog = log4net.ILog;
 using LogManager = log4net.LogManager;
 using MapModifier = Menagerie.Models.MapModifier;
+using Mouse = System.Windows.Input.Mouse;
 
 namespace Menagerie.ViewModels
 {
@@ -51,7 +53,7 @@ namespace Menagerie.ViewModels
             get
             {
                 if (TargetLanguages == null) return new BindableCollection<string>();
-                
+
                 var langs = new string[TargetLanguages.Count + 1];
                 TargetLanguages.CopyTo(langs, 1);
                 langs[0] = "Auto";
@@ -127,15 +129,6 @@ namespace Menagerie.ViewModels
                     return state;
                 }
             };
-            MapModifiersPopupVisibility = new ReactiveProperty<Visibility>("MapModifiersPopupVisibility", this, Visibility.Hidden)
-            {
-                AdditionalPropertiesToNotify = new List<string>()
-                {
-                    "MapModifiersPopupX",
-                    "MapModifiersPopupX"
-                },
-                AdditionalReactivePropertiesToNotify = new List<IReactiveProperty>() {MapModifiers}
-            };
             IncomingOffers = new ReactiveProperty<BindableCollection<Offer>>("IncomingOffers", this, new())
             {
                 AdditionalPropertiesToNotify = new List<string>()
@@ -174,6 +167,15 @@ namespace Menagerie.ViewModels
                 }
             };
             MapModifiers = new ReactiveProperty<BindableCollection<MapModifier>>("MapModifiers", this, new BindableCollection<MapModifier>());
+            MapModifiersPopupVisibility = new ReactiveProperty<Visibility>("MapModifiersPopupVisibility", this, Visibility.Hidden)
+            {
+                AdditionalPropertiesToNotify = new List<string>()
+                {
+                    "MapModifiersPopupX",
+                    "MapModifiersPopupX"
+                },
+                AdditionalReactivePropertiesToNotify = new List<IReactiveProperty>() {MapModifiers}
+            };
             TranslateInputControlVisibility = new ReactiveProperty<Visibility>("TranslateInputControlVisibility", this, Visibility.Hidden);
 
             TargetLanguages = new BindableCollection<string>(AppService.Instance.GetAvailableTranslationLanguages());
@@ -194,15 +196,11 @@ namespace Menagerie.ViewModels
 
         private void AppService_OnMapModifiersVerified(List<Core.Models.ItemsScan.MapModifier> modifiers)
         {
-            var localModifiers = modifiers.Select(mod => AppMapper.Instance.Map<CoreModels.ItemsScan.MapModifier, MapModifier>(mod)).ToList();
+            var localModifiers = AppMapper.Instance.Map<List<CoreModels.ItemsScan.MapModifier>, List<MapModifier>>(modifiers);
 
             var mapModifiers = new BindableCollection<MapModifier>();
             localModifiers.ForEach(mod => mapModifiers.Add(mod));
             MapModifiers.Value = mapModifiers;
-
-            var position = AppService.Instance.GetMousePosition();
-            MapModifiersPopupX = position.X < 100 ? position.X + 50 : position.X - 50;
-            MapModifiersPopupY = position.Y;
 
             MapModifiersPopupVisibility.Value = Visibility.Visible;
         }
