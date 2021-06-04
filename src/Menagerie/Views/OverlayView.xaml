@@ -35,6 +35,7 @@
             <RowDefinition Height="100" />
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
+        
         <!-- Map modifiers popup -->
         <Grid Grid.Row="0"
               Grid.Column="0"

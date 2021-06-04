@@ -5,6 +5,7 @@ using System.Drawing;
 using Winook;
 using Menagerie.Core.Extensions;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using Desktop.Robot;
 
 namespace Menagerie.Core.Services
@@ -19,8 +20,8 @@ namespace Menagerie.Core.Services
 
         #region Members
 
+        private Point _previousMousePosition = new Point(-1, -1);
         private KeyboardHook _windowsKeyboardHook;
-        private MouseHook _windowsMouseHook;
 
         private readonly Robot _robot;
 
@@ -51,13 +52,6 @@ namespace Menagerie.Core.Services
                 _windowsKeyboardHook = null;
             }
 
-            if (_windowsMouseHook != null)
-            {
-                _windowsMouseHook.MouseMove -= WindowsMouseHookOnMouseMove;
-                _windowsMouseHook.Dispose();
-                _windowsMouseHook = null;
-            }
-            
             try
             {
                 _windowsKeyboardHook = new KeyboardHook(processId);
@@ -68,22 +62,23 @@ namespace Menagerie.Core.Services
             {
                 Log.Error($"Error while hooking process {processId}", e);
             }
-            
-            try
-            {
-                _windowsMouseHook = new MouseHook(processId);
-                _windowsMouseHook.MouseMove += WindowsMouseHookOnMouseMove;
-                _windowsMouseHook.InstallAsync().Wait();
-            }
-            catch (Exception e)
-            {
-                Log.Error($"Error while mouse hooking process {processId}", e);
-            }
         }
 
-        private void WindowsMouseHookOnMouseMove(object? sender, MouseMessageEventArgs e)
+        private void VerifyMouseMoved()
         {
-                AppService.Instance.MouseMoved();
+            while (true)
+            {
+                var currentPosition = GetMousePosition();
+
+                if (_previousMousePosition.X == -1 && _previousMousePosition.Y == -1)
+                {
+                    _previousMousePosition = currentPosition;
+                }
+                else if (_previousMousePosition.X != currentPosition.X || _previousMousePosition.Y != currentPosition.Y)
+                {
+                    AppService.Instance.MouseMoved();
+                }
+            }
         }
 
         private static void WindowsKeyboardHook_MessageReceived(object sender, KeyboardMessageEventArgs e)
@@ -168,6 +163,7 @@ namespace Menagerie.Core.Services
         public void Start()
         {
             Log.Trace("Starting KeyboardService");
+            Task.Run(VerifyMouseMoved);
         }
 
         #endregion
