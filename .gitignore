@@ -352,3 +352,5 @@ MigrationBackup/
 src/.idea
 src/.idea/.idea.Menagerie/.idea/workspace.xml
 src/build/
+java/.idea/workspace.xml
+java/.idea/vcs.xml
