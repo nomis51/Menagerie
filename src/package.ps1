@@ -14,7 +14,7 @@ if(Test-Path -Path build) {
 
 New-Item -Name build\files -ItemType directory
 
-Copy-Item -Path Menagerie\bin\Release\net5.0-windows\* -Destination build\files -Include *.dll,*.exe
+Copy-Item -Path Menagerie\bin\Release\net5.0-windows\* -Destination build\files -Include *.dll,*.exe,*.json
 
 echo Editing Menagerie.nuspec...
 $content = Get-Content MenagerieTemplate.nuspec -Raw
@@ -27,3 +27,6 @@ D:\nuget.exe pack build\Menagerie-$version.nuspec -OutputDirectory build
 echo Cleaning...
 Remove-Item -Force -Recurse build\files
 Remove-Item -Force build\Menagerie-$version.nuspec
+
+echo Squirrel...
+./packages/squirrel.windows.2.0.1/tools/Squirrel.exe --releasify ("./build/Menagerie." + $version + ".nupkg")
