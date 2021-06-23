@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 
-namespace Menagerie.Core.Models {
-    public class PoeNinjaCurrency {
+namespace Menagerie.Core.Models
+{
+    public abstract class PoeNinjaCurrency
+    {
         public string CurrencyTypeName { get; set; }
         public PoeNinjaExchange Pay { get; set; }
         public PoeNinjaExchange Receive { get; set; }

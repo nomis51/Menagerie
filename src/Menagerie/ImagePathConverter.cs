@@ -8,16 +8,20 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 
-namespace Menagerie {
-    public class ImagePathConverter : IValueConverter {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) {
-            if (value == null) {
+namespace Menagerie
+{
+    public class ImagePathConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            if (value == null)
+            {
                 return null;
             }
 
-            var fullFilePath = (string)value;
+            var fullFilePath = (string) value;
 
-            BitmapImage bitmap = new BitmapImage();
+            var bitmap = new BitmapImage();
             bitmap.BeginInit();
             bitmap.UriSource = new Uri(fullFilePath, UriKind.Absolute);
             bitmap.EndInit();
@@ -25,7 +29,9 @@ namespace Menagerie {
             return bitmap;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) {
+        public object ConvertBack(object value, Type targetType, object parameter,
+            System.Globalization.CultureInfo culture)
+        {
             throw new NotImplementedException();
         }
     }

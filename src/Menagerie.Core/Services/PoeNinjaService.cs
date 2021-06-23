@@ -4,240 +4,190 @@ using Menagerie.Core.Extensions;
 using Menagerie.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Menagerie.Core.Extensions;
 
-namespace Menagerie.Core.Services {
-    public class PoeNinjaService : IService {
-        private readonly static ILog log = LogManager.GetLogger(typeof(PoeNinjaService));
+namespace Menagerie.Core.Services
+{
+    public class PoeNinjaService : IService
+    {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(PoeNinjaService));
 
-        //private static object _lockUpdatePoeNinjaItemsLoop = new object();
-        private static object _lockCurrencyCacheAccess = new object();
-        //private static object _lockItemsCacheAccess = new object();
+        private static readonly object LockCurrencyCacheAccess = new();
 
         #region Constants
-        private int CACHE_EXPIRATION_TIME_MINS = 30;
-        private readonly Uri POE_NINJA_API_BASE_URL = new Uri("https://poe.ninja");
-        private const string POE_NINJA_API_CURRENCY = "api/data/currencyoverview";
-        //private const string POE_NINJA_API_ITEM = "api/data/itemoverview";
 
-        //private List<string> ItemTypes = new List<string>() {
-        //    "Oil",
-        //    "Incubator",
-        //    "Scarab",
-        //    "Fossil",
-        //    "Resonator",
-        //    "Essence",
-        //    "DivinationCard",
-        //    "Prophecy",
-        //    "SkillGem",
-        //    "UniqueMap",
-        //    "Map",
-        //    "UniqueJewel",
-        //    "UniqueFlask",
-        //    "UniqueWeapon",
-        //    "UniqueArmour",
-        //    "UniqueAccessory",
-        //    "Beast"
-        //};
+        private int _cacheExpirationTimeMinutes = 30;
+        private readonly Uri _poeNinjaApiBaseUrl = new("https://poe.ninja");
+        private const string PoeNinjaApiCurrency = "api/data/currencyoverview";
+
         #endregion
 
         #region Members
-        private PoeNinjaCaches OldCache = null;
-        private PoeNinjaCaches Cache = new PoeNinjaCaches();
-        private HttpService _httpService;
-        private bool CacheUpdating = false;
+
+        private PoeNinjaCaches _oldCache;
+        private PoeNinjaCaches _cache = new();
+        private readonly HttpService _httpService;
+        private bool _cacheUpdating;
+
         #endregion
 
         #region Props
-        public bool CacheReady { get; private set; } = false;
+
+        public bool CacheReady { get; private set; }
+
         #endregion
 
         #region Constructors
-        public PoeNinjaService() {
-            log.Trace("Initializing PoeNinjaService");
-            _httpService = new HttpService(POE_NINJA_API_BASE_URL);
+
+        public PoeNinjaService()
+        {
+            Log.Trace("Initializing PoeNinjaService");
+            _httpService = new HttpService(_poeNinjaApiBaseUrl);
         }
+
         #endregion
 
         #region Private methods
-        private void AutoUpdateCache(bool skipFirstUpdate = false, bool setOldCache = false) {
-            log.Trace("Starting auto cache update");
-            while (true) {
-                if (!skipFirstUpdate) {
-                    if (setOldCache) {
-                        log.Trace("Backup old cache");
-                        OldCache = Cache.Copy();
+
+        private void AutoUpdateCache(bool skipFirstUpdate = false, bool setOldCache = false)
+        {
+            Log.Trace("Starting auto cache update");
+            while (true)
+            {
+                if (!skipFirstUpdate)
+                {
+                    if (setOldCache)
+                    {
+                        Log.Trace("Backup old cache");
+                        lock (LockCurrencyCacheAccess)
+                        {
+                            _oldCache = _cache.Copy();
+                        }
                     }
 
-                    log.Trace("Updating cache");
-                    CacheUpdating = true;
-                    Task.Run(() => UpdateCurrencyCache()).Wait();
-                    // Task.Run(() => UpdateItemsCache()).Wait();
-                    Cache.UpdateTime = DateTime.Now;
-                    CacheUpdating = false;
+                    Log.Trace("Updating cache");
+                    _cacheUpdating = true;
+                    Task.Run(UpdateCurrencyCache).Wait();
+                    _cache.UpdateTime = DateTime.Now;
+                    _cacheUpdating = false;
 
                     SaveCache();
-                } else {
-                    log.Trace("Skipping first cache update");
-                    Cache = OldCache.Copy();
+                }
+                else
+                {
+                    Log.Trace("Skipping first cache update");
+                    _cache = _oldCache.Copy();
                 }
 
                 CacheReady = true;
                 skipFirstUpdate = false;
                 setOldCache = true;
 
-                Thread.Sleep(CACHE_EXPIRATION_TIME_MINS * 60 * 1000);
+                Thread.Sleep(_cacheExpirationTimeMinutes * 60 * 1000);
             }
+            // ReSharper disable once FunctionNeverReturns
         }
 
-        private void UpdateCurrencyCache() {
-            log.Trace("Updating currency cache");
-            lock (_lockCurrencyCacheAccess) {
-                try {
-                    var response = _httpService.Client.GetAsync($"/{POE_NINJA_API_CURRENCY}?league={AppService.Instance.GetConfig().CurrentLeague}&type=Currency&language=en").Result;
-                    PoeNinjaResult<PoeNinjaCurrency> result = _httpService.ReadResponse<PoeNinjaResult<PoeNinjaCurrency>>(response).Result;
-                    Dictionary<string, List<PoeNinjaCurrency>> currencies = new Dictionary<string, List<PoeNinjaCurrency>>();
+        private void UpdateCurrencyCache()
+        {
+            Log.Trace("Updating currency cache");
+            lock (LockCurrencyCacheAccess)
+            {
+                try
+                {
+                    var response = _httpService.Client
+                        .GetAsync(
+                            $"/{PoeNinjaApiCurrency}?league={AppService.Instance.GetConfig().CurrentLeague}&type=Currency&language=en")
+                        .Result;
+                    var result = HttpService.ReadResponse<PoeNinjaResult<PoeNinjaCurrency>>(response).Result;
 
-                    foreach (var line in result.Lines) {
-                        currencies.Add(line.CurrencyTypeName, new List<PoeNinjaCurrency>() { line });
-                    }
+                    var currencies = result.Lines.ToDictionary(line => line.CurrencyTypeName,
+                        line => new List<PoeNinjaCurrency>() {line});
 
-                    log.Trace($"Poe Ninja returned {currencies.Count} currencies");
+                    Log.Trace($"Poe Ninja returned {currencies.Count} currencies");
 
-                    Cache.Currency = new PoeNinjaCache<PoeNinjaCurrency>() {
+                    _cache.Currency = new PoeNinjaCache<PoeNinjaCurrency>()
+                    {
                         Language = result.Language,
                         Map = currencies
                     };
-                } catch (Exception e) {
-                    log.Error("Error while updating currency cache", e);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Error while updating currency cache", e);
                 }
             }
         }
 
-        //private void UpdateItemsCache() {
-        //    lock (_lockItemsCacheAccess) {
-        //        Dictionary<string, PoeNinjaResult<PoeNinjaItem>> results = new Dictionary<string, PoeNinjaResult<PoeNinjaItem>>();
-
-        //        Cache.Items = new Dictionary<string, PoeNinjaCache<PoeNinjaItem>>();
-
-        //        Parallel.For(0, ItemTypes.Count, (i) => {
-        //            var response = _httpService.Client.GetAsync($"/{POE_NINJA_API_ITEM}?league={AppService.Instance.GetConfig().CurrentLeague}&type={ItemTypes[i]}&language=en").Result;
-        //            PoeNinjaResult<PoeNinjaItem> result = _httpService.ReadResponse<PoeNinjaResult<PoeNinjaItem>>(response).Result;
-
-        //            lock (_lockUpdatePoeNinjaItemsLoop) {
-        //                results.Add(ItemTypes[i], result);
-        //            }
-        //        });
-
-        //        foreach (var bulk in results) {
-        //            foreach (var line in bulk.Value.Lines) {
-        //                if (!Cache.Items.ContainsKey(bulk.Key)) {
-        //                    Cache.Items.Add(bulk.Key, new PoeNinjaCache<PoeNinjaItem>());
-        //                }
-
-        //                if (Cache.Items[bulk.Key].Map == null) {
-        //                    Cache.Items[bulk.Key].Map = new Dictionary<string, List<PoeNinjaItem>>();
-        //                }
-
-        //                if (!Cache.Items[bulk.Key].Map.ContainsKey(line.Name)) {
-        //                    Cache.Items[bulk.Key].Map.Add(line.Name, new List<PoeNinjaItem>() { line });
-        //                } else {
-        //                    Cache.Items[bulk.Key].Map[line.Name].Add(line);
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
-
-        //public double GetItemChaosValue(PoeNinjaCache<PoeNinjaItem> cache, string itemName) {
-        //    if (cache == null) {
-        //        return 0.0d;
-        //    }
-
-
-        //    if (cache.Map.ContainsKey(itemName)) {
-        //        return cache.Map[itemName][0].ChaosValue;
-        //    }
-
-        //    return 0.0d;
-        //}
-
-        private double GetCurrencyChaosValue(PoeNinjaCache<PoeNinjaCurrency> cache, string currencyName) {
-            log.Trace($"Getting currency chaos value for {currencyName}");
-            if (cache == null) {
+        private static double GetCurrencyChaosValue(PoeNinjaCache<PoeNinjaCurrency> cache, string currencyName)
+        {
+            Log.Trace($"Getting currency chaos value for {currencyName}");
+            if (cache == null)
+            {
                 return 0.0d;
             }
 
-            if (cache.Map.ContainsKey(currencyName)) {
-                return cache.Map[currencyName][0].Receive.Value;
+            return cache.Map.ContainsKey(currencyName) ? cache.Map[currencyName][0].Receive.Value : 0.0d;
+        }
+
+        private void SaveCache()
+        {
+            Log.Trace("Saving cache");
+            AppService.Instance.SavePoeNinjaCaches(_cache);
+        }
+
+        private void LoadCache()
+        {
+            Log.Trace("Loading cache");
+            _oldCache = AppService.Instance.GetPoeNinjaCaches();
+
+            if (_oldCache != null)
+            {
+                Log.Trace("Existing cache found");
             }
-
-            return 0.0d;
         }
 
-        private void SaveCache() {
-            log.Trace("Saving cache");
-            AppService.Instance.SavePoeNinjaCaches(Cache);
-        }
-
-        private void LoadCache() {
-            log.Trace("Loading cache");
-            OldCache = AppService.Instance.GetPoeNinjaCaches();
-
-            if (OldCache != null) {
-                log.Trace("Existing cache found");
-            }
-        }
         #endregion
 
         #region Public methods
-        //public double GetItemChaosValue(string itemName, string itemType) {
-        //    if (CacheUpdating) {
-        //        if (OldCache == null) {
-        //            return 0.0d;
-        //        }
 
-        //        if (OldCache.Items.ContainsKey(itemType)) {
-        //            return GetItemChaosValue(OldCache.Items[itemType], itemName);
-        //        }
-        //    } else {
-        //        lock (_lockItemsCacheAccess) {
-        //            if (Cache.Items.ContainsKey(itemType)) {
-        //                return GetItemChaosValue(Cache.Items[itemType], itemName);
-        //            }
-        //        }
-        //    }
-
-        //    return 0.0d;
-        //}
-
-        public double GetCurrencyChaosValue(string currencyName) {
-            if (CacheUpdating) {
-                if (OldCache == null) {
+        public double GetCurrencyChaosValue(string currencyName)
+        {
+            if (_cacheUpdating)
+            {
+                if (_oldCache == null)
+                {
                     return 0.0d;
                 }
 
-                log.Trace($"Getting chaos value of {currencyName} from old cache");
+                Log.Trace($"Getting chaos value of {currencyName} from old cache");
 
-                return GetCurrencyChaosValue(OldCache.Currency, currencyName);
-            } else {
-                lock (_lockCurrencyCacheAccess) {
-                    log.Trace($"Getting chaos value of {currencyName} from current cache");
-                    return GetCurrencyChaosValue(Cache.Currency, currencyName);
+                return GetCurrencyChaosValue(_oldCache.Currency, currencyName);
+            }
+            else
+            {
+                lock (LockCurrencyCacheAccess)
+                {
+                    Log.Trace($"Getting chaos value of {currencyName} from current cache");
+                    return GetCurrencyChaosValue(_cache.Currency, currencyName);
                 }
             }
         }
 
-        public void Start() {
-            log.Trace("Starting PoeNinjaService");
+        public void Start()
+        {
+            Log.Trace("Starting PoeNinjaService");
 
-            CACHE_EXPIRATION_TIME_MINS = AppService.Instance.GetConfig().PoeNinjaUpdateRate;
+            _cacheExpirationTimeMinutes = AppService.Instance.GetConfig().PoeNinjaUpdateRate;
 
             LoadCache();
-            Task.Run(() => AutoUpdateCache(OldCache != null && (DateTime.Now - OldCache.UpdateTime).TotalMinutes < CACHE_EXPIRATION_TIME_MINS));
+            Task.Run(() => AutoUpdateCache(_oldCache != null &&
+                                           (DateTime.Now - _oldCache.UpdateTime).TotalMinutes <
+                                           _cacheExpirationTimeMinutes));
         }
+
         #endregion
     }
 }

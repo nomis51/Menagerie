@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Menagerie.Core.Models {
-    public class FetchResultElementListingPrice {
+namespace Menagerie.Core.Models
+{
+    public abstract class FetchResultElementListingPrice
+    {
         public double Amount { get; set; }
         public string Currency { get; set; }
         public string Type { get; set; }

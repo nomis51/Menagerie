@@ -3,11 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
+using log4net.Core;
 
 namespace Menagerie.Core.Extensions {
-    public static class ILogExtentions {
+    public static class LogExtentions {
         public static void Trace(this ILog log, string message, Exception exception) {
-                log.Logger.Log(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType,
+                log.Logger.Log(System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType,
                 log4net.Core.Level.Trace, $"{message}", exception);
         }
 
@@ -15,8 +16,8 @@ namespace Menagerie.Core.Extensions {
             log.Trace(message, null);
         }
 
-        public static void Verbose(this ILog log, string message, Exception exception) {
-            log.Logger.Log(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType,
+        private static void Verbose(this ILoggerWrapper log, string message, Exception exception) {
+            log.Logger.Log(System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType,
                 log4net.Core.Level.Verbose, $"{message}", exception);
         }
 

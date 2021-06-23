@@ -1,23 +1,20 @@
-﻿using Menagerie.Core.Enums;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Drawing;
-using System.Text;
-using System.Text.RegularExpressions;
+using System.Linq;
+using LiteDB;
+using Menagerie.Core.Abstractions;
+using Menagerie.Core.Enums;
+using PoeLogsParser.Enums;
+using PoeLogsParser.Models;
 
-namespace Menagerie.Core.Models {
-    public class Offer : ChatEvent {
-        public int Id { get; set; }
+namespace Menagerie.Core.Models.Trades
+{
+    public class Offer :  ChatEvent, IDocument
+    {
+        [BsonId]
+        public ObjectId Id { get; set; } = ObjectId.NewObjectId();
         public string ItemName { get; set; }
-        public string EscapedName {
-            get {
-                if (string.IsNullOrEmpty(ItemName)) {
-                    return "";
-                }
-
-                return Escape(ItemName);
-            }
-        }
+        public string EscapedName { get; set; }
         public string PlayerName { get; set; }
         public DateTime Time { get; set; }
         public string Currency { get; set; }
@@ -29,20 +26,26 @@ namespace Menagerie.Core.Models {
         public Point Position { get; set; }
         public string Notes { get; set; }
 
-        public Offer() {
-            base.EvenType = ChatEventEnum.Offer;
+        public Offer()
+        {
+            EvenType = ChatEventEnum.Offer;
         }
 
-        private string Escape(string val) {
-            return CleanBulkName(CleanMapName(val));
-        }
+        public Offer(TradeLogEntry entry)
+        {
+            ItemName = entry.Item.Name;
+            EscapedName = entry.Item.EscapedName;
+            PlayerName = entry.Player;
+            Time = entry.Time;
+            Currency = entry.Price.Currency;
+            Price = entry.Price.Value;
+            CurrencyImageLink = entry.Price.ImageLink;
+            League = entry.League;
+            IsOutgoing = entry.Types.Contains(LogEntryType.Outgoing);
 
-        private string CleanMapName(string val) {
-            return Regex.Replace(val, @" \(T[0-9]+\)", "");
-        }
-
-        private string CleanBulkName(string val) {
-            return Regex.Replace(val, "[0-9]+ ", "");
+            if (entry.Location == null) return;
+            StashTab = entry.Location.StashTab;
+            Position = new Point(entry.Location.Left, entry.Location.Top);
         }
     }
 }
