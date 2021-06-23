@@ -3,8 +3,8 @@
 A Path of Exile trade manger to simplify and speed up your trading experience.
 
 ## Requirements ⚙️
-- [.NET Framework 4.7.2+](https://dotnet.microsoft.com/download/dotnet-framework)
-- If you are using the release version [1.4.0+](https://github.com/nomis51/Menagerie/releases/tag/v1.4.0), you'll need [.NET 5.0](https://dotnet.microsoft.com/download/dotnet/5.0) instead
+- [.NET 5.0+](https://dotnet.microsoft.com/download/dotnet/5.0)
+- If you are using any version below 1.4.0, you'll need [.NET Framework 4.7.2+](https://dotnet.microsoft.com/download/dotnet-framework) instead
 
 ## Discord 💬
 - https://discord.gg/yAqNKpGZ2j
