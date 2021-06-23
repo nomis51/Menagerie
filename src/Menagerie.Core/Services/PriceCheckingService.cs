@@ -1,6 +1,7 @@
 ﻿using Menagerie.Core.Abstractions;
 using Menagerie.Core.Models;
 using System.Threading.Tasks;
+using Menagerie.Core.Models.Trades;
 
 namespace Menagerie.Core.Services
 {

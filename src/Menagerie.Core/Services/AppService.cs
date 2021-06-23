@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Menagerie.Core.Models.ItemsScan;
+using Menagerie.Core.Models.Trades;
 using Menagerie.Core.Models.Translator;
 using PoeLogsParser.Enums;
 using PoeLogsParser.Models;
@@ -93,7 +94,7 @@ namespace Menagerie.Core.Services
         public delegate void MouseMovedEvent();
 
         public event MouseMovedEvent OnMouseMoved;
-        
+
         #endregion
 
         private IntPtr _overlayHandle;
@@ -202,7 +203,7 @@ namespace Menagerie.Core.Services
             var mods = _itemService.FindMapModifiers(data);
 
             if (!mods.Any()) return;
-            
+
             OnMapModifiersVerified(mods);
         }
 
@@ -580,7 +581,7 @@ namespace Menagerie.Core.Services
             {
                 return;
             }
-            
+
             if (!string.IsNullOrEmpty(config.PlayerName) && !offer.IsOutgoing)
             {
                 Task.Run(() =>

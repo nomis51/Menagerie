@@ -16,6 +16,7 @@ using Brushes = System.Windows.Media.Brushes;
 using System.Windows.Media;
 using Caliburn.Micro;
 using Desktop.Robot.Clicks;
+using LiteDB;
 using Menagerie.Models.Abstractions;
 using Menagerie.Views;
 using ILog = log4net.ILog;
@@ -267,9 +268,9 @@ namespace Menagerie.ViewModels
             NotificationService.Instance.ShowTradeChatMatchNotification(line);
         }
 
-        private void Instance_OnOfferScam(CoreModels.PriceCheckResult result, CoreModels.Offer offer)
+        private void Instance_OnOfferScam(CoreModels.PriceCheckResult result, Core.Models.Trades.Offer offer)
         {
-            var localOffer = AppMapper.Instance.Map<CoreModels.Offer, Offer>(offer);
+            var localOffer = AppMapper.Instance.Map<Core.Models.Trades.Offer, Offer>(offer);
             var localPriceCheckResult = AppMapper.Instance.Map<CoreModels.PriceCheckResult, PriceCheckResult>(result);
 
             var nbTry = 0;
@@ -358,7 +359,7 @@ namespace Menagerie.ViewModels
                         }
                         else
                         {
-                            AppService.Instance.OfferCompleted(AppMapper.Instance.Map<Offer, CoreModels.Offer>(offer));
+                            AppService.Instance.OfferCompleted(AppMapper.Instance.Map<Offer, Core.Models.Trades.Offer>(offer));
 
                             SendKick(offer.Id, AppService.Instance.GetConfig().AutoThanks);
                         }
@@ -438,7 +439,7 @@ namespace Menagerie.ViewModels
             RemoveOffer(offer.Id, isOutgoing);
         }
 
-        public void RemoveOffer(int id, bool isOutgoing = false)
+        public void RemoveOffer(ObjectId id, bool isOutgoing = false)
         {
             var offers = isOutgoing ? OutgoingOffers : IncomingOffers;
             var overflowOffers = isOutgoing ? _overflowOutgoingOffers : _overflowIncomingOffers;
@@ -459,9 +460,9 @@ namespace Menagerie.ViewModels
             offers.Notify();
         }
 
-        private void AppService_OnNewOffer(Core.Models.Offer offer)
+        private void AppService_OnNewOffer(Core.Models.Trades.Offer offer)
         {
-            var localOffer = AppMapper.Instance.Map<CoreModels.Offer, Offer>(offer);
+            var localOffer = AppMapper.Instance.Map<Core.Models.Trades.Offer, Offer>(offer);
 
             Log.Trace("New offer event");
 
@@ -481,7 +482,7 @@ namespace Menagerie.ViewModels
             return AppService.Instance.GetLeagues().Result;
         }
 
-        public Offer GetOffer(int id, bool isOutgoing = false)
+        public Offer GetOffer(ObjectId id, bool isOutgoing = false)
         {
             Log.Trace($"Getting offer {id}");
             return (isOutgoing ? OutgoingOffers : IncomingOffers).Value.FirstOrDefault(o => o.Id == id);
@@ -493,10 +494,10 @@ namespace Menagerie.ViewModels
             return (isOutgoing ? OutgoingOffers : IncomingOffers).Value.FirstOrDefault(o => o.TradeRequestSent);
         }
 
-        private int GetOfferIndex(int id, bool isOutgoing = false)
+        private int GetOfferIndex(string id, bool isOutgoing = false)
         {
             Log.Trace($"Getting offer's index {id}");
-            return (isOutgoing ? OutgoingOffers : IncomingOffers).Value.Select(o => o.Id).ToList().IndexOf(id);
+            return (isOutgoing ? OutgoingOffers : IncomingOffers).Value.Select(o => o.Id).ToList().IndexOf(new ObjectId(id));
         }
 
         private void UpdateOffer(Offer offer, bool fullUpdate = false)
@@ -541,7 +542,7 @@ namespace Menagerie.ViewModels
             }
         }
 
-        public void SendTradeRequest(int id, bool isOutgoing = false)
+        public void SendTradeRequest(ObjectId id, bool isOutgoing = false)
         {
             Log.Trace($"Sending trade request {id}");
             var offer = GetOffer(id, isOutgoing);
@@ -560,7 +561,7 @@ namespace Menagerie.ViewModels
             }
         }
 
-        public void SendJoinHideoutCommand(int id)
+        public void SendJoinHideoutCommand(ObjectId id)
         {
             Log.Trace($"Sending join hideout command {id}");
             var offer = GetOffer(id, true);
@@ -573,7 +574,7 @@ namespace Menagerie.ViewModels
             AppService.SendHideoutChatCommand(offer.PlayerName);
         }
 
-        public void SendBusyWhisper(int id)
+        public void SendBusyWhisper(ObjectId id)
         {
             Log.Trace($"Sending busy whisper {id}");
             var offer = GetOffer(id);
@@ -581,10 +582,10 @@ namespace Menagerie.ViewModels
             if (offer is not {State: OfferState.Initial}) return;
 
             AppService.SendChatMessage(
-                $"@{offer.PlayerName} {AppService.Instance.ReplaceVars(Config.BusyWhisper, AppMapper.Instance.Map<Offer, CoreModels.Offer>(offer))}");
+                $"@{offer.PlayerName} {AppService.Instance.ReplaceVars(Config.BusyWhisper, AppMapper.Instance.Map<Offer, Core.Models.Trades.Offer>(offer))}");
         }
 
-        public void SendReInvite(int id)
+        public void SendReInvite(ObjectId id)
         {
             Log.Trace($"Sending re-invite commands {id}");
             var offer = GetOffer(id);
@@ -602,7 +603,7 @@ namespace Menagerie.ViewModels
             t.Start();
         }
 
-        public void SendInvite(int id)
+        public void SendInvite(ObjectId id)
         {
             Log.Trace($"Sending invite command {id}");
             var offer = GetOffer(id);
@@ -615,7 +616,7 @@ namespace Menagerie.ViewModels
             AppService.SendInviteChatCommand(offer.PlayerName);
         }
 
-        public void SendKick(int id, bool sayThanks = false)
+        public void SendKick(ObjectId id, bool sayThanks = false)
         {
             Log.Trace($"Sending kick command {id}");
             var offer = GetOffer(id);
@@ -635,7 +636,7 @@ namespace Menagerie.ViewModels
                 {
                     Thread.Sleep(250);
                     AppService.SendChatMessage(
-                        $"@{offer.PlayerName} {AppService.Instance.ReplaceVars(Config.ThanksWhisper, AppMapper.Instance.Map<Offer, CoreModels.Offer>(offer))}");
+                        $"@{offer.PlayerName} {AppService.Instance.ReplaceVars(Config.ThanksWhisper, AppMapper.Instance.Map<Offer, Core.Models.Trades.Offer>(offer))}");
                 }
 
                 RemoveOffer(offer);
@@ -644,7 +645,7 @@ namespace Menagerie.ViewModels
             t.Start();
         }
 
-        public void SendLeave(int id, bool sayThanks = false)
+        public void SendLeave(ObjectId id, bool sayThanks = false)
         {
             Log.Trace($"Sending leave command {id}");
             var offer = GetOffer(id, true);
@@ -660,7 +661,7 @@ namespace Menagerie.ViewModels
                 {
                     Thread.Sleep(100);
                     AppService.SendChatMessage(
-                        $"@{offer.PlayerName} {(AppService.Instance.ReplaceVars(Config.ThanksWhisper, AppMapper.Instance.Map<Offer, CoreModels.Offer>(offer)))}");
+                        $"@{offer.PlayerName} {(AppService.Instance.ReplaceVars(Config.ThanksWhisper, AppMapper.Instance.Map<Offer, Core.Models.Trades.Offer>(offer)))}");
                 }
 
                 RemoveOffer(offer, true);
@@ -669,7 +670,7 @@ namespace Menagerie.ViewModels
             t.Start();
         }
 
-        public void SendStillInterestedWhisper(int id)
+        public void SendStillInterestedWhisper(ObjectId id)
         {
             Log.Trace($"Sending still interested whisper {id}");
             var offer = GetOffer(id);
@@ -677,10 +678,10 @@ namespace Menagerie.ViewModels
             if (offer == null) return;
 
             AppService.SendChatMessage(
-                $"@{offer.PlayerName} {AppService.Instance.ReplaceVars(Config.StillInterestedWhisper, AppMapper.Instance.Map<Offer, CoreModels.Offer>(offer))}");
+                $"@{offer.PlayerName} {AppService.Instance.ReplaceVars(Config.StillInterestedWhisper, AppMapper.Instance.Map<Offer, Core.Models.Trades.Offer>(offer))}");
         }
 
-        public void SendSoldWhisper(int id)
+        public void SendSoldWhisper(ObjectId id)
         {
             Log.Trace($"Sending sold whisper {id}");
             var offer = GetOffer(id);
@@ -690,7 +691,7 @@ namespace Menagerie.ViewModels
             offer.State = OfferState.Done;
             UpdateOffer(offer);
 
-            var mappedOffer = AppMapper.Instance.Map<Offer, CoreModels.Offer>(offer);
+            var mappedOffer = AppMapper.Instance.Map<Offer, Core.Models.Trades.Offer>(offer);
 
             AppService.SendChatMessage(
                 $"@{offer.PlayerName} {AppService.Instance.ReplaceVars(Config.SoldWhisper, mappedOffer)}");
@@ -725,7 +726,7 @@ namespace Menagerie.ViewModels
             offers.Value = bufferOffers;
         }
 
-        public void HighlightItem(int id)
+        public void HighlightItem(ObjectId id)
         {
             Log.Trace($"Highlighting offer {id}");
             var offer = GetOffer(id);

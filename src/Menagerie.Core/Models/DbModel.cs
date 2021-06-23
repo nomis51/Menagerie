@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using LiteDB;
+using Menagerie.Core.Abstractions;
 
 namespace Menagerie.Core.Models
 {
-    public abstract class DbModel
+    public abstract class DbModel : IDocument
     {
-        public int Id { get; set; }
+        [BsonId]
+        public ObjectId Id { get; set; }
     }
 }

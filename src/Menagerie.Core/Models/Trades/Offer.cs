@@ -1,20 +1,18 @@
-﻿using Menagerie.Core.Enums;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
+using LiteDB;
+using Menagerie.Core.Abstractions;
+using Menagerie.Core.Enums;
 using PoeLogsParser.Enums;
 using PoeLogsParser.Models;
 
-namespace Menagerie.Core.Models
+namespace Menagerie.Core.Models.Trades
 {
-    public class Offer : ChatEvent
+    public class Offer :  ChatEvent, IDocument
     {
-        private static int NextId = 0;
-
-        public int Id { get; set; } = ++NextId;
+        [BsonId]
+        public ObjectId Id { get; set; } = ObjectId.NewObjectId();
         public string ItemName { get; set; }
         public string EscapedName { get; set; }
         public string PlayerName { get; set; }
@@ -30,7 +28,7 @@ namespace Menagerie.Core.Models
 
         public Offer()
         {
-            base.EvenType = ChatEventEnum.Offer;
+            EvenType = ChatEventEnum.Offer;
         }
 
         public Offer(TradeLogEntry entry)

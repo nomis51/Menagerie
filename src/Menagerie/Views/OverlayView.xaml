@@ -589,7 +589,7 @@
                               Height="80"
                               Margin="2"
                               MouseDown="grdOffer_MouseDown"
-                              Tag="{Binding Id}"
+                              Tag="{Binding StrId}"
                               ToolTip="{Binding Tooltip}"
                               ToolTipService.ShowDuration="60000">
                             <Grid.RowDefinitions>
@@ -685,7 +685,7 @@
                                    Stretch="Uniform"
                                    Source="{Binding CurrencyImageLink}" />
                             <Button Name="btnBusy"
-                                    Tag="{Binding Id}"
+                                    Tag="{Binding StrId}"
                                     Click="btnBusy_Click"
                                     Grid.Row="3"
                                     Grid.Column="1"
@@ -700,7 +700,7 @@
                                 </Button.Content>
                             </Button>
                             <Button x:Name="btnRemove"
-                                    Tag="{Binding Id}"
+                                    Tag="{Binding StrId}"
                                     Click="btnRemove_Click"
                                     Grid.Row="3"
                                     Grid.Column="2"
@@ -714,7 +714,7 @@
                                 </Button.Content>
                             </Button>
                             <Button x:Name="btnInvite"
-                                    Tag="{Binding Id}"
+                                    Tag="{Binding StrId}"
                                     Click="btnInvite_Click"
                                     Grid.Row="3"
                                     Grid.Column="1"
@@ -804,7 +804,7 @@
                               MaxWidth="200"
                               MaxHeight="90"
                               Margin="2"
-                              Tag="{Binding Id}"
+                              Tag="{Binding StrId}"
                               ToolTip="{Binding Tooltip}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="3" />
@@ -870,7 +870,7 @@
                                    Source="{Binding CurrencyImageLink}" />
                             <Button x:Name="btnJoinHideout"
                                     Click="btnJoinHideout_Click"
-                                    Tag="{Binding Id}"
+                                    Tag="{Binding StrId}"
                                     Grid.Row="4"
                                     Grid.Column="1"
                                     Grid.ColumnSpan="2"
@@ -884,7 +884,7 @@
                                 </Button.Content>
                             </Button>
                             <Button x:Name="btnTrade"
-                                    Tag="{Binding Id}"
+                                    Tag="{Binding StrId}"
                                     Click="btnTrade_Click"
                                     Grid.Row="4"
                                     Grid.Column="3"
@@ -899,7 +899,7 @@
                                 </Button.Content>
                             </Button>
                             <Button x:Name="btnLeave"
-                                    Tag="{Binding Id}"
+                                    Tag="{Binding StrId}"
                                     Click="btnLeave_Click"
                                     Grid.Row="4"
                                     Grid.Column="5"

@@ -2,13 +2,15 @@
 using System.Linq;
 using System.Windows;
 using Caliburn.Micro;
+using LiteDB;
 using Point = System.Drawing.Point;
 
 namespace Menagerie.Models
 {
     public class Offer : Screen
     {
-        public int Id { get; set; }
+        public ObjectId Id { get; set; }
+        public string StrId => Id.ToString();
         public string ItemName { get; set; }
         public string EscapedName { get; set; }
         public string PlayerName { get; set; }

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using Menagerie.Core.Models.PoeApi;
 using Menagerie.Core.Models.PoeApi.Stash;
+using Menagerie.Core.Models.Trades;
 
 namespace Menagerie.Core.Services
 {

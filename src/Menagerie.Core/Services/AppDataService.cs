@@ -8,6 +8,7 @@ using System.Linq.Expressions;
 using log4net;
 using Menagerie.Core.Extensions;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace Menagerie.Core.Services
 {
@@ -16,17 +17,15 @@ namespace Menagerie.Core.Services
         #region Constants
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(AppDataService));
-        private const string DbFilePath = "Menagerie.db";
-        public const string COLLECTION_CONFIG = "config";
-        public const string COLLECTION_TRADES = "trades";
-        public const string COLLECTION_POE_NINJA_CACHES = "poeNinjaCaches";
-        public const string COLLECTION_IMAGES = "images";
+        private const string DataDir = "data/";
+        public const string COLLECTION_CONFIG = DataDir + "config.json";
+        public const string COLLECTION_TRADES = DataDir + "trades.json";
+        public const string COLLECTION_POE_NINJA_CACHES = DataDir + "poeNinjaCaches.json";
+        public const string COLLECTION_IMAGES = DataDir + "images.json";
 
         #endregion
 
         #region Members
-
-        private readonly LiteDatabase _db;
 
         #endregion
 
@@ -36,12 +35,30 @@ namespace Menagerie.Core.Services
         {
             Log.Trace("Initializing AppDataService");
 
-            if (!File.Exists(DbFilePath))
+            if (!Directory.Exists(DataDir))
             {
-                CopyOldConfig();
+                Directory.CreateDirectory(DataDir);
             }
 
-            _db = new LiteDatabase(DbFilePath);
+            if (!File.Exists(COLLECTION_CONFIG))
+            {
+                File.WriteAllText(COLLECTION_CONFIG, "[]");
+            }
+
+            if (!File.Exists(COLLECTION_TRADES))
+            {
+                File.WriteAllText(COLLECTION_TRADES, "[]");
+            }
+
+            if (!File.Exists(COLLECTION_POE_NINJA_CACHES))
+            {
+                File.WriteAllText(COLLECTION_POE_NINJA_CACHES, "[]");
+            }
+
+            if (!File.Exists(COLLECTION_IMAGES))
+            {
+                File.WriteAllText(COLLECTION_IMAGES, "[]");
+            }
         }
 
         #endregion
@@ -123,7 +140,7 @@ namespace Menagerie.Core.Services
         {
             if (GetDocument<Config>(COLLECTION_CONFIG) != null) return;
             Log.Trace("Creating initial db data");
-            InsertDocument<Config>(COLLECTION_CONFIG, new Config()
+            InsertDocument(COLLECTION_CONFIG, new Config()
             {
                 PlayerName = "",
                 CurrentLeague = "Standard",
@@ -147,43 +164,53 @@ namespace Menagerie.Core.Services
             });
         }
 
-        public List<T> GetDocuments<T>(string collectionName, Expression<Func<T, bool>> predicate = null)
+        public List<T> GetDocuments<T>(string collectionName, Predicate<T> predicate = null) where T : IDocument
         {
             Log.Trace($"Reading db documents for {typeof(T)}");
-            return predicate == null
-                ? _db.GetCollection<T>(collectionName)
-                    .FindAll()
-                    .ToList()
-                : _db.GetCollection<T>(collectionName)
-                    .Find(predicate)
-                    .ToList();
+            var elements = JsonConvert.DeserializeObject<List<T>>(File.ReadAllText(collectionName));
+
+            return elements == null ? new List<T>() : predicate == null ? elements : elements.FindAll(predicate);
         }
 
-        public T GetDocument<T>(string collectionName, Expression<Func<T, bool>> predicate = null)
+        public T GetDocument<T>(string collectionName, Predicate<T> predicate = null) where T : IDocument
         {
             var docs = GetDocuments<T>(collectionName, predicate);
             return docs.FirstOrDefault();
         }
 
-        public int InsertDocument<T>(string collectionName, T doc)
+        public ObjectId InsertDocument<T>(string collectionName, T doc) where T : IDocument
         {
             Log.Trace($"Inserting db document for {typeof(T)}");
-            return _db.GetCollection<T>(collectionName)
-                .Insert(doc);
+
+            var elements = GetDocuments<T>(collectionName);
+
+            elements.Add(doc);
+
+            File.WriteAllText(collectionName, JsonConvert.SerializeObject(elements));
+
+            return doc.Id;
         }
 
-        public bool UpdateDocument<T>(string collectionName, T doc)
+        public bool UpdateDocument<T>(string collectionName, T doc) where T : IDocument
         {
             Log.Trace($"Updating db document for {typeof(T)}");
-            return _db.GetCollection<T>(collectionName)
-                .Update(doc);
+            var elements = GetDocuments<T>(collectionName);
+
+            var index = elements.FindIndex(d => d.Id == doc.Id);
+
+            if (index == -1) return false;
+
+            elements[index] = doc;
+
+            File.WriteAllText(collectionName, JsonConvert.SerializeObject(elements));
+
+            return true;
         }
 
         public void DeleteAllDocument(string collectionName)
         {
             Log.Trace($"Deleting db documents for {collectionName}");
-            _db.GetCollection(collectionName)
-                .DeleteAll();
+            File.WriteAllText(collectionName, "[]");
         }
 
         public void Start()

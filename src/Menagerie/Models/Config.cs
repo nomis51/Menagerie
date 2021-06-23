@@ -5,7 +5,7 @@ namespace Menagerie.Models
 {
     public class Config
     {
-        public int Id { get; set; }
+        public object Id { get; set; }
         public string PlayerName { get; set; }
         public string CurrentLeague { get; set; }
         public bool OnlyShowOffersOfCurrentLeague { get; set; }

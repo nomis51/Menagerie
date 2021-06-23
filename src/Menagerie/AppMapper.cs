@@ -38,8 +38,8 @@ namespace Menagerie
         {
             var configuration = new MapperConfiguration(config =>
             {
-                config.CreateMap<CoreModels.Offer, Offer>();
-                config.CreateMap<Offer, CoreModels.Offer>();
+                config.CreateMap<Core.Models.Trades.Offer, Offer>();
+                config.CreateMap<Offer, Core.Models.Trades.Offer>();
                 config.CreateMap<CoreModels.PriceCheckResult, PriceCheckResult>();
                 config.CreateMap<CoreModels.PricingResult, PricingResult>();
                 config.CreateMap<CoreModels.PoeApi.Stash.ChaosRecipeResult, ChaosRecipeResult>();

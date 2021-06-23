@@ -7,6 +7,7 @@ using Menagerie.Core.Models;
 using System.Threading;
 using System.Linq;
 using System.Threading.Tasks;
+using Menagerie.Core.Models.Trades;
 
 namespace Menagerie.Core.Services
 {

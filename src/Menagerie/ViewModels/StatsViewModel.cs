@@ -10,6 +10,7 @@ using Menagerie.Core.Services;
 using Menagerie.Core.Models;
 using System.Windows;
 using Caliburn.Micro;
+using Menagerie.Core.Models.Trades;
 using ILog = log4net.ILog;
 using LogManager = log4net.LogManager;
 using StatsOffer = Menagerie.Models.StatsOffer;
