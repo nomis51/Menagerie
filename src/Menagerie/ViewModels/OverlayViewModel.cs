@@ -367,7 +367,7 @@ namespace Menagerie.ViewModels
                         break;
 
                     case ChatEventEnum.TradeCancelled:
-                        foreach (var o in IncomingOffers.Value.Where(o => !o.TradeRequestSent))
+                        foreach (var o in IncomingOffers.Value.Where(o => o.TradeRequestSent))
                         {
                             o.State = OfferState.PlayerInvited;
                             UpdateOffer(o, true);
