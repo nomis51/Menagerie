@@ -163,7 +163,7 @@ namespace Menagerie.Core.Services
         public void Start()
         {
             Log.Trace("Starting KeyboardService");
-            Task.Run(VerifyMouseMoved);
+            //Task.Run(VerifyMouseMoved);
         }
 
         #endregion
