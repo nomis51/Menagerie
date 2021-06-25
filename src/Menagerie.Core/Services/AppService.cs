@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Menagerie.Core.Enums;
 using Menagerie.Core.Models.ItemsScan;
 using Menagerie.Core.Models.Trades;
 using Menagerie.Core.Models.Translator;
@@ -215,6 +216,16 @@ namespace Menagerie.Core.Services
         public Point GetMousePosition()
         {
             return _keyboardService.GetMousePosition();
+        }
+
+        public void OnTradeAccepted()
+        {
+            NewChatEvent(ChatEventEnum.TradeAccepted);
+        }
+
+        public void OnTradeCancelled()
+        {
+            NewChatEvent(ChatEventEnum.TradeCancelled);
         }
 
         private void SearchItemInStash(bool useTypeInstead = false)

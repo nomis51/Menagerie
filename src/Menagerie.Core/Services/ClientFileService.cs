@@ -54,6 +54,19 @@ namespace Menagerie.Core.Services
             LogService.NewPlayerJoinedAreaLogEntry += LogServiceOnNewPlayerJoinedAreaLogEntry;
             LogService.NewChatMessageLogEntry += LogServiceOnNewChatMessageLogEntry;
             LogService.NewLogEntry += LogServiceOnNewLogEntry;
+            LogService.NewTradeStateLogEntry += LogServiceOnNewTradeStateLogEntry;
+        }
+
+        private static void LogServiceOnNewTradeStateLogEntry(TradeStateLogEntry logEntry)
+        {
+            if (logEntry.IsAccepted)
+            {
+                AppService.Instance.OnTradeAccepted();
+            }
+            else if (logEntry.IsCancelled)
+            {
+                AppService.Instance.OnTradeCancelled();
+            }
         }
 
         private static void LogServiceOnNewChatMessageLogEntry(ChatMessageLogEntry logEntry)
@@ -84,6 +97,7 @@ namespace Menagerie.Core.Services
 
         private static void LogServiceOnNewLogEntry(ILogEntry logEntry)
         {
+            var g = 0;
             // TODO: deal with generic logEntries
         }
 
