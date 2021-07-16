@@ -86,6 +86,11 @@ namespace Menagerie.Core.Services
             AppService.Instance.HandleKeyboardInput(e);
         }
 
+        public void MoveMouse(uint x, uint y)
+        {
+            _robot.MouseMove(x, y);
+        }
+
         public Point GetMousePosition()
         {
             return _robot.GetMousePosition();

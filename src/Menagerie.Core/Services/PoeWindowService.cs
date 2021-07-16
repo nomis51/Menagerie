@@ -45,7 +45,8 @@ namespace Menagerie.Core.Services
         private readonly List<string> _poeProcesses = new List<string>()
         {
             "PathOfExile_x64",
-            "PathOfExile_x64Steam"
+            "PathOfExile_x64Steam",
+            "PathOfExile"
         };
 
         #endregion

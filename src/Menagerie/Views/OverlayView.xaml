@@ -36,6 +36,9 @@
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
         
+        <!-- Trade window scan -->
+        <Label Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Content="{Binding TradeWindowChaosValue.Value, Mode=OneWay}" Foreground="Gold" FontSize="18" FontWeight="Bold"></Label>
+        
         <!-- Map modifiers popup -->
         <Grid Grid.Row="0"
               Grid.Column="0"

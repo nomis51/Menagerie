@@ -46,6 +46,7 @@ namespace Menagerie.ViewModels
         public ReactiveProperty<ChaosRecipeResult> ChaosRecipe { get; set; }
         public ReactiveProperty<bool> OverlayMovable { get; set; }
         public ReactiveProperty<BindableCollection<MapModifier>> MapModifiers { get; set; }
+        public ReactiveProperty<string> TradeWindowChaosValue { get; set; }
 
         public BindableCollection<string> TargetLanguages { get; set; }
 
@@ -178,7 +179,8 @@ namespace Menagerie.ViewModels
                 AdditionalReactivePropertiesToNotify = new List<IReactiveProperty>() {MapModifiers}
             };
             TranslateInputControlVisibility = new ReactiveProperty<Visibility>("TranslateInputControlVisibility", this, Visibility.Hidden);
-
+            TradeWindowChaosValue = new ReactiveProperty<string>("TradeWindowChaosValue", this, string.Empty)
+                ;
             TargetLanguages = new BindableCollection<string>(AppService.Instance.GetAvailableTranslationLanguages());
             NotifyOfPropertyChange(() => SourceLanguages);
 
@@ -191,6 +193,10 @@ namespace Menagerie.ViewModels
             AppService.Instance.OnToggleChaosRecipeOverlayVisibility += AppService_OnToggleChaosRecipeOverlayVisibility;
             AppService.Instance.ShowTranslateInputControl += AppService_OnShowTranslateInputControl;
             AppService.Instance.MapModifiersVerified += AppService_OnMapModifiersVerified;
+            AppService.Instance.OnTradeWindowScanned += value =>
+            {
+                TradeWindowChaosValue.Value = $"There is {(decimal.Round((decimal)value, 3) != (decimal)value ? "~" : "")}{Math.Round(value, 2)} chaos in the window.";
+            };
 
             UpdateService.NewUpdateInstalled += UpdateServiceOnNewUpdateInstalled;
         }

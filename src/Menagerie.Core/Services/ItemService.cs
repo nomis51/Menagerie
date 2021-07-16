@@ -191,6 +191,36 @@ namespace Menagerie.Core.Services
 
         #region Public methods
 
+        public TradeWindowItem ParseTradeWindowItem(string data)
+        {
+            if (string.IsNullOrEmpty(data)) return default;
+
+            var nameAndType = ParseItemNameAndType(data);
+
+            if (nameAndType == null) return default;
+
+            var stackSize = ParseStackSize(data);
+            return new TradeWindowItem()
+            {
+                Name = nameAndType.Item1,
+                Type = nameAndType.Item2,
+                StackSize = stackSize
+            };
+        }
+
+        public int ParseStackSize(string data)
+        {
+            var startIndex = data.IndexOf("Stack Size:");
+
+            if (startIndex == -1) return 0;
+
+            startIndex += 12;
+
+            var endIndex = data.IndexOf("/", startIndex);
+
+            return endIndex == -1 ? 0 : int.Parse(data.Substring(startIndex, endIndex - startIndex));
+        }
+
         public Tuple<string, string> ParseItemNameAndType(string data)
         {
             if (string.IsNullOrEmpty(data)) return default;
@@ -215,25 +245,25 @@ namespace Menagerie.Core.Services
                     {
                         itemType += $" Tier:{tier}";
                     }
-                    
+
                     break;
                 }
-                
+
                 if (dataParts[i].Contains("---"))
                 {
                     if (!isMap) break;
-                    
+
                     continue;
                 }
-                
+
                 if (dataParts[i].Contains("Rarity:")) continue;
-                
+
                 if (!isMap && dataParts[i].Contains("Item Class:") && dataParts[i].Contains("Map"))
                 {
                     isMap = true;
                     continue;
-                } 
-                
+                }
+
                 if (dataParts[i].Contains("Item Class:"))
                 {
                     continue;

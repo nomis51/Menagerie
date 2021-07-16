@@ -6,7 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
+using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,6 +16,7 @@ using Menagerie.Core.Enums;
 using Menagerie.Core.Models.ItemsScan;
 using Menagerie.Core.Models.Trades;
 using Menagerie.Core.Models.Translator;
+using Menagerie.ML.Services;
 using PoeLogsParser.Enums;
 using PoeLogsParser.Models;
 using Winook;
@@ -96,6 +99,10 @@ namespace Menagerie.Core.Services
 
         public event MouseMovedEvent OnMouseMoved;
 
+        public delegate void TradeWindowScannedEvent(double chaosValue);
+
+        public event TradeWindowScannedEvent OnTradeWindowScanned;
+
         #endregion
 
         private IntPtr _overlayHandle;
@@ -140,6 +147,57 @@ namespace Menagerie.Core.Services
 
         private void SetShortcuts()
         {
+            _shortcutService.RegisterShortcut(new Shortcut()
+            {
+                Direction = KeyDirection.Down,
+                Key = (Key) 117, // F6
+                Alt = false,
+                Control = false,
+                Shift = false,
+                Action = () =>
+                {
+                    // var chaosValue = _tradeService.ValidateTradeWindow(new Price() {Currency = "Chaos Orb", Value = 3.5});
+                    // OnTradeWindowScanned?.Invoke(chaosValue);
+
+                    var pythonInfo = new ProcessStartInfo();
+                    Task.Run(() =>
+                    {
+                        Process python;
+                        pythonInfo.FileName = "python.exe";
+                        pythonInfo.Arguments = @"./api/server.py";
+                        pythonInfo.UseShellExecute = false;
+                        
+                        Console.WriteLine("Python Starting");
+                        python = Process.Start(pythonInfo);
+                        python.WaitForExit();
+                        python.Close();
+                    });
+
+                    Thread.Sleep(10000);
+
+                    Size _tradeWindowSquareSize = new(53, 53);
+                    Point _tradeWindowTopCornerPosition = new(312, 202);
+                    Size _tradeWindowColsRowsSize = new(12, 5);
+                    Rectangle _tradeWindowRectangle = new Rectangle(_tradeWindowTopCornerPosition.X, _tradeWindowTopCornerPosition.Y,
+                        _tradeWindowColsRowsSize.Width * _tradeWindowSquareSize.Width,
+                        _tradeWindowColsRowsSize.Height * _tradeWindowSquareSize.Height);
+
+                    var image = ScreenCaptureService.CaptureArea(_tradeWindowRectangle);
+                    var id = Guid.NewGuid().ToString();
+                    var filePath = $"./api/.temp/{id}.jpeg";
+                    image.Save(filePath, ImageFormat.Jpeg);
+
+                    var httpService = new HttpService(new Uri("http://localhost:5000"));
+                    var response = httpService.Client.GetAsync($"/api/currency-type?file_id=ancient_orb_1").Result;
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var result = response.Content.ReadAsStringAsync().Result;
+                        var g = 0;
+                    }
+                }
+            });
+
             _shortcutService.RegisterShortcut(new Shortcut()
             {
                 Direction = KeyDirection.Down,
@@ -206,6 +264,16 @@ namespace Menagerie.Core.Services
             if (!mods.Any()) return;
 
             OnMapModifiersVerified(mods);
+        }
+
+        public TradeWindowItem ParseTradeWindowItem(string data)
+        {
+            return _itemService.ParseTradeWindowItem(data);
+        }
+
+        public void MoveMouse(int x, int y)
+        {
+            _keyboardService.MoveMouse((uint) x, (uint) y);
         }
 
         public void MouseMoved()
@@ -714,7 +782,7 @@ namespace Menagerie.Core.Services
             ModifiedKeyStroke(Key.Control, Key.A);
         }
 
-        private void SendCtrlC()
+        public void SendCtrlC()
         {
             ModifiedKeyStroke(Key.Control, Key.C);
         }
@@ -737,6 +805,16 @@ namespace Menagerie.Core.Services
         public bool SetClipboard(string text)
         {
             return _clipboardService.SetClipboard(text);
+        }
+
+        public string GetClipboardValue(int delay = 0)
+        {
+            return _clipboardService.GetClipboard(delay);
+        }
+
+        public void ResetClipboardValue()
+        {
+            SetClipboard("");
         }
 
         public string ReplaceVars(string msg, Offer offer)

@@ -118,7 +118,7 @@ namespace Menagerie.Core.Services
             AppService.Instance.SetCurrentArea(logEntry.Area, type);
         }
 
-        private static void LogServiceOnNewTradeLogEntry(TradeLogEntry logEntry)
+        private void LogServiceOnNewTradeLogEntry(TradeLogEntry logEntry)
         {
             AppService.Instance.NewOffer(new Offer(logEntry));
         }
