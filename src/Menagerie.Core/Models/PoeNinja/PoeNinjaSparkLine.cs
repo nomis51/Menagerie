@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace Menagerie.Core.Models
+namespace Menagerie.Core.Models.PoeNinja
 {
-    public abstract class PoeNinjaSparkLine
+    public class PoeNinjaSparkLine
     {
         public double TotalChange { get; set; }
         public List<double?> Data { get; set; }
