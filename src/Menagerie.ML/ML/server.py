@@ -1,6 +1,7 @@
 import time
 from flask \
     import Flask, \
+    make_response, \
     request, \
     jsonify
 from shared \
@@ -114,8 +115,45 @@ def do_run(training_name):
     })
 
 
+def create_error(message):
+    return make_response(
+        jsonify({
+            "error": True,
+            "message": message
+        }),
+        400
+    )
+
+
+def create_image_field_error():
+    return {
+        "error": True,
+        "message": "filed_id or file_path missing"
+    }
+
+
 load_models()
 app = Flask(__name__)
+
+
+@app.route("/api", methods=["POST"])
+def api():
+    body = request.json
+
+    if "images" not in body or body["images"] is not list or len(body["images"]) == 0:
+        return create_error("images field is missing or empty in the body")
+
+    result = []
+    image_file_paths = []
+
+    for image_field in body["images"]:
+        if "file_id" not in image_field or "file_path" not in image_field:
+            result.append(create_image_field_error())
+            continue
+
+        image_file_paths.append(image_field["file_path"])
+
+
 
 
 @app.route("/api/currency_type", methods=["GET"])
