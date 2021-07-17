@@ -4,11 +4,9 @@ using Menagerie.Core.Models;
 using Menagerie.Core.Models.PoeApi.Stash;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
-using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,7 +14,6 @@ using Menagerie.Core.Enums;
 using Menagerie.Core.Models.ItemsScan;
 using Menagerie.Core.Models.Trades;
 using Menagerie.Core.Models.Translator;
-using Menagerie.ML.Services;
 using PoeLogsParser.Enums;
 using PoeLogsParser.Models;
 using Winook;
@@ -42,6 +39,14 @@ namespace Menagerie.Core.Services
                 return _instance;
             }
         }
+
+        #endregion
+
+        #region Constants
+
+        public readonly Size TradeWindowSquareSize = new(53, 53);
+        public readonly Size TradeWindowRowsAndColumns = new(12, 5);
+        public readonly Rectangle TradeWindowBounds = new(312, 202, 53 * 12, 53 * 5);
 
         #endregion
 
@@ -121,6 +126,8 @@ namespace Menagerie.Core.Services
         private readonly PriceCheckingService _priceCheckingService;
         private readonly TranslateService _translateService;
         private readonly ItemService _itemService;
+        private readonly AppAiService _appAiService;
+        private readonly ScreenCaptureService _screenCaptureService;
 
         private Area _currentArea;
         private static AppVersion _appVersion = new();
@@ -143,6 +150,8 @@ namespace Menagerie.Core.Services
             _priceCheckingService = new PriceCheckingService();
             _translateService = new TranslateService();
             _itemService = new ItemService();
+            _appAiService = new AppAiService();
+            _screenCaptureService = new ScreenCaptureService();
         }
 
         private void SetShortcuts()
@@ -154,47 +163,12 @@ namespace Menagerie.Core.Services
                 Alt = false,
                 Control = false,
                 Shift = false,
-                Action = () =>
+                Action = async () =>
                 {
-                    // var chaosValue = _tradeService.ValidateTradeWindow(new Price() {Currency = "Chaos Orb", Value = 3.5});
-                    // OnTradeWindowScanned?.Invoke(chaosValue);
-
-                    var pythonInfo = new ProcessStartInfo();
-                    Task.Run(() =>
-                    {
-                        Process python;
-                        pythonInfo.FileName = "python.exe";
-                        pythonInfo.Arguments = @"./api/server.py";
-                        pythonInfo.UseShellExecute = false;
-                        
-                        Console.WriteLine("Python Starting");
-                        python = Process.Start(pythonInfo);
-                        python.WaitForExit();
-                        python.Close();
-                    });
-
-                    Thread.Sleep(10000);
-
-                    Size _tradeWindowSquareSize = new(53, 53);
-                    Point _tradeWindowTopCornerPosition = new(312, 202);
-                    Size _tradeWindowColsRowsSize = new(12, 5);
-                    Rectangle _tradeWindowRectangle = new Rectangle(_tradeWindowTopCornerPosition.X, _tradeWindowTopCornerPosition.Y,
-                        _tradeWindowColsRowsSize.Width * _tradeWindowSquareSize.Width,
-                        _tradeWindowColsRowsSize.Height * _tradeWindowSquareSize.Height);
-
-                    var image = ScreenCaptureService.CaptureArea(_tradeWindowRectangle);
-                    var id = Guid.NewGuid().ToString();
-                    var filePath = $"./api/.temp/{id}.jpeg";
-                    image.Save(filePath, ImageFormat.Jpeg);
-
-                    var httpService = new HttpService(new Uri("http://localhost:5000"));
-                    var response = httpService.Client.GetAsync($"/api/currency-type?file_id=ancient_orb_1").Result;
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var result = response.Content.ReadAsStringAsync().Result;
-                        var g = 0;
-                    }
+                    var image = _screenCaptureService.CaptureArea(TradeWindowBounds);
+                    var imageIds = _appAiService.ProcessAndSaveTradeWindowImage(image);
+                    var result = await _appAiService.Predict(TrainedModelType.CurrencyType, imageIds);
+                    var g = 0;
                 }
             });
 
@@ -935,6 +909,8 @@ namespace Menagerie.Core.Services
             _priceCheckingService.Start();
             _translateService.Start();
             _itemService.Start();
+            _appAiService.Start();
+            _screenCaptureService.Start();
         }
     }
 }

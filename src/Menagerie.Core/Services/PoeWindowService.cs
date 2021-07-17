@@ -11,6 +11,7 @@ using log4net;
 using Menagerie.Core.Abstractions;
 using Menagerie.Core.Enums;
 using Menagerie.Core.Extensions;
+using Menagerie.Core.Win32;
 
 namespace Menagerie.Core.Services
 {

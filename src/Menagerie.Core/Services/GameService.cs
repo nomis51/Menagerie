@@ -6,18 +6,12 @@ using Menagerie.Core.Extensions;
 using System;
 using System.Runtime.InteropServices;
 using Desktop.Robot;
+using Menagerie.Core.Win32;
 
 namespace Menagerie.Core.Services
 {
     public class GameService : IService
     {
-        #region WinAPI
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-        private static extern IntPtr GetForegroundWindow();
-
-        #endregion
-
         #region Constants
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(GameService));
@@ -43,7 +37,7 @@ namespace Menagerie.Core.Services
 
         private static bool IsOverlayFocused()
         {
-            var activeHandle = GetForegroundWindow();
+            var activeHandle = User32.GetForegroundWindow();
             var overlayHandle = AppService.Instance.GetOverlayHandle();
             return activeHandle == overlayHandle;
         }
