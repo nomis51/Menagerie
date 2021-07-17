@@ -4,10 +4,11 @@ from tensorflow.keras.layers import Conv2D, MaxPool2D, Dense, Flatten
 from tensorflow.keras.optimizers import RMSprop
 
 os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
-training_name = "stack_size"
+training_name = "currency_type"
 image_size = (46, 46)
-model_file_path = "./training/{}/{}.h5".format(training_name, training_name)
-classes_file_path = "./training/{}/{}-classes.txt".format(training_name, training_name)
+model_file_path = "./trained/{}/{}.h5".format(training_name, training_name)
+classes_file_path = "./trained/{}/{}-classes.txt".format(
+    training_name, training_name)
 
 
 def load_model(num_classes):
