@@ -10,30 +10,20 @@ using CoreModels = Menagerie.Core.Models;
 using Menagerie.Core.Extensions;
 using Menagerie.Services;
 using System.Reflection;
-using System.Threading.Tasks;
 using Brush = System.Windows.Media.Brush;
 using Brushes = System.Windows.Media.Brushes;
 using System.Windows.Media;
 using Caliburn.Micro;
-using Desktop.Robot.Clicks;
 using LiteDB;
 using Menagerie.Models.Abstractions;
 using Menagerie.Views;
-using ILog = log4net.ILog;
-using LogManager = log4net.LogManager;
+using Serilog;
 using MapModifier = Menagerie.Models.MapModifier;
-using Mouse = System.Windows.Input.Mouse;
 
 namespace Menagerie.ViewModels
 {
     public class OverlayViewModel : Screen
     {
-        #region Constants
-
-        private static readonly ILog Log = LogManager.GetLogger(typeof(OverlayViewModel));
-
-        #endregion
-
         #region Props
 
         public ReactiveProperty<Visibility> StackChaosRecipeOverlayVisibility { get; set; }
@@ -109,7 +99,7 @@ namespace Menagerie.ViewModels
 
         public OverlayViewModel()
         {
-            Log.Trace("Initializing OverlayViewModel");
+            Log.Information("Initializing OverlayViewModel");
 
             StackChaosRecipeOverlayVisibility = new ReactiveProperty<Visibility>("StackChaosRecipeOverlayVisibility", this, Visibility.Hidden)
             {
@@ -302,20 +292,20 @@ namespace Menagerie.ViewModels
 
         public void ShowConfigWindow()
         {
-            Log.Trace("Showing config window");
+            Log.Information("Showing config window");
             AppBootstrapper.WindowManager.ShowWindowAsync(new ConfigViewModel());
         }
 
         private void ConfigWin_Closed(object sender, EventArgs e)
         {
-            Log.Trace("Deleting config window");
+            Log.Information("Deleting config window");
             _configWin.Closed -= ConfigWin_Closed;
             _configWin = null;
         }
 
         private void AppService_OnNewPlayerJoined(string playerName)
         {
-            Log.Trace("New player joined event");
+            Log.Information("New player joined event");
 
             AudioService.Instance.PlayKnock();
 
@@ -323,7 +313,7 @@ namespace Menagerie.ViewModels
             {
                 foreach (var offer in IncomingOffers.Value.Where(offer => offer.PlayerName == playerName))
                 {
-                    Log.Trace($"player \"{playerName}\" joined");
+                    Log.Information($"player \"{playerName}\" joined");
 
                     offer.PlayerJoined = true;
                     UpdateOffer(offer, true);
@@ -331,7 +321,7 @@ namespace Menagerie.ViewModels
 
                 foreach (var offer in _overflowIncomingOffers.Where(offer => offer.PlayerName == playerName))
                 {
-                    Log.Trace($"player \"{playerName}\" joined");
+                    Log.Information($"player \"{playerName}\" joined");
 
                     offer.PlayerJoined = true;
                 }
@@ -340,7 +330,7 @@ namespace Menagerie.ViewModels
 
         private void AppService_OnNewChatEvent(ChatEventEnum type)
         {
-            Log.Trace($"New chat event: {type.ToString()}");
+            Log.Information($"New chat event: {type.ToString()}");
 
             Application.Current.Dispatcher.Invoke(delegate
             {
@@ -383,7 +373,7 @@ namespace Menagerie.ViewModels
                     case ChatEventEnum.AreaJoined:
                         break;
                     default:
-                        Log.Warn($"Unhandled chat event type {type}");
+                        Log.Warning($"Unhandled chat event type {type}");
                         break;
                 }
             });
@@ -464,7 +454,7 @@ namespace Menagerie.ViewModels
         {
             var localOffer = AppMapper.Instance.Map<Core.Models.Trades.Offer, Offer>(offer);
 
-            Log.Trace("New offer event");
+            Log.Information("New offer event");
 
             if (Config.OnlyShowOffersOfCurrentLeague && Config.CurrentLeague != localOffer.League) return;
 
@@ -478,25 +468,25 @@ namespace Menagerie.ViewModels
 
         public List<string> GetLeagues()
         {
-            Log.Trace("Getting leagues");
+            Log.Information("Getting leagues");
             return AppService.Instance.GetLeagues().Result;
         }
 
         public Offer GetOffer(ObjectId id, bool isOutgoing = false)
         {
-            Log.Trace($"Getting offer {id}");
+            Log.Information($"Getting offer {id}");
             return (isOutgoing ? OutgoingOffers : IncomingOffers).Value.FirstOrDefault(o => o.Id == id);
         }
 
         private Offer GetActiveOffer(bool isOutgoing = false)
         {
-            Log.Trace("Getting active offer");
+            Log.Information("Getting active offer");
             return (isOutgoing ? OutgoingOffers : IncomingOffers).Value.FirstOrDefault(o => o.TradeRequestSent);
         }
 
         private int GetOfferIndex(string id, bool isOutgoing = false)
         {
-            Log.Trace($"Getting offer's index {id}");
+            Log.Information($"Getting offer's index {id}");
             return (isOutgoing ? OutgoingOffers : IncomingOffers).Value.Select(o => o.Id).ToList().IndexOf(new ObjectId(id));
         }
 
@@ -544,7 +534,7 @@ namespace Menagerie.ViewModels
 
         public void SendTradeRequest(ObjectId id, bool isOutgoing = false)
         {
-            Log.Trace($"Sending trade request {id}");
+            Log.Information($"Sending trade request {id}");
             var offer = GetOffer(id, isOutgoing);
 
             if (offer == null) return;
@@ -563,7 +553,7 @@ namespace Menagerie.ViewModels
 
         public void SendJoinHideoutCommand(ObjectId id)
         {
-            Log.Trace($"Sending join hideout command {id}");
+            Log.Information($"Sending join hideout command {id}");
             var offer = GetOffer(id, true);
 
             if (offer == null) return;
@@ -576,7 +566,7 @@ namespace Menagerie.ViewModels
 
         public void SendBusyWhisper(ObjectId id)
         {
-            Log.Trace($"Sending busy whisper {id}");
+            Log.Information($"Sending busy whisper {id}");
             var offer = GetOffer(id);
 
             if (offer is not {State: OfferState.Initial}) return;
@@ -587,7 +577,7 @@ namespace Menagerie.ViewModels
 
         public void SendReInvite(ObjectId id)
         {
-            Log.Trace($"Sending re-invite commands {id}");
+            Log.Information($"Sending re-invite commands {id}");
             var offer = GetOffer(id);
 
             if (offer is not {PlayerInvited: true}) return;
@@ -605,7 +595,7 @@ namespace Menagerie.ViewModels
 
         public void SendInvite(ObjectId id)
         {
-            Log.Trace($"Sending invite command {id}");
+            Log.Information($"Sending invite command {id}");
             var offer = GetOffer(id);
 
             if (offer is not {State: OfferState.Initial}) return;
@@ -618,7 +608,7 @@ namespace Menagerie.ViewModels
 
         public void SendKick(ObjectId id, bool sayThanks = false)
         {
-            Log.Trace($"Sending kick command {id}");
+            Log.Information($"Sending kick command {id}");
             var offer = GetOffer(id);
 
             if (offer == null) return;
@@ -647,7 +637,7 @@ namespace Menagerie.ViewModels
 
         public void SendLeave(ObjectId id, bool sayThanks = false)
         {
-            Log.Trace($"Sending leave command {id}");
+            Log.Information($"Sending leave command {id}");
             var offer = GetOffer(id, true);
 
             if (offer == null) return;
@@ -672,7 +662,7 @@ namespace Menagerie.ViewModels
 
         public void SendStillInterestedWhisper(ObjectId id)
         {
-            Log.Trace($"Sending still interested whisper {id}");
+            Log.Information($"Sending still interested whisper {id}");
             var offer = GetOffer(id);
 
             if (offer == null) return;
@@ -683,7 +673,7 @@ namespace Menagerie.ViewModels
 
         public void SendSoldWhisper(ObjectId id)
         {
-            Log.Trace($"Sending sold whisper {id}");
+            Log.Information($"Sending sold whisper {id}");
             var offer = GetOffer(id);
 
             if (offer == null) return;
@@ -703,7 +693,7 @@ namespace Menagerie.ViewModels
 
         public void RemoveAllOffers(bool isOutgoing = false)
         {
-            Log.Trace("Clearing offers");
+            Log.Information("Clearing offers");
             AppService.Instance.FocusGame();
 
             var offers = isOutgoing ? OutgoingOffers : IncomingOffers;
@@ -728,7 +718,7 @@ namespace Menagerie.ViewModels
 
         public void HighlightItem(ObjectId id)
         {
-            Log.Trace($"Highlighting offer {id}");
+            Log.Information($"Highlighting offer {id}");
             var offer = GetOffer(id);
 
             if (offer == null) return;
@@ -740,7 +730,7 @@ namespace Menagerie.ViewModels
 
         public void ResetFilter(bool applyToOutgoing = false)
         {
-            Log.Trace($"Resetting filter {(applyToOutgoing ? "Outgoing" : "Incoming")} offers");
+            Log.Information($"Resetting filter {(applyToOutgoing ? "Outgoing" : "Incoming")} offers");
 
             var fullOffers = applyToOutgoing ? _fullOutgoingOffers : _fullIncomingOffers;
 
@@ -767,7 +757,7 @@ namespace Menagerie.ViewModels
 
         public void FilterOffers(string searchText, bool applyToOutgoing = false)
         {
-            Log.Trace($"Filtering {(applyToOutgoing ? "Outgoing" : "Incoming")} offers with {searchText}");
+            Log.Information($"Filtering {(applyToOutgoing ? "Outgoing" : "Incoming")} offers with {searchText}");
 
             ResetFilter(applyToOutgoing);
 
@@ -803,7 +793,7 @@ namespace Menagerie.ViewModels
 
         public void SetCurrentLeague(string league)
         {
-            Log.Trace($"Setting current to {league}");
+            Log.Information($"Setting current to {league}");
             var config = Config;
             config.CurrentLeague = league;
             AppService.Instance.SetConfig(AppMapper.Instance.Map<Config, CoreModels.Config>(config));
@@ -811,7 +801,7 @@ namespace Menagerie.ViewModels
 
         public string GetCurrentLeague()
         {
-            Log.Trace("Getting current league");
+            Log.Information("Getting current league");
             return Config == null ? "" : Config.CurrentLeague;
         }
 

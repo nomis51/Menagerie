@@ -4,20 +4,17 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using log4net;
 using Menagerie.Core.Abstractions;
-using Menagerie.Core.Extensions;
 using Menagerie.Core.Models.Translator;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Serilog;
 
 namespace Menagerie.Core.Services
 {
     public class TranslateService : IService
     {
         #region Constants
-
-        private static readonly ILog Log = LogManager.GetLogger(typeof(TranslateService));
 
         private static readonly Dictionary<string, string> Languages = new Dictionary<string, string>()
         {
@@ -146,7 +143,7 @@ namespace Menagerie.Core.Services
 
         public TranslateService()
         {
-            Log.Trace("Initializing TranslateService");
+            Log.Information("Initializing TranslateService");
 
             _httpService = new HttpService(new Uri(GoogleTranslateUrl));
             _urlEncodedHttpService = new HttpService(new Uri(GoogleTranslateUrl));
@@ -349,7 +346,7 @@ namespace Menagerie.Core.Services
             }
             catch (Exception e)
             {
-                Log.Error(e);
+                Log.Error("",e);
             }
 
             return new Tuple<string, string, string>("", "", "");

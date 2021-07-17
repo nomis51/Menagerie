@@ -1,11 +1,10 @@
-﻿using log4net;
-using Menagerie.Core.Abstractions;
+﻿using Menagerie.Core.Abstractions;
 using System.Threading;
 using System.Threading.Tasks;
-using Menagerie.Core.Extensions;
 using System;
 using System.Runtime.InteropServices;
 using Desktop.Robot;
+using Serilog;
 
 namespace Menagerie.Core.Services
 {
@@ -15,12 +14,6 @@ namespace Menagerie.Core.Services
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
         private static extern IntPtr GetForegroundWindow();
-
-        #endregion
-
-        #region Constants
-
-        private static readonly ILog Log = LogManager.GetLogger(typeof(GameService));
 
         #endregion
 
@@ -34,7 +27,7 @@ namespace Menagerie.Core.Services
 
         public GameService()
         {
-            Log.Trace("Initializing GameService");
+            Log.Information("Initializing GameService");
         }
 
         #endregion
@@ -50,7 +43,7 @@ namespace Menagerie.Core.Services
 
         private void VerifyGameFocused()
         {
-            Log.Trace("Verifying game focus");
+            Log.Information("Verifying game focus");
             while (true)
             {
                 var poeWinFocused = AppService.Instance.GameFocused();
@@ -58,13 +51,13 @@ namespace Menagerie.Core.Services
                 switch (poeWinFocused)
                 {
                     case false when _gameFocused && !IsOverlayFocused():
-                        Log.Trace("Game isn't focused");
+                        Log.Information("Game isn't focused");
                         _gameFocused = false;
                         AppService.Instance.HideOverlay();
                         AppService.Instance.EnsurePoeAlive();
                         break;
                     case true when !_gameFocused:
-                        Log.Trace("Game is focused");
+                        Log.Information("Game is focused");
                         _gameFocused = true;
                         AppService.Instance.ShowOverlay();
                         break;
@@ -81,7 +74,7 @@ namespace Menagerie.Core.Services
 
         public static void HighlightStash(string searchText)
         {
-            Log.Trace($"Highlighting stash {searchText}");
+            Log.Information($"Highlighting stash {searchText}");
             if (!AppService.Instance.FocusGame())
             {
                 return;
@@ -104,7 +97,7 @@ namespace Menagerie.Core.Services
 
         public void Start()
         {
-            Log.Trace("Starting GameService");
+            Log.Information("Starting GameService");
             Task.Run(VerifyGameFocused);
         }
 

@@ -1,25 +1,18 @@
-﻿using log4net;
-using Menagerie.Core.Abstractions;
+﻿using Menagerie.Core.Abstractions;
 using System;
-using Menagerie.Core.Extensions;
 using System.Threading;
 using Desktop.Robot;
+using Serilog;
 
 namespace Menagerie.Core.Services
 {
     public class ChatService : IService
     {
-        #region Constants
-
-        private static readonly ILog Log = LogManager.GetLogger(typeof(ChatService));
-
-        #endregion
-
         #region Constructors
 
         public ChatService()
         {
-            Log.Trace("Initializing ChatService");
+            Log.Information("Initializing ChatService");
         }
 
         #endregion
@@ -32,7 +25,7 @@ namespace Menagerie.Core.Services
 
         private static void Send(string message, int delay = 0)
         {
-            Log.Trace("Sending message");
+            Log.Information("Sending message");
             try
             {
                 if (!AppService.Instance.FocusGame())
@@ -61,7 +54,7 @@ namespace Menagerie.Core.Services
 
         private static void ClearSpecialKeys()
         {
-            Log.Trace("Clearing special keys");
+            Log.Information("Clearing special keys");
             AppService.Instance.KeyUp(Key.Control);
             AppService.Instance.KeyUp(Key.Shift);
         }
@@ -72,43 +65,43 @@ namespace Menagerie.Core.Services
 
         public static void SendChatMessage(string message, int delay = 0)
         {
-            Log.Trace("Sending chat message");
+            Log.Information("Sending chat message");
             Send(message, delay);
         }
 
         public static void SendHideoutCommand()
         {
-            Log.Trace("Sending hideout command");
+            Log.Information("Sending hideout command");
             Send("/hideout");
         }
 
         public static void SendHideoutCommand(string playerName)
         {
-            Log.Trace("Sending hideout command with param");
+            Log.Information("Sending hideout command with param");
             Send($"/hideout {playerName}");
         }
 
         public static void SendInviteCommand(string playerName)
         {
-            Log.Trace("Sending invite command");
+            Log.Information("Sending invite command");
             Send($"/invite {playerName}");
         }
 
         public static void SendKickCommand(string playerName)
         {
-            Log.Trace("Sending kick command");
+            Log.Information("Sending kick command");
             Send($"/kick {playerName}");
         }
 
         public static void SendTradeCommand(string playerName)
         {
-            Log.Trace("Sending trace command");
+            Log.Information("Sending Information command");
             Send($"/tradewith {playerName}");
         }
 
         public void Start()
         {
-            Log.Trace("Starting ChatService");
+            Log.Information("Starting ChatService");
         }
 
         #endregion

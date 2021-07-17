@@ -1,17 +1,14 @@
-﻿using log4net;
-using Menagerie.Core.Abstractions;
+﻿using Menagerie.Core.Abstractions;
 using System.Collections.Generic;
-using Menagerie.Core.Extensions;
 using System.Net.Http;
 using System;
+using Serilog;
 
 namespace Menagerie.Core.Services
 {
     public class CurrencyService : IService
     {
         #region Constants
-
-        private static readonly ILog Log = LogManager.GetLogger(typeof(CurrencyService));
 
         private readonly Dictionary<string, string> _currencyToImageLink = new()
         {
@@ -91,7 +88,7 @@ namespace Menagerie.Core.Services
 
         public CurrencyService()
         {
-            Log.Trace("Initializing CurrencyService");
+            Log.Information("Initializing CurrencyService");
         }
 
         #endregion
@@ -118,7 +115,7 @@ namespace Menagerie.Core.Services
 
         public string GetCurrencyImageLink(string currencyName)
         {
-            Log.Trace($"Getting currency image link {currencyName}");
+            Log.Information($"Getting currency image link {currencyName}");
 
             var link = _currencyToImageLink[NormalizeCurrency(currencyName)];
 
@@ -138,7 +135,7 @@ namespace Menagerie.Core.Services
 
         public static string GetRealName(string text)
         {
-            Log.Trace($"Getting real currency name {text}");
+            Log.Information($"Getting real currency name {text}");
             return text switch
             {
                 "chaos" => "Chaos Orb",
@@ -162,7 +159,7 @@ namespace Menagerie.Core.Services
 
         private static string NormalizeCurrency(string text)
         {
-            Log.Trace($"Normalizing currency name {text}");
+            Log.Information($"Normalizing currency name {text}");
             return text switch
             {
                 "Chaos Orb" => "chaos",
@@ -186,7 +183,7 @@ namespace Menagerie.Core.Services
 
         public void Start()
         {
-            Log.Trace("Starting CurrencyService");
+            Log.Information("Starting CurrencyService");
         }
 
         #endregion

@@ -4,16 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Menagerie.Models;
-using ILog = log4net.ILog;
-using LogManager = log4net.LogManager;
+using Serilog;
 using CoreModels = Menagerie.Core.Models;
 
 namespace Menagerie.ViewModels
 {
     public class ConfigViewModel : Screen
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(ConfigViewModel));
-
         #region Props
 
         public Config Config { get; set; }
@@ -30,7 +27,7 @@ namespace Menagerie.ViewModels
 
         public ConfigViewModel()
         {
-            Log.Trace("Intializing ConfigViewModel");
+            Log.Information("Intializing ConfigViewModel");
 
             Task.Run(() =>
             {
@@ -45,7 +42,7 @@ namespace Menagerie.ViewModels
 
         public void SaveConfig()
         {
-            Log.Trace("Saving config");
+            Log.Information("Saving config");
             AppService.Instance.SetConfig(AppMapper.Instance.Map<Config, CoreModels.Config>(Config));
         }
     }

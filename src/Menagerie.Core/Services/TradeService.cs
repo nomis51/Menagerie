@@ -1,13 +1,11 @@
-﻿using log4net;
-using Menagerie.Core.Abstractions;
+﻿using Menagerie.Core.Abstractions;
 using System;
 using System.Collections.Generic;
-using Menagerie.Core.Extensions;
-using Menagerie.Core.Models;
 using System.Threading;
 using System.Linq;
 using System.Threading.Tasks;
 using Menagerie.Core.Models.Trades;
+using Serilog;
 
 namespace Menagerie.Core.Services
 {
@@ -15,7 +13,6 @@ namespace Menagerie.Core.Services
     {
         #region Constants
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof(TradeService));
         private const int OfferExpirationMinutes = 15;
 
         #endregion
@@ -30,7 +27,7 @@ namespace Menagerie.Core.Services
 
         public TradeService()
         {
-            Log.Trace("Initializing TradeService");
+            Log.Information("Initializing TradeService");
         }
 
         #endregion
@@ -39,10 +36,10 @@ namespace Menagerie.Core.Services
 
         private void AutoCleanOffers()
         {
-            Log.Trace("Auto cleaning offers");
+            Log.Information("Auto cleaning offers");
             while (true)
             {
-                Log.Trace("Cleaning offers");
+                Log.Information("Cleaning offers");
                 for (var i = 0; i < _offers.Count; ++i)
                 {
                     if (!((DateTime.Now - _offers.ElementAt(i).Time).TotalMinutes >= OfferExpirationMinutes)) continue;
@@ -84,7 +81,7 @@ namespace Menagerie.Core.Services
 
         public void Start()
         {
-            Log.Trace("Starting TradeService");
+            Log.Information("Starting TradeService");
             Task.Run(AutoCleanOffers);
         }
 

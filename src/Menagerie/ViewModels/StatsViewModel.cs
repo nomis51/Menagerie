@@ -2,25 +2,20 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Menagerie.Core.Extensions;
 using LiveCharts;
 using LiveCharts.Defaults;
 using LiveCharts.Wpf;
 using Menagerie.Core.Services;
-using Menagerie.Core.Models;
 using System.Windows;
 using Caliburn.Micro;
 using Menagerie.Core.Models.Trades;
-using ILog = log4net.ILog;
-using LogManager = log4net.LogManager;
+using Serilog;
 using StatsOffer = Menagerie.Models.StatsOffer;
 
 namespace Menagerie.ViewModels
 {
     public class StatsViewModel : Screen
     {
-        private readonly static ILog log = LogManager.GetLogger(typeof(StatsViewModel));
-
         public SeriesCollection Trades { get; set; } = new SeriesCollection()
         {
             new LineSeries()
@@ -63,7 +58,7 @@ namespace Menagerie.ViewModels
 
         public StatsViewModel()
         {
-            log.Trace("Initializing StatsViewModel");
+            Log.Information("Initializing StatsViewModel");
 
             GetTrades();
         }

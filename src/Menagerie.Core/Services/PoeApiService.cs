@@ -1,6 +1,4 @@
-﻿using log4net;
-using Menagerie.Core.Abstractions;
-using Menagerie.Core.Extensions;
+﻿using Menagerie.Core.Abstractions;
 using Menagerie.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -11,6 +9,7 @@ using System.Threading;
 using Menagerie.Core.Models.PoeApi;
 using Menagerie.Core.Models.PoeApi.Stash;
 using Menagerie.Core.Models.Trades;
+using Serilog;
 
 namespace Menagerie.Core.Services
 {
@@ -18,7 +17,6 @@ namespace Menagerie.Core.Services
     {
         #region Constants
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof(PoeApiService));
         private static readonly object LockStashApi = new object();
         private readonly Uri _altPoeApiBaseUrl = new Uri("http://api.pathofexile.com");
         private readonly Uri _poeApiBaseUrl = new Uri("https://www.pathofexile.com");
@@ -44,14 +42,14 @@ namespace Menagerie.Core.Services
 
         public PoeApiService()
         {
-            Log.Trace("Initializing PoeApiService");
+            Log.Information("Initializing PoeApiService");
             _altHttpService = new HttpService(_altPoeApiBaseUrl);
             _httpService = new HttpService(_poeApiBaseUrl);
         }
 
         public async Task<List<string>> GetLeagues()
         {
-            Log.Trace("Getting leagues");
+            Log.Information("Getting leagues");
             try
             {
                 var response = _altHttpService.Client.GetAsync($"/{PoeApiLeagues}").Result;
@@ -191,7 +189,7 @@ namespace Menagerie.Core.Services
 
         private static List<string> ParseLeagues(IEnumerable<Dictionary<string, string>> json)
         {
-            Log.Trace("Parsing leagues");
+            Log.Information("Parsing leagues");
             return json.Select(l => l["id"])
                 .ToList()
                 .FindAll(n => !n.Contains("SSF"))
@@ -386,7 +384,7 @@ namespace Menagerie.Core.Services
 
         private void AutoUpdateItemsCache()
         {
-            Log.Trace("Starting auto cache update");
+            Log.Information("Starting auto cache update");
 
             _cache = new ItemCache()
             {
@@ -401,7 +399,7 @@ namespace Menagerie.Core.Services
                 }
                 catch (Exception e)
                 {
-                    Log.Trace("Error while update items cache ", e);
+                    Log.Information("Error while update items cache ", e);
                 }
 
                 Thread.Sleep(CacheExpirationTimeMinutes * 60 * 1000);
@@ -430,7 +428,7 @@ namespace Menagerie.Core.Services
                         }
                         catch (Exception e)
                         {
-                            Log.Trace("Error while updating chaos recipe tab", e);
+                            Log.Information("Error while updating chaos recipe tab", e);
                         }
 
                         Thread.Sleep(config.ChaosRecipeRefreshRate * 60 * 1000);
@@ -450,7 +448,7 @@ namespace Menagerie.Core.Services
 
         public void Start()
         {
-            Log.Trace("Starting PoeApiService");
+            Log.Information("Starting PoeApiService");
 
             var config = AppService.Instance.GetConfig();
 

@@ -7,10 +7,9 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using log4net;
 using Menagerie.Core.Abstractions;
 using Menagerie.Core.Enums;
-using Menagerie.Core.Extensions;
+using Serilog;
 
 namespace Menagerie.Core.Services
 {
@@ -40,8 +39,6 @@ namespace Menagerie.Core.Services
 
         #region Constants
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof(PoeWindowService));
-
         private readonly List<string> _poeProcesses = new List<string>()
         {
             "PathOfExile_x64",
@@ -70,7 +67,7 @@ namespace Menagerie.Core.Services
 
         public PoeWindowService()
         {
-            Log.Trace("Initializing PoeWindowService");
+            Log.Information("Initializing PoeWindowService");
         }
 
         #endregion
@@ -79,7 +76,7 @@ namespace Menagerie.Core.Services
 
         private bool ClientFileExists()
         {
-            Log.Trace("Verify client file exists");
+            Log.Information("Verify client file exists");
             return ClientFilePath != null &&
                    Directory.Exists(ClientFilePath[..ClientFilePath.LastIndexOf("\\", StringComparison.Ordinal)]) &&
                    File.Exists(ClientFilePath);
@@ -87,7 +84,7 @@ namespace Menagerie.Core.Services
 
         private async void FindPoeProcess()
         {
-            Log.Trace("Looking for PoE process");
+            Log.Information("Looking for PoE process");
             while (!ClientFileExists() || _process == null)
             {
                 var processes = Process.GetProcesses();
@@ -95,7 +92,7 @@ namespace Menagerie.Core.Services
                 foreach (var proc in processes)
                 {
                     if (!_poeProcesses.Contains(proc.ProcessName) || proc.HasExited) continue;
-                    Log.Trace($"PoE process found");
+                    Log.Information($"PoE process found");
                     _process = proc;
 
                     var clientFileFound = false;
@@ -103,10 +100,10 @@ namespace Menagerie.Core.Services
                     try
                     {
                         // 64 bits
-                        Log.Trace("Trying to get 64bits location");
+                        Log.Information("Trying to get 64bits location");
                         if (proc.MainModule != null)
                         {
-                            Log.Trace($"PoE location {proc.MainModule.FileName}");
+                            Log.Information($"PoE location {proc.MainModule.FileName}");
                             if (proc.MainModule.FileName != null)
                             {
                                 ClientFilePath =
@@ -114,7 +111,7 @@ namespace Menagerie.Core.Services
                             }
                         }
 
-                        Log.Trace($"64bits Client file location: {ClientFilePath}");
+                        Log.Information($"64bits Client file location: {ClientFilePath}");
                         clientFileFound = true;
                     }
                     catch (Win32Exception)
@@ -122,8 +119,8 @@ namespace Menagerie.Core.Services
                         try
                         {
                             //32 bits
-                            Log.Trace("Failed trying to get 64bits location");
-                            Log.Trace("Trying to get 32bits location");
+                            Log.Information("Failed trying to get 64bits location");
+                            Log.Information("Trying to get 32bits location");
                             var size = 1024;
                             var filename = new StringBuilder(size);
                             var result = QueryFullProcessImageNameW(proc.Handle, 0, filename, ref size);
@@ -136,15 +133,15 @@ namespace Menagerie.Core.Services
                                 throw new Exception($"GetLastError() = {lastError}");
                             }
 
-                            Log.Trace($"PoE location {filename}");
+                            Log.Information($"PoE location {filename}");
                             ClientFilePath =
                                 $"{filename.ToString()[..filename.ToString().LastIndexOf("\\", StringComparison.Ordinal)]}\\logs\\Client.txt";
-                            Log.Trace($"32bits Client file location: {ClientFilePath}");
+                            Log.Information($"32bits Client file location: {ClientFilePath}");
                             clientFileFound = true;
                         }
                         catch (Win32Exception)
                         {
-                            Log.Trace("Failed trying to get 32bits location");
+                            Log.Information("Failed trying to get 32bits location");
                         }
                         catch (Exception e)
                         {
@@ -171,12 +168,12 @@ namespace Menagerie.Core.Services
                 }
 
                 if (ClientFileExists() && _process != null) continue;
-                Log.Trace("Unable to find any known PoE processes");
-                Log.Trace("Waiting 5 seconds before retry");
+                Log.Information("Unable to find any known PoE processes");
+                Log.Information("Waiting 5 seconds before retry");
                 await Task.Delay(5000);
             }
 
-            Log.Trace("PoE process and client file found");
+            Log.Information("PoE process and client file found");
         }
 
         #endregion
@@ -185,7 +182,7 @@ namespace Menagerie.Core.Services
 
         public bool EnsurePoeWindowAlive()
         {
-            Log.Trace("Ensuring Poe window alive");
+            Log.Information("Ensuring Poe window alive");
             if (!_process.HasExited) return true;
             _process = null;
             Task.Run(FindPoeProcess);
@@ -200,7 +197,7 @@ namespace Menagerie.Core.Services
 
         public bool Focus()
         {
-            Log.Trace("Focusing PoE");
+            Log.Information("Focusing PoE");
             if (_process == null)
             {
                 return false;
@@ -228,7 +225,7 @@ namespace Menagerie.Core.Services
 
         public void Start()
         {
-            Log.Trace("Starting PoeWindowService");
+            Log.Information("Starting PoeWindowService");
             FindPoeProcess();
         }
 

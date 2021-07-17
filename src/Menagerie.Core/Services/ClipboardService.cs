@@ -1,20 +1,13 @@
-﻿using log4net;
-using Menagerie.Core.Abstractions;
+﻿using Menagerie.Core.Abstractions;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Menagerie.Core.Extensions;
+using Serilog;
 
 namespace Menagerie.Core.Services
 {
     public class ClipboardService : IService
     {
-        #region Constants
-
-        private static readonly ILog Log = LogManager.GetLogger(typeof(ClipboardService));
-
-        #endregion
-
         #region Members
 
         private static object Lock = new();
@@ -27,7 +20,7 @@ namespace Menagerie.Core.Services
 
         public ClipboardService()
         {
-            Log.Trace("Initializing ClipboardService");
+            Log.Information("Initializing ClipboardService");
         }
 
         #endregion
@@ -36,7 +29,7 @@ namespace Menagerie.Core.Services
 
         private async void Listen()
         {
-            Log.Trace("Start listening for clipboard inputs");
+            Log.Information("Start listening for clipboard inputs");
             while (true)
             {
                 await Task.Delay(500);
@@ -51,7 +44,7 @@ namespace Menagerie.Core.Services
                 }
 
                 if (string.IsNullOrEmpty(text) || text == _lastText) continue;
-                Log.Trace("New clipboard input");
+                Log.Information("New clipboard input");
                 _lastText = text;
                 AppService.Instance.NewClipboardText(text);
             }
@@ -64,7 +57,7 @@ namespace Menagerie.Core.Services
 
         public bool SetClipboard(string value, int delay = 0)
         {
-            Log.Trace("Setting clipboard value");
+            Log.Information("Setting clipboard value");
 
             lock (Lock)
             {
@@ -87,7 +80,7 @@ namespace Menagerie.Core.Services
 
         public string GetClipboard(int delay = 0)
         {
-            Log.Trace("Getting clipboard value");
+            Log.Information("Getting clipboard value");
             var text = "";
 
             try
@@ -105,7 +98,7 @@ namespace Menagerie.Core.Services
 
         public void Start()
         {
-            Log.Trace("Starting ClipboardService");
+            Log.Information("Starting ClipboardService");
             Listen();
         }
 

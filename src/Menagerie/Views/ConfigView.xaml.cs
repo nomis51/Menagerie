@@ -1,11 +1,10 @@
-﻿using log4net;
-using Menagerie.ViewModels;
+﻿using Menagerie.ViewModels;
 using System.Windows;
-using Menagerie.Core.Extensions;
 using AdonisUI.Controls;
 using System.Collections.Generic;
 using System.Windows.Controls;
 using Menagerie.Core.Services;
+using Serilog;
 
 namespace Menagerie.Views
 {
@@ -14,8 +13,6 @@ namespace Menagerie.Views
     /// </summary>
     public partial class ConfigView : AdonisWindow
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(ConfigView));
-
         private ConfigViewModel _vm => (ConfigViewModel) DataContext;
 
         private readonly List<Grid> _views = new();
@@ -24,7 +21,7 @@ namespace Menagerie.Views
         {
             InitializeComponent();
 
-            Log.Trace("Initializing ConfigWindow");
+            Log.Information("Initializing ConfigWindow");
 
             SetupViews();
             ShowView("grdGeneral");
@@ -49,13 +46,13 @@ namespace Menagerie.Views
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
-            Log.Trace("Cancel button clicked");
+            Log.Information("Cancel button clicked");
             Close();
         }
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            Log.Trace("Save button clicked");
+            Log.Information("Save button clicked");
             _vm.SaveConfig();
             Close();
         }

@@ -4,13 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Menagerie.Core.Extensions;
-using log4net;
 using Menagerie.Core.Models.Trades;
 using Newtonsoft.Json;
 using PoeLogsParser.Models;
 using PoeLogsParser.Models.Abstractions;
 using PoeLogsParser.Services;
+using Serilog;
 
 namespace Menagerie.Core.Services
 {
@@ -18,7 +17,6 @@ namespace Menagerie.Core.Services
     {
         #region Constants
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof(ClientFileService));
         private const string LocationsFile = @".\Data\locations.json";
 
         #endregion
@@ -39,7 +37,7 @@ namespace Menagerie.Core.Services
 
         public ClientFileService()
         {
-            Log.Trace("Initializing ClientFileService");
+            Log.Information("Initializing ClientFileService");
         }
 
         #endregion
@@ -76,7 +74,7 @@ namespace Menagerie.Core.Services
 
         private void LoadLocations()
         {
-            Log.Trace("Loading locations");
+            Log.Information("Loading locations");
 
             try
             {
@@ -129,7 +127,7 @@ namespace Menagerie.Core.Services
 
         public void Start()
         {
-            Log.Trace("Starting ClientFileService");
+            Log.Information("Starting ClientFileService");
             LoadLocations();
         }
 

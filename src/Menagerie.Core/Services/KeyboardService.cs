@@ -1,23 +1,15 @@
-﻿using log4net;
-using Menagerie.Core.Abstractions;
+﻿using Menagerie.Core.Abstractions;
 using System;
 using System.Drawing;
 using Winook;
-using Menagerie.Core.Extensions;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using Desktop.Robot;
+using Serilog;
 
 namespace Menagerie.Core.Services
 {
     public class KeyboardService : IService
     {
-        #region Constants
-
-        private static readonly ILog Log = LogManager.GetLogger(typeof(KeyboardService));
-
-        #endregion
-
         #region Members
 
         private Point _previousMousePosition = new Point(-1, -1);
@@ -31,7 +23,7 @@ namespace Menagerie.Core.Services
 
         public KeyboardService()
         {
-            Log.Trace("Initializing KeyboardService");
+            Log.Information("Initializing KeyboardService");
             _robot = new Robot();
         }
 
@@ -41,7 +33,7 @@ namespace Menagerie.Core.Services
 
         public void HookProcess(int processId)
         {
-            Log.Trace($"Hooking process {processId}");
+            Log.Information($"Hooking process {processId}");
 
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) return;
             if (processId == 0) return;
@@ -93,32 +85,32 @@ namespace Menagerie.Core.Services
 
         public void KeyPress(Key key)
         {
-            Log.Trace($"Sending key press {(int) key}");
+            Log.Information($"Sending key press {(int) key}");
             _robot.KeyPress(key);
         }
 
         public void KeyUp(Key key)
         {
-            Log.Trace($"Sending key up {(int) key}");
+            Log.Information($"Sending key up {(int) key}");
             _robot.KeyUp(key);
         }
 
         public void KeyDown(Key key)
         {
-            Log.Trace($"Sending key down {(int) key}");
+            Log.Information($"Sending key down {(int) key}");
             _robot.KeyDown(key);
         }
 
         public void ClearSpecialKeys()
         {
-            Log.Trace($"Clearing special keys");
+            Log.Information($"Clearing special keys");
             KeyUp(Key.Control);
             KeyUp(Key.Shift);
         }
 
         public void ModifiedKeyStroke(Key modifier, Key key)
         {
-            Log.Trace($"Sending modified key strokes for {(int) key} with {(int) modifier}");
+            Log.Information($"Sending modified key strokes for {(int) key} with {(int) modifier}");
             _robot.KeyDown(modifier);
             _robot.KeyPress(key);
             _robot.KeyUp(modifier);
@@ -126,43 +118,43 @@ namespace Menagerie.Core.Services
 
         public void SendEnter()
         {
-            Log.Trace("Sending Enter key press");
+            Log.Information("Sending Enter key press");
             _robot.KeyPress(Key.Enter);
         }
 
         public void SendCtrlA()
         {
-            Log.Trace("Sending Ctrl + A");
+            Log.Information("Sending Ctrl + A");
             ModifiedKeyStroke(Key.Control, Key.A);
         }
 
         public void SendBackspace()
         {
-            Log.Trace("Sending Backspace key press");
+            Log.Information("Sending Backspace key press");
             _robot.KeyPress(Key.Backspace);
         }
 
         public void SendEscape()
         {
-            Log.Trace("Sending Escape key press");
+            Log.Information("Sending Escape key press");
             _robot.KeyPress(Key.Esc);
         }
 
         public void SendCtrlV()
         {
-            Log.Trace("Sending Ctrl + V");
+            Log.Information("Sending Ctrl + V");
             ModifiedKeyStroke(Key.Control, Key.V);
         }
 
         public void SendCtrlC()
         {
-            Log.Trace("Sending Ctrl + C");
+            Log.Information("Sending Ctrl + C");
             ModifiedKeyStroke(Key.Control, Key.C);
         }
 
         public void Start()
         {
-            Log.Trace("Starting KeyboardService");
+            Log.Information("Starting KeyboardService");
             //Task.Run(VerifyMouseMoved);
         }
 

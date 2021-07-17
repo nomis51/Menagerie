@@ -4,11 +4,9 @@ using System.Linq;
 using Menagerie.Core.Models;
 using Menagerie.Core.Abstractions;
 using LiteDB;
-using System.Linq.Expressions;
-using log4net;
-using Menagerie.Core.Extensions;
 using System.IO;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace Menagerie.Core.Services
 {
@@ -16,7 +14,6 @@ namespace Menagerie.Core.Services
     {
         #region Constants
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof(AppDataService));
         private const string DataDir = "data/";
         public const string COLLECTION_CONFIG = DataDir + "config.json";
         public const string COLLECTION_TRADES = DataDir + "trades.json";
@@ -33,7 +30,7 @@ namespace Menagerie.Core.Services
 
         public AppDataService()
         {
-            Log.Trace("Initializing AppDataService");
+            Log.Information("Initializing AppDataService");
 
             if (!Directory.Exists(DataDir))
             {
@@ -65,7 +62,7 @@ namespace Menagerie.Core.Services
 
         private static void CopyOldConfig()
         {
-            Log.Trace("Looking for previous version db data");
+            Log.Information("Looking for previous version db data");
             var foundConfig = false;
             var currentVersion = AppService.GetAppVersion();
             const string appFolderPath = "app-";
@@ -76,7 +73,7 @@ namespace Menagerie.Core.Services
 
             foreach (var dir in Directory.EnumerateDirectories(".."))
             {
-                Log.Trace(dir);
+                Log.Information(dir);
                 var appFolderPathIndex = dir.IndexOf(appFolderPath, StringComparison.Ordinal);
 
                 if (appFolderPathIndex == -1)
@@ -121,7 +118,7 @@ namespace Menagerie.Core.Services
                 }
                 catch (Exception e)
                 {
-                    Log.Error(e);
+                    Log.Error("",e);
                 }
             }
 
@@ -132,14 +129,14 @@ namespace Menagerie.Core.Services
             }
             catch (Exception e)
             {
-                Log.Error(e);
+                Log.Error("",e);
             }
         }
 
         private void EnsureDefaultData()
         {
             if (GetDocument<Config>(COLLECTION_CONFIG) != null) return;
-            Log.Trace("Creating initial db data");
+            Log.Information("Creating initial db data");
             InsertDocument(COLLECTION_CONFIG, new Config()
             {
                 PlayerName = "",
@@ -166,7 +163,7 @@ namespace Menagerie.Core.Services
 
         public List<T> GetDocuments<T>(string collectionName, Predicate<T> predicate = null) where T : IDocument
         {
-            Log.Trace($"Reading db documents for {typeof(T)}");
+            Log.Information($"Reading db documents for {typeof(T)}");
             var elements = JsonConvert.DeserializeObject<List<T>>(File.ReadAllText(collectionName));
 
             return elements == null ? new List<T>() : predicate == null ? elements : elements.FindAll(predicate);
@@ -180,7 +177,7 @@ namespace Menagerie.Core.Services
 
         public ObjectId InsertDocument<T>(string collectionName, T doc) where T : IDocument
         {
-            Log.Trace($"Inserting db document for {typeof(T)}");
+            Log.Information($"Inserting db document for {typeof(T)}");
 
             var elements = GetDocuments<T>(collectionName);
 
@@ -193,7 +190,7 @@ namespace Menagerie.Core.Services
 
         public bool UpdateDocument<T>(string collectionName, T doc) where T : IDocument
         {
-            Log.Trace($"Updating db document for {typeof(T)}");
+            Log.Information($"Updating db document for {typeof(T)}");
             var elements = GetDocuments<T>(collectionName);
 
             var index = elements.FindIndex(d => d.Id == doc.Id);
@@ -209,13 +206,13 @@ namespace Menagerie.Core.Services
 
         public void DeleteAllDocument(string collectionName)
         {
-            Log.Trace($"Deleting db documents for {collectionName}");
+            Log.Information($"Deleting db documents for {collectionName}");
             File.WriteAllText(collectionName, "[]");
         }
 
         public void Start()
         {
-            Log.Trace("Starting AppDataService");
+            Log.Information("Starting AppDataService");
             EnsureDefaultData();
         }
     }

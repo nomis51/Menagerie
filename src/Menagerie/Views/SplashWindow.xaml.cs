@@ -1,13 +1,11 @@
-﻿using log4net;
-using Menagerie.ViewModels;
+﻿using Menagerie.ViewModels;
 using System;
 using System.Drawing;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Menagerie.Core.Extensions;
+using Serilog;
 
 namespace Menagerie.Views
 {
@@ -16,13 +14,11 @@ namespace Menagerie.Views
     /// </summary>
     public partial class SplashView : Window
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(SplashView));
-
         public SplashView()
         {
             InitializeComponent();
 
-            Log.Trace("Initializing SplashWindow");
+            Log.Information("Initializing SplashWindow");
 
             DataContext = new SplashViewModel();
 
@@ -31,13 +27,13 @@ namespace Menagerie.Views
 
         private void SetLogo()
         {
-            Log.Trace("Setting logo");
+            Log.Information("Setting logo");
             imgLogo.Source = ImageSourceFromBitmap(new Bitmap("Assets/menagerie-logo-splash.png"));
         }
 
         private static ImageSource ImageSourceFromBitmap(Bitmap bmp)
         {
-            Log.Trace("Converting bitmap to imageSource");
+            Log.Information("Converting bitmap to imageSource");
 
             var handle = bmp.GetHbitmap();
             return Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty,

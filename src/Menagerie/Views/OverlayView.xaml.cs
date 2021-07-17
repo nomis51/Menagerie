@@ -1,5 +1,4 @@
-﻿using log4net;
-using Menagerie.Core.Services;
+﻿using Menagerie.Core.Services;
 using Menagerie.Models;
 using Menagerie.ViewModels;
 using System;
@@ -7,11 +6,9 @@ using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Menagerie.Core.Extensions;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using Menagerie.Services;
-using Menagerie.Views;
 using System.Threading;
 using System.Threading.Tasks;
 using AdonisUI.Controls;
@@ -32,8 +29,8 @@ namespace Menagerie.Views
 
         #endregion
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof(OverlayView));
-
+        private static readonly Serilog.ILogger Log = Serilog.Log.Logger.ForContext<OverlayView>();
+        
         private readonly Rectangle _screenRect;
         private bool _winMoved;
 
@@ -46,7 +43,7 @@ namespace Menagerie.Views
         {
             InitializeComponent();
 
-            Log.Trace("Initializing Overlay");
+            Log.Information("Initializing Overlay");
 
             _screenRect = new Rectangle(0, 0, (int) SystemParameters.FullPrimaryScreenWidth,
                 (int) SystemParameters.FullPrimaryScreenHeight);
@@ -173,7 +170,7 @@ namespace Menagerie.Views
 
         private void AppService_OnToggleOverlayVisibility(bool show)
         {
-            Log.Trace($"Toggling overlay visibility: {show}");
+            Log.Information($"Toggling overlay visibility: {show}");
 
             Application.Current.Dispatcher.Invoke(delegate
             {
@@ -203,7 +200,7 @@ namespace Menagerie.Views
 
         private void btnBusy_Click(object sender, RoutedEventArgs e)
         {
-            Log.Trace("Busy button clicked");
+            Log.Information("Busy button clicked");
             AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
             _vm.SendBusyWhisper(new ObjectId((string) ((Button) sender).Tag));
@@ -211,7 +208,7 @@ namespace Menagerie.Views
 
         private void btnRemove_Click(object sender, RoutedEventArgs e)
         {
-            Log.Trace("Remove button clicked");
+            Log.Information("Remove button clicked");
             AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
 
@@ -230,7 +227,7 @@ namespace Menagerie.Views
 
         private void btnInvite_Click(object sender, RoutedEventArgs e)
         {
-            Log.Trace("Invite button clicked");
+            Log.Information("Invite button clicked");
             AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
 
@@ -249,7 +246,7 @@ namespace Menagerie.Views
 
         private void grdOffer_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Log.Trace("Offer clicked");
+            Log.Information("Offer clicked");
             AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
 
@@ -294,7 +291,7 @@ namespace Menagerie.Views
 
         private void btnJoinHideout_Click(object sender, RoutedEventArgs e)
         {
-            Log.Trace("Join hideout button clicked");
+            Log.Information("Join hideout button clicked");
             AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
 
@@ -305,7 +302,7 @@ namespace Menagerie.Views
 
         private void btnTrade_Click(object sender, RoutedEventArgs e)
         {
-            Log.Trace("Trade button clicked");
+            Log.Information("Trade button clicked");
             AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
 
@@ -316,7 +313,7 @@ namespace Menagerie.Views
 
         private void btnLeave_Click(object sender, RoutedEventArgs e)
         {
-            Log.Trace("Leave button clicked");
+            Log.Information("Leave button clicked");
             AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
 
@@ -327,7 +324,7 @@ namespace Menagerie.Views
 
         private void btnClearOffers_Click(object sender, RoutedEventArgs e)
         {
-            Log.Trace("Clear offers button clicked");
+            Log.Information("Clear offers button clicked");
             AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
 
@@ -336,7 +333,7 @@ namespace Menagerie.Views
 
         private void btnClearOutgoingOffers_Click(object sender, RoutedEventArgs e)
         {
-            Log.Trace("Clear outgoing offers button clicked");
+            Log.Information("Clear outgoing offers button clicked");
             AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
 
@@ -345,7 +342,7 @@ namespace Menagerie.Views
 
         private void txtSearchOutgoingOffer_TextChanged(object sender, TextChangedEventArgs e)
         {
-            Log.Trace($"Outgoing offers search bar input: {txtSearchOutgoingOffer.Text}");
+            Log.Information($"Outgoing offers search bar input: {txtSearchOutgoingOffer.Text}");
             if (string.IsNullOrEmpty(txtSearchOutgoingOffer.Text))
             {
                 _vm.ResetFilter(true);
@@ -358,7 +355,7 @@ namespace Menagerie.Views
 
         private void txtSearchOffer_TextChanged(object sender, TextChangedEventArgs e)
         {
-            Log.Trace($"Offers offers search bar input: {txtSearchOutgoingOffer.Text}");
+            Log.Information($"Offers offers search bar input: {txtSearchOutgoingOffer.Text}");
             if (string.IsNullOrEmpty(txtSearchOffer.Text))
             {
                 _vm.ResetFilter();
@@ -376,13 +373,13 @@ namespace Menagerie.Views
 
         private void itSettings_Click(object sender, RoutedEventArgs e)
         {
-            Log.Trace("Config system tray menu item clicked");
+            Log.Information("Config system tray menu item clicked");
             _vm.ShowConfigWindow();
         }
 
         private void itQuit_Click(object sender, RoutedEventArgs e)
         {
-            Log.Trace("Quit system tray menu item clicked");
+            Log.Information("Quit system tray menu item clicked");
             Application.Current.Shutdown(0);
         }
 

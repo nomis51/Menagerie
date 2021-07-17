@@ -1,5 +1,4 @@
-﻿using log4net;
-using Menagerie.Core.Abstractions;
+﻿using Menagerie.Core.Abstractions;
 using Menagerie.Core.Extensions;
 using Menagerie.Core.Models;
 using System;
@@ -7,13 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace Menagerie.Core.Services
 {
     public class PoeNinjaService : IService
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(PoeNinjaService));
-
         private static readonly object LockCurrencyCacheAccess = new();
 
         #region Constants
@@ -43,7 +41,7 @@ namespace Menagerie.Core.Services
 
         public PoeNinjaService()
         {
-            Log.Trace("Initializing PoeNinjaService");
+            Log.Information("Initializing PoeNinjaService");
             _httpService = new HttpService(_poeNinjaApiBaseUrl);
         }
 
@@ -53,21 +51,21 @@ namespace Menagerie.Core.Services
 
         private void AutoUpdateCache(bool skipFirstUpdate = false, bool setOldCache = false)
         {
-            Log.Trace("Starting auto cache update");
+            Log.Information("Starting auto cache update");
             while (true)
             {
                 if (!skipFirstUpdate)
                 {
                     if (setOldCache)
                     {
-                        Log.Trace("Backup old cache");
+                        Log.Information("Backup old cache");
                         lock (LockCurrencyCacheAccess)
                         {
                             _oldCache = _cache.Copy();
                         }
                     }
 
-                    Log.Trace("Updating cache");
+                    Log.Information("Updating cache");
                     _cacheUpdating = true;
                     Task.Run(UpdateCurrencyCache).Wait();
                     _cache.UpdateTime = DateTime.Now;
@@ -77,7 +75,7 @@ namespace Menagerie.Core.Services
                 }
                 else
                 {
-                    Log.Trace("Skipping first cache update");
+                    Log.Information("Skipping first cache update");
                     _cache = _oldCache.Copy();
                 }
 
@@ -92,7 +90,7 @@ namespace Menagerie.Core.Services
 
         private void UpdateCurrencyCache()
         {
-            Log.Trace("Updating currency cache");
+            Log.Information("Updating currency cache");
             lock (LockCurrencyCacheAccess)
             {
                 try
@@ -106,7 +104,7 @@ namespace Menagerie.Core.Services
                     var currencies = result.Lines.ToDictionary(line => line.CurrencyTypeName,
                         line => new List<PoeNinjaCurrency>() {line});
 
-                    Log.Trace($"Poe Ninja returned {currencies.Count} currencies");
+                    Log.Information($"Poe Ninja returned {currencies.Count} currencies");
 
                     _cache.Currency = new PoeNinjaCache<PoeNinjaCurrency>()
                     {
@@ -123,7 +121,7 @@ namespace Menagerie.Core.Services
 
         private static double GetCurrencyChaosValue(PoeNinjaCache<PoeNinjaCurrency> cache, string currencyName)
         {
-            Log.Trace($"Getting currency chaos value for {currencyName}");
+            Log.Information($"Getting currency chaos value for {currencyName}");
             if (cache == null)
             {
                 return 0.0d;
@@ -134,18 +132,18 @@ namespace Menagerie.Core.Services
 
         private void SaveCache()
         {
-            Log.Trace("Saving cache");
+            Log.Information("Saving cache");
             AppService.Instance.SavePoeNinjaCaches(_cache);
         }
 
         private void LoadCache()
         {
-            Log.Trace("Loading cache");
+            Log.Information("Loading cache");
             _oldCache = AppService.Instance.GetPoeNinjaCaches();
 
             if (_oldCache != null)
             {
-                Log.Trace("Existing cache found");
+                Log.Information("Existing cache found");
             }
         }
 
@@ -162,7 +160,7 @@ namespace Menagerie.Core.Services
                     return 0.0d;
                 }
 
-                Log.Trace($"Getting chaos value of {currencyName} from old cache");
+                Log.Information($"Getting chaos value of {currencyName} from old cache");
 
                 return GetCurrencyChaosValue(_oldCache.Currency, currencyName);
             }
@@ -170,7 +168,7 @@ namespace Menagerie.Core.Services
             {
                 lock (LockCurrencyCacheAccess)
                 {
-                    Log.Trace($"Getting chaos value of {currencyName} from current cache");
+                    Log.Information($"Getting chaos value of {currencyName} from current cache");
                     return GetCurrencyChaosValue(_cache.Currency, currencyName);
                 }
             }
@@ -178,7 +176,7 @@ namespace Menagerie.Core.Services
 
         public void Start()
         {
-            Log.Trace("Starting PoeNinjaService");
+            Log.Information("Starting PoeNinjaService");
 
             _cacheExpirationTimeMinutes = AppService.Instance.GetConfig().PoeNinjaUpdateRate;
 

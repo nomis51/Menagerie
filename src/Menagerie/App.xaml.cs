@@ -1,11 +1,9 @@
-﻿using log4net;
-using Menagerie.Core.Services;
-using Menagerie.Views;
+﻿using Menagerie.Core.Services;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
-using Menagerie.Core.Extensions;
-using Menagerie.Services;
+using Serilog;
+using Serilog.Core;
 
 namespace Menagerie
 {
@@ -14,13 +12,17 @@ namespace Menagerie
     /// </summary>
     public partial class App : Application
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(App));
-
         public App()
         {
             InitializeComponent();
 
-            Log.Trace("Initializing App", null);
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Verbose()
+                .Enrich.FromLogContext()
+                .WriteTo.File("Menagerie-log-.txt", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+
+            Log.Information("Initializing App");
 
             Task.Run(() => { AppService.Instance.Start(); });
         }

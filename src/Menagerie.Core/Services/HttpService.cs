@@ -1,25 +1,18 @@
-﻿using log4net;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using Menagerie.Core.Extensions;
 using System.Collections.Generic;
 using System.Net;
+using Serilog;
 
 namespace Menagerie.Core.Services
 {
     public class HttpService
     {
-        #region Constants
-
-        private static readonly ILog Log = LogManager.GetLogger(typeof(HttpService));
-
-        #endregion
-
         #region Props
 
         public HttpClient Client { get; private set; }
@@ -30,14 +23,14 @@ namespace Menagerie.Core.Services
 
         public HttpService(Uri baseUrl)
         {
-            Log.Trace("Initializing HttpService");
+            Log.Information("Initializing HttpService");
             Client = new HttpClient();
             SetupClient(baseUrl);
         }
 
         public HttpService(Uri baseUrl, List<Cookie> cookies)
         {
-            Log.Trace("Initializing HttpService");
+            Log.Information("Initializing HttpService");
             Client = new HttpClient(GetHandler(baseUrl, cookies));
             SetupClient(baseUrl);
         }
@@ -57,7 +50,7 @@ namespace Menagerie.Core.Services
 
         private void SetupClient(Uri baseUrl)
         {
-            Log.Trace($"Settings client for {baseUrl}");
+            Log.Information($"Settings client for {baseUrl}");
             Client.BaseAddress = baseUrl;
             Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             Client.DefaultRequestHeaders.TryAddWithoutValidation("X-Powered-By", "Menagerie");
@@ -70,7 +63,7 @@ namespace Menagerie.Core.Services
 
         public static async Task<T> ReadResponse<T>(HttpResponseMessage response)
         {
-            Log.Trace($"Reading response {response.StatusCode} {response.ReasonPhrase}");
+            Log.Information($"Reading response {response.StatusCode} {response.ReasonPhrase}");
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
@@ -100,7 +93,7 @@ namespace Menagerie.Core.Services
 
         public static HttpContent SerializeBody<T>(T obj)
         {
-            Log.Trace($"Serializing body content for {typeof(T)}");
+            Log.Information($"Serializing body content for {typeof(T)}");
             try
             {
                 var json = JsonConvert.SerializeObject(obj, new JsonSerializerSettings
