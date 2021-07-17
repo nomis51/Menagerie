@@ -355,6 +355,6 @@ src/build/
 java/.idea/workspace.xml
 java/.idea/vcs.xml
 
-src/Menagerie.ML/api/.idea/
-src/Menagerie.ML/api/training/
-src/Menagerie.ML/api/.temp/
+src/Menagerie.ML/ML/.idea/
+src/Menagerie.ML/ML/training/
+src/Menagerie.ML/ML/.temp/
