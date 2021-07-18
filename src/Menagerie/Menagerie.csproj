@@ -4,10 +4,10 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
-    <AssemblyVersion>1.4.2</AssemblyVersion>
-    <FileVersion>1.4.2</FileVersion>
+    <AssemblyVersion>1.4.3</AssemblyVersion>
+    <FileVersion>1.4.3</FileVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageVersion>1.4.2</PackageVersion>
+    <PackageVersion>1.4.3</PackageVersion>
     <Title>Menagerie</Title>
     <Authors>nomis51</Authors>
     <PackageProjectUrl>https://github.com/nomis51/Menagerie</PackageProjectUrl>
