@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Menagerie.Core.Enums;
 using Menagerie.Core.Models.ItemsScan;
+using Menagerie.Core.Models.ML;
 using Menagerie.Core.Models.Trades;
 using Menagerie.Core.Models.Translator;
 using PoeLogsParser.Enums;
@@ -167,7 +168,18 @@ namespace Menagerie.Core.Services
                 {
                     var image = _screenCaptureService.CaptureArea(TradeWindowBounds);
                     var imageIds = _appAiService.ProcessAndSaveTradeWindowImage(image);
-                    var result = await _appAiService.Predict(TrainedModelType.CurrencyType, imageIds);
+                    var request = new PredictionRequest();
+                    imageIds.ForEach(i => request.Images.Add(new PredictionRequestImage
+                    {
+                        FileId = i.Item1,
+                        FilePath = i.Item2,
+                        Models = new List<string>
+                        {
+                            TrainedModelTypeConverter.Convert(TrainedModelType.CurrencyType),
+                            TrainedModelTypeConverter.Convert(TrainedModelType.StackSize),
+                        }
+                    }));
+                    var result = await _appAiService.Predict(request);
                     var g = 0;
                 }
             });
@@ -238,6 +250,11 @@ namespace Menagerie.Core.Services
             if (!mods.Any()) return;
 
             OnMapModifiersVerified(mods);
+        }
+
+        public void CloseAiServer()
+        {
+            _appAiService.ClosePythonServer();
         }
 
         public TradeWindowItem ParseTradeWindowItem(string data)
