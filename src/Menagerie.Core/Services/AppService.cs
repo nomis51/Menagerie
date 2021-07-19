@@ -427,8 +427,11 @@ namespace Menagerie.Core.Services
             {
                 var chatScanWords = GetConfig().ChatScanWords;
 
+                var playerName = entry.Player.ToLower();
+                var message = entry.Message.ToLower();
+
                 foreach (var unused in chatScanWords.Where(word =>
-                    entry.Message.Contains(word) || entry.Player.Contains(word)))
+                   message.Contains(word) || playerName.Contains(word)))
                 {
                     var line = HighlightScannedChatMessage(entry, chatScanWords);
                     NewTradeChatLine(line);
