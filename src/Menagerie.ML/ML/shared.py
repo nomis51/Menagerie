@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import tensorflow as tf
+import cv2
 from tensorflow.keras.preprocessing import image as Image
 from currency_type import load_model as currency_type_load_model, \
     classes_file_path as currency_type_file_path, \
@@ -62,12 +63,37 @@ def load_classes(classes_file_path):
     return data.split(",")[:-1]
 
 
+def is_empty_image(empty_image, test_image_path):
+    EMPTY_IMAGE_THRESHOLD = 0.15
+    EMPTY_IMAGE_SIZE = (46, 46)
+
+    test_image = cv2.imread(test_image_path, cv2.IMREAD_UNCHANGED)
+
+    if test_image.shape[0] > empty_image.shape[0] or test_image.shape[1] > empty_image.shape[1]:
+        test_image = cv2.resize(test_image, EMPTY_IMAGE_SIZE, interpolation=cv2.INTER_AREA)
+
+    match = cv2.matchTemplate(empty_image, test_image, cv2.TM_CCOEFF_NORMED)
+    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(match)
+
+    return True if max_val >= EMPTY_IMAGE_THRESHOLD else False
+
+
+def load_empty_image():
+    empty_file_path = "./images/empty.jpeg"
+    empty_image = cv2.imread(empty_file_path, cv2.IMREAD_UNCHANGED)
+    return empty_image
+
+
 def predict(model, classes, image_file_paths, image_size):
     if image_file_paths is None or len(image_file_paths) == 0:
         return []
 
     images = []
     results = []
+    empty_image = load_empty_image()
+    prediction_indices = []
+    result_index = 0
+    prediction_index = 0
 
     for path in image_file_paths:
         if not os.path.exists(path):
@@ -76,12 +102,29 @@ def predict(model, classes, image_file_paths, image_size):
                 "error": True,
                 "message": "File doesn't exists"
             })
+            prediction_indices.append([result_index, -1])
+            result_index = result_index + 1
+            continue
+
+        if is_empty_image(empty_image, path):
+            results.append({
+                "file_path": path,
+                "error": False,
+                "message": "Processed by OpenCV",
+                "prediction": "empty"
+            })
+            prediction_indices.append([result_index, -1])
+            result_index = result_index + 1
             continue
 
         results.append({
             "error": False,
             "file_path": path
         })
+
+        prediction_indices.append([result_index, prediction_index])
+        result_index = result_index + 1
+        prediction_index = prediction_index + 1
 
         img = Image.load_img(path, target_size=image_size)
         x = Image.img_to_array(img)
@@ -95,11 +138,14 @@ def predict(model, classes, image_file_paths, image_size):
     images = np.vstack(images)
     predictions = model.predict(images)
 
-    for i in range(len(predictions)):
-        score = tf.nn.softmax(predictions[i])
+    for i in range(len(prediction_indices)):
+        if prediction_indices[i][1] == -1:
+            continue
+
+        score = tf.nn.softmax(predictions[prediction_indices[i][1]])
         # confidence = np.max(score)
         result = classes[np.argmax(score)]
-        results[i]["prediction"] = result
+        results[prediction_indices[i][0]]["prediction"] = result
 
     return results
 
@@ -126,28 +172,34 @@ def group_images(images):
 
 def read_predictions(output, predictions, images, model_name):
     for i in range(len(images)):
-        if images[i]["file_id"] not in output:
-            output[images[i]["file_id"]] = {
-                "file_id": images[i]["file_id"],
-                "file_path": images[i]["file_path"],
-                "predictions": [
-                    {
-                        "model": model_name,
-                        "value": predictions[i]["prediction"],
-                    }
-                ]
-            }
+        if not predictions[i]["error"]:
+            if images[i]["file_id"] not in output:
+                output[images[i]["file_id"]] = {
+                    "file_id": images[i]["file_id"],
+                    "file_path": images[i]["file_path"],
+                    "predictions": [
+                        {
+                            "model": model_name,
+                            "value": predictions[i]["prediction"],
+                        }
+                    ]
+                }
+            else:
+                output[images[i]["file_id"]]["predictions"].append({
+                    "model": model_name,
+                    "value": predictions[i]["prediction"],
+                })
         else:
-            output[images[i]["file_id"]]["predictions"].append({
-                "model": model_name,
-                "value": predictions[i]["prediction"],
-            })
+            if images[i]["file_id"] in output:
+                output[images[i]["file_id"]]["error"] = True
+            else:
+                output[images[i]["file_id"]] = {"error": True}
 
         if "message" in predictions[i]:
-            output[images[i]["file_id"]]["message"] = predictions[i]["message"]
-
-        if predictions[i]["error"]:
-            output[images[i]["file_id"]]["error"] = True
+            if images[i]["file_id"] in output:
+                output[images[i]["file_id"]]["message"] = predictions[i]["message"]
+            else:
+                output[images[i]["file_id"]] = {"message": predictions[i]["message"]}
 
     return output
 
@@ -156,6 +208,9 @@ def bulk_predict(models, image_groups):
     result = dict()
 
     for model_name, images in image_groups.items():
+        if model_name not in models:
+            continue
+
         model = models[model_name]
 
         if model is None:

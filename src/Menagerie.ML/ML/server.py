@@ -16,6 +16,7 @@ app = Flask(__name__)
 
 @app.route("/api", methods=["POST"])
 def api():
+    global models
     start_time = time.time()
     body = request.json
 
@@ -28,6 +29,22 @@ def api():
     return jsonify({
         "elapsed_time": (time.time() - start_time) * 1000,
         "images": list(map(lambda k: result[k], result))
+    })
+
+
+@app.route("/verify", methods=["GET"])
+def verify():
+    return jsonify({
+        "ok": True
+    })
+
+
+@app.route("/reload", methods=["GET"])
+def reload():
+    global models
+    models = load_models()
+    return jsonify({
+        "ok": True
     })
 
 

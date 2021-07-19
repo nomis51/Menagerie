@@ -7,13 +7,18 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Security;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using LiteDB.Engine;
 using Menagerie.Core.Abstractions;
 using Menagerie.Core.Enums;
+using Menagerie.Core.Models;
 using Menagerie.Core.Models.ML;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Menagerie.Core.Services
 {
@@ -24,11 +29,12 @@ namespace Menagerie.Core.Services
         private const string PYTHON_392_ZIP_URL = "https://www.python.org/ftp/python/3.9.2/python-3.9.2-embed-amd64.zip";
         private const string PYTHON_FOLDER = "./ML/python/";
         private const string LOCAL_PYTHON_EXE_PATH = "./ML/python/python.exe";
-        private const string ML_SERVER_PATH = "./ML/server.py";
+        private const string ML_SERVER_PATH = "./server.py";
         private const string TRAINED_MODELS_FOLDER = "./ML/trained/";
         private const string TRAINED_MODELS_LATEST_RELEASE_URL = "https://github.com/nomis51/poe-ml/releases/download/v0.1.0/trained_models.zip";
         public const string TEMP_FOLDER = "./ML/.temp/";
         private readonly Uri _pythonServerUrl = new("http://localhost:8302");
+        private readonly JsonSerializerSettings _jsonSerializerSettings;
 
         private readonly List<string> _trainedModelsName = new()
         {
@@ -54,6 +60,10 @@ namespace Menagerie.Core.Services
 
         public AppAiService()
         {
+            _jsonSerializerSettings = new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            };
             _httpService = new HttpService(_pythonServerUrl);
 
             if (!IsPythonInstalled())
@@ -66,7 +76,10 @@ namespace Menagerie.Core.Services
             {
                 FileName = _useLocalPython ? LOCAL_PYTHON_EXE_PATH : "python.exe",
                 Arguments = ML_SERVER_PATH,
+                WorkingDirectory = Environment.CurrentDirectory + "/ML/",
                 UseShellExecute = false,
+                RedirectStandardError = true,
+                RedirectStandardOutput = true,
                 CreateNoWindow = true
             };
 
@@ -79,14 +92,45 @@ namespace Menagerie.Core.Services
 
         private void StartPythonServer()
         {
-            Task.Run(() =>
+            Task.Run(async () =>
             {
+                try
+                {
+                    var verifyResponse = await _httpService.Client.GetAsync("/verify");
+
+                    if (verifyResponse.IsSuccessStatusCode)
+                    {
+                        var response = await HttpService.ReadResponse<Dictionary<string, bool>>(verifyResponse);
+
+                        if (response != null && response["ok"])
+                        {
+                            var reloadResponse = await _httpService.Client.GetAsync("/reload");
+
+                            if (reloadResponse.IsSuccessStatusCode) return;
+
+                            throw new Exception("ML server unavailable");
+                        }
+                    }
+                    else if (verifyResponse.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        // TODO: something is already running on the current port, so change ML server port
+                        throw new NotImplementedException("Change ML server port");
+                    }
+                }
+                catch
+                {
+                    // ignored
+                }
+
                 while (true)
                 {
                     _pythonServerProcess = Process.Start(_pythonServerProcessInfos);
 
                     if (_pythonServerProcess != null)
                     {
+                        // TODO: log to serilog
+                        // var errorOutput = _pythonServerProcess.StandardError.ReadToEnd();
+                        // var output = _pythonServerProcess.StandardOutput.ReadToEnd();
                         _pythonServerProcess.WaitForExit();
                         _pythonServerProcess.Close();
                     }
@@ -106,7 +150,7 @@ namespace Menagerie.Core.Services
                 {
                     Directory.Delete(TRAINED_MODELS_FOLDER, true);
                 }
-            
+
                 DownloadTrainedModels();
             }
         }
@@ -189,41 +233,52 @@ namespace Menagerie.Core.Services
             return images;
         }
 
+        private static void RemoveImages(PredictionRequest request)
+        {
+            foreach (var image in request.Images)
+            {
+                var path = image.FilePath.Replace("./", "./ML/");
+
+                if (!File.Exists(path)) continue;
+
+                File.Delete(path);
+            }
+        }
+
         #endregion
 
         #region Public methods
 
-        public List<string> ProcessAndSaveTradeWindowImage(Bitmap image)
+        public void ClosePythonServer()
+        {
+            _pythonServerProcess.Close();
+        }
+
+        public List<Tuple<string, string>> ProcessAndSaveTradeWindowImage(Bitmap image)
         {
             var images = SliceImage(image, AppService.Instance.TradeWindowRowsAndColumns.Width, AppService.Instance.TradeWindowRowsAndColumns.Height,
                 AppService.Instance.TradeWindowSquareSize.Width, AppService.Instance.TradeWindowSquareSize.Height);
-            List<string> imageIds = new();
+            List<Tuple<string, string>> imageIds = new();
 
             images.ForEach(i =>
             {
                 var id = Guid.NewGuid().ToString();
                 var path = $"{TEMP_FOLDER}{id}.jpeg";
                 i.Save(path, ImageFormat.Jpeg);
-                imageIds.Add(id);
+                imageIds.Add(new Tuple<string, string>(id, path.Replace("ML/", "")));
             });
 
             return imageIds;
         }
 
-        public async Task<PredictionResponse> Predict(TrainedModelType trainedModelType, IEnumerable<string> imageIds)
+        public async Task<PredictionResponse> Predict(PredictionRequest request)
         {
-            var trainingName = TrainedModelTypeConverter.Convert(trainedModelType);
-
-            if (string.IsNullOrEmpty(trainingName)) return default;
-
-            Dictionary<string, Prediction> results = new();
-
-            var fileIds = imageIds.Where(imageId => !string.IsNullOrEmpty(imageId) && File.Exists($"{TEMP_FOLDER}{imageId}.jpeg"))
-                .Aggregate(string.Empty, (current, imageId) => current + "," + imageId).Substring(1);
-
             try
             {
-                var response = await _httpService.Client.GetAsync($"/api/{trainingName}?file_ids={fileIds}");
+                var response = await _httpService.Client.PostAsync($"/api",
+                    new StringContent(JsonConvert.SerializeObject(request, _jsonSerializerSettings), Encoding.UTF8, "application/json"));
+
+                _ = Task.Run(() => RemoveImages(request));
 
                 if (!response.IsSuccessStatusCode) return default;
 
@@ -237,24 +292,24 @@ namespace Menagerie.Core.Services
             return new PredictionResponse();
         }
 
-        public async Task<Prediction> Predict(TrainedModelType trainedModelType, string imageFileId)
-        {
-            if (string.IsNullOrEmpty(imageFileId) || !File.Exists($"{TEMP_FOLDER}{imageFileId}.jpeg")) return default;
-
-            var trainingName = TrainedModelTypeConverter.Convert(trainedModelType);
-
-            if (string.IsNullOrEmpty(trainingName)) return default;
-
-            var response = await _httpService.Client.GetAsync($"{trainingName}?file_id={imageFileId}");
-
-            if (!response.IsSuccessStatusCode) return default;
-
-            return await HttpService.ReadResponse<Prediction>(response);
-        }
+        // public async Task<PredictionResponseImage> Predict(TrainedModelType trainedModelType, string imageFileId)
+        // {
+        //     if (string.IsNullOrEmpty(imageFileId) || !File.Exists($"{TEMP_FOLDER}{imageFileId}.jpeg")) return default;
+        //
+        //     var trainingName = TrainedModelTypeConverter.Convert(trainedModelType);
+        //
+        //     if (string.IsNullOrEmpty(trainingName)) return default;
+        //
+        //     var response = await _httpService.Client.GetAsync($"{trainingName}?file_id={imageFileId}");
+        //
+        //     if (!response.IsSuccessStatusCode) return default;
+        //
+        //     return await HttpService.ReadResponse<PredictionResponseImage>(response);
+        // }
 
         public void Start()
         {
-          //  StartPythonServer();
+            StartPythonServer();
         }
 
         #endregion
