@@ -37,7 +37,7 @@
         </Grid.RowDefinitions>
 
         <!-- Trade window scan -->
-        <Grid Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" Margin="10,110,0,0">
+        <Grid Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="415,130,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
@@ -65,7 +65,7 @@
             </ItemsControl>
         </Grid>
 
-        <DockPanel Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"  Margin="-110,15,0,0">
+        <DockPanel Visibility="{Binding AiCurrenciesAnalysisVisibility, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"  Margin="-110,15,0,0">
 
             <Border    BorderBrush="White" Background="#714a2d" BorderThickness="2" MinHeight="45" MaxHeight="45" MinWidth="70" MaxWidth="100"  CornerRadius="4">
                 <DockPanel>
