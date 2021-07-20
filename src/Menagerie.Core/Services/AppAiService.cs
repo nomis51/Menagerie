@@ -278,7 +278,7 @@ namespace Menagerie.Core.Services
                 var response = await _httpService.Client.PostAsync($"/api",
                     new StringContent(JsonConvert.SerializeObject(request, _jsonSerializerSettings), Encoding.UTF8, "application/json"));
 
-                _ = Task.Run(() => RemoveImages(request));
+                // _ = Task.Run(() => RemoveImages(request));
 
                 if (!response.IsSuccessStatusCode) return default;
 

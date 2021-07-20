@@ -81,6 +81,19 @@
             </Border>
         </DockPanel>
 
+        <Button Grid.Row="1" Grid.Column="1" Margin="290,15,0,0" MaxWidth="110"  MaxHeight="30" Cursor="Hand" HorizontalAlignment="Left" VerticalAlignment="Center" ToolTip="Share the current trade window analysis that is not right">
+            <Button.Content>
+                <DockPanel>
+                    <fa5:ImageAwesome Width="20"
+                                  Height="20"
+                                  Icon="Solid_ShareAlt"
+                                  Foreground="#a0aec0"
+                                  HorizontalAlignment="Center" />
+                    <Label VerticalAlignment="Center" Margin="5,0,0,0" Content="Share Error"></Label>
+                </DockPanel>
+            </Button.Content>
+        </Button>
+
         <!-- Map modifiers popup -->
         <Grid Grid.Row="0"
               Grid.Column="0"

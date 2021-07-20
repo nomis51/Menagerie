@@ -562,5 +562,10 @@ namespace Menagerie.Views
                     break;
             }
         }
+
+        private void btnShareAiAnalysis_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
