@@ -120,20 +120,26 @@ namespace Menagerie.Core.Services
         {
             Log.Trace($"Getting currency image link {currencyName}");
 
-            var link = _currencyToImageLink[NormalizeCurrency(currencyName)];
+            var norm = NormalizeCurrency(currencyName);
 
-            var dbImage = AppService.Instance.GetImage(link);
+            if (!_currencyToImageLink.ContainsKey(norm)) return string.Empty;
 
-            if (dbImage != null) return dbImage.Base64;
-            dbImage = new Models.AppImage()
-            {
-                Link = link,
-                Base64 = GetImage(link)
-            };
+            var link = _currencyToImageLink[norm];
 
-            AppService.Instance.SaveImage(dbImage);
+            return link;
 
-            return dbImage.Base64;
+            //var dbImage = AppService.Instance.GetImage(link);
+
+            //if (dbImage != null) return dbImage.Base64;
+            //dbImage = new Models.AppImage()
+            //{
+            //    Link = link,
+            //    Base64 = GetImage(link)
+            //};
+
+            //AppService.Instance.SaveImage(dbImage);
+
+            //return dbImage.Base64;
         }
 
         public static string GetRealName(string text)
@@ -160,7 +166,7 @@ namespace Menagerie.Core.Services
             };
         }
 
-        private static string NormalizeCurrency(string text)
+        public static string NormalizeCurrency(string text)
         {
             Log.Trace($"Normalizing currency name {text}");
             return text switch
@@ -180,6 +186,30 @@ namespace Menagerie.Core.Services
                 "Mirror of Kalandra" => "mirror",
                 "Orb of Transmutation" => "transmute",
                 "Silver Coin" => "silver",
+                _ => text
+            };
+        }
+
+        public static string AiCurrencyToNormzlizedCurrency(string text)
+        {
+            Log.Trace($"Converting AI currency to normalized currency name {text}");
+            return text switch
+            {
+                "chaos_orb" => "chaos",
+                "orb_of_alteration" => "alt",
+                "orb_of_alchemy" => "alc",
+                "gemcutter_prism" => "gcp",
+                "exalted_orb" => "exalted",
+                "chromatic_orb" => "chrome",
+                "jeweller_orb" => "jewellers",
+                "orb_of_chance" => "chance",
+                "cartographer_chisel" => "chisel",
+                "vaal_orb" => "vaal",
+                "blessed_orb" => "blessed",
+                "perandus_coin" => "p",
+                "mirror_of_kalandra" => "mirror",
+                "orb_of_transmutation" => "transmute",
+                "silver_coin" => "silver",
                 _ => text
             };
         }

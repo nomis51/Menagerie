@@ -47,6 +47,12 @@ namespace Menagerie.ViewModels
         public ReactiveProperty<bool> OverlayMovable { get; set; }
         public ReactiveProperty<BindableCollection<MapModifier>> MapModifiers { get; set; }
         public ReactiveProperty<string> TradeWindowChaosValue { get; set; }
+        public ReactiveProperty<BindableCollection<AiCurrencyAnalysis>> AiCurrenciesAnalysis { get; set; }
+        public ReactiveProperty<float> AiCurrencyAnalysisChaosValue { get; set; }
+        public string AiCurrencyAnalysisChaosValueStr => $"~{Math.Round(AiCurrencyAnalysisChaosValue.Value, 2)}";
+        public ReactiveProperty<float> AiCurrencyAnalysisExaltedValue { get; set; }
+        public string AiCurrencyAnalysisExaltedValueStr => $"~{Math.Round(AiCurrencyAnalysisExaltedValue.Value, 2)}";
+
 
         public BindableCollection<string> TargetLanguages { get; set; }
 
@@ -93,6 +99,7 @@ namespace Menagerie.ViewModels
         public Visibility WeaponsVisibility => ChaosRecipe.Value.NeedWeapons ? Visibility.Visible : Visibility.Hidden;
         public Visibility IsIncomingOffersFilterVisibility => IncomingOffers.Value.Count > 1 || _fullIncomingOffers != null ? Visibility.Visible : Visibility.Hidden;
         public Visibility IsOutgoingOffersFilterVisibility => OutgoingOffers.Value.Count > 1 || _fullOutgoingOffers != null ? Visibility.Visible : Visibility.Hidden;
+        public Visibility AiCurrenciesAnalysisVisibility => AiCurrenciesAnalysis.Value.Count > 1 || AiCurrencyAnalysisChaosValue.Value > 0.0f || AiCurrencyAnalysisExaltedValue.Value > 0.0f ? Visibility.Visible : Visibility.Hidden;
 
         #endregion
 
@@ -114,19 +121,19 @@ namespace Menagerie.ViewModels
 
             StackChaosRecipeOverlayVisibility = new ReactiveProperty<Visibility>("StackChaosRecipeOverlayVisibility", this, Visibility.Hidden)
             {
-                AdditionalPropertiesToNotify = new List<string>() {"ChaosRecipeGridHeight", "ChaosRecipeGridWidth"}
+                AdditionalPropertiesToNotify = new List<string>() { "ChaosRecipeGridHeight", "ChaosRecipeGridWidth" }
             };
             DockChaosRecipeOverlayVisibility = new ReactiveProperty<Visibility>("DockChaosRecipeOverlayVisibility", this, Visibility.Visible)
             {
-                AdditionalPropertiesToNotify = new List<string>() {"ChaosRecipeGridHeight", "ChaosRecipeGridWidth"}
+                AdditionalPropertiesToNotify = new List<string>() { "ChaosRecipeGridHeight", "ChaosRecipeGridWidth" }
             };
             ChaosRecipeOverlayVisibility = new ReactiveProperty<Visibility>("ChaosRecipeOverlayVisibility", this, Visibility.Collapsed)
             {
-                CustomGet = delegate(Visibility visibility)
+                CustomGet = delegate (Visibility visibility)
                 {
                     var config = AppService.Instance.GetConfig();
                     var state = visibility == Visibility.Collapsed
-                        ? (config is {ChaosRecipeEnabled: true} ? Visibility.Visible : Visibility.Hidden)
+                        ? (config is { ChaosRecipeEnabled: true } ? Visibility.Visible : Visibility.Hidden)
                         : visibility;
                     return state;
                 }
@@ -176,13 +183,34 @@ namespace Menagerie.ViewModels
                     "MapModifiersPopupX",
                     "MapModifiersPopupX"
                 },
-                AdditionalReactivePropertiesToNotify = new List<IReactiveProperty>() {MapModifiers}
+                AdditionalReactivePropertiesToNotify = new List<IReactiveProperty>() { MapModifiers }
             };
             TranslateInputControlVisibility = new ReactiveProperty<Visibility>("TranslateInputControlVisibility", this, Visibility.Hidden);
             TradeWindowChaosValue = new ReactiveProperty<string>("TradeWindowChaosValue", this, string.Empty)
                 ;
             TargetLanguages = new BindableCollection<string>(AppService.Instance.GetAvailableTranslationLanguages());
             NotifyOfPropertyChange(() => SourceLanguages);
+            AiCurrenciesAnalysis = new ReactiveProperty<BindableCollection<AiCurrencyAnalysis>>("AiCurrenciesAnalysis", this, new BindableCollection<AiCurrencyAnalysis>())
+            {
+                AdditionalPropertiesToNotify = new List<string>
+                {
+                    "AiCurrenciesAnalysisVisibility"
+                }
+            };
+            AiCurrencyAnalysisChaosValue = new ReactiveProperty<float>("AiCurrencyAnalysisChaosValue", this, 0.0f)
+            {
+                AdditionalPropertiesToNotify = new List<string>
+                {
+                    "AiCurrencyAnalysisChaosValueStr"
+                }
+            };
+            AiCurrencyAnalysisExaltedValue = new ReactiveProperty<float>("AiCurrencyAnalysisExaltedValue", this, 0.0f)
+            {
+                AdditionalPropertiesToNotify = new List<string>
+                {
+                    "AiCurrencyAnalysisExaltedValueStr"
+                }
+            };
 
             AppService.Instance.OnNewOffer += AppService_OnNewOffer;
             AppService.Instance.OnNewChatEvent += AppService_OnNewChatEvent;
@@ -193,12 +221,56 @@ namespace Menagerie.ViewModels
             AppService.Instance.OnToggleChaosRecipeOverlayVisibility += AppService_OnToggleChaosRecipeOverlayVisibility;
             AppService.Instance.ShowTranslateInputControl += AppService_OnShowTranslateInputControl;
             AppService.Instance.MapModifiersVerified += AppService_OnMapModifiersVerified;
-            AppService.Instance.OnTradeWindowScanned += value =>
-            {
-                TradeWindowChaosValue.Value = $"There is {(decimal.Round((decimal)value, 3) != (decimal)value ? "~" : "")}{Math.Round(value, 2)} chaos in the window.";
-            };
+            AppService.Instance.OnTradeWindowScanned += AppService_OnTradeWindowScanned;
 
             UpdateService.NewUpdateInstalled += UpdateServiceOnNewUpdateInstalled;
+
+
+            // TODO: remove, test only
+            AiCurrencyAnalysisChaosValue.Value = (float)((89 * 6) + 2.0f + (3 / 4.2) + (4 / 1.7f) + (1 / 1.3f) + (2 / 8.5f));
+            AiCurrencyAnalysisExaltedValue.Value = AiCurrencyAnalysisChaosValue.Value / 89.0f;
+            AiCurrenciesAnalysis.Value = new BindableCollection<AiCurrencyAnalysis>
+            {
+                new AiCurrencyAnalysis()
+                {
+                    StackSize = 2,
+                    IconLink = "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyUpgradeToRare.png?v=89c110be97333995522c7b2c29cae728"
+                },
+                 new AiCurrencyAnalysis()
+                {
+                    StackSize = 1,
+                    IconLink = "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyGemQuality.png?v=f11792b6dbd2f5f869351151bc3a4539"
+                },
+                  new AiCurrencyAnalysis()
+                {
+                    StackSize = 3,
+                    IconLink = "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyRerollSocketColours.png?v=9d377f2cf04a16a39aac7b14abc9d7c3"
+                },
+                   new AiCurrencyAnalysis()
+                {
+                    StackSize = 4,
+                    IconLink = "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyVaal.png?v=64114709d67069cd665f8f1a918cd12a"
+                },
+                    new AiCurrencyAnalysis()
+                {
+                    StackSize = 2,
+                    IconLink = "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyRerollRare.png?v=c60aa876dd6bab31174df91b1da1b4f9"
+                },
+                new AiCurrencyAnalysis(){
+                    StackSize = 6,
+                    IconLink = "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyAddModToRare.png?v=1745ebafbd533b6f91bccf588ab5efc5"
+                },
+            };
+        }
+
+        private void AppService_OnTradeWindowScanned(float chaosValue, float exaltedValue, List<CoreModels.ML.AiCurrencyAnalysis> aiCurrencyAnalyses)
+        {
+            var localAiCurrencyAnalyses = AppMapper.Instance.Map<List<CoreModels.ML.AiCurrencyAnalysis>, List<AiCurrencyAnalysis>>(aiCurrencyAnalyses);
+
+            AiCurrencyAnalysisChaosValue.Value = chaosValue;
+            AiCurrencyAnalysisExaltedValue.Value = exaltedValue;
+            AiCurrenciesAnalysis.Value.Clear();
+            AiCurrenciesAnalysis.Value.AddRange(localAiCurrencyAnalyses);
         }
 
         private void AppService_OnMapModifiersVerified(List<Core.Models.ItemsScan.MapModifier> modifiers)
@@ -585,7 +657,7 @@ namespace Menagerie.ViewModels
             Log.Trace($"Sending busy whisper {id}");
             var offer = GetOffer(id);
 
-            if (offer is not {State: OfferState.Initial}) return;
+            if (offer is not { State: OfferState.Initial }) return;
 
             AppService.SendChatMessage(
                 $"@{offer.PlayerName} {AppService.Instance.ReplaceVars(Config.BusyWhisper, AppMapper.Instance.Map<Offer, Core.Models.Trades.Offer>(offer))}");
@@ -596,9 +668,9 @@ namespace Menagerie.ViewModels
             Log.Trace($"Sending re-invite commands {id}");
             var offer = GetOffer(id);
 
-            if (offer is not {PlayerInvited: true}) return;
+            if (offer is not { PlayerInvited: true }) return;
 
-            var t = new Thread(delegate()
+            var t = new Thread(delegate ()
             {
                 AppService.SendKickChatCommand(offer.PlayerName);
                 Thread.Sleep(100);
@@ -614,7 +686,7 @@ namespace Menagerie.ViewModels
             Log.Trace($"Sending invite command {id}");
             var offer = GetOffer(id);
 
-            if (offer is not {State: OfferState.Initial}) return;
+            if (offer is not { State: OfferState.Initial }) return;
 
             offer.State = OfferState.PlayerInvited;
             UpdateOffer(offer, true);
@@ -634,7 +706,7 @@ namespace Menagerie.ViewModels
             offer.State = OfferState.Done;
             UpdateOffer(offer);
 
-            var t = new Thread(delegate()
+            var t = new Thread(delegate ()
             {
                 AppService.SendKickChatCommand(offer.PlayerName);
 
@@ -661,7 +733,7 @@ namespace Menagerie.ViewModels
             offer.State = OfferState.Done;
             UpdateOffer(offer);
 
-            var t = new Thread(delegate()
+            var t = new Thread(delegate ()
             {
                 if (sayThanks)
                 {
@@ -830,12 +902,12 @@ namespace Menagerie.ViewModels
 
             var config = Config;
 
-            config.IncomingOffersGridOffset = new System.Drawing.Point((int) grdOffers.X, (int) grdOffers.Y);
+            config.IncomingOffersGridOffset = new System.Drawing.Point((int)grdOffers.X, (int)grdOffers.Y);
             config.IncomingOffersControlsGridOffset =
-                new System.Drawing.Point((int) grdOffersControls.X, (int) grdOffersControls.Y);
+                new System.Drawing.Point((int)grdOffersControls.X, (int)grdOffersControls.Y);
             config.OutgoingOffersGridOffset =
-                new System.Drawing.Point((int) grdOutgoingOffers.X, (int) grdOutgoingOffers.Y);
-            config.ChaosRecipeGridOffset = new System.Drawing.Point((int) grdChaosRecipe.X, (int) grdChaosRecipe.Y);
+                new System.Drawing.Point((int)grdOutgoingOffers.X, (int)grdOutgoingOffers.Y);
+            config.ChaosRecipeGridOffset = new System.Drawing.Point((int)grdChaosRecipe.X, (int)grdChaosRecipe.Y);
             config.ChaosRecipeOveralyDockMode = chaosRecipeDockMode;
 
             AppService.Instance.SetConfig(AppMapper.Instance.Map<Config, CoreModels.Config>(config));

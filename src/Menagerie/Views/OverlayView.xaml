@@ -35,10 +35,52 @@
             <RowDefinition Height="100" />
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
-        
+
         <!-- Trade window scan -->
-        <Label Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Content="{Binding TradeWindowChaosValue.Value, Mode=OneWay}" Foreground="Gold" FontSize="18" FontWeight="Bold"></Label>
-        
+        <Grid Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" Margin="10,110,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <ItemsControl Grid.Column="0" HorizontalAlignment="Left" ItemsSource="{Binding AiCurrenciesAnalysis.Value, UpdateSourceTrigger=PropertyChanged}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Cursor="Hand"
+                                   HorizontalAlignment="Center" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Margin="0,0,0,5" BorderBrush="White" Background="#714a2d" BorderThickness="2" MinHeight="45" MaxHeight="45" MinWidth="70" MaxWidth="70"  CornerRadius="4">
+                            <DockPanel>
+                                <Label FontSize="{Binding StackSizeFontSize}" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" Padding="3" Content="{Binding StackSizeStr}"></Label>
+                                <Image Source="{Binding IconLink}" VerticalAlignment="Center" Height="32" Width="32"></Image>
+                            </DockPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+
+        <DockPanel Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"  Margin="-110,15,0,0">
+
+            <Border    BorderBrush="White" Background="#714a2d" BorderThickness="2" MinHeight="45" MaxHeight="45" MinWidth="70" MaxWidth="100"  CornerRadius="4">
+                <DockPanel>
+                    <Label FontSize="16" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" Padding="3" Content="{Binding AiCurrencyAnalysisChaosValueStr}"></Label>
+                    <Image Source="https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyRerollRare.png?v=c60aa876dd6bab31174df91b1da1b4f9" VerticalAlignment="Center" Height="32" Width="32"></Image>
+                </DockPanel>
+            </Border>
+            <Border Margin="5,0,0,0" BorderBrush="White" Background="#714a2d" BorderThickness="2" MinHeight="45" MaxHeight="45" MinWidth="70" MaxWidth="100"  CornerRadius="4">
+                <DockPanel>
+                    <Label FontSize="16" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" Padding="3" Content="{Binding AiCurrencyAnalysisExaltedValueStr}"></Label>
+                    <Image Source="https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyAddModToRare.png?v=1745ebafbd533b6f91bccf588ab5efc5" VerticalAlignment="Center" Height="32" Width="32"></Image>
+                </DockPanel>
+            </Border>
+        </DockPanel>
+
         <!-- Map modifiers popup -->
         <Grid Grid.Row="0"
               Grid.Column="0"

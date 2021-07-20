@@ -105,7 +105,7 @@ namespace Menagerie.Core.Services
                     var result = HttpService.ReadResponse<PoeNinjaResult<PoeNinjaCurrency>>(response).Result;
 
                     var currencies = result.Lines.ToDictionary(line => line.CurrencyTypeName,
-                        line => new List<PoeNinjaCurrency>() {line});
+                        line => new List<PoeNinjaCurrency>() { line });
 
                     Log.Trace($"Poe Ninja returned {currencies.Count} currencies");
 
@@ -176,6 +176,40 @@ namespace Menagerie.Core.Services
             }
         }
 
+        public double GetCurrencyExaltedValue(string currencyName)
+        {
+            var exaltedChaosValue = GetCurrencyChaosValue(currencyName);
+
+            if (exaltedChaosValue == 0) return 0;
+
+            if (_cacheUpdating)
+            {
+                if (_oldCache == null)
+                {
+                    return 0.0d;
+                }
+
+                Log.Trace($"Getting currency chaos value for {currencyName}");
+
+                if (currencyName == "Exalted Orb") return 1.0d;
+                if (_oldCache == null) return 0.0d;
+
+                return (_oldCache.Currency.Map.ContainsKey(currencyName) ? _oldCache.Currency.Map[currencyName][0].Receive.Value : 0.0d) / exaltedChaosValue;
+            }
+            else
+            {
+                lock (LockCurrencyCacheAccess)
+                {
+                    Log.Trace($"Getting currency chaos value for {currencyName}");
+
+                    if (currencyName == "Exalted Orb") return 1.0d;
+                    if (_oldCache == null) return 0.0d;
+
+                    return (_oldCache.Currency.Map.ContainsKey(currencyName) ? _oldCache.Currency.Map[currencyName][0].Receive.Value : 0.0d) / exaltedChaosValue;
+                }
+            }
+        }
+
         public void Start()
         {
             Log.Trace("Starting PoeNinjaService");
@@ -183,7 +217,7 @@ namespace Menagerie.Core.Services
             _cacheExpirationTimeMinutes = AppService.Instance.GetConfig().PoeNinjaUpdateRate;
 
             LoadCache();
-            Task.Run(() => AutoUpdateCache(_oldCache != null && _oldCache.Items != null && _oldCache.Items.Count > 0 && _oldCache.Currency is {Map: { }} &&
+            Task.Run(() => AutoUpdateCache(_oldCache != null && _oldCache.Items != null && _oldCache.Items.Count > 0 && _oldCache.Currency is { Map: { } } &&
                                            (DateTime.Now - _oldCache.UpdateTime).TotalMinutes <
                                            _cacheExpirationTimeMinutes));
         }

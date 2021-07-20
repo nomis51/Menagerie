@@ -105,7 +105,7 @@ namespace Menagerie.Core.Services
 
         public event MouseMovedEvent OnMouseMoved;
 
-        public delegate void TradeWindowScannedEvent(double chaosValue);
+        public delegate void TradeWindowScannedEvent(float chaosValue, float exaltedValue, List<AiCurrencyAnalysis> aiCurrencyAnalyses);
 
         public event TradeWindowScannedEvent OnTradeWindowScanned;
 
@@ -160,7 +160,7 @@ namespace Menagerie.Core.Services
             _shortcutService.RegisterShortcut(new Shortcut()
             {
                 Direction = KeyDirection.Down,
-                Key = (Key) 117, // F6
+                Key = (Key)117, // F6
                 Alt = false,
                 Control = false,
                 Shift = false,
@@ -180,14 +180,58 @@ namespace Menagerie.Core.Services
                         }
                     }));
                     var result = await _appAiService.Predict(request);
-                    var g = 0;
+
+                    List<AiCurrencyAnalysis> aiCurrencyAnalyses = new();
+                    double chaosValue = 0.0f;
+                    double exaltedValue = 0.0f;
+
+                    foreach (var i in result.Images)
+                    {
+                        var currencyTypeValue = i.Predictions.Find(p => p.Model == "currency_type");
+                        if (string.IsNullOrEmpty(currencyTypeValue.Value)) continue;
+
+                        var stackSizeValue = i.Predictions.Find(p => p.Model == "stack_size");
+                        if (string.IsNullOrEmpty(stackSizeValue.Value)) continue;
+
+                        var normalizedCurrencyName = CurrencyService.AiCurrencyToNormzlizedCurrency(currencyTypeValue.Value);
+
+                        string iconLink = string.Empty;
+
+                        if (normalizedCurrencyName != currencyTypeValue.Value)
+                        {
+                            iconLink = _currencyService.GetCurrencyImageLink(normalizedCurrencyName);
+                        }
+
+                        int stackSize;
+                        if (!int.TryParse(stackSizeValue.Value, out stackSize)) continue;
+
+                        var existingAnalysis = aiCurrencyAnalyses.FirstOrDefault(c => c.IconLink == iconLink);
+
+                        if (existingAnalysis != null)
+                        {
+                            existingAnalysis.StackSize += stackSize;
+                        }
+                        else
+                        {
+                            aiCurrencyAnalyses.Add(new AiCurrencyAnalysis
+                            {
+                                IconLink = iconLink,
+                                StackSize = stackSize
+                            });
+                        }
+
+                        chaosValue += normalizedCurrencyName == "chaos" ? stackSize : _poeNinjaService.GetCurrencyChaosValue(normalizedCurrencyName);
+                        exaltedValue += normalizedCurrencyName == "exalted" ? stackSize : _poeNinjaService.GetCurrencyExaltedValue(normalizedCurrencyName);
+                    }
+
+                    OnTradeWindowScanned?.Invoke((float)chaosValue, (float)0.02, aiCurrencyAnalyses);
                 }
             });
 
             _shortcutService.RegisterShortcut(new Shortcut()
             {
                 Direction = KeyDirection.Down,
-                Key = (Key) 116, // F5
+                Key = (Key)116, // F5
                 Alt = false,
                 Control = false,
                 Shift = false,
@@ -197,7 +241,7 @@ namespace Menagerie.Core.Services
             _shortcutService.RegisterShortcut(new Shortcut()
             {
                 Direction = KeyDirection.Down,
-                Key = (Key) 84, // T
+                Key = (Key)84, // T
                 Alt = false,
                 Control = true,
                 Shift = true,
@@ -207,7 +251,7 @@ namespace Menagerie.Core.Services
             _shortcutService.RegisterShortcut(new Shortcut()
             {
                 Direction = KeyDirection.Down,
-                Key = (Key) 70, // F
+                Key = (Key)70, // F
                 Alt = false,
                 Control = true,
                 Shift = false,
@@ -217,7 +261,7 @@ namespace Menagerie.Core.Services
             _shortcutService.RegisterShortcut(new Shortcut()
             {
                 Direction = KeyDirection.Down,
-                Key = (Key) 70, // F
+                Key = (Key)70, // F
                 Alt = false,
                 Control = true,
                 Shift = true,
@@ -227,7 +271,7 @@ namespace Menagerie.Core.Services
             _shortcutService.RegisterShortcut(new Shortcut()
             {
                 Direction = KeyDirection.Down,
-                Key = (Key) 70, // F
+                Key = (Key)70, // F
                 Alt = true,
                 Control = false,
                 Shift = false,
@@ -264,7 +308,7 @@ namespace Menagerie.Core.Services
 
         public void MoveMouse(int x, int y)
         {
-            _keyboardService.MoveMouse((uint) x, (uint) y);
+            _keyboardService.MoveMouse((uint)x, (uint)y);
         }
 
         public void MouseMoved()
@@ -353,7 +397,7 @@ namespace Menagerie.Core.Services
                 translation.OriginalLang = fromLang;
             }
 
-            _ = _translateService.Translate(translation, new TranslateOptions() {To = toLang, From = fromLang});
+            _ = _translateService.Translate(translation, new TranslateOptions() { To = toLang, From = fromLang });
         }
 
         private static void Shortcut_GoToHideout()
@@ -878,15 +922,15 @@ namespace Menagerie.Core.Services
                     _translationTable.Add(translation.PlayerName, translation.OriginalLang);
                     break;
                 case false:
-                {
-                    if (!string.Equals(_translationTable[translation.PlayerName], translation.OriginalLang,
-                        StringComparison.Ordinal))
                     {
-                        _translationTable[translation.PlayerName] = translation.OriginalLang;
-                    }
+                        if (!string.Equals(_translationTable[translation.PlayerName], translation.OriginalLang,
+                            StringComparison.Ordinal))
+                        {
+                            _translationTable[translation.PlayerName] = translation.OriginalLang;
+                        }
 
-                    break;
-                }
+                        break;
+                    }
             }
 
             if (translation.UserInitiated)
