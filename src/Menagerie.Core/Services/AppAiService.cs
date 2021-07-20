@@ -90,6 +90,16 @@ namespace Menagerie.Core.Services
 
         #region Private methods
 
+        private void CleanTempFolder()
+        {
+            if (Directory.Exists(TEMP_FOLDER))
+            {
+                Directory.Delete(TEMP_FOLDER, true);
+            }
+
+            Directory.CreateDirectory(TEMP_FOLDER);
+        }
+
         private void StartPythonServer()
         {
             Task.Run(async () =>
@@ -278,8 +288,6 @@ namespace Menagerie.Core.Services
                 var response = await _httpService.Client.PostAsync($"/api",
                     new StringContent(JsonConvert.SerializeObject(request, _jsonSerializerSettings), Encoding.UTF8, "application/json"));
 
-                // _ = Task.Run(() => RemoveImages(request));
-
                 if (!response.IsSuccessStatusCode) return default;
 
                 return await HttpService.ReadResponse<PredictionResponse>(response);
@@ -310,6 +318,7 @@ namespace Menagerie.Core.Services
         public void Start()
         {
             StartPythonServer();
+            CleanTempFolder();
         }
 
         #endregion
