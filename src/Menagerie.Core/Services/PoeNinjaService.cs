@@ -178,7 +178,7 @@ namespace Menagerie.Core.Services
 
         public double GetCurrencyExaltedValue(string currencyName)
         {
-            var exaltedChaosValue = GetCurrencyChaosValue(currencyName);
+            var exaltedChaosValue = GetCurrencyChaosValue("Exalted Orb");
 
             if (exaltedChaosValue == 0) return 0;
 

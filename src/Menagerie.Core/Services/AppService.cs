@@ -168,65 +168,7 @@ namespace Menagerie.Core.Services
                 Shift = false,
                 Action = async () =>
                 {
-                    var image = _screenCaptureService.CaptureArea(TradeWindowBounds);
-                    var imageIds = _appAiService.ProcessAndSaveTradeWindowImage(image);
-                    var request = new PredictionRequest();
-                    imageIds.ForEach(i => request.Images.Add(new PredictionRequestImage
-                    {
-                        FileId = i.Item1,
-                        FilePath = i.Item2,
-                        Models = new List<string>
-                        {
-                            TrainedModelTypeConverter.Convert(TrainedModelType.CurrencyType),
-                            TrainedModelTypeConverter.Convert(TrainedModelType.StackSize),
-                        }
-                    }));
-                    var result = await _appAiService.Predict(request);
-
-                    List<AiCurrencyAnalysis> aiCurrencyAnalyses = new();
-                    double chaosValue = 0.0f;
-                    double exaltedValue = 0.0f;
-
-                    foreach (var i in result.Images)
-                    {
-                        var currencyTypeValue = i.Predictions.Find(p => p.Model == "currency_type");
-                        if (string.IsNullOrEmpty(currencyTypeValue.Value)) continue;
-
-                        var stackSizeValue = i.Predictions.Find(p => p.Model == "stack_size");
-                        if (string.IsNullOrEmpty(stackSizeValue.Value)) continue;
-
-                        var normalizedCurrencyName = CurrencyService.AiCurrencyToNormzlizedCurrency(currencyTypeValue.Value);
-
-                        string iconLink = string.Empty;
-
-                        if (normalizedCurrencyName != currencyTypeValue.Value)
-                        {
-                            iconLink = _currencyService.GetCurrencyImageLink(normalizedCurrencyName);
-                        }
-
-                        int stackSize;
-                        if (!int.TryParse(stackSizeValue.Value, out stackSize)) continue;
-
-                        var existingAnalysis = aiCurrencyAnalyses.FirstOrDefault(c => c.IconLink == iconLink);
-
-                        if (existingAnalysis != null)
-                        {
-                            existingAnalysis.StackSize += stackSize;
-                        }
-                        else
-                        {
-                            aiCurrencyAnalyses.Add(new AiCurrencyAnalysis
-                            {
-                                IconLink = iconLink,
-                                StackSize = stackSize
-                            });
-                        }
-
-                        chaosValue += normalizedCurrencyName == "chaos" ? stackSize : _poeNinjaService.GetCurrencyChaosValue(normalizedCurrencyName);
-                        exaltedValue += normalizedCurrencyName == "exalted" ? stackSize : _poeNinjaService.GetCurrencyExaltedValue(normalizedCurrencyName);
-                    }
-
-                    OnTradeWindowScanned?.Invoke((float)chaosValue, (float)0.02, aiCurrencyAnalyses, result);
+                   
                 }
             });
 
@@ -279,6 +221,70 @@ namespace Menagerie.Core.Services
                 Shift = false,
                 Action = VerifyMapModifiers
             });
+        }
+
+        public async Task AnalyzeTradeWindow()
+        {
+            var image = _screenCaptureService.CaptureArea(TradeWindowBounds);
+            var imageIds = _appAiService.ProcessAndSaveTradeWindowImage(image);
+            var request = new PredictionRequest();
+            imageIds.ForEach(i => request.Images.Add(new PredictionRequestImage
+            {
+                FileId = i.Item1,
+                FilePath = i.Item2,
+                Models = new List<string>
+                        {
+                            TrainedModelTypeConverter.Convert(TrainedModelType.CurrencyType),
+                            TrainedModelTypeConverter.Convert(TrainedModelType.StackSize),
+                        }
+            }));
+            var result = await _appAiService.Predict(request);
+
+            List<AiCurrencyAnalysis> aiCurrencyAnalyses = new();
+            double chaosValue = 0.0f;
+            double exaltedValue = 0.0f;
+
+            foreach (var i in result.Images)
+            {
+                var currencyTypeValue = i.Predictions.Find(p => p.Model == "currency_type");
+                if (string.IsNullOrEmpty(currencyTypeValue.Value)) continue;
+
+                var stackSizeValue = i.Predictions.Find(p => p.Model == "stack_size");
+                if (string.IsNullOrEmpty(stackSizeValue.Value)) continue;
+
+                var normalizedCurrencyName = CurrencyService.AiCurrencyToNormzlizedCurrency(currencyTypeValue.Value);
+
+                string iconLink = string.Empty;
+
+                if (normalizedCurrencyName != currencyTypeValue.Value)
+                {
+                    iconLink = _currencyService.GetCurrencyImageLink(normalizedCurrencyName);
+                }
+
+                int stackSize;
+                if (!int.TryParse(stackSizeValue.Value, out stackSize)) continue;
+
+                var existingAnalysis = aiCurrencyAnalyses.FirstOrDefault(c => c.IconLink == iconLink);
+
+                if (existingAnalysis != null)
+                {
+                    existingAnalysis.StackSize += stackSize;
+                }
+                else
+                {
+                    aiCurrencyAnalyses.Add(new AiCurrencyAnalysis
+                    {
+                        IconLink = iconLink,
+                        StackSize = stackSize
+                    });
+                }
+
+                chaosValue += normalizedCurrencyName == "chaos" ? stackSize : stackSize * _poeNinjaService.GetCurrencyChaosValue(CurrencyService.GetRealName(normalizedCurrencyName));
+            }
+
+            exaltedValue = chaosValue / _poeNinjaService.GetCurrencyChaosValue("Exalted Orb");
+
+            OnTradeWindowScanned?.Invoke((float)chaosValue, (float)exaltedValue, aiCurrencyAnalyses, result);
         }
 
         private void VerifyMapModifiers()

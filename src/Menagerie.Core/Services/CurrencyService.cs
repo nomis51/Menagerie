@@ -82,6 +82,18 @@ namespace Menagerie.Core.Services
             {
                 "ancient",
                 "https://web.poecdn.com/image/Art/2DItems/Currency/AncientOrb.png?v=3edb14b53b9b05e176124814aba86f94"
+            },
+            {
+                "bauble",
+                "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyFlaskQuality.png?v=ca8bd0dd43d2adf8b021578a398eb9de"
+            },
+            {
+                "scouring",
+                "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyConvertToNormal.png?v=15e3ef97f04a39ae284359309697ef7d"
+            },
+            {
+                "regret",
+                "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyPassiveSkillRefund.png?v=1de687952ce56385b74ac450f97fcc33"
             }
         };
 
@@ -153,7 +165,7 @@ namespace Menagerie.Core.Services
             {
                 "chaos" => "Chaos Orb",
                 "alt" => "Orb of Alteration",
-                "alc" => "Orb of Alchemy",
+                "alch" => "Orb of Alchemy",
                 "gcp" => "Gemcutter's Prism",
                 "exalted" => "Exalted Orb",
                 "chrome" => "Chromatic Orb",
@@ -166,6 +178,11 @@ namespace Menagerie.Core.Services
                 "mirror" => "Mirror of Kalandra",
                 "transmute" => "Orb of Transmutation",
                 "silver" => "Silver Coin",
+                "fuse" => "Orb of Fusing",
+                "ancient" => "Ancient Orb",
+                "bauble" => "Glassblower's Bauble",
+                "souring" => "Orb of Scouring",
+                "regret" => "Orb of Regret",
                 _ => text
             };
         }
@@ -190,6 +207,10 @@ namespace Menagerie.Core.Services
                 "Mirror of Kalandra" => "mirror",
                 "Orb of Transmutation" => "transmute",
                 "Silver Coin" => "silver",
+                "Ancient Orb" => "ancient",
+                "Glassblower's Bauble" => "bauble",
+                "Orb of Scouring" => "scouring",
+                "Orb of Regret" => "regret",
                 _ => text
             };
         }
@@ -216,6 +237,9 @@ namespace Menagerie.Core.Services
                 "silver_coin" => "silver",
                 "orb_of_fusing" => "fuse",
                 "ancient_orb" => "ancient",
+                "glassblower_bauble" => "bauble",
+                "orb_of_scouring" => "scouring",
+                "orb_of_regret" => "regret",
                 _ => text
             };
         }

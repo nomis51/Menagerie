@@ -81,7 +81,7 @@
             </Border>
         </DockPanel>
 
-        <Button x:Name="btnShareAiAnalysis" Grid.Row="1" Grid.Column="1" Margin="290,15,0,0" MaxWidth="110"  MaxHeight="30" Cursor="Hand" HorizontalAlignment="Left" VerticalAlignment="Center" ToolTip="Share the current trade window analysis that is not right" Click="btnShareAiAnalysis_Click">
+        <Button x:Name="btnShareAiAnalysis" Visibility="{Binding AiCurrenciesAnalysisVisibility, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" Margin="150,15,0,0" MaxWidth="110"  MaxHeight="30" Cursor="Hand" HorizontalAlignment="Left" VerticalAlignment="Center" ToolTip="Share the current trade window analysis that is not right" Click="btnShareAiAnalysis_Click">
             <Button.Content>
                 <DockPanel>
                     <fa5:ImageAwesome Width="20"
@@ -90,6 +90,20 @@
                                   Foreground="#a0aec0"
                                   HorizontalAlignment="Center" />
                     <Label Name="lblContent_btnShareAiAnalysis" VerticalAlignment="Center" Margin="5,0,0,0" Content="Share Error"></Label>
+                </DockPanel>
+            </Button.Content>
+        </Button>
+
+        <Button x:Name="btnDoAiAnalysis" IsEnabled="{Binding AnalyzeTradeWindowButtonEnabled.Value}"
+                Visibility="{Binding AiAnalyseButtonVisibility.Value, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" MaxWidth="180" Margin="260,15,0,0"  MaxHeight="30" Cursor="Hand" HorizontalAlignment="Left" VerticalAlignment="Center" ToolTip="Share the current trade window analysis that is not right" Click="btnDoAiAnalysis_Click">
+            <Button.Content>
+                <DockPanel>
+                    <fa5:ImageAwesome Width="20"
+                                  Height="20"
+                                  Icon="Solid_CameraRetro"
+                                  Foreground="#a0aec0"
+                                  HorizontalAlignment="Center" />
+                    <Label VerticalAlignment="Center" Margin="5,0,0,0" Content="Analyse Window"></Label>
                 </DockPanel>
             </Button.Content>
         </Button>

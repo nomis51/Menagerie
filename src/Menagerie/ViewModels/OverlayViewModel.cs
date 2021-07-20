@@ -100,6 +100,8 @@ namespace Menagerie.ViewModels
         public Visibility IsIncomingOffersFilterVisibility => IncomingOffers.Value.Count > 1 || _fullIncomingOffers != null ? Visibility.Visible : Visibility.Hidden;
         public Visibility IsOutgoingOffersFilterVisibility => OutgoingOffers.Value.Count > 1 || _fullOutgoingOffers != null ? Visibility.Visible : Visibility.Hidden;
         public Visibility AiCurrenciesAnalysisVisibility => AiCurrenciesAnalysis.Value.Count > 0 || AiCurrencyAnalysisChaosValue.Value > 0.0f || AiCurrencyAnalysisExaltedValue.Value > 0.0f ? Visibility.Visible : Visibility.Hidden;
+        public ReactiveProperty<Visibility> AiAnalyseButtonVisibility { get; set; }
+        public ReactiveProperty<bool> AnalyzeTradeWindowButtonEnabled { get; set; }
 
         public bool AnyPredictionResponseToShare => _currentPredictionResponse != null;
 
@@ -214,6 +216,8 @@ namespace Menagerie.ViewModels
                     "AiCurrencyAnalysisExaltedValueStr"
                 }
             };
+            AiAnalyseButtonVisibility = new ReactiveProperty<Visibility>("AiAnalyseButtonVisibility", this, Visibility.Hidden);
+            AnalyzeTradeWindowButtonEnabled = new ReactiveProperty<bool>("AnalyzeTradeWindowButtonEnabled", this, true);
 
             AppService.Instance.OnNewOffer += AppService_OnNewOffer;
             AppService.Instance.OnNewChatEvent += AppService_OnNewChatEvent;
@@ -270,6 +274,14 @@ namespace Menagerie.ViewModels
         {
             AppService.Instance.FocusGame();
             AppService.Instance.ShareAiAnalysis(_currentPredictionResponse);
+            _currentPredictionResponse = null;
+        }
+
+        public void AnalyzeTradeWindow()
+        {
+            AppService.Instance.FocusGame();
+            AnalyzeTradeWindowButtonEnabled.Value = false;
+            Task.Run(() => AppService.Instance.AnalyzeTradeWindow());
         }
 
         private void AppService_OnTradeWindowScanned(float chaosValue, float exaltedValue, List<CoreModels.ML.AiCurrencyAnalysis> aiCurrencyAnalyses, CoreModels.ML.PredictionResponse predictionResponse)
@@ -282,6 +294,8 @@ namespace Menagerie.ViewModels
             AiCurrenciesAnalysis.Value.Clear();
             AiCurrenciesAnalysis.Value.AddRange(localAiCurrencyAnalyses);
             AiCurrenciesAnalysis.Notify();
+
+            AnalyzeTradeWindowButtonEnabled.Value = true;
         }
 
         private void AppService_OnMapModifiersVerified(List<Core.Models.ItemsScan.MapModifier> modifiers)
@@ -427,6 +441,15 @@ namespace Menagerie.ViewModels
             });
         }
 
+        private void ClearAiCurrencyAnalysis()
+        {
+            AiCurrencyAnalysisChaosValue.Value = 0.0f;
+            AiCurrencyAnalysisExaltedValue.Value = 0.0f;
+            AiCurrenciesAnalysis.Value.Clear();
+            AiCurrenciesAnalysis.Notify();
+            AiAnalyseButtonVisibility.Value = Visibility.Hidden;
+        }
+
         private void AppService_OnNewChatEvent(ChatEventEnum type)
         {
             Log.Trace($"New chat event: {type.ToString()}");
@@ -436,6 +459,8 @@ namespace Menagerie.ViewModels
                 switch (type)
                 {
                     case ChatEventEnum.TradeAccepted:
+                        ClearAiCurrencyAnalysis();
+
                         var offer = GetActiveOffer();
 
                         if (offer == null) return;
@@ -456,6 +481,8 @@ namespace Menagerie.ViewModels
                         break;
 
                     case ChatEventEnum.TradeCancelled:
+                        ClearAiCurrencyAnalysis();
+
                         foreach (var o in IncomingOffers.Value.Where(o => o.TradeRequestSent))
                         {
                             o.State = OfferState.PlayerInvited;
@@ -648,6 +675,8 @@ namespace Menagerie.ViewModels
                     AppService.SendTradeChatCommand(offer.PlayerName);
                     break;
             }
+
+            AiAnalyseButtonVisibility.Value = Visibility.Visible;
         }
 
         public void SendJoinHideoutCommand(ObjectId id)

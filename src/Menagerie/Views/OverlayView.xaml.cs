@@ -573,7 +573,7 @@ namespace Menagerie.Views
             else
             {
                 btnShareAiAnalysis.MaxWidth = 140;
-                btnShareAiAnalysis.Margin = new Thickness(250, 15, 0, 0);
+                btnShareAiAnalysis.Margin = new Thickness(130, 15, 0, 0);
             }
 
             lblContent_btnShareAiAnalysis.Content = _vm.AnyPredictionResponseToShare ? "Shared!" : "Nothing to share";
@@ -586,9 +586,14 @@ namespace Menagerie.Views
                 {
                     lblContent_btnShareAiAnalysis.Content = "Share Error";
                     btnShareAiAnalysis.MaxWidth = 110;
-                    btnShareAiAnalysis.Margin = new Thickness(290, 15, 0, 0);
+                    btnShareAiAnalysis.Margin = new Thickness(150, 15, 0, 0);
                 });
             });
+        }
+
+        private void btnDoAiAnalysis_Click(object sender, RoutedEventArgs e)
+        {
+            _vm.AnalyzeTradeWindow();
         }
     }
 }
