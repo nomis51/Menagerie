@@ -76,8 +76,12 @@ namespace Menagerie.Core.Services
                 "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyUpgradeToMagic.png?v=333b8b5e28b73c62972fc66e7634c5c8"
             },
             {
-                " silver",
+                "silver",
                 "https://web.poecdn.com/image/Art/2DItems/Currency/SilverObol.png?v=93c1b204ec2736a2fe5aabbb99510bcf"
+            },
+            {
+                "ancient",
+                "https://web.poecdn.com/image/Art/2DItems/Currency/AncientOrb.png?v=3edb14b53b9b05e176124814aba86f94"
             }
         };
 
