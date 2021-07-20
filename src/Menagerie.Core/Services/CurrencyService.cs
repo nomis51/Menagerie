@@ -177,7 +177,7 @@ namespace Menagerie.Core.Services
             {
                 "Chaos Orb" => "chaos",
                 "Orb of Alteration" => "alt",
-                "Orb of Alchemy" => "alc",
+                "Orb of Alchemy" => "alch",
                 "Gemcutter's Prism" => "gcp",
                 "Exalted Orb" => "exalted",
                 "Chromatic Orb" => "chrome",
@@ -201,7 +201,7 @@ namespace Menagerie.Core.Services
             {
                 "chaos_orb" => "chaos",
                 "orb_of_alteration" => "alt",
-                "orb_of_alchemy" => "alc",
+                "orb_of_alchemy" => "alch",
                 "gemcutter_prism" => "gcp",
                 "exalted_orb" => "exalted",
                 "chromatic_orb" => "chrome",
@@ -214,6 +214,8 @@ namespace Menagerie.Core.Services
                 "mirror_of_kalandra" => "mirror",
                 "orb_of_transmutation" => "transmute",
                 "silver_coin" => "silver",
+                "orb_of_fusing" => "fuse",
+                "ancient_orb" => "ancient",
                 _ => text
             };
         }
