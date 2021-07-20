@@ -573,7 +573,7 @@ namespace Menagerie.Views
             else
             {
                 btnShareAiAnalysis.MaxWidth = 140;
-                btnShareAiAnalysis.Margin = new Thickness(130, 15, 0, 0);
+                btnShareAiAnalysis.Margin = new Thickness(110, 15, 0, 0);
             }
 
             lblContent_btnShareAiAnalysis.Content = _vm.AnyPredictionResponseToShare ? "Shared!" : "Nothing to share";

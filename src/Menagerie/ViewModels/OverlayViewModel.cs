@@ -273,8 +273,11 @@ namespace Menagerie.ViewModels
         public void ShareAiAnalysis()
         {
             AppService.Instance.FocusGame();
-            AppService.Instance.ShareAiAnalysis(_currentPredictionResponse);
-            _currentPredictionResponse = null;
+            Task.Run(() =>
+            {
+                AppService.Instance.ShareAiAnalysis(_currentPredictionResponse);
+                _currentPredictionResponse = null;
+            });
         }
 
         public void AnalyzeTradeWindow()
