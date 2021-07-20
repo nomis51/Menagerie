@@ -105,7 +105,7 @@ namespace Menagerie.Core.Services
 
         public event MouseMovedEvent OnMouseMoved;
 
-        public delegate void TradeWindowScannedEvent(float chaosValue, float exaltedValue, List<AiCurrencyAnalysis> aiCurrencyAnalyses);
+        public delegate void TradeWindowScannedEvent(float chaosValue, float exaltedValue, List<AiCurrencyAnalysis> aiCurrencyAnalyses, PredictionResponse response);
 
         public event TradeWindowScannedEvent OnTradeWindowScanned;
 
@@ -129,6 +129,7 @@ namespace Menagerie.Core.Services
         private readonly ItemService _itemService;
         private readonly AppAiService _appAiService;
         private readonly ScreenCaptureService _screenCaptureService;
+        private readonly CloudDataService _cloudDataService;
 
         private Area _currentArea;
         private static AppVersion _appVersion = new();
@@ -153,6 +154,7 @@ namespace Menagerie.Core.Services
             _itemService = new ItemService();
             _appAiService = new AppAiService();
             _screenCaptureService = new ScreenCaptureService();
+            _cloudDataService = new CloudDataService();
         }
 
         private void SetShortcuts()
@@ -224,7 +226,7 @@ namespace Menagerie.Core.Services
                         exaltedValue += normalizedCurrencyName == "exalted" ? stackSize : _poeNinjaService.GetCurrencyExaltedValue(normalizedCurrencyName);
                     }
 
-                    OnTradeWindowScanned?.Invoke((float)chaosValue, (float)0.02, aiCurrencyAnalyses);
+                    OnTradeWindowScanned?.Invoke((float)chaosValue, (float)0.02, aiCurrencyAnalyses, result);
                 }
             });
 
@@ -357,6 +359,11 @@ namespace Menagerie.Core.Services
         private void DoShowTranslateInputControl()
         {
             OnShowTranslateInputControl();
+        }
+
+        public void ShareAiAnalysis(PredictionResponse response)
+        {
+            _ = _cloudDataService.InsertAiAnalyzes(response);
         }
 
         public void TranslateMessage(string text, string targetLanguage = "", string sourceLanguage = "",
@@ -972,6 +979,7 @@ namespace Menagerie.Core.Services
             _itemService.Start();
             _appAiService.Start();
             _screenCaptureService.Start();
+            _cloudDataService.Start();
         }
     }
 }

@@ -565,7 +565,8 @@ namespace Menagerie.Views
 
         private void btnShareAiAnalysis_Click(object sender, RoutedEventArgs e)
         {
-
+            _vm.ShareAiAnalysis();
+            // TODO: UI effect, notification, something to tell "Hey, it works! Thanks!"
         }
     }
 }

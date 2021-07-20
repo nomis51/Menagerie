@@ -111,6 +111,7 @@ namespace Menagerie.ViewModels
         private Offer[] _fullIncomingOffers;
         private Offer[] _fullOutgoingOffers;
         private ChaosRecipeResult _chaosRecipe = new();
+        private CoreModels.ML.PredictionResponse _currentPredictionResponse;
 
         #endregion
 
@@ -263,8 +264,14 @@ namespace Menagerie.ViewModels
             // };
         }
 
-        private void AppService_OnTradeWindowScanned(float chaosValue, float exaltedValue, List<CoreModels.ML.AiCurrencyAnalysis> aiCurrencyAnalyses)
+        public void ShareAiAnalysis()
         {
+            AppService.Instance.ShareAiAnalysis(_currentPredictionResponse);
+        }
+
+        private void AppService_OnTradeWindowScanned(float chaosValue, float exaltedValue, List<CoreModels.ML.AiCurrencyAnalysis> aiCurrencyAnalyses, CoreModels.ML.PredictionResponse predictionResponse)
+        {
+            _currentPredictionResponse = predictionResponse;
             var localAiCurrencyAnalyses = AppMapper.Instance.Map<List<CoreModels.ML.AiCurrencyAnalysis>, List<AiCurrencyAnalysis>>(aiCurrencyAnalyses);
 
             AiCurrencyAnalysisChaosValue.Value = chaosValue;
