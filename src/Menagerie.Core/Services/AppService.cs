@@ -47,7 +47,7 @@ namespace Menagerie.Core.Services
 
         public readonly Size TradeWindowSquareSize = new(53, 53);
         public readonly Size TradeWindowRowsAndColumns = new(12, 5);
-        public readonly Rectangle TradeWindowBounds = new(312, 202, 53 * 12, 53 * 5);
+        public readonly Rectangle TradeWindowBounds = new(311, 203, 632, 264);
 
         #endregion
 
@@ -134,6 +134,7 @@ namespace Menagerie.Core.Services
         private Area _currentArea;
         private static AppVersion _appVersion = new();
         private readonly Dictionary<string, string> _translationTable = new Dictionary<string, string>();
+        private bool _runningAiAnalysis;
 
         private AppService()
         {
@@ -166,10 +167,7 @@ namespace Menagerie.Core.Services
                 Alt = false,
                 Control = false,
                 Shift = false,
-                Action = async () =>
-                {
-                   
-                }
+                Action = () => AnalyzeTradeWindow().Wait()
             });
 
             _shortcutService.RegisterShortcut(new Shortcut()
@@ -225,6 +223,10 @@ namespace Menagerie.Core.Services
 
         public async Task AnalyzeTradeWindow()
         {
+            if (_runningAiAnalysis) return;
+
+            _runningAiAnalysis = true;
+
             var image = _screenCaptureService.CaptureArea(TradeWindowBounds);
             var imageIds = _appAiService.ProcessAndSaveTradeWindowImage(image);
             var request = new PredictionRequest();
@@ -253,13 +255,9 @@ namespace Menagerie.Core.Services
                 if (string.IsNullOrEmpty(stackSizeValue.Value)) continue;
 
                 var normalizedCurrencyName = CurrencyService.AiCurrencyToNormzlizedCurrency(currencyTypeValue.Value);
+                var realCurrencyName = CurrencyService.GetRealName(normalizedCurrencyName);
 
-                string iconLink = string.Empty;
-
-                if (normalizedCurrencyName != currencyTypeValue.Value)
-                {
-                    iconLink = _currencyService.GetCurrencyImageLink(normalizedCurrencyName);
-                }
+                string iconLink = _currencyService.GetCurrencyImageLink(normalizedCurrencyName);
 
                 int stackSize;
                 if (!int.TryParse(stackSizeValue.Value, out stackSize)) continue;
@@ -274,6 +272,7 @@ namespace Menagerie.Core.Services
                 {
                     aiCurrencyAnalyses.Add(new AiCurrencyAnalysis
                     {
+                        Text = string.IsNullOrEmpty(realCurrencyName) ? (string.IsNullOrEmpty(normalizedCurrencyName) ? currencyTypeValue.Value : normalizedCurrencyName) : realCurrencyName,
                         IconLink = iconLink,
                         StackSize = stackSize
                     });
@@ -285,6 +284,8 @@ namespace Menagerie.Core.Services
             exaltedValue = chaosValue / _poeNinjaService.GetCurrencyChaosValue("Exalted Orb");
 
             OnTradeWindowScanned?.Invoke((float)chaosValue, (float)exaltedValue, aiCurrencyAnalyses, result);
+
+            _runningAiAnalysis = false;
         }
 
         private void VerifyMapModifiers()

@@ -31,7 +31,8 @@ namespace Menagerie.Core.Services
         private const string LOCAL_PYTHON_EXE_PATH = "./ML/python/python.exe";
         private const string ML_SERVER_PATH = "./server.py";
         private const string TRAINED_MODELS_FOLDER = "./ML/trained/";
-        private const string TRAINED_MODELS_LATEST_RELEASE_URL = "https://github.com/nomis51/poe-ml/releases/download/v0.1.0/trained_models.zip";
+        private const string TRAINED_MODELS_LATEST_RELEASE_URL = "https://github.com/nomis51/poe-ml/releases/download/v1.0.0/trained_models.zip";
+        private const string TRAINED_MODELS_VERSION_URL = "https://github.com/nomis51/poe-ml/releases/download/v1.0.0/version.txt";
         public const string TEMP_FOLDER = "./ML/.temp/";
         private readonly Uri _pythonServerUrl = new("http://localhost:8302");
         private readonly JsonSerializerSettings _jsonSerializerSettings;
@@ -163,6 +164,35 @@ namespace Menagerie.Core.Services
 
                 DownloadTrainedModels();
             }
+            else
+            {
+                var versionPath = $"{TRAINED_MODELS_FOLDER}/version.txt";
+                var tempVersionPath = $"{TRAINED_MODELS_FOLDER}/temp-version.txt";
+
+                if (!File.Exists(versionPath)) return;
+
+                var currentVersion = File.ReadAllText(versionPath);
+
+                using var client = new WebClient();
+                client.DownloadFile(TRAINED_MODELS_VERSION_URL, tempVersionPath);
+
+                var tempVersion = File.ReadAllText(tempVersionPath);
+
+                if (tempVersion != currentVersion)
+                {
+                    if (Directory.Exists(TRAINED_MODELS_FOLDER))
+                    {
+                        Directory.Delete(TRAINED_MODELS_FOLDER, true);
+                    }
+
+                    DownloadTrainedModels();
+                }
+
+                if (File.Exists(tempVersionPath))
+                {
+                    File.Delete(tempVersionPath);
+                }
+            }
         }
 
         private static void DownloadTrainedModels()
@@ -174,6 +204,10 @@ namespace Menagerie.Core.Services
             client.DownloadFile(TRAINED_MODELS_LATEST_RELEASE_URL, zipFilePath);
 
             ZipFile.ExtractToDirectory(zipFilePath, $"{TRAINED_MODELS_FOLDER}/");
+
+            File.Delete(zipFilePath);
+
+            client.DownloadFile(TRAINED_MODELS_VERSION_URL, $"{TRAINED_MODELS_FOLDER}/version.txt");
         }
 
         private static void EnsureTrainedFolderExists()
@@ -227,6 +261,7 @@ namespace Menagerie.Core.Services
         private List<Bitmap> SliceImage(Image image, int rows, int cols, int width, int height)
         {
             List<Bitmap> images = new(rows * cols);
+            int offseter = 0;
 
             for (var i = 0; i < rows; i++)
             {
@@ -234,9 +269,19 @@ namespace Menagerie.Core.Services
                 {
                     var bmp = new Bitmap(width, height);
                     var graphics = Graphics.FromImage(bmp);
-                    graphics.DrawImage(image, new Rectangle(0, 0, width, height), new Rectangle(i * width, j * height, width, height), GraphicsUnit.Pixel);
+                    graphics.DrawImage(image, new Rectangle(0, 0, width, height), new Rectangle(i * width, j * height, width - (offseter == 0 ? 0 : 1), height), GraphicsUnit.Pixel);
                     graphics.Dispose();
                     images.Add(bmp);
+
+                    // Dumb code, but the trade window doesn't keep the same square size everywhere
+                    // Looks like 53x53 in Gimp, but if you check the whole window size
+                    // 12x53 != trade window width and 5x53 != trade window height
+                    // There's a ~0.4 offset on the width and ~0.2 offset on the height
+                    ++offseter;
+                    if(offseter > 3)
+                    {
+                        offseter = 0;
+                    }
                 }
             }
 
@@ -269,6 +314,11 @@ namespace Menagerie.Core.Services
             var images = SliceImage(image, AppService.Instance.TradeWindowRowsAndColumns.Width, AppService.Instance.TradeWindowRowsAndColumns.Height,
                 AppService.Instance.TradeWindowSquareSize.Width, AppService.Instance.TradeWindowSquareSize.Height);
             List<Tuple<string, string>> imageIds = new();
+
+            if (!Directory.Exists(TEMP_FOLDER))
+            {
+                Directory.CreateDirectory(TEMP_FOLDER);
+            }
 
             images.ForEach(i =>
             {
