@@ -94,6 +94,50 @@ namespace Menagerie.Core.Services
             {
                 "regret",
                 "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyPassiveSkillRefund.png?v=1de687952ce56385b74ac450f97fcc33"
+            },
+            {
+                "sextant",
+                "https://web.poecdn.com/image/Art/2DItems/Currency/AtlasRadiusTier1.png?v=7c21fc06120d910018893083227406df"
+            },
+            {
+                "prime sextant",
+                "https://web.poecdn.com/image/Art/2DItems/Currency/AtlasRadiusTier2.png?v=043e5f4d8c52af6b302e30afaffa5eba"
+            },
+            {
+                "awakened sextant",
+                "https://web.poecdn.com/image/Art/2DItems/Currency/AtlasRadiusTier3.png?v=d69377f526ff51c408461b0cee4d4ade"
+            },
+            {
+                "augment",
+                "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyAddModToMagic.png?v=97e63b85807f2419f4208482fd0b4859"
+            },
+            {
+                "annul",
+                "https://web.poecdn.com/image/Art/2DItems/Currency/AnnullOrb.png?v=f9a0f8b21515c8abf517e9648cfc7455"
+            },
+            {
+                "regal",
+                "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyUpgradeMagicToRare.png?v=1187a8511b47b35815bd75698de1fa2a"
+            },
+            {
+                "scrap",
+                "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyArmourQuality.png?v=251e204e4ec325f75ce8ef75b2dfbeb8"
+            },
+            {
+                "portal",
+                "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyPortal.png?v=728696ea10d4fb1e789039debc5d8c3c"
+            },
+            {
+                "scroll",
+                "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyIdentification.png?v=1b9b38c45be95c59d8900f91b2afd58b"
+            },
+            {
+                "harbinger",
+                "https://web.poecdn.com/image/Art/2DItems/Currency/HarbingerOrb.png?v=a61bf3add692a2fe74bb5f39213f4d93"
+            },
+            {
+                "horizon",
+                "https://web.poecdn.com/image/Art/2DItems/Currency/HorizonOrb.png?v=f3b3343dc61c60e667003bbdbbdb2374"
             }
         };
 
@@ -183,6 +227,17 @@ namespace Menagerie.Core.Services
                 "bauble" => "Glassblower's Bauble",
                 "souring" => "Orb of Scouring",
                 "regret" => "Orb of Regret",
+                "augment" => "Orb of Augmentation",
+                "sextant" => "Simple Sextant",
+                "prime sextant" => "Prime Sextant",
+                "awakened sextant" => "Awakened Sextant",
+                "annul" => "Orb of Annulment",
+                "regal" => "Regal Orb",
+                "scrap" => "Armourer's Scrap",
+                "portal" => "Portal Scroll",
+                "scroll" => "Scroll of Wisdom",
+                "harbinger" => "Harbinger's Orb",
+                "horizon" => "Orb of Horizon",
                 _ => text
             };
         }
@@ -211,6 +266,17 @@ namespace Menagerie.Core.Services
                 "Glassblower's Bauble" => "bauble",
                 "Orb of Scouring" => "scouring",
                 "Orb of Regret" => "regret",
+                "Orb of Augmentation" => "augment",
+                "Simple Sextant" => "sextant",
+                "Prime Sextant" => "prime sextant",
+                "Awakened Sextant" => "awakened sextant",
+                "Orb of Annulment" => "annul",
+                "Regal Orb" => "regal",
+                "Armourer's Scrap" => "scrap",
+                "Portal Scroll" => "portal",
+                "Scroll of Wisdom" => "scroll",
+                "Harbinger's Orb" => "harbinger",
+                "Orb of Horizon" => "horizon",
                 _ => text
             };
         }
@@ -240,6 +306,17 @@ namespace Menagerie.Core.Services
                 "glassblower_bauble" => "bauble",
                 "orb_of_scouring" => "scouring",
                 "orb_of_regret" => "regret",
+                "orb_of_augmentation" => "augment",
+                "simple_sextant" => "sextant",
+                "prime_sextant" => "prime sextant",
+                "awakened_sextant" => "awakened sextant",
+                "orb_of_annulment" => "annul",
+                "regal_orb" => "regal",
+                "armourer_scrap" => "scrap",
+                "portal_scroll" => "portal",
+                "scroll_of_wisdom" => "scroll",
+                "harbinger_orb" => "harbinger",
+                "orb_of_horizon" => "horizon",
                 _ => text
             };
         }
