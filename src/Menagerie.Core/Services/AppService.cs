@@ -363,7 +363,7 @@ namespace Menagerie.Core.Services
 
         public void ShareAiAnalysis(PredictionResponse response)
         {
-            _ = _cloudDataService.InsertAiAnalyzes(response);
+            _cloudDataService.InsertAiAnalyzes(response);
         }
 
         public void TranslateMessage(string text, string targetLanguage = "", string sourceLanguage = "",

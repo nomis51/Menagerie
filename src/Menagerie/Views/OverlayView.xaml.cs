@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using AdonisUI.Controls;
 using LiteDB;
 using Point = System.Windows.Point;
+using System.Windows.Media;
 
 namespace Menagerie.Views
 {
@@ -40,7 +41,7 @@ namespace Menagerie.Views
         private Point _dragStart;
         private Vector _dragStartOffset;
 
-        private OverlayViewModel _vm => (OverlayViewModel) DataContext;
+        private OverlayViewModel _vm => (OverlayViewModel)DataContext;
 
         public OverlayView()
         {
@@ -48,8 +49,8 @@ namespace Menagerie.Views
 
             Log.Trace("Initializing Overlay");
 
-            _screenRect = new Rectangle(0, 0, (int) SystemParameters.FullPrimaryScreenWidth,
-                (int) SystemParameters.FullPrimaryScreenHeight);
+            _screenRect = new Rectangle(0, 0, (int)SystemParameters.FullPrimaryScreenWidth,
+                (int)SystemParameters.FullPrimaryScreenHeight);
 
             SourceInitialized += OverlayWindow_SourceInitialized;
             Loaded += OverlayWindow_Loaded;
@@ -86,8 +87,8 @@ namespace Menagerie.Views
 
             if (string.IsNullOrEmpty(message) || message.Trim().Length == 0) return;
 
-            OverlayViewModel.SendTranslatedMessage(message, (string) cboTargetLang.SelectedValue,
-                (string) cboSourceLang.SelectedValue, true);
+            OverlayViewModel.SendTranslatedMessage(message, (string)cboTargetLang.SelectedValue,
+                (string)cboSourceLang.SelectedValue, true);
             HideTranslateInput();
         }
 
@@ -206,7 +207,7 @@ namespace Menagerie.Views
             Log.Trace("Busy button clicked");
             AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
-            _vm.SendBusyWhisper(new ObjectId((string) ((Button) sender).Tag));
+            _vm.SendBusyWhisper(new ObjectId((string)((Button)sender).Tag));
         }
 
         private void btnRemove_Click(object sender, RoutedEventArgs e)
@@ -215,7 +216,7 @@ namespace Menagerie.Views
             AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
 
-            var id = new ObjectId((string) ((Button) sender).Tag);
+            var id = new ObjectId((string)((Button)sender).Tag);
             var offer = _vm.GetOffer(id);
 
             if (offer.PlayerInvited)
@@ -234,7 +235,7 @@ namespace Menagerie.Views
             AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
 
-            var id = new ObjectId((string) ((Button) sender).Tag);
+            var id = new ObjectId((string)((Button)sender).Tag);
             var offer = _vm.GetOffer(id);
 
             if (!offer.PlayerInvited)
@@ -253,7 +254,7 @@ namespace Menagerie.Views
             AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
 
-            var id = new ObjectId((string) ((Grid) sender).Tag);
+            var id = new ObjectId((string)((Grid)sender).Tag);
             var offer = _vm.GetOffer(id);
 
             if (offer == null) return;
@@ -298,7 +299,7 @@ namespace Menagerie.Views
             AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
 
-            var id = new ObjectId((string) ((Button) sender).Tag);
+            var id = new ObjectId((string)((Button)sender).Tag);
 
             _vm.SendJoinHideoutCommand(id);
         }
@@ -309,7 +310,7 @@ namespace Menagerie.Views
             AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
 
-            var id = new ObjectId((string) ((Button) sender).Tag);
+            var id = new ObjectId((string)((Button)sender).Tag);
 
             _vm.SendTradeRequest(id, true);
         }
@@ -320,7 +321,7 @@ namespace Menagerie.Views
             AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
 
-            var id = new ObjectId((string) ((Button) sender).Tag);
+            var id = new ObjectId((string)((Button)sender).Tag);
 
             _vm.SendLeave(id);
         }
@@ -565,8 +566,29 @@ namespace Menagerie.Views
 
         private void btnShareAiAnalysis_Click(object sender, RoutedEventArgs e)
         {
-            _vm.ShareAiAnalysis();
-            // TODO: UI effect, notification, something to tell "Hey, it works! Thanks!"
+            if (_vm.AnyPredictionResponseToShare)
+            {
+                _vm.ShareAiAnalysis();
+            }
+            else
+            {
+                btnShareAiAnalysis.MaxWidth = 140;
+                btnShareAiAnalysis.Margin = new Thickness(250, 15, 0, 0);
+            }
+
+            lblContent_btnShareAiAnalysis.Content = _vm.AnyPredictionResponseToShare ? "Shared!" : "Nothing to share";
+
+            Task.Run(() =>
+            {
+                Thread.Sleep(4000);
+
+                App.Current.Dispatcher.Invoke(delegate
+                {
+                    lblContent_btnShareAiAnalysis.Content = "Share Error";
+                    btnShareAiAnalysis.MaxWidth = 110;
+                    btnShareAiAnalysis.Margin = new Thickness(290, 15, 0, 0);
+                });
+            });
         }
     }
 }

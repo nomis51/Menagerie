@@ -89,7 +89,7 @@
                                   Icon="Solid_ShareAlt"
                                   Foreground="#a0aec0"
                                   HorizontalAlignment="Center" />
-                    <Label VerticalAlignment="Center" Margin="5,0,0,0" Content="Share Error"></Label>
+                    <Label Name="lblContent_btnShareAiAnalysis" VerticalAlignment="Center" Margin="5,0,0,0" Content="Share Error"></Label>
                 </DockPanel>
             </Button.Content>
         </Button>

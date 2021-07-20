@@ -101,6 +101,8 @@ namespace Menagerie.ViewModels
         public Visibility IsOutgoingOffersFilterVisibility => OutgoingOffers.Value.Count > 1 || _fullOutgoingOffers != null ? Visibility.Visible : Visibility.Hidden;
         public Visibility AiCurrenciesAnalysisVisibility => AiCurrenciesAnalysis.Value.Count > 0 || AiCurrencyAnalysisChaosValue.Value > 0.0f || AiCurrencyAnalysisExaltedValue.Value > 0.0f ? Visibility.Visible : Visibility.Hidden;
 
+        public bool AnyPredictionResponseToShare => _currentPredictionResponse != null;
+
         #endregion
 
         #region Members
@@ -266,6 +268,7 @@ namespace Menagerie.ViewModels
 
         public void ShareAiAnalysis()
         {
+            AppService.Instance.FocusGame();
             AppService.Instance.ShareAiAnalysis(_currentPredictionResponse);
         }
 
