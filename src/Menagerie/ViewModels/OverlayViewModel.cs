@@ -99,7 +99,7 @@ namespace Menagerie.ViewModels
         public Visibility WeaponsVisibility => ChaosRecipe.Value.NeedWeapons ? Visibility.Visible : Visibility.Hidden;
         public Visibility IsIncomingOffersFilterVisibility => IncomingOffers.Value.Count > 1 || _fullIncomingOffers != null ? Visibility.Visible : Visibility.Hidden;
         public Visibility IsOutgoingOffersFilterVisibility => OutgoingOffers.Value.Count > 1 || _fullOutgoingOffers != null ? Visibility.Visible : Visibility.Hidden;
-        public Visibility AiCurrenciesAnalysisVisibility => AiCurrenciesAnalysis.Value.Count > 1 || AiCurrencyAnalysisChaosValue.Value > 0.0f || AiCurrencyAnalysisExaltedValue.Value > 0.0f ? Visibility.Visible : Visibility.Hidden;
+        public Visibility AiCurrenciesAnalysisVisibility => AiCurrenciesAnalysis.Value.Count > 0 || AiCurrencyAnalysisChaosValue.Value > 0.0f || AiCurrencyAnalysisExaltedValue.Value > 0.0f ? Visibility.Visible : Visibility.Hidden;
 
         #endregion
 
@@ -227,40 +227,40 @@ namespace Menagerie.ViewModels
 
 
             // TODO: remove, test only
-            AiCurrencyAnalysisChaosValue.Value = (float)((89 * 6) + 2.0f + (3 / 4.2) + (4 / 1.7f) + (1 / 1.3f) + (2 / 8.5f));
-            AiCurrencyAnalysisExaltedValue.Value = AiCurrencyAnalysisChaosValue.Value / 89.0f;
-            AiCurrenciesAnalysis.Value = new BindableCollection<AiCurrencyAnalysis>
-            {
-                new AiCurrencyAnalysis()
-                {
-                    StackSize = 2,
-                    IconLink = "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyUpgradeToRare.png?v=89c110be97333995522c7b2c29cae728"
-                },
-                 new AiCurrencyAnalysis()
-                {
-                    StackSize = 1,
-                    IconLink = "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyGemQuality.png?v=f11792b6dbd2f5f869351151bc3a4539"
-                },
-                  new AiCurrencyAnalysis()
-                {
-                    StackSize = 3,
-                    IconLink = "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyRerollSocketColours.png?v=9d377f2cf04a16a39aac7b14abc9d7c3"
-                },
-                   new AiCurrencyAnalysis()
-                {
-                    StackSize = 4,
-                    IconLink = "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyVaal.png?v=64114709d67069cd665f8f1a918cd12a"
-                },
-                    new AiCurrencyAnalysis()
-                {
-                    StackSize = 2,
-                    IconLink = "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyRerollRare.png?v=c60aa876dd6bab31174df91b1da1b4f9"
-                },
-                new AiCurrencyAnalysis(){
-                    StackSize = 6,
-                    IconLink = "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyAddModToRare.png?v=1745ebafbd533b6f91bccf588ab5efc5"
-                },
-            };
+            // AiCurrencyAnalysisChaosValue.Value = (float)((89 * 6) + 2.0f + (3 / 4.2) + (4 / 1.7f) + (1 / 1.3f) + (2 / 8.5f));
+            // AiCurrencyAnalysisExaltedValue.Value = AiCurrencyAnalysisChaosValue.Value / 89.0f;
+            // AiCurrenciesAnalysis.Value = new BindableCollection<AiCurrencyAnalysis>
+            // {
+            //     new AiCurrencyAnalysis()
+            //     {
+            //         StackSize = 2,
+            //         IconLink = "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyUpgradeToRare.png?v=89c110be97333995522c7b2c29cae728"
+            //     },
+            //      new AiCurrencyAnalysis()
+            //     {
+            //         StackSize = 1,
+            //         IconLink = "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyGemQuality.png?v=f11792b6dbd2f5f869351151bc3a4539"
+            //     },
+            //       new AiCurrencyAnalysis()
+            //     {
+            //         StackSize = 3,
+            //         IconLink = "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyRerollSocketColours.png?v=9d377f2cf04a16a39aac7b14abc9d7c3"
+            //     },
+            //        new AiCurrencyAnalysis()
+            //     {
+            //         StackSize = 4,
+            //         IconLink = "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyVaal.png?v=64114709d67069cd665f8f1a918cd12a"
+            //     },
+            //         new AiCurrencyAnalysis()
+            //     {
+            //         StackSize = 2,
+            //         IconLink = "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyRerollRare.png?v=c60aa876dd6bab31174df91b1da1b4f9"
+            //     },
+            //     new AiCurrencyAnalysis(){
+            //         StackSize = 6,
+            //         IconLink = "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyAddModToRare.png?v=1745ebafbd533b6f91bccf588ab5efc5"
+            //     },
+            // };
         }
 
         private void AppService_OnTradeWindowScanned(float chaosValue, float exaltedValue, List<CoreModels.ML.AiCurrencyAnalysis> aiCurrencyAnalyses)
@@ -271,6 +271,7 @@ namespace Menagerie.ViewModels
             AiCurrencyAnalysisExaltedValue.Value = exaltedValue;
             AiCurrenciesAnalysis.Value.Clear();
             AiCurrenciesAnalysis.Value.AddRange(localAiCurrencyAnalyses);
+            AiCurrenciesAnalysis.Notify();
         }
 
         private void AppService_OnMapModifiersVerified(List<Core.Models.ItemsScan.MapModifier> modifiers)
