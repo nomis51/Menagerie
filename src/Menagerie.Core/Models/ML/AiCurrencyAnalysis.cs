@@ -8,6 +8,7 @@ namespace Menagerie.Core.Models.ML
 {
     public class AiCurrencyAnalysis
     {
+        public string Text { get; set; }
         public int StackSize { get; set; }
         public string IconLink { get; set; }
     }
