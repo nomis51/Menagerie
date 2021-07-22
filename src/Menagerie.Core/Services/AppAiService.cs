@@ -12,6 +12,8 @@ using System.Security;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Emgu.CV;
+using Emgu.CV.Structure;
 using LiteDB.Engine;
 using Menagerie.Core.Abstractions;
 using Menagerie.Core.Enums;
@@ -36,6 +38,7 @@ namespace Menagerie.Core.Services
         public const string TEMP_FOLDER = "./ML/.temp/";
         private readonly Uri _pythonServerUrl = new("http://localhost:8302");
         private readonly JsonSerializerSettings _jsonSerializerSettings;
+        private bool _pythonServerReady;
 
         private readonly List<string> _trainedModelsName = new()
         {
@@ -142,11 +145,12 @@ namespace Menagerie.Core.Services
                         // TODO: log to serilog
                         // var errorOutput = _pythonServerProcess.StandardError.ReadToEnd();
                         // var output = _pythonServerProcess.StandardOutput.ReadToEnd();
+                        _pythonServerReady = true;
                         _pythonServerProcess.WaitForExit();
                         _pythonServerProcess.Close();
                     }
 
-                    Thread.Sleep(1000);
+                    Thread.Sleep(5000);
                 }
             });
             // ReSharper disable once FunctionNeverReturns
@@ -278,7 +282,7 @@ namespace Menagerie.Core.Services
                     // 12x53 != trade window width and 5x53 != trade window height
                     // There's a ~0.4 offset on the width and ~0.2 offset on the height
                     ++offseter;
-                    if(offseter > 3)
+                    if (offseter > 3)
                     {
                         offseter = 0;
                     }
@@ -298,6 +302,55 @@ namespace Menagerie.Core.Services
 
                 File.Delete(path);
             }
+        }
+
+        private void KeepPythonServerAlive()
+        {
+            Task.Run(async () =>
+            {
+                while (true)
+                {
+                    var response = await _httpService.Client.GetAsync("/verify");
+
+                    Thread.Sleep(5000);
+                }
+            });
+        }
+
+        private void LookForTradeWindow()
+        {
+            Task.Run(() =>
+            {
+                Stopwatch timer = new();
+                var bounds = new Rectangle(528, 63, 201, 61);
+                var cvRefMat = CvInvoke.Imread("./Assets/trade-window-title.png", Emgu.CV.CvEnum.ImreadModes.Grayscale);
+                var cvRefImage = cvRefMat.ToImage<Gray, byte>();
+                int sleepTime = 1000;
+
+                while (true)
+                {
+                    timer.Restart();
+                    var image = AppService.Instance.CaptureArea(bounds);
+                    var cvImage = image.ToImage<Gray, byte>();
+
+                    var result = cvRefImage.MatchTemplate(cvRefImage, Emgu.CV.CvEnum.TemplateMatchingType.CcoeffNormed);
+
+                    double[] minValues, maxValues;
+                    Point[] minLocations, maxLocations;
+                    result.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
+
+                    if (maxValues[0] > 0.9)
+                    {
+                        _ = Task.Run(async () => await AppService.Instance.AnalyzeTradeWindow());
+                    }
+
+                    timer.Stop();
+
+                    sleepTime = 1000 - (int)timer.ElapsedMilliseconds;
+
+                    Thread.Sleep(sleepTime < 0 ? 0 : sleepTime);
+                }
+            });
         }
 
         #endregion
@@ -333,10 +386,12 @@ namespace Menagerie.Core.Services
 
         public async Task<PredictionResponse> Predict(PredictionRequest request)
         {
+            if (!_pythonServerReady) return new PredictionResponse();
+
             try
             {
-                var response = await _httpService.Client.PostAsync($"/api",
-                    new StringContent(JsonConvert.SerializeObject(request, _jsonSerializerSettings), Encoding.UTF8, "application/json"));
+                var body = new StringContent(JsonConvert.SerializeObject(request, _jsonSerializerSettings), Encoding.UTF8, "application/json");
+                var response = await _httpService.Client.PostAsync($"/api", body);
 
                 if (!response.IsSuccessStatusCode) return default;
 
@@ -368,7 +423,9 @@ namespace Menagerie.Core.Services
         public void Start()
         {
             StartPythonServer();
+            KeepPythonServerAlive();
             CleanTempFolder();
+            LookForTradeWindow();
         }
 
         #endregion

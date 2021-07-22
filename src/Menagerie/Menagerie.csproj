@@ -46,6 +46,7 @@
 
   <ItemGroup>
     <None Remove="Assets\Audio\click.wav" />
+    <None Remove="Assets\trade-window-title.png" />
     <Content Include="Assets\Audio\click.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -102,6 +103,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Remove="Data\locations.json" />
+    <Content Include="Assets\trade-window-title.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Data\locations.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

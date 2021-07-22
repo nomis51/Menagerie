@@ -246,6 +246,12 @@ namespace Menagerie.Core.Services
             double chaosValue = 0.0f;
             double exaltedValue = 0.0f;
 
+            if (result.Images == null)
+            {
+                _runningAiAnalysis = false;
+                return;
+            }
+
             foreach (var i in result.Images)
             {
                 var currencyTypeValue = i.Predictions.Find(p => p.Model == "currency_type");
@@ -965,6 +971,11 @@ namespace Menagerie.Core.Services
         private void OnMapModifiersVerified(List<MapModifier> modifiers)
         {
             MapModifiersVerified?.Invoke(modifiers);
+        }
+
+        public Bitmap CaptureArea(Rectangle bounds)
+        {
+            return _screenCaptureService.CaptureArea(bounds);
         }
 
         public void Start()
