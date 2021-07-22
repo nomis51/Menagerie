@@ -21,6 +21,7 @@ using Menagerie.Core.Models;
 using Menagerie.Core.Models.ML;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.Windows;
 
 namespace Menagerie.Core.Services
 {
@@ -33,7 +34,7 @@ namespace Menagerie.Core.Services
         private const string LOCAL_PYTHON_EXE_PATH = "./ML/python/python.exe";
         private const string ML_SERVER_PATH = "./server.py";
         private const string TRAINED_MODELS_FOLDER = "./ML/trained/";
-        private const string TRAINED_MODELS_LATEST_RELEASE_URL = "https://github.com/nomis51/poe-ml/releases/download/v1.0.0/trained_models.zip";
+        private const string TRAINED_MODELS_LATEST_RELEASE_URL = "https://github.com/nomis51/poe-ml/releases/download/v1.0.0/{}.zip";
         private const string TRAINED_MODELS_VERSION_URL = "https://github.com/nomis51/poe-ml/releases/download/v1.0.0/version.txt";
         public const string TEMP_FOLDER = "./ML/.temp/";
         private readonly Uri _pythonServerUrl = new("http://localhost:8302");
@@ -44,9 +45,6 @@ namespace Menagerie.Core.Services
         {
             "currency_type",
             "stack_size",
-            "item_links",
-            "item_sockets",
-            "socket_color"
         };
 
         #endregion
@@ -54,7 +52,7 @@ namespace Menagerie.Core.Services
         #region Members
 
         private readonly bool _useLocalPython = false;
-        private readonly ProcessStartInfo _pythonServerProcessInfos;
+        private ProcessStartInfo _pythonServerProcessInfos;
         private Process _pythonServerProcess;
         private readonly HttpService _httpService;
 
@@ -69,25 +67,6 @@ namespace Menagerie.Core.Services
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
             _httpService = new HttpService(_pythonServerUrl);
-
-            if (!IsPythonInstalled())
-            {
-                DownloadPython();
-                _useLocalPython = true;
-            }
-
-            _pythonServerProcessInfos = new ProcessStartInfo()
-            {
-                FileName = _useLocalPython ? LOCAL_PYTHON_EXE_PATH : "python.exe",
-                Arguments = ML_SERVER_PATH,
-                WorkingDirectory = Environment.CurrentDirectory + "/ML/",
-                UseShellExecute = false,
-                RedirectStandardError = true,
-                RedirectStandardOutput = true,
-                CreateNoWindow = true
-            };
-
-            EnsureTrainedModelsAvailable();
         }
 
         #endregion
@@ -106,6 +85,8 @@ namespace Menagerie.Core.Services
 
         private void StartPythonServer()
         {
+            AppService.ShowDebugMessage("Starting Ai server...");
+
             Task.Run(async () =>
             {
                 try
@@ -140,6 +121,13 @@ namespace Menagerie.Core.Services
                 {
                     _pythonServerProcess = Process.Start(_pythonServerProcessInfos);
 
+
+                    _ = Task.Run(() =>
+                      {
+                          Thread.Sleep(10000);
+                          AppService.ShowDebugMessage("");
+                      });
+
                     if (_pythonServerProcess != null)
                     {
                         // TODO: log to serilog
@@ -158,6 +146,8 @@ namespace Menagerie.Core.Services
 
         private void EnsureTrainedModelsAvailable()
         {
+            AppService.ShowDebugMessage("Verifying AI models...");
+
             if (_trainedModelsName.Any(trainedModelName => !File.Exists($"{TRAINED_MODELS_FOLDER}/{trainedModelName}/{trainedModelName}.h5") ||
                                                            !File.Exists($"{TRAINED_MODELS_FOLDER}/{trainedModelName}/{trainedModelName}-classes.txt")))
             {
@@ -199,17 +189,22 @@ namespace Menagerie.Core.Services
             }
         }
 
-        private static void DownloadTrainedModels()
+        private void DownloadTrainedModels()
         {
+            AppService.ShowDebugMessage("Downloading AI models...");
+
             EnsureTrainedFolderExists();
-
             using var client = new WebClient();
-            var zipFilePath = $"{TRAINED_MODELS_FOLDER}/trainedModels.zip";
-            client.DownloadFile(TRAINED_MODELS_LATEST_RELEASE_URL, zipFilePath);
 
-            ZipFile.ExtractToDirectory(zipFilePath, $"{TRAINED_MODELS_FOLDER}/");
+            foreach(var name in _trainedModelsName)
+            {
+                var zipFilePath = $"{TRAINED_MODELS_FOLDER}/{name}.zip";
+                client.DownloadFile(TRAINED_MODELS_LATEST_RELEASE_URL.Replace("{}", name), zipFilePath);
 
-            File.Delete(zipFilePath);
+                ZipFile.ExtractToDirectory(zipFilePath, $"{TRAINED_MODELS_FOLDER}/");
+
+                File.Delete(zipFilePath);
+            }
 
             client.DownloadFile(TRAINED_MODELS_VERSION_URL, $"{TRAINED_MODELS_FOLDER}/version.txt");
         }
@@ -243,6 +238,8 @@ namespace Menagerie.Core.Services
 
         private static bool IsPythonInstalled()
         {
+            AppService.ShowDebugMessage("Checking dependencies...");
+
             var start = new ProcessStartInfo
             {
                 FileName = "python.exe",
@@ -260,6 +257,42 @@ namespace Menagerie.Core.Services
             var result = reader.ReadToEnd();
 
             return string.IsNullOrEmpty(result);
+        }
+
+        private static void EnsureDependenciesInstalled()
+        {
+            var start = new ProcessStartInfo
+            {
+                FileName = "python.exe",
+                Arguments = "-m ensurepip",
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            using var pipCheckProcess = Process.Start(start);
+
+            if (pipCheckProcess == null) throw new ApplicationException("Cannot verify pip installation");
+
+            pipCheckProcess.WaitForExit();
+            pipCheckProcess.Close();
+
+            start = new ProcessStartInfo
+            {
+                FileName = "python.exe",
+                Arguments = "-m pip install --user -r ./ML/requirements.txt",
+                UseShellExecute = false,
+                RedirectStandardError = true,
+                CreateNoWindow = true
+            };
+
+            using var depsInstallProcess = Process.Start(start);
+
+            if (depsInstallProcess == null) throw new ApplicationException("Cannot install ML server dependencies");
+
+            var errors = depsInstallProcess.StandardError.ReadToEnd();
+
+            depsInstallProcess.WaitForExit();
+            depsInstallProcess.Close();
         }
 
         private List<Bitmap> SliceImage(Image image, int rows, int cols, int width, int height)
@@ -333,11 +366,12 @@ namespace Menagerie.Core.Services
                     var image = AppService.Instance.CaptureArea(bounds);
                     var cvImage = image.ToImage<Gray, byte>();
 
-                    var result = cvRefImage.MatchTemplate(cvRefImage, Emgu.CV.CvEnum.TemplateMatchingType.CcoeffNormed);
+                    var result = cvImage.MatchTemplate(cvRefImage, Emgu.CV.CvEnum.TemplateMatchingType.CcoeffNormed);
 
                     double[] minValues, maxValues;
                     Point[] minLocations, maxLocations;
                     result.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
+                    result.Dispose();
 
                     if (maxValues[0] > 0.9)
                     {
@@ -422,10 +456,35 @@ namespace Menagerie.Core.Services
 
         public void Start()
         {
-            StartPythonServer();
-            KeepPythonServerAlive();
-            CleanTempFolder();
-            LookForTradeWindow();
+            Task.Run(() =>
+            {
+
+                if (!IsPythonInstalled())
+                {
+                    return;
+                    // TODO: notify python is not installed
+                }
+
+                EnsureDependenciesInstalled();
+
+                _pythonServerProcessInfos = new ProcessStartInfo()
+                {
+                    FileName = _useLocalPython ? LOCAL_PYTHON_EXE_PATH : "python.exe",
+                    Arguments = ML_SERVER_PATH,
+                    WorkingDirectory = Environment.CurrentDirectory + "/ML/",
+                    UseShellExecute = false,
+                    RedirectStandardError = true,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true
+                };
+
+                EnsureTrainedModelsAvailable();
+
+                StartPythonServer();
+                KeepPythonServerAlive();
+                CleanTempFolder();
+                LookForTradeWindow();
+            });
         }
 
         #endregion
