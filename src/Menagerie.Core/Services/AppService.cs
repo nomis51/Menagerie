@@ -109,6 +109,10 @@ namespace Menagerie.Core.Services
 
         public event TradeWindowScannedEvent OnTradeWindowScanned;
 
+        public delegate void DebugMessageEvent(string message);
+
+        public static event DebugMessageEvent OnDebugMessage;
+
         #endregion
 
         private IntPtr _overlayHandle;
@@ -219,6 +223,11 @@ namespace Menagerie.Core.Services
                 Shift = false,
                 Action = VerifyMapModifiers
             });
+        }
+
+        public static void ShowDebugMessage(string msg)
+        {
+            OnDebugMessage?.Invoke(msg);
         }
 
         public async Task AnalyzeTradeWindow()
