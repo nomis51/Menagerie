@@ -102,6 +102,7 @@ namespace Menagerie.ViewModels
         public Visibility AiCurrenciesAnalysisVisibility => AiCurrenciesAnalysis.Value.Count > 0 || AiCurrencyAnalysisChaosValue.Value > 0.0f || AiCurrencyAnalysisExaltedValue.Value > 0.0f ? Visibility.Visible : Visibility.Hidden;
         public ReactiveProperty<Visibility> AiAnalyseButtonVisibility { get; set; }
         public ReactiveProperty<bool> AnalyzeTradeWindowButtonEnabled { get; set; }
+        public ReactiveProperty<string> DebugMessage { get; set; }
 
         public bool AnyPredictionResponseToShare => _currentPredictionResponse != null;
 
@@ -218,6 +219,7 @@ namespace Menagerie.ViewModels
             };
             AiAnalyseButtonVisibility = new ReactiveProperty<Visibility>("AiAnalyseButtonVisibility", this, Visibility.Hidden);
             AnalyzeTradeWindowButtonEnabled = new ReactiveProperty<bool>("AnalyzeTradeWindowButtonEnabled", this, true);
+            DebugMessage = new ReactiveProperty<string>("DebugMessage", this, string.Empty);
 
             AppService.Instance.OnNewOffer += AppService_OnNewOffer;
             AppService.Instance.OnNewChatEvent += AppService_OnNewChatEvent;
@@ -229,6 +231,7 @@ namespace Menagerie.ViewModels
             AppService.Instance.ShowTranslateInputControl += AppService_OnShowTranslateInputControl;
             AppService.Instance.MapModifiersVerified += AppService_OnMapModifiersVerified;
             AppService.Instance.OnTradeWindowScanned += AppService_OnTradeWindowScanned;
+            AppService.OnDebugMessage += AppService_OnDebugMessage;
 
             UpdateService.NewUpdateInstalled += UpdateServiceOnNewUpdateInstalled;
 
@@ -268,6 +271,11 @@ namespace Menagerie.ViewModels
             //         IconLink = "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyAddModToRare.png?v=1745ebafbd533b6f91bccf588ab5efc5"
             //     },
             // };
+        }
+
+        private void AppService_OnDebugMessage(string message)
+        {
+            DebugMessage.Value = message;
         }
 
         public void ShareAiAnalysis()

@@ -81,7 +81,7 @@
             </Border>
         </DockPanel>
 
-        <Button x:Name="btnShareAiAnalysis" Visibility="{Binding AiCurrenciesAnalysisVisibility, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" Margin="150,15,0,0" MaxWidth="110"  MaxHeight="30" Cursor="Hand" HorizontalAlignment="Left" VerticalAlignment="Center" ToolTip="Share the current trade window analysis that is not right" Click="btnShareAiAnalysis_Click">
+        <Button x:Name="btnShareAiAnalysis" Visibility="{Binding AiCurrenciesAnalysisVisibility, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" Margin="290,15,0,0" MaxWidth="110"  MaxHeight="30" Cursor="Hand" HorizontalAlignment="Left" VerticalAlignment="Center" ToolTip="Share the current trade window analysis that is not right" Click="btnShareAiAnalysis_Click">
             <Button.Content>
                 <DockPanel>
                     <fa5:ImageAwesome Width="20"
@@ -94,8 +94,10 @@
             </Button.Content>
         </Button>
 
+        <TextBlock Text="{Binding DebugMessage.Value}"></TextBlock>
+
         <Button x:Name="btnDoAiAnalysis" IsEnabled="{Binding AnalyzeTradeWindowButtonEnabled.Value}"
-                Visibility="{Binding AiAnalyseButtonVisibility.Value, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" MaxWidth="180" Margin="260,15,0,0"  MaxHeight="30" Cursor="Hand" HorizontalAlignment="Left" VerticalAlignment="Center" ToolTip="Share the current trade window analysis that is not right" Click="btnDoAiAnalysis_Click">
+                Visibility="Hidden" Grid.Row="1" Grid.Column="1" MaxWidth="180" Margin="260,15,0,0"  MaxHeight="30" Cursor="Hand" HorizontalAlignment="Left" VerticalAlignment="Center" ToolTip="Share the current trade window analysis that is not right" Click="btnDoAiAnalysis_Click">
             <Button.Content>
                 <DockPanel>
                     <fa5:ImageAwesome Width="20"
