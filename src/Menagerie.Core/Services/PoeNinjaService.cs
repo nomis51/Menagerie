@@ -101,8 +101,10 @@ namespace Menagerie.Core.Services
                         .Result;
                     var result = HttpService.ReadResponse<PoeNinjaResult<PoeNinjaCurrency>>(response).Result;
 
+                    if (result == null) return;
+
                     var currencies = result.Lines.ToDictionary(line => line.CurrencyTypeName,
-                        line => new List<PoeNinjaCurrency>() {line});
+                        line => new List<PoeNinjaCurrency>() { line });
 
                     Log.Information($"Poe Ninja returned {currencies.Count} currencies");
 

@@ -118,7 +118,7 @@ namespace Menagerie.Core.Services
                 }
                 catch (Exception e)
                 {
-                    Log.Error("",e);
+                    Log.Error("", e);
                 }
             }
 
@@ -129,7 +129,7 @@ namespace Menagerie.Core.Services
             }
             catch (Exception e)
             {
-                Log.Error("",e);
+                Log.Error("", e);
             }
         }
 
@@ -164,7 +164,17 @@ namespace Menagerie.Core.Services
         public List<T> GetDocuments<T>(string collectionName, Predicate<T> predicate = null) where T : IDocument
         {
             Log.Information($"Reading db documents for {typeof(T)}");
-            var elements = JsonConvert.DeserializeObject<List<T>>(File.ReadAllText(collectionName));
+
+            List<T> elements = null;
+
+            try
+            {
+                elements = JsonConvert.DeserializeObject<List<T>>(File.ReadAllText(collectionName));
+            }
+            catch (Exception e)
+            {
+                Log.Error("GetDocuments " + e.Message);
+            }
 
             return elements == null ? new List<T>() : predicate == null ? elements : elements.FindAll(predicate);
         }

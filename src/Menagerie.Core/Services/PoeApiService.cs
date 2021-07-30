@@ -75,6 +75,8 @@ namespace Menagerie.Core.Services
 
         private async Task GetChaosRecipeStashTab()
         {
+            return;
+
             if (_authHttpService != null)
             {
                 var config = AppService.Instance.GetConfig();
@@ -138,48 +140,96 @@ namespace Menagerie.Core.Services
         {
             var result = new ChaosRecipeResult();
 
-            const string startStr = "https://web.poecdn.com/image/Art/2DItems/";
+            const string startStr = "https://web.poecdn.com/gen/image/";
 
             foreach (var item in tab.Items)
             {
                 if (item.FrameType != 2 || item.ItemLevel is < 60 or >= 75) continue;
-                var startIndex = item.IconUrl.IndexOf(startStr, StringComparison.Ordinal);
+                //var startIndex = item.IconUrl.IndexOf(startStr, StringComparison.Ordinal);
 
-                if (startIndex == -1)
+                //if (startIndex == -1)
+                //{
+                //    continue;
+                //}
+
+                //startIndex += startStr.Length;
+
+                //var endIndex = item.IconUrl.IndexOf("/", startIndex, StringComparison.Ordinal);
+
+                //if (endIndex == -1)
+                //{
+                //    continue;
+                //}
+
+                //var type = item.IconUrl.Substring(startIndex, endIndex - startIndex);
+
+                //if (type == "Weapons")
+                //{
+                //    var nextIndex = item.IconUrl.IndexOf("/", endIndex + 1, StringComparison.Ordinal);
+
+                //    if (nextIndex != -1)
+                //    {
+                //        type = item.IconUrl.Substring(startIndex, nextIndex - startIndex);
+                //    }
+                //}
+
+                //if (type == "Armours")
+                //{
+                //    var nextIndex = item.IconUrl.IndexOf("/", endIndex + 1, StringComparison.Ordinal);
+
+                //    if (nextIndex != -1)
+                //    {
+                //        type = item.IconUrl.Substring(startIndex, nextIndex - startIndex);
+                //    }
+                //}
+
+                var type = string.Empty;
+
+                if (item.Type.ToLower().EndsWith("gloves"))
                 {
-                    continue;
+                    type = "gloves";
+                }
+                else if (item.Type.ToLower().EndsWith("boots"))
+                {
+                    type = "boots";
+                }
+                else if (item.Type.ToLower().EndsWith("helmet"))
+                {
+                    type = "helmet";
+                }
+                else if (item.Type.ToLower().EndsWith("body"))
+                {
+                    type = "gloves";
+                }
+                else if (item.Type.ToLower().EndsWith("gloves"))
+                {
+                    type = "gloves";
+                }
+                else if (item.Type.ToLower().EndsWith("gloves"))
+                {
+                    type = "gloves";
+                }
+                else if (item.Type.ToLower().EndsWith("gloves"))
+                {
+                    type = "gloves";
+                }
+                else if (item.Type.ToLower().EndsWith("gloves"))
+                {
+                    type = "gloves";
+                }
+                else if (item.Type.ToLower().EndsWith("gloves"))
+                {
+                    type = "gloves";
+                }
+                else if (item.Type.ToLower().EndsWith("gloves"))
+                {
+                    type = "gloves";
+                }
+                else if (item.Type.ToLower().EndsWith("gloves"))
+                {
+                    type = "gloves";
                 }
 
-                startIndex += startStr.Length;
-
-                var endIndex = item.IconUrl.IndexOf("/", startIndex, StringComparison.Ordinal);
-
-                if (endIndex == -1)
-                {
-                    continue;
-                }
-
-                var type = item.IconUrl.Substring(startIndex, endIndex - startIndex);
-
-                if (type == "Weapons")
-                {
-                    var nextIndex = item.IconUrl.IndexOf("/", endIndex + 1, StringComparison.Ordinal);
-
-                    if (nextIndex != -1)
-                    {
-                        type = item.IconUrl.Substring(startIndex, nextIndex - startIndex);
-                    }
-                }
-
-                if (type == "Armours")
-                {
-                    var nextIndex = item.IconUrl.IndexOf("/", endIndex + 1, StringComparison.Ordinal);
-
-                    if (nextIndex != -1)
-                    {
-                        type = item.IconUrl.Substring(startIndex, nextIndex - startIndex);
-                    }
-                }
 
                 SetResult(type, ref result);
             }
@@ -204,7 +254,7 @@ namespace Menagerie.Core.Services
 
             var result = await HttpService.ReadResponse<SearchResult>(response);
 
-            if (result is not {Error: null})
+            if (result is not { Error: null })
             {
                 Log.Error("Error while getting trade request results");
                 return null;
@@ -350,9 +400,9 @@ namespace Menagerie.Core.Services
             var founds = new List<PricingResult>();
 
             foreach (var r in from r in _cache.Items.Results
-                let emptyName = string.IsNullOrEmpty(r.ItemName)
-                where ((!emptyName && r.ItemName == offer.ItemName) || (emptyName && r.ItemType == offer.ItemName))
-                select r)
+                              let emptyName = string.IsNullOrEmpty(r.ItemName)
+                              where ((!emptyName && r.ItemName == offer.ItemName) || (emptyName && r.ItemType == offer.ItemName))
+                              select r)
             {
                 foundItem = true;
                 founds.Add(r);
@@ -455,7 +505,7 @@ namespace Menagerie.Core.Services
             if (config != null && !string.IsNullOrEmpty(config.POESESSID))
             {
                 _authHttpService = new HttpService(_poeApiBaseUrl,
-                    new List<Cookie>() {new Cookie("POESESSID", config.POESESSID)});
+                    new List<Cookie>() { new Cookie("POESESSID", config.POESESSID) });
             }
 
             Task.Run(AutoUpdateItemsCache);
