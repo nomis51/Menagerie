@@ -503,7 +503,15 @@ namespace Menagerie.Core.Services
 
         public void NewClipboardText(string text)
         {
-            Task.Run(() => { _clientFileService.LogService.Parse(text); });
+            Task.Run(() =>
+            {
+                var entry =  _clientFileService.LogService.Parse(text);
+
+                if (entry.Types.Contains(LogEntryType.Trade) && entry.Types.Contains(LogEntryType.Outgoing))
+                {
+                    SendChatMessage(text);
+                }
+            });
         }
 
         public void StashApiUpdated()
