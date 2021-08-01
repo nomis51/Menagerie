@@ -703,7 +703,6 @@ namespace Menagerie.ViewModels
 
             if (overflowOffers.Count == 0) return;
 
-
             while (offers.Value.Count < 8 && offers.Value.Count > 0)
             {
                 offers.Value.Add(overflowOffers.Dequeue());

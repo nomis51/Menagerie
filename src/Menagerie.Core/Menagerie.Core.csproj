@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <PackageVersion>1.4.5</PackageVersion>
-    <AssemblyVersion>1.4.5</AssemblyVersion>
-    <FileVersion>1.4.5</FileVersion>
+    <PackageVersion>1.4.6</PackageVersion>
+    <AssemblyVersion>1.4.6</AssemblyVersion>
+    <FileVersion>1.4.6</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

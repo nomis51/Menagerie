@@ -44,7 +44,8 @@ namespace Menagerie.Core.Services
             "PathOfExile",
             "PathOfExile_Steam",
             "PathOfExile_x64",
-            "PathOfExile_x64Steam"
+            "PathOfExile_x64Steam",
+            "PathOfExileSteam"
         };
 
         #endregion
@@ -93,7 +94,7 @@ namespace Menagerie.Core.Services
 
                 foreach (var proc in processes)
                 {
-                    if (!_poeProcesses.Contains(proc.ProcessName) || proc.HasExited) continue;
+                    if (_poeProcesses.FindIndex(name => proc.ProcessName == name && proc.ProcessName.Contains(name)) == -1 || proc.HasExited) continue;
                     Log.Information($"PoE process found");
                     _process = proc;
 
