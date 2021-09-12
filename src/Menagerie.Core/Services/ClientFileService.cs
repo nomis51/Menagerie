@@ -6,11 +6,11 @@ using System.IO;
 using System.Linq;
 using Menagerie.Core.Extensions;
 using log4net;
+using Menagerie.Core.Models.Parsing.Abstractions;
+using Menagerie.Core.Models.Parsing.Entries;
 using Menagerie.Core.Models.Trades;
+using Menagerie.Core.Services.Parsing;
 using Newtonsoft.Json;
-using PoeLogsParser.Models;
-using PoeLogsParser.Models.Abstractions;
-using PoeLogsParser.Services;
 
 namespace Menagerie.Core.Services
 {

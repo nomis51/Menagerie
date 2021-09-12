@@ -8,8 +8,8 @@ using System.Threading;
 using System.Linq;
 using System.Threading.Tasks;
 using Menagerie.Core.Models.ItemsScan;
+using Menagerie.Core.Models.Parsing;
 using Menagerie.Core.Models.Trades;
-using PoeLogsParser.Models;
 
 namespace Menagerie.Core.Services
 {

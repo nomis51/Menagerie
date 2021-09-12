@@ -5,7 +5,6 @@ using Menagerie.Core.Models.PoeApi.Stash;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -13,10 +12,10 @@ using System.Threading.Tasks;
 using Menagerie.Core.Enums;
 using Menagerie.Core.Models.ItemsScan;
 using Menagerie.Core.Models.ML;
+using Menagerie.Core.Models.Parsing.Entries;
+using Menagerie.Core.Models.Parsing.Enums;
 using Menagerie.Core.Models.Trades;
 using Menagerie.Core.Models.Translator;
-using PoeLogsParser.Enums;
-using PoeLogsParser.Models;
 using Winook;
 
 namespace Menagerie.Core.Services
@@ -133,7 +132,7 @@ namespace Menagerie.Core.Services
         private readonly ItemService _itemService;
         private readonly AppAiService _appAiService;
         private readonly ScreenCaptureService _screenCaptureService;
-        private readonly CloudDataService _cloudDataService;
+        // private readonly CloudDataService _cloudDataService;
 
         private Area _currentArea;
         private static AppVersion _appVersion = new();
@@ -159,7 +158,7 @@ namespace Menagerie.Core.Services
             _itemService = new ItemService();
             _appAiService = new AppAiService();
             _screenCaptureService = new ScreenCaptureService();
-            _cloudDataService = new CloudDataService();
+            // _cloudDataService = new CloudDataService();
         }
 
         private void SetShortcuts()
@@ -383,10 +382,10 @@ namespace Menagerie.Core.Services
             OnShowTranslateInputControl();
         }
 
-        public void ShareAiAnalysis(PredictionResponse response)
-        {
-            _cloudDataService.InsertAiAnalyzes(response);
-        }
+        // public void ShareAiAnalysis(PredictionResponse response)
+        // {
+        //     _cloudDataService.InsertAiAnalyzes(response);
+        // }
 
         public void TranslateMessage(string text, string targetLanguage = "", string sourceLanguage = "",
             bool notWhisper = false)
@@ -1006,7 +1005,7 @@ namespace Menagerie.Core.Services
             _itemService.Start();
             _appAiService.Start();
             _screenCaptureService.Start();
-            _cloudDataService.Start();
+            // _cloudDataService.Start();
         }
     }
 }
