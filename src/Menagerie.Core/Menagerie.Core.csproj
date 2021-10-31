@@ -5,6 +5,7 @@
     <PackageVersion>1.4.1</PackageVersion>
     <AssemblyVersion>1.5.0</AssemblyVersion>
     <FileVersion>1.5.0</FileVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,6 +17,10 @@
     <PackageReference Include="log4net" Version="2.0.12" />
     <PackageReference Include="MongoDB.Driver" Version="2.13.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="NumSharp.Bitmap" Version="0.30.0" />
+    <PackageReference Include="SciSharp.TensorFlow.Redist" Version="2.6.0" />
+    <PackageReference Include="TensorFlow.Keras" Version="0.6.3" />
+    <PackageReference Include="TensorFlow.NET" Version="0.60.3" />
     <PackageReference Include="TextCopy" Version="4.3.0" />
     <PackageReference Include="Websocket.Client" Version="4.3.35" />
     <PackageReference Include="Winook" Version="1.3.2" />

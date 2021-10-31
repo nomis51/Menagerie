@@ -46,7 +46,7 @@ namespace Menagerie.Core.Services
 
         public readonly Size TradeWindowSquareSize = new(53, 53);
         public readonly Size TradeWindowRowsAndColumns = new(12, 5);
-        public readonly Rectangle TradeWindowBounds = new(311, 203, 632, 264);
+        private readonly Rectangle _tradeWindowBounds = new(311, 186, 632, 264);
 
         #endregion
 
@@ -170,7 +170,7 @@ namespace Menagerie.Core.Services
                 Alt = false,
                 Control = false,
                 Shift = false,
-                Action = () => AnalyzeTradeWindow().Wait()
+                Action = AnalyzeTradeWindow
             });
 
             _shortcutService.RegisterShortcut(new Shortcut()
@@ -229,75 +229,58 @@ namespace Menagerie.Core.Services
             OnDebugMessage?.Invoke(msg);
         }
 
-        public async Task AnalyzeTradeWindow()
+        public void AnalyzeTradeWindow()
         {
             if (_runningAiAnalysis) return;
 
             _runningAiAnalysis = true;
 
-            var image = _screenCaptureService.CaptureArea(TradeWindowBounds);
-            var imageIds = _appAiService.ProcessAndSaveTradeWindowImage(image);
-            var request = new PredictionRequest();
-            imageIds.ForEach(i => request.Images.Add(new PredictionRequestImage
-            {
-                FileId = i.Item1,
-                FilePath = i.Item2,
-                Models = new List<string>
-                        {
-                            TrainedModelTypeConverter.Convert(TrainedModelType.CurrencyType),
-                            TrainedModelTypeConverter.Convert(TrainedModelType.StackSize),
-                        }
-            }));
-            var result = await _appAiService.Predict(request);
+            var image = _screenCaptureService.CaptureArea(_tradeWindowBounds);
+            var filePaths = _appAiService.ProcessAndSaveTradeWindowImage(image);
+            var prices = _appAiService.PredictTradeWindowCurrencies(filePaths);
 
             List<AiCurrencyAnalysis> aiCurrencyAnalyses = new();
             double chaosValue = 0.0f;
             double exaltedValue = 0.0f;
 
-            if (result.Images == null)
+            if (!prices.Any())
             {
                 _runningAiAnalysis = false;
                 return;
             }
 
-            foreach (var i in result.Images)
+            foreach (var price in prices)
             {
-                var currencyTypeValue = i.Predictions.Find(p => p.Model == "currency_type");
-                if (string.IsNullOrEmpty(currencyTypeValue.Value)) continue;
+                if (string.IsNullOrEmpty(price.Currency)) continue;
+                if (price.Value <= 0) continue;
 
-                var stackSizeValue = i.Predictions.Find(p => p.Model == "stack_size");
-                if (string.IsNullOrEmpty(stackSizeValue.Value)) continue;
-
-                var normalizedCurrencyName = CurrencyService.AiCurrencyToNormzlizedCurrency(currencyTypeValue.Value);
+                var normalizedCurrencyName = CurrencyService.AiCurrencyToNormzlizedCurrency(price.Currency);
                 var realCurrencyName = CurrencyService.GetRealName(normalizedCurrencyName);
-
-                string iconLink = _currencyService.GetCurrencyImageLink(normalizedCurrencyName);
-
-                int stackSize;
-                if (!int.TryParse(stackSizeValue.Value, out stackSize)) continue;
-
+                var iconLink = _currencyService.GetCurrencyImageLink(normalizedCurrencyName);
                 var existingAnalysis = aiCurrencyAnalyses.FirstOrDefault(c => c.IconLink == iconLink);
+                var intPriceValue = (int) price.Value;
 
                 if (existingAnalysis != null)
                 {
-                    existingAnalysis.StackSize += stackSize;
+                    existingAnalysis.StackSize += intPriceValue;
                 }
                 else
                 {
                     aiCurrencyAnalyses.Add(new AiCurrencyAnalysis
                     {
-                        Text = string.IsNullOrEmpty(realCurrencyName) ? (string.IsNullOrEmpty(normalizedCurrencyName) ? currencyTypeValue.Value : normalizedCurrencyName) : realCurrencyName,
+                        Text = string.IsNullOrEmpty(realCurrencyName) ? (string.IsNullOrEmpty(normalizedCurrencyName) ? price.Currency : normalizedCurrencyName) : realCurrencyName,
                         IconLink = iconLink,
-                        StackSize = stackSize
+                        StackSize = intPriceValue
                     });
                 }
 
-                chaosValue += normalizedCurrencyName == "chaos" ? stackSize : stackSize * _poeNinjaService.GetCurrencyChaosValue(CurrencyService.GetRealName(normalizedCurrencyName));
+                chaosValue += normalizedCurrencyName == "chaos" ? intPriceValue : intPriceValue * _poeNinjaService.GetCurrencyChaosValue(CurrencyService.GetRealName(normalizedCurrencyName));
             }
 
             exaltedValue = chaosValue / _poeNinjaService.GetCurrencyChaosValue("Exalted Orb");
 
-            OnTradeWindowScanned?.Invoke((float)chaosValue, (float)exaltedValue, aiCurrencyAnalyses, result);
+            // TODO: invoke with AI results
+            OnTradeWindowScanned?.Invoke((float)chaosValue, (float)exaltedValue, aiCurrencyAnalyses, null);
 
             _runningAiAnalysis = false;
         }
