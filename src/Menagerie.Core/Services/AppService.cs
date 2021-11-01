@@ -130,14 +130,11 @@ namespace Menagerie.Core.Services
         private readonly PriceCheckingService _priceCheckingService;
         private readonly TranslateService _translateService;
         private readonly ItemService _itemService;
-        private readonly AppAiService _appAiService;
         private readonly ScreenCaptureService _screenCaptureService;
-        // private readonly CloudDataService _cloudDataService;
 
         private Area _currentArea;
         private static AppVersion _appVersion = new();
         private readonly Dictionary<string, string> _translationTable = new Dictionary<string, string>();
-        private bool _runningAiAnalysis;
 
         private AppService()
         {
@@ -156,23 +153,11 @@ namespace Menagerie.Core.Services
             _priceCheckingService = new PriceCheckingService();
             _translateService = new TranslateService();
             _itemService = new ItemService();
-            _appAiService = new AppAiService();
             _screenCaptureService = new ScreenCaptureService();
-            // _cloudDataService = new CloudDataService();
         }
 
         private void SetShortcuts()
         {
-            _shortcutService.RegisterShortcut(new Shortcut()
-            {
-                Direction = KeyDirection.Down,
-                Key = (Key)117, // F6
-                Alt = false,
-                Control = false,
-                Shift = false,
-                Action = AnalyzeTradeWindow
-            });
-
             _shortcutService.RegisterShortcut(new Shortcut()
             {
                 Direction = KeyDirection.Down,
@@ -229,62 +214,6 @@ namespace Menagerie.Core.Services
             OnDebugMessage?.Invoke(msg);
         }
 
-        public void AnalyzeTradeWindow()
-        {
-            if (_runningAiAnalysis) return;
-
-            _runningAiAnalysis = true;
-
-            var image = _screenCaptureService.CaptureArea(_tradeWindowBounds);
-            var filePaths = _appAiService.ProcessAndSaveTradeWindowImage(image);
-            var prices = _appAiService.PredictTradeWindowCurrencies(filePaths);
-
-            List<AiCurrencyAnalysis> aiCurrencyAnalyses = new();
-            double chaosValue = 0.0f;
-            double exaltedValue = 0.0f;
-
-            if (!prices.Any())
-            {
-                _runningAiAnalysis = false;
-                return;
-            }
-
-            foreach (var price in prices)
-            {
-                if (string.IsNullOrEmpty(price.Currency)) continue;
-                if (price.Value <= 0) continue;
-
-                var normalizedCurrencyName = CurrencyService.AiCurrencyToNormzlizedCurrency(price.Currency);
-                var realCurrencyName = CurrencyService.GetRealName(normalizedCurrencyName);
-                var iconLink = _currencyService.GetCurrencyImageLink(normalizedCurrencyName);
-                var existingAnalysis = aiCurrencyAnalyses.FirstOrDefault(c => c.IconLink == iconLink);
-                var intPriceValue = (int) price.Value;
-
-                if (existingAnalysis != null)
-                {
-                    existingAnalysis.StackSize += intPriceValue;
-                }
-                else
-                {
-                    aiCurrencyAnalyses.Add(new AiCurrencyAnalysis
-                    {
-                        Text = string.IsNullOrEmpty(realCurrencyName) ? (string.IsNullOrEmpty(normalizedCurrencyName) ? price.Currency : normalizedCurrencyName) : realCurrencyName,
-                        IconLink = iconLink,
-                        StackSize = intPriceValue
-                    });
-                }
-
-                chaosValue += normalizedCurrencyName == "chaos" ? intPriceValue : intPriceValue * _poeNinjaService.GetCurrencyChaosValue(CurrencyService.GetRealName(normalizedCurrencyName));
-            }
-
-            exaltedValue = chaosValue / _poeNinjaService.GetCurrencyChaosValue("Exalted Orb");
-
-            // TODO: invoke with AI results
-            OnTradeWindowScanned?.Invoke((float)chaosValue, (float)exaltedValue, aiCurrencyAnalyses, null);
-
-            _runningAiAnalysis = false;
-        }
-
         private void VerifyMapModifiers()
         {
             ClearSpecialKeys();
@@ -300,11 +229,6 @@ namespace Menagerie.Core.Services
             if (!mods.Any()) return;
 
             OnMapModifiersVerified(mods);
-        }
-
-        public void CloseAiServer()
-        {
-            _appAiService.ClosePythonServer();
         }
 
         public TradeWindowItem ParseTradeWindowItem(string data)
@@ -986,9 +910,7 @@ namespace Menagerie.Core.Services
             _priceCheckingService.Start();
             _translateService.Start();
             _itemService.Start();
-            _appAiService.Start();
             _screenCaptureService.Start();
-            // _cloudDataService.Start();
         }
     }
 }

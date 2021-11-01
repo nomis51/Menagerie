@@ -563,37 +563,5 @@ namespace Menagerie.Views
                     break;
             }
         }
-
-        private void btnShareAiAnalysis_Click(object sender, RoutedEventArgs e)
-        {
-            if (_vm.AnyPredictionResponseToShare)
-            {
-                _vm.ShareAiAnalysis();
-            }
-            else
-            {
-                btnShareAiAnalysis.MaxWidth = 140;
-                btnShareAiAnalysis.Margin = new Thickness(110, 15, 0, 0);
-            }
-
-            lblContent_btnShareAiAnalysis.Content = _vm.AnyPredictionResponseToShare ? "Shared!" : "Nothing to share";
-
-            Task.Run(() =>
-            {
-                Thread.Sleep(4000);
-
-                App.Current.Dispatcher.Invoke(delegate
-                {
-                    lblContent_btnShareAiAnalysis.Content = "Share Error";
-                    btnShareAiAnalysis.MaxWidth = 110;
-                    btnShareAiAnalysis.Margin = new Thickness(150, 15, 0, 0);
-                });
-            });
-        }
-
-        private void btnDoAiAnalysis_Click(object sender, RoutedEventArgs e)
-        {
-            _vm.AnalyzeTradeWindow();
-        }
     }
 }

@@ -36,85 +36,11 @@
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
 
-        <!-- Trade window scan -->
-        <Grid Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="415,130,0,0">
-            <Grid.RowDefinitions>
-                <RowDefinition></RowDefinition>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-
-            <ItemsControl Grid.Column="0" HorizontalAlignment="Left" ItemsSource="{Binding AiCurrenciesAnalysis.Value, UpdateSourceTrigger=PropertyChanged}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Cursor="Hand"
-                                   HorizontalAlignment="Center" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border Margin="0,0,0,5"  BorderBrush="#a0aec0" Background="{DynamicResource {x:Static adonisUi:Brushes.Layer1BackgroundBrush}}" BorderThickness="2" MinHeight="45" MaxHeight="45" MinWidth="70" MaxWidth="70"  CornerRadius="4">
-                            <DockPanel ToolTip="{Binding Text}">
-                                <Label ToolTip="{Binding Text}" FontSize="{Binding StackSizeFontSize}" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" Padding="3" Content="{Binding StackSizeStr}"></Label>
-                                <Image ToolTip="{Binding Text}" Source="{Binding IconLink}" VerticalAlignment="Center" Height="32" Width="32"></Image>
-                            </DockPanel>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </Grid>
-
-        <DockPanel Visibility="{Binding AiCurrenciesAnalysisVisibility, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"  Margin="-110,15,0,0">
-
-            <Border     BorderBrush="#a0aec0" Background="{DynamicResource {x:Static adonisUi:Brushes.Layer1BackgroundBrush}}" BorderThickness="2" MinHeight="45" MaxHeight="45" MinWidth="70" MaxWidth="100"  CornerRadius="4">
-                <DockPanel>
-                    <Label FontSize="16" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" Padding="3" Content="{Binding AiCurrencyAnalysisChaosValueStr}"></Label>
-                    <Image Source="https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyRerollRare.png?v=c60aa876dd6bab31174df91b1da1b4f9" VerticalAlignment="Center" Height="32" Width="32"></Image>
-                </DockPanel>
-            </Border>
-            <Border Margin="5,0,0,0"  BorderBrush="#a0aec0" Background="{DynamicResource {x:Static adonisUi:Brushes.Layer1BackgroundBrush}}" BorderThickness="2" MinHeight="45" MaxHeight="45" MinWidth="70" MaxWidth="100"  CornerRadius="4">
-                <DockPanel>
-                    <Label FontSize="16" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" Padding="3" Content="{Binding AiCurrencyAnalysisExaltedValueStr}"></Label>
-                    <Image Source="https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyAddModToRare.png?v=1745ebafbd533b6f91bccf588ab5efc5" VerticalAlignment="Center" Height="32" Width="32"></Image>
-                </DockPanel>
-            </Border>
-        </DockPanel>
-
-        <Button x:Name="btnShareAiAnalysis" Visibility="{Binding AiCurrenciesAnalysisVisibility, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" Margin="290,15,0,0" MaxWidth="110"  MaxHeight="30" Cursor="Hand" HorizontalAlignment="Left" VerticalAlignment="Center" ToolTip="Share the current trade window analysis that is not right" Click="btnShareAiAnalysis_Click">
-            <Button.Content>
-                <DockPanel>
-                    <fa5:ImageAwesome Width="20"
-                                  Height="20"
-                                  Icon="Solid_ShareAlt"
-                                  Foreground="#a0aec0"
-                                  HorizontalAlignment="Center" />
-                    <Label Name="lblContent_btnShareAiAnalysis" VerticalAlignment="Center" Margin="5,0,0,0" Content="Share Error"></Label>
-                </DockPanel>
-            </Button.Content>
-        </Button>
-
-        <TextBlock Text="{Binding DebugMessage.Value}"></TextBlock>
-
-        <Button x:Name="btnDoAiAnalysis" IsEnabled="{Binding AnalyzeTradeWindowButtonEnabled.Value}"
-                Visibility="Hidden" Grid.Row="1" Grid.Column="1" MaxWidth="180" Margin="260,15,0,0"  MaxHeight="30" Cursor="Hand" HorizontalAlignment="Left" VerticalAlignment="Center" ToolTip="Share the current trade window analysis that is not right" Click="btnDoAiAnalysis_Click">
-            <Button.Content>
-                <DockPanel>
-                    <fa5:ImageAwesome Width="20"
-                                  Height="20"
-                                  Icon="Solid_CameraRetro"
-                                  Foreground="#a0aec0"
-                                  HorizontalAlignment="Center" />
-                    <Label VerticalAlignment="Center" Margin="5,0,0,0" Content="Analyse Window"></Label>
-                </DockPanel>
-            </Button.Content>
-        </Button>
-
         <!-- Map modifiers popup -->
         <Grid Grid.Row="0"
               Grid.Column="0"
-              Grid.RowSpan="99"
-              Grid.ColumnSpan="99"
+              Grid.RowSpan="3"
+              Grid.ColumnSpan="3"
               HorizontalAlignment="Center"
               Background="{DynamicResource {x:Static adonisUi:Brushes.Layer1BackgroundBrush}}"
               VerticalAlignment="Center"

@@ -39,7 +39,6 @@ namespace Menagerie
 
         private void App_OnExit(object sender, ExitEventArgs e)
         {
-            AppService.Instance.CloseAiServer();
         }
     }
 }
