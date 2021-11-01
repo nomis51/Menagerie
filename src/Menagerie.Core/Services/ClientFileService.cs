@@ -4,12 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Menagerie.Core.Extensions;
+using log4net;
+using Menagerie.Core.Models.Parsing.Abstractions;
+using Menagerie.Core.Models.Parsing.Entries;
 using Menagerie.Core.Models.Trades;
+using Menagerie.Core.Services.Parsing;
 using Newtonsoft.Json;
-using PoeLogsParser.Models;
-using PoeLogsParser.Models.Abstractions;
-using PoeLogsParser.Services;
-using Serilog;
 
 namespace Menagerie.Core.Services
 {
@@ -116,7 +117,7 @@ namespace Menagerie.Core.Services
             AppService.Instance.SetCurrentArea(logEntry.Area, type);
         }
 
-        private static void LogServiceOnNewTradeLogEntry(TradeLogEntry logEntry)
+        private void LogServiceOnNewTradeLogEntry(TradeLogEntry logEntry)
         {
             AppService.Instance.NewOffer(new Offer(logEntry));
         }

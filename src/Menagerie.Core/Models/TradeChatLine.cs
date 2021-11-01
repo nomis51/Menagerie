@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using PoeLogsParser.Models;
+using Menagerie.Core.Models.Parsing.Entries;
 
 namespace Menagerie.Core.Models
 {

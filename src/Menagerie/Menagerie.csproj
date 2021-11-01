@@ -37,8 +37,8 @@
     <PackageReference Include="Owin" Version="1.0.0" />
     <PackageReference Include="Serilog" Version="2.10.1-dev-01343" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-    <PackageReference Include="SharpCompress" Version="0.17.1" />
     <PackageReference Include="squirrel.windows" Version="2.0.1" />
+    <PackageReference Include="SharpCompress" Version="0.23.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,6 +47,7 @@
 
   <ItemGroup>
     <None Remove="Assets\Audio\click.wav" />
+    <None Remove="Assets\trade-window-title.png" />
     <Content Include="Assets\Audio\click.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -103,6 +104,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Remove="Data\locations.json" />
+    <Content Include="Assets\trade-window-title.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Data\locations.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

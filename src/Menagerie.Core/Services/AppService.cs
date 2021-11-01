@@ -4,7 +4,6 @@ using Menagerie.Core.Models;
 using Menagerie.Core.Models.PoeApi.Stash;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -12,10 +11,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Menagerie.Core.Enums;
 using Menagerie.Core.Models.ItemsScan;
+using Menagerie.Core.Models.ML;
+using Menagerie.Core.Models.Parsing.Entries;
+using Menagerie.Core.Models.Parsing.Enums;
 using Menagerie.Core.Models.Trades;
 using Menagerie.Core.Models.Translator;
-using PoeLogsParser.Enums;
-using PoeLogsParser.Models;
 using Winook;
 
 namespace Menagerie.Core.Services
@@ -39,6 +39,14 @@ namespace Menagerie.Core.Services
                 return _instance;
             }
         }
+
+        #endregion
+
+        #region Constants
+
+        public readonly Size TradeWindowSquareSize = new(53, 53);
+        public readonly Size TradeWindowRowsAndColumns = new(12, 5);
+        private readonly Rectangle _tradeWindowBounds = new(311, 186, 632, 264);
 
         #endregion
 
@@ -96,6 +104,14 @@ namespace Menagerie.Core.Services
 
         public event MouseMovedEvent OnMouseMoved;
 
+        public delegate void TradeWindowScannedEvent(float chaosValue, float exaltedValue, List<AiCurrencyAnalysis> aiCurrencyAnalyses, PredictionResponse response);
+
+        public event TradeWindowScannedEvent OnTradeWindowScanned;
+
+        public delegate void DebugMessageEvent(string message);
+
+        public static event DebugMessageEvent OnDebugMessage;
+
         #endregion
 
         private IntPtr _overlayHandle;
@@ -114,6 +130,7 @@ namespace Menagerie.Core.Services
         private readonly PriceCheckingService _priceCheckingService;
         private readonly TranslateService _translateService;
         private readonly ItemService _itemService;
+        private readonly ScreenCaptureService _screenCaptureService;
 
         private Area _currentArea;
         private static AppVersion _appVersion = new();
@@ -136,6 +153,7 @@ namespace Menagerie.Core.Services
             _priceCheckingService = new PriceCheckingService();
             _translateService = new TranslateService();
             _itemService = new ItemService();
+            _screenCaptureService = new ScreenCaptureService();
         }
 
         private void SetShortcuts()
@@ -143,7 +161,7 @@ namespace Menagerie.Core.Services
             _shortcutService.RegisterShortcut(new Shortcut()
             {
                 Direction = KeyDirection.Down,
-                Key = (Key) 116, // F5
+                Key = (Key)116, // F5
                 Alt = false,
                 Control = false,
                 Shift = false,
@@ -153,7 +171,7 @@ namespace Menagerie.Core.Services
             _shortcutService.RegisterShortcut(new Shortcut()
             {
                 Direction = KeyDirection.Down,
-                Key = (Key) 84, // T
+                Key = (Key)84, // T
                 Alt = false,
                 Control = true,
                 Shift = true,
@@ -163,7 +181,7 @@ namespace Menagerie.Core.Services
             _shortcutService.RegisterShortcut(new Shortcut()
             {
                 Direction = KeyDirection.Down,
-                Key = (Key) 70, // F
+                Key = (Key)70, // F
                 Alt = false,
                 Control = true,
                 Shift = false,
@@ -173,7 +191,7 @@ namespace Menagerie.Core.Services
             _shortcutService.RegisterShortcut(new Shortcut()
             {
                 Direction = KeyDirection.Down,
-                Key = (Key) 70, // F
+                Key = (Key)70, // F
                 Alt = false,
                 Control = true,
                 Shift = true,
@@ -183,12 +201,17 @@ namespace Menagerie.Core.Services
             _shortcutService.RegisterShortcut(new Shortcut()
             {
                 Direction = KeyDirection.Down,
-                Key = (Key) 70, // F
+                Key = (Key)70, // F
                 Alt = true,
                 Control = false,
                 Shift = false,
                 Action = VerifyMapModifiers
             });
+        }
+
+        public static void ShowDebugMessage(string msg)
+        {
+            OnDebugMessage?.Invoke(msg);
         }
 
         private void VerifyMapModifiers()
@@ -206,6 +229,16 @@ namespace Menagerie.Core.Services
             if (!mods.Any()) return;
 
             OnMapModifiersVerified(mods);
+        }
+
+        public TradeWindowItem ParseTradeWindowItem(string data)
+        {
+            return _itemService.ParseTradeWindowItem(data);
+        }
+
+        public void MoveMouse(int x, int y)
+        {
+            _keyboardService.MoveMouse((uint)x, (uint)y);
         }
 
         public void MouseMoved()
@@ -256,6 +289,11 @@ namespace Menagerie.Core.Services
             OnShowTranslateInputControl();
         }
 
+        // public void ShareAiAnalysis(PredictionResponse response)
+        // {
+        //     _cloudDataService.InsertAiAnalyzes(response);
+        // }
+
         public void TranslateMessage(string text, string targetLanguage = "", string sourceLanguage = "",
             bool notWhisper = false)
         {
@@ -294,7 +332,7 @@ namespace Menagerie.Core.Services
                 translation.OriginalLang = fromLang;
             }
 
-            _ = _translateService.Translate(translation, new TranslateOptions() {To = toLang, From = fromLang});
+            _ = _translateService.Translate(translation, new TranslateOptions() { To = toLang, From = fromLang });
         }
 
         private static void Shortcut_GoToHideout()
@@ -725,7 +763,7 @@ namespace Menagerie.Core.Services
             ModifiedKeyStroke(Key.Control, Key.A);
         }
 
-        private void SendCtrlC()
+        public void SendCtrlC()
         {
             ModifiedKeyStroke(Key.Control, Key.C);
         }
@@ -748,6 +786,16 @@ namespace Menagerie.Core.Services
         public bool SetClipboard(string text)
         {
             return _clipboardService.SetClipboard(text);
+        }
+
+        public string GetClipboardValue(int delay = 0)
+        {
+            return _clipboardService.GetClipboard(delay);
+        }
+
+        public void ResetClipboardValue()
+        {
+            SetClipboard("");
         }
 
         public string ReplaceVars(string msg, Offer offer)
@@ -820,15 +868,15 @@ namespace Menagerie.Core.Services
                     _translationTable.Add(translation.PlayerName, translation.OriginalLang);
                     break;
                 case false:
-                {
-                    if (!string.Equals(_translationTable[translation.PlayerName], translation.OriginalLang,
-                        StringComparison.Ordinal))
                     {
-                        _translationTable[translation.PlayerName] = translation.OriginalLang;
-                    }
+                        if (!string.Equals(_translationTable[translation.PlayerName], translation.OriginalLang,
+                            StringComparison.Ordinal))
+                        {
+                            _translationTable[translation.PlayerName] = translation.OriginalLang;
+                        }
 
-                    break;
-                }
+                        break;
+                    }
             }
 
             if (translation.UserInitiated)
@@ -851,6 +899,11 @@ namespace Menagerie.Core.Services
             MapModifiersVerified?.Invoke(modifiers);
         }
 
+        public Bitmap CaptureArea(Rectangle bounds)
+        {
+            return _screenCaptureService.CaptureArea(bounds);
+        }
+
         public void Start()
         {
             _appDataService.Start();
@@ -868,6 +921,7 @@ namespace Menagerie.Core.Services
             _priceCheckingService.Start();
             _translateService.Start();
             _itemService.Start();
+            _screenCaptureService.Start();
         }
     }
 }

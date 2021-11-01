@@ -4,7 +4,8 @@
              xmlns:local="clr-namespace:Menagerie"
              xmlns:fa5="http://schemas.fontawesome.com/icons/"
              xmlns:adonisUi="clr-namespace:AdonisUI;assembly=AdonisUI"
-             DispatcherUnhandledException="Application_DispatcherUnhandledException">
+             DispatcherUnhandledException="Application_DispatcherUnhandledException"
+             Exit="App_OnExit">
     <Application.Resources>
             <ResourceDictionary>
                 <ResourceDictionary.MergedDictionaries>

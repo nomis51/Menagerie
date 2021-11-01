@@ -38,5 +38,9 @@ namespace Menagerie
 
             Environment.Exit(0);
         }
+
+        private void App_OnExit(object sender, ExitEventArgs e)
+        {
+        }
     }
 }

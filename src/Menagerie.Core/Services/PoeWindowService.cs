@@ -9,7 +9,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Menagerie.Core.Abstractions;
 using Menagerie.Core.Enums;
-using Serilog;
+using Menagerie.Core.Extensions;
+using Menagerie.Core.Win32;
 
 namespace Menagerie.Core.Services
 {

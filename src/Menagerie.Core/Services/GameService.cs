@@ -5,6 +5,7 @@ using System;
 using System.Runtime.InteropServices;
 using Desktop.Robot;
 using Serilog;
+using Menagerie.Core.Win32;
 
 namespace Menagerie.Core.Services
 {
@@ -36,7 +37,7 @@ namespace Menagerie.Core.Services
 
         private static bool IsOverlayFocused()
         {
-            var activeHandle = GetForegroundWindow();
+            var activeHandle = User32.GetForegroundWindow();
             var overlayHandle = AppService.Instance.GetOverlayHandle();
             return activeHandle == overlayHandle;
         }

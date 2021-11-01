@@ -23,8 +23,8 @@ namespace Menagerie.Core.Services
 
         public HttpService(Uri baseUrl)
         {
-            Log.Information("Initializing HttpService");
-            Client = new HttpClient();
+            Log.Trace("Initializing HttpService");
+            Client = new HttpClient(new HttpClientHandler() { UseProxy = false, Proxy = null });
             SetupClient(baseUrl);
         }
 
@@ -45,7 +45,7 @@ namespace Menagerie.Core.Services
 
             cookies.ForEach(c => cookieContainer.Add(baseUrl, c));
 
-            return new HttpClientHandler() {CookieContainer = cookieContainer};
+            return new HttpClientHandler() { CookieContainer = cookieContainer, UseProxy = false, Proxy = null };
         }
 
         private void SetupClient(Uri baseUrl)

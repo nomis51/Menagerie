@@ -35,12 +35,12 @@
             <RowDefinition Height="100" />
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
-        
+
         <!-- Map modifiers popup -->
         <Grid Grid.Row="0"
               Grid.Column="0"
-              Grid.RowSpan="99"
-              Grid.ColumnSpan="99"
+              Grid.RowSpan="3"
+              Grid.ColumnSpan="3"
               HorizontalAlignment="Center"
               Background="{DynamicResource {x:Static adonisUi:Brushes.Layer1BackgroundBrush}}"
               VerticalAlignment="Center"

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Serilog;
+using Menagerie.Core.Models.PoeNinja;
 
 namespace Menagerie.Core.Services
 {
@@ -123,11 +124,10 @@ namespace Menagerie.Core.Services
 
         private static double GetCurrencyChaosValue(PoeNinjaCache<PoeNinjaCurrency> cache, string currencyName)
         {
-            Log.Information($"Getting currency chaos value for {currencyName}");
-            if (cache == null)
-            {
-                return 0.0d;
-            }
+            Log.Trace($"Getting currency chaos value for {currencyName}");
+
+            if (currencyName == "Chaos Orb") return 1.0d;
+            if (cache == null) return 0.0d;
 
             return cache.Map.ContainsKey(currencyName) ? cache.Map[currencyName][0].Receive.Value : 0.0d;
         }
@@ -176,6 +176,40 @@ namespace Menagerie.Core.Services
             }
         }
 
+        public double GetCurrencyExaltedValue(string currencyName)
+        {
+            var exaltedChaosValue = GetCurrencyChaosValue("Exalted Orb");
+
+            if (exaltedChaosValue == 0) return 0;
+
+            if (_cacheUpdating)
+            {
+                if (_oldCache == null)
+                {
+                    return 0.0d;
+                }
+
+                Log.Trace($"Getting currency chaos value for {currencyName}");
+
+                if (currencyName == "Exalted Orb") return 1.0d;
+                if (_oldCache == null) return 0.0d;
+
+                return (_oldCache.Currency.Map.ContainsKey(currencyName) ? _oldCache.Currency.Map[currencyName][0].Receive.Value : 0.0d) / exaltedChaosValue;
+            }
+            else
+            {
+                lock (LockCurrencyCacheAccess)
+                {
+                    Log.Trace($"Getting currency chaos value for {currencyName}");
+
+                    if (currencyName == "Exalted Orb") return 1.0d;
+                    if (_oldCache == null) return 0.0d;
+
+                    return (_oldCache.Currency.Map.ContainsKey(currencyName) ? _oldCache.Currency.Map[currencyName][0].Receive.Value : 0.0d) / exaltedChaosValue;
+                }
+            }
+        }
+
         public void Start()
         {
             Log.Information("Starting PoeNinjaService");
@@ -183,7 +217,7 @@ namespace Menagerie.Core.Services
             _cacheExpirationTimeMinutes = AppService.Instance.GetConfig().PoeNinjaUpdateRate;
 
             LoadCache();
-            Task.Run(() => AutoUpdateCache(_oldCache != null &&
+            Task.Run(() => AutoUpdateCache(_oldCache != null && _oldCache.Items != null && _oldCache.Items.Count > 0 && _oldCache.Currency is { Map: { } } &&
                                            (DateTime.Now - _oldCache.UpdateTime).TotalMinutes <
                                            _cacheExpirationTimeMinutes));
         }

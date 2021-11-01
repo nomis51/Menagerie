@@ -4,8 +4,8 @@ using System.Linq;
 using LiteDB;
 using Menagerie.Core.Abstractions;
 using Menagerie.Core.Enums;
-using PoeLogsParser.Enums;
-using PoeLogsParser.Models;
+using Menagerie.Core.Models.Parsing.Entries;
+using Menagerie.Core.Models.Parsing.Enums;
 
 namespace Menagerie.Core.Models.Trades
 {

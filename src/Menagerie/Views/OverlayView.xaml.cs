@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using AdonisUI.Controls;
 using LiteDB;
 using Point = System.Windows.Point;
+using System.Windows.Media;
 
 namespace Menagerie.Views
 {
@@ -37,7 +38,7 @@ namespace Menagerie.Views
         private Point _dragStart;
         private Vector _dragStartOffset;
 
-        private OverlayViewModel _vm => (OverlayViewModel) DataContext;
+        private OverlayViewModel _vm => (OverlayViewModel)DataContext;
 
         public OverlayView()
         {
@@ -45,8 +46,8 @@ namespace Menagerie.Views
 
             Log.Information("Initializing Overlay");
 
-            _screenRect = new Rectangle(0, 0, (int) SystemParameters.FullPrimaryScreenWidth,
-                (int) SystemParameters.FullPrimaryScreenHeight);
+            _screenRect = new Rectangle(0, 0, (int)SystemParameters.FullPrimaryScreenWidth,
+                (int)SystemParameters.FullPrimaryScreenHeight);
 
             SourceInitialized += OverlayWindow_SourceInitialized;
             Loaded += OverlayWindow_Loaded;
@@ -83,8 +84,8 @@ namespace Menagerie.Views
 
             if (string.IsNullOrEmpty(message) || message.Trim().Length == 0) return;
 
-            OverlayViewModel.SendTranslatedMessage(message, (string) cboTargetLang.SelectedValue,
-                (string) cboSourceLang.SelectedValue, true);
+            OverlayViewModel.SendTranslatedMessage(message, (string)cboTargetLang.SelectedValue,
+                (string)cboSourceLang.SelectedValue, true);
             HideTranslateInput();
         }
 
@@ -203,7 +204,7 @@ namespace Menagerie.Views
             Log.Information("Busy button clicked");
             AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
-            _vm.SendBusyWhisper(new ObjectId((string) ((Button) sender).Tag));
+            _vm.SendBusyWhisper(new ObjectId((string)((Button)sender).Tag));
         }
 
         private void btnRemove_Click(object sender, RoutedEventArgs e)
@@ -212,7 +213,7 @@ namespace Menagerie.Views
             AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
 
-            var id = new ObjectId((string) ((Button) sender).Tag);
+            var id = new ObjectId((string)((Button)sender).Tag);
             var offer = _vm.GetOffer(id);
 
             if (offer.PlayerInvited)
@@ -231,7 +232,7 @@ namespace Menagerie.Views
             AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
 
-            var id = new ObjectId((string) ((Button) sender).Tag);
+            var id = new ObjectId((string)((Button)sender).Tag);
             var offer = _vm.GetOffer(id);
 
             if (!offer.PlayerInvited)
@@ -250,7 +251,7 @@ namespace Menagerie.Views
             AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
 
-            var id = new ObjectId((string) ((Grid) sender).Tag);
+            var id = new ObjectId((string)((Grid)sender).Tag);
             var offer = _vm.GetOffer(id);
 
             if (offer == null) return;
@@ -295,7 +296,7 @@ namespace Menagerie.Views
             AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
 
-            var id = new ObjectId((string) ((Button) sender).Tag);
+            var id = new ObjectId((string)((Button)sender).Tag);
 
             _vm.SendJoinHideoutCommand(id);
         }
@@ -306,7 +307,7 @@ namespace Menagerie.Views
             AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
 
-            var id = new ObjectId((string) ((Button) sender).Tag);
+            var id = new ObjectId((string)((Button)sender).Tag);
 
             _vm.SendTradeRequest(id, true);
         }
@@ -317,7 +318,7 @@ namespace Menagerie.Views
             AppService.Instance.FocusGame();
             AudioService.Instance.PlayClick();
 
-            var id = new ObjectId((string) ((Button) sender).Tag);
+            var id = new ObjectId((string)((Button)sender).Tag);
 
             _vm.SendLeave(id);
         }

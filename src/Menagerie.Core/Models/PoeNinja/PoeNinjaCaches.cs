@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Menagerie.Core.Models.PoeNinja;
 
 namespace Menagerie.Core.Models
 {
