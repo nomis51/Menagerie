@@ -46,7 +46,6 @@ namespace Menagerie
                 config.CreateMap<CoreModels.Config, Config>();
                 config.CreateMap<Config, CoreModels.Config>();
                 config.CreateMap<CoreModels.ItemsScan.MapModifier, MapModifier>();
-                config.CreateMap<CoreModels.ML.AiCurrencyAnalysis, AiCurrencyAnalysis>();
             });
 
             Mapper = new Mapper(configuration);

@@ -124,7 +124,7 @@ namespace Menagerie.Core.Services
 
         private static double GetCurrencyChaosValue(PoeNinjaCache<PoeNinjaCurrency> cache, string currencyName)
         {
-            Log.Trace($"Getting currency chaos value for {currencyName}");
+            Log.Information($"Getting currency chaos value for {currencyName}");
 
             if (currencyName == "Chaos Orb") return 1.0d;
             if (cache == null) return 0.0d;
@@ -189,7 +189,7 @@ namespace Menagerie.Core.Services
                     return 0.0d;
                 }
 
-                Log.Trace($"Getting currency chaos value for {currencyName}");
+                Log.Information($"Getting currency chaos value for {currencyName}");
 
                 if (currencyName == "Exalted Orb") return 1.0d;
                 if (_oldCache == null) return 0.0d;
@@ -200,7 +200,7 @@ namespace Menagerie.Core.Services
             {
                 lock (LockCurrencyCacheAccess)
                 {
-                    Log.Trace($"Getting currency chaos value for {currencyName}");
+                    Log.Information($"Getting currency chaos value for {currencyName}");
 
                     if (currencyName == "Exalted Orb") return 1.0d;
                     if (_oldCache == null) return 0.0d;

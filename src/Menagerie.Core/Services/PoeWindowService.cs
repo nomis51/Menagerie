@@ -11,6 +11,7 @@ using Menagerie.Core.Abstractions;
 using Menagerie.Core.Enums;
 using Menagerie.Core.Extensions;
 using Menagerie.Core.Win32;
+using Serilog;
 
 namespace Menagerie.Core.Services
 {

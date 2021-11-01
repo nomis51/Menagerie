@@ -280,7 +280,7 @@ namespace Menagerie.Core.Services
 
         public static string AiCurrencyToNormzlizedCurrency(string text)
         {
-            Log.Trace($"Converting AI currency to normalized currency name {text}");
+            Log.Debug($"Converting AI currency to normalized currency name {text}");
             return text switch
             {
                 "chaos_orb" => "chaos",

@@ -23,7 +23,7 @@ namespace Menagerie.Core.Services
 
         public HttpService(Uri baseUrl)
         {
-            Log.Trace("Initializing HttpService");
+            Log.Debug("Initializing HttpService");
             Client = new HttpClient(new HttpClientHandler() { UseProxy = false, Proxy = null });
             SetupClient(baseUrl);
         }

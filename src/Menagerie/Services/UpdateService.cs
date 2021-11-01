@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Squirrel;
 
@@ -12,18 +13,21 @@ namespace Menagerie.Services
 
         public static void CheckUpdates()
         {
-            Task.Run(async () =>
+            if (Environment.GetEnvironmentVariable("DEBUG") == null)
             {
-                using var updateManager =
-                    await UpdateManager.GitHubUpdateManager("https://github.com/nomis51/Menagerie");
-                var infos = await updateManager.CheckForUpdate();
-
-                if (infos.ReleasesToApply.Any())
+                Task.Run(new Action(async () =>
                 {
-                    var result = await updateManager.UpdateApp();
-                    OnNewUpdateInstalled();
-                }
-            });
+                    using var updateManager =
+                        await UpdateManager.GitHubUpdateManager("https://github.com/nomis51/Menagerie");
+                    var infos = await updateManager.CheckForUpdate();
+
+                    if (infos.ReleasesToApply.Any())
+                    {
+                        var result = await updateManager.UpdateApp();
+                        OnNewUpdateInstalled();
+                    }
+                }));
+            }
         }
 
         private static void OnNewUpdateInstalled()

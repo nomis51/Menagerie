@@ -14,7 +14,6 @@
     <PackageReference Include="Emgu.CV.runtime.windows" Version="4.5.2.4673" />
     <PackageReference Include="LiteDB" Version="5.0.10" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="PoeLogsParser" Version="1.0.11" />
     <PackageReference Include="Serilog" Version="2.10.1-dev-01343" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="TextCopy" Version="4.3.0" />

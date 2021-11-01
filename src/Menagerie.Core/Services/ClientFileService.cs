@@ -4,13 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Menagerie.Core.Extensions;
-using log4net;
 using Menagerie.Core.Models.Parsing.Abstractions;
 using Menagerie.Core.Models.Parsing.Entries;
 using Menagerie.Core.Models.Trades;
 using Menagerie.Core.Services.Parsing;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace Menagerie.Core.Services
 {
