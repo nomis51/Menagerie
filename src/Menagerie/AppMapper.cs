@@ -40,7 +40,7 @@ namespace Menagerie
             {
                 config.CreateMap<Core.Models.Trades.Offer, Offer>();
                 config.CreateMap<Offer, Core.Models.Trades.Offer>();
-                config.CreateMap<CoreModels.PriceCheckResult, PriceCheckResult>();
+                config.CreateMap<Core.Models.PoeApi.Price.PriceCheckResult, PriceCheckResult>();
                 config.CreateMap<CoreModels.PricingResult, PricingResult>();
                 config.CreateMap<CoreModels.PoeApi.Stash.ChaosRecipeResult, ChaosRecipeResult>();
                 config.CreateMap<CoreModels.Config, Config>();

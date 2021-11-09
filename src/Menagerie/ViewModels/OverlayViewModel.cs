@@ -265,10 +265,10 @@ namespace Menagerie.ViewModels
             NotificationService.Instance.ShowTradeChatMatchNotification(line);
         }
 
-        private void Instance_OnOfferScam(CoreModels.PriceCheckResult result, Core.Models.Trades.Offer offer)
+        private void Instance_OnOfferScam(Core.Models.PoeApi.Price.PriceCheckResult result, Core.Models.Trades.Offer offer)
         {
             var localOffer = AppMapper.Instance.Map<Core.Models.Trades.Offer, Offer>(offer);
-            var localPriceCheckResult = AppMapper.Instance.Map<CoreModels.PriceCheckResult, PriceCheckResult>(result);
+            var localPriceCheckResult = AppMapper.Instance.Map<Core.Models.PoeApi.Price.PriceCheckResult, PriceCheckResult>(result);
 
             var nbTry = 0;
 
