@@ -2,6 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using System.Windows;
+using Menagerie.Views;
 using Serilog;
 using Serilog.Core;
 

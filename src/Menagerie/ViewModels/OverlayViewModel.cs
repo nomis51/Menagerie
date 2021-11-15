@@ -812,7 +812,7 @@ namespace Menagerie.ViewModels
         }
 
         public void ToggleMovableOverlay(TranslateTransform grdOffers, TranslateTransform grdOffersControls,
-            TranslateTransform grdOutgoingOffers, TranslateTransform grdChaosRecipe, bool chaosRecipeDockMode = true)
+            TranslateTransform grdOutgoingOffers, bool chaosRecipeDockMode = true)
         {
             OverlayMovable.Value = !OverlayMovable.Value;
 
@@ -825,7 +825,6 @@ namespace Menagerie.ViewModels
                 new System.Drawing.Point((int)grdOffersControls.X, (int)grdOffersControls.Y);
             config.OutgoingOffersGridOffset =
                 new System.Drawing.Point((int)grdOutgoingOffers.X, (int)grdOutgoingOffers.Y);
-            config.ChaosRecipeGridOffset = new System.Drawing.Point((int)grdChaosRecipe.X, (int)grdChaosRecipe.Y);
             config.ChaosRecipeOveralyDockMode = chaosRecipeDockMode;
 
             AppService.Instance.SetConfig(AppMapper.Instance.Map<Config, CoreModels.Config>(config));

@@ -41,7 +41,7 @@ namespace Menagerie.Core.Services
 
         #region Constants
 
-        private readonly List<string> _poeProcesses = new List<string>()
+        private readonly List<string> _poeProcesses = new()
         {
             "PathOfExile",
             "PathOfExile_Steam",
@@ -60,6 +60,8 @@ namespace Menagerie.Core.Services
 
         public bool Focused => _process != null && GetForegroundWindow() == _process.MainWindowHandle;
 
+        private bool IsDebug => Environment.GetEnvironmentVariable("DEBUG") != null;
+
         #endregion
 
         #region Members
@@ -73,6 +75,11 @@ namespace Menagerie.Core.Services
         public PoeWindowService()
         {
             Log.Information("Initializing PoeWindowService");
+
+            if (IsDebug)
+            {
+                _poeProcesses.Clear();
+            }
         }
 
         #endregion
@@ -90,6 +97,15 @@ namespace Menagerie.Core.Services
         private async void FindPoeProcess()
         {
             Log.Information("Looking for PoE process");
+
+            if (IsDebug)
+            {
+                ClientFilePath = "./.debug/logs/Client.txt";
+                AppService.Instance.PoeWindowReady();
+                AppService.Instance.ClientFileReady();
+                return;
+            }
+
             while (!ClientFileExists() || _process == null)
             {
                 var processes = Process.GetProcesses();
@@ -188,6 +204,9 @@ namespace Menagerie.Core.Services
         public bool EnsurePoeWindowAlive()
         {
             Log.Information("Ensuring Poe window alive");
+
+            if (IsDebug) return true;
+
             if (!_process.HasExited) return true;
             _process = null;
             Task.Run(FindPoeProcess);
@@ -196,6 +215,8 @@ namespace Menagerie.Core.Services
 
         private bool IsGameWindowFocused()
         {
+            if (IsDebug) return true;
+
             var activeHandle = GetForegroundWindow();
             return activeHandle == _process.MainWindowHandle;
         }
@@ -203,6 +224,8 @@ namespace Menagerie.Core.Services
         public bool Focus()
         {
             Log.Information("Focusing PoE");
+            if (IsDebug) return true;
+
             if (_process == null)
             {
                 return false;

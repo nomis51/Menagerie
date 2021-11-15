@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Threading;
 using Caliburn.Micro;
 using Menagerie.ViewModels;

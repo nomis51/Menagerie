@@ -15,6 +15,7 @@ using AdonisUI.Controls;
 using LiteDB;
 using Point = System.Windows.Point;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace Menagerie.Views
 {
@@ -31,7 +32,7 @@ namespace Menagerie.Views
         #endregion
 
         private static readonly Serilog.ILogger Log = Serilog.Log.Logger.ForContext<OverlayView>();
-        
+
         private readonly Rectangle _screenRect;
         private bool _winMoved;
 
@@ -45,6 +46,27 @@ namespace Menagerie.Views
             InitializeComponent();
 
             Log.Information("Initializing Overlay");
+
+            if (Environment.GetEnvironmentVariable("DEBUG") != null)
+            {
+                Hide();
+                AllowsTransparency = false;
+                WindowState = WindowState.Normal;
+                WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                Width = 1600;
+                Height = 900;
+                Topmost = false;
+                ShowInTaskbar = true;
+                WindowStyle = WindowStyle.ThreeDBorderWindow;
+                ResizeMode = ResizeMode.CanResize;
+                var background = new ImageBrush
+                {
+                    ImageSource = new BitmapImage(new Uri("./Assets/poe-gameplay.jpg", UriKind.Relative)),
+                    Stretch = Stretch.Fill
+                };
+                Background = background;
+                Show();
+            }
 
             _screenRect = new Rectangle(0, 0, (int)SystemParameters.FullPrimaryScreenWidth,
                 (int)SystemParameters.FullPrimaryScreenHeight);
@@ -133,19 +155,6 @@ namespace Menagerie.Views
 
             grdOutgoingControls_tt.X = config.OutgoingOffersGridOffset.X;
             grdOutgoingControls_tt.Y = config.OutgoingOffersGridOffset.Y;
-
-            grdChaosRecipe_tt.X = config.ChaosRecipeGridOffset.X;
-            grdChaosRecipe_tt.Y = config.ChaosRecipeGridOffset.Y;
-
-            if (!config.ChaosRecipeEnabled) return;
-            if (config.ChaosRecipeOveralyDockMode)
-            {
-                SetChaosRecipeOverlayDockMode();
-            }
-            else
-            {
-                SetChaosRecipeOverlayStackMode();
-            }
         }
 
         private void OverlayWindow_Loaded(object sender, RoutedEventArgs e)
@@ -384,19 +393,6 @@ namespace Menagerie.Views
             Application.Current.Shutdown(0);
         }
 
-        private void grdChaosRecipe_MouseEnter(object sender, MouseEventArgs e)
-        {
-            if (!_vm.OverlayMovable.Value)
-            {
-                grdChaosRecipe.Opacity = 0.1;
-            }
-        }
-
-        private void grdChaosRecipe_MouseLeave(object sender, MouseEventArgs e)
-        {
-            grdChaosRecipe.Opacity = 0.7;
-        }
-
         private void grdOffers_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (!_vm.OverlayMovable.Value) return;
@@ -480,67 +476,8 @@ namespace Menagerie.Views
 
         private void btnMoveOverlay_Click(object sender, RoutedEventArgs e)
         {
-            _vm.ToggleMovableOverlay(grdOffers_tt, grdIncomingControls_tt, grdOutgoingControls_tt, grdChaosRecipe_tt,
+            _vm.ToggleMovableOverlay(grdOffers_tt, grdIncomingControls_tt, grdOutgoingControls_tt,
                 _vm.DockChaosRecipeOverlayVisibility.Value == Visibility.Visible);
-        }
-
-        private void grdChaosRecipe_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (!_vm.OverlayMovable.Value) return;
-
-            _dragStart = e.GetPosition(this);
-            _dragStartOffset = new Vector(grdChaosRecipe_tt.X, grdChaosRecipe_tt.Y);
-            grdChaosRecipe.CaptureMouse();
-        }
-
-        private void grdChaosRecipe_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (!_vm.OverlayMovable.Value) return;
-
-            if (!grdChaosRecipe.IsMouseCaptured) return;
-            var offset = Point.Subtract(e.GetPosition(this), _dragStart);
-
-            grdChaosRecipe_tt.X = _dragStartOffset.X + offset.X;
-            grdChaosRecipe_tt.Y = _dragStartOffset.Y + offset.Y;
-        }
-
-        private void grdChaosRecipe_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            if (!_vm.OverlayMovable.Value) return;
-
-            grdChaosRecipe.ReleaseMouseCapture();
-        }
-
-        private void SetChaosRecipeOverlayDockMode()
-        {
-            _vm.StackChaosRecipeOverlayVisibility.Value = Visibility.Hidden;
-            _vm.DockChaosRecipeOverlayVisibility.Value = Visibility.Visible;
-        }
-
-        private void SetChaosRecipeOverlayStackMode()
-        {
-            _vm.DockChaosRecipeOverlayVisibility.Value = Visibility.Hidden;
-            _vm.StackChaosRecipeOverlayVisibility.Value = Visibility.Visible;
-        }
-
-        private void ChangeChaosRecipeOverlayOrientation()
-        {
-            if (_vm.DockChaosRecipeOverlayVisibility.Value == Visibility.Visible)
-            {
-                SetChaosRecipeOverlayStackMode();
-            }
-            else
-            {
-                SetChaosRecipeOverlayDockMode();
-            }
-        }
-
-        private void btnChangeChaosRecipeOrientation_Click(object sender, RoutedEventArgs e)
-        {
-            if (_vm.OverlayMovable.Value)
-            {
-                ChangeChaosRecipeOverlayOrientation();
-            }
         }
 
         private void BtnCloseTranslateInputControl_OnClick(object sender, RoutedEventArgs e)
