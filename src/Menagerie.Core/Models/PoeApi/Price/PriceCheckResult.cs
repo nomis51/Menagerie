@@ -1,13 +1,11 @@
-﻿using Menagerie.Core.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
+using Menagerie.Core.Models.Parsing;
 
-namespace Menagerie.Core.Models
+namespace Menagerie.Core.Models.PoeApi.Price
 {
     public class PriceCheckResult
     {
+        public Item Item { get; set; }
         public string League { get; set; }
         public List<PricingResult> Results { get; set; }
     }

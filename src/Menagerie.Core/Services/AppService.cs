@@ -13,6 +13,7 @@ using Menagerie.Core.Enums;
 using Menagerie.Core.Models.ItemsScan;
 using Menagerie.Core.Models.Parsing.Entries;
 using Menagerie.Core.Models.Parsing.Enums;
+using Menagerie.Core.Models.PoeApi.Price;
 using Menagerie.Core.Models.Trades;
 using Menagerie.Core.Models.Translator;
 using Winook;

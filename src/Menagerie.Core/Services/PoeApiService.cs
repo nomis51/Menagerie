@@ -6,7 +6,10 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Threading;
+using Menagerie.Core.Extensions;
+using Menagerie.Core.Models.Parsing;
 using Menagerie.Core.Models.PoeApi;
+using Menagerie.Core.Models.PoeApi.Price;
 using Menagerie.Core.Models.PoeApi.Stash;
 using Menagerie.Core.Models.Trades;
 using Serilog;
@@ -63,6 +66,111 @@ namespace Menagerie.Core.Services
             }
 
             return new List<string>();
+        }
+        
+         public async Task<SearchResult> GetTradeRequestResults(TradeRequest request) {
+            var json = HttpService.SerializeBody(request);
+
+            var response = _httpService.Client.PostAsync($"/{PoeApiTrade}/{AppService.Instance.GetConfig().CurrentLeague}", json).Result;
+
+            var result = await HttpService.ReadResponse<SearchResult>(response);
+
+            if (result is not {Error: null}) {
+                throw new Exception("Error while getting trade request results");
+            }
+
+            return result;
+        }
+
+        public PriceCheckResult GetTradeResults(SearchResult search, Item item, int nbResults = 20) {
+            var results = new List<FetchResult>();
+            var loopLock = new object();
+
+            var loopResult = Parallel.ForEach(SteppedIterator.GetIterator(0, nbResults, 10),  (i) => {
+                var ids = search.Result.Skip(i)
+                .Take(10)
+                .ToList();
+                var result = GetTradeResults(search.Id, ids).Result;
+
+                lock (loopLock) {
+                    results.Add(result);
+                }
+            });
+
+            switch (results.Count)
+            {
+                case 0:
+                    return null;
+                case > 1:
+                {
+                    for (int i = 1; i < results.Count; ++i) {
+                        results[0].Result.AddRange(results[i].Result);
+                    }
+
+                    break;
+                }
+            }
+
+            if (results[0].Result.Count > 0) {
+                item.Icon = results[0].Result[0].Item.Icon;
+            }
+
+            return AppService.Instance.CalculateChaosValues(new PriceCheckResult() {
+                Item = item,
+                Results = results[0].Result.Select(p => new PricingResult() {
+                    Currency = p.Listing.Price.Currency,
+                    Price = p.Listing.Price.Amount,
+                    CurrencyImageLink = AppService.Instance.GetCurrencyImageLink(p.Listing.Price.Currency),
+                    PlayerName = p.Listing.Account.Name
+                }).ToList()
+            });
+        }
+
+        private async Task<FetchResult> GetTradeResults(string queryId, List<string> resultIds) {
+            var ids = string.Join(",", resultIds);
+            var response = _httpService.Client.GetAsync($"/{POE_API_FETCH}/{ids}?query={queryId}").Result;
+
+            FetchResult result = await _httpService.ReadResponse<FetchResult>(response);
+
+            if (result == null) {
+                throw new Exception("Error while getting trade results");
+            }
+
+            return result;
+        }
+
+        public TradeRequest CreateTradeRequest(Item item) {
+            TradeRequest body = new TradeRequest() {
+                Query = new TradeRequestQuery() {
+                    Name = new TradeRequestType() {
+                        Option = item.Name,
+                        Discriminator = null
+                    },
+                    Status = new TradeRequestQueryStatus() {
+                        Option = "online"
+                    },
+                    Stats = new List<TradeRequestQueryStat>() {
+                        new TradeRequestQueryStat() {
+                            Type = "and",
+                            Filters = new List<TradeRequestQueryStatFilter>()
+                        }
+                    },
+                    Filters = new TradeRequestQueryFilters() {
+                        TradeFilters = new FiltersGroup<TradeFilters>() {
+                            Filters = new TradeFilters() {
+                                SaleType = new TradeFiltersOption() {
+                                    Option = "priced"
+                                }
+                            }
+                        }
+                    }
+                },
+                Sort = new TradeRequestSort() {
+                    Price = "asc"
+                }
+            };
+
+            return body;
         }
 
         public void StashApiReady()
