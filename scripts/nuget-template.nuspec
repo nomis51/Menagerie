@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Menagerie</id>
+    <version>#{version}</version>
+    <title>Menagerie</title>
+    <authors>nomis51</authors>
+    <owners>nomis51</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <projectUrl>https://github.com/nomis51/Menagerie</projectUrl>
+    <icon>lib\net45\assets\menagerie-logo-splash.png</icon>
+    <description>A Path of Exile trade manger to simplify and speed up your trading experience</description>
+    <!-- <readme>lib\net45\README.md</readme> -->
+  </metadata>
+  <files>
+    <file src="files\**" target="lib\net45" />
+    <file src="..\src\Menagerie\bin\Release\net6.0-windows\assets\**" target="lib\net45\assets" />
+    <file src="..\src\Menagerie\bin\Release\net6.0-windows\data\**" target="lib\net45\data" />
+    <file src="..\src\Menagerie\bin\Release\net6.0-windows\tools\**" target="lib\net45\tools" />
+    <file src="..\src\Menagerie\bin\Release\net6.0-windows\runtimes\win\lib\**" target="lib\net45\runtimes\win\lib" />
+  </files>
+</package>

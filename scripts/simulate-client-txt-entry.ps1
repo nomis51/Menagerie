@@ -1,0 +1,1 @@
+Add-Content "C:\Windows\system32\logs\Client.txt" "2022/02/05 09:43:39 569062 cff94453 [INFO Client 8808] @From Player: Hi, I would like to buy your Maligaro's Cruelty Turquoise Amulet listed for 6 ancient in Archnemesis"
