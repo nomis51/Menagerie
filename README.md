@@ -36,7 +36,7 @@ A Path of Exile trade manger to simplify and speed up your trading experience.
 
 ## Table of contents 📜
 - [General informations](https://github.com/nomis51/Menagerie/blob/master/docs/general.md)
-- [Installation](https://github.com/nomis51/Menagerie/blob/master/docs/insatllation.md)
+- [Installation](https://github.com/nomis51/Menagerie/blob/master/docs/installation.md)
 - [Cheatsheet (Mostly keyboard shorcuts)](https://github.com/nomis51/Menagerie/blob/master/docs/cheatsheet.md)
 - [Incoming offers](https://github.com/nomis51/Menagerie/blob/master/docs/features/feature-incoming-offers.md)
 - [Outgoing offers](https://github.com/nomis51/Menagerie/blob/master/docs/features/feature-outgoing-offers.md)
