@@ -2,6 +2,8 @@
 ![logo](https://user-images.githubusercontent.com/25111613/103430530-0f114d80-4b93-11eb-9937-884259718529.png)
 A Path of Exile trade manger to simplify and speed up your trading experience.
 
+## Version 2.0.0 now out! See the release for more informations
+
 ## Requirements ⚙️
 - [.NET 6](https://dotnet.microsoft.com/en-us/download/dotnet/6.0/runtime) (See the [documentation](https://github.com/nomis51/Menagerie/blob/master/docs/installation.md))
 
