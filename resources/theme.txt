@@ -1,0 +1,20 @@
+background:          #434b5e
+secondaryBackground: #3b4252
+darkBackground:      #2e3440
+primary:             #e5eaf0
+accent:              #8fbbba
+
+error:               #be616a
+warning:             #eacb8b
+success:             #a3bd8d
+
+white:               #e5eaf0
+lightBlue:           #8fbbba
+blue: 				 #80a1c0
+orange:              #cf876f
+red:                 #be616b
+yellow:              #eacb8b
+green:               #a3bd8d
+purple:              #b38ead
+
+
