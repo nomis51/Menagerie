@@ -1,0 +1,138 @@
+﻿<adonisControls:AdonisWindow x:Class="Menagerie.Views.StatsView"
+                             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                             xmlns:local="clr-namespace:Menagerie.Views"
+                             xmlns:converters="clr-namespace:Menagerie.Converters"
+                             xmlns:adonisControls="clr-namespace:AdonisUI.Controls;assembly=AdonisUI"
+                             xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+                             xmlns:fa5="http://schemas.fontawesome.com/icons/"
+                             mc:Ignorable="d"
+                             Title="Statistics"
+                             Height="800"
+                             Width="1200">
+    <Window.Resources>
+        <converters:Base64ImageConverter x:Key="Base64ImageConverter" />
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <StackPanel Visibility="{Binding NoDataVisible}"
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="99"
+                    Grid.RowSpan="99"
+                    Panel.ZIndex="99"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center">
+            <TextBlock Text="No data"
+                       FontSize="42"
+                       FontWeight="Bold"></TextBlock>
+        </StackPanel>
+        <TextBlock  Grid.Row="0"
+                    Grid.Column="0"
+                    Text="Amount of Trades"
+                    HorizontalAlignment="Center"
+                    FontWeight="Bold"
+                    FontSize="18"></TextBlock>
+        <lvc:CartesianChart Name="chTrades"
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Series="{Binding Trades}"
+                            Hoverable="False">
+            <lvc:CartesianChart.AxisY>
+                <lvc:Axis Title="Nb Trades"></lvc:Axis>
+            </lvc:CartesianChart.AxisY>
+            <lvc:CartesianChart.AxisX>
+                <lvc:Axis Title="Days"
+                          Labels="{Binding Labels}"></lvc:Axis>
+            </lvc:CartesianChart.AxisX>
+        </lvc:CartesianChart>
+        <TextBlock Grid.Row="0"
+                   Grid.Column="1"
+                   Text="Amount of Currency (in Chaos Orbs)"
+                   HorizontalAlignment="Center"
+                   FontWeight="Bold"
+                   FontSize="18"></TextBlock>
+        <lvc:CartesianChart Name="chCurrencies"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Series="{Binding Currencies}"
+                            Hoverable="False">
+            <lvc:CartesianChart.AxisY>
+                <lvc:Axis Title="Amount of currency"></lvc:Axis>
+            </lvc:CartesianChart.AxisY>
+            <lvc:CartesianChart.AxisX>
+                <lvc:Axis Title="Days"
+                          Labels="{Binding Labels}"></lvc:Axis>
+            </lvc:CartesianChart.AxisX>
+        </lvc:CartesianChart>
+        <TextBlock Grid.Row="2"
+                   Grid.Column="0"
+                   Text="Currency Distribution"
+                   HorizontalAlignment="Center"
+                   FontWeight="Bold"
+                   FontSize="18"></TextBlock>
+        <lvc:PieChart Name="chCurrencyGroups"
+                      Grid.Row="3"
+                      Grid.Column="0"
+                      Series="{Binding CurrencyGroups}"
+                      StartingRotationAngle="0" />
+        <TextBlock Grid.Row="2"
+                   Grid.Column="1"
+                   Text="Trades"
+                   HorizontalAlignment="Center"
+                   FontWeight="Bold"
+                   FontSize="18"></TextBlock>
+        <ScrollViewer Grid.Row="4"
+                      Grid.Column="1">
+            <ItemsControl ItemsSource="{Binding Offers, UpdateSourceTrigger=PropertyChanged}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Row="0"
+                                       Grid.Column="0"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Right"
+                                       Text="{Binding ItemName}"></TextBlock>
+                            <fa5:ImageAwesome Grid.Row="0"
+                                              Grid.Column="1"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"
+                                              Icon="Solid_ArrowRight"
+                                              Height="20"
+                                              Foreground="#a0aec0" />
+                            <DockPanel  Grid.Row="0"
+                                        Grid.Column="2">
+                                <TextBlock VerticalAlignment="Center"
+                                           HorizontalAlignment="left"
+                                           Text="{Binding Price}"></TextBlock>
+                                <Image Margin="5,0,0,0"
+                                       HorizontalAlignment="Left"
+                                       Source="{Binding CurrencyImageLink, Converter={StaticResource Base64ImageConverter}}"
+                                       Height="30"></Image>
+                            </DockPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</adonisControls:AdonisWindow>
