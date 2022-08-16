@@ -1,0 +1,93 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <PackageVersion>2.0.0.0</PackageVersion>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="FontAwesome5" Version="2.1.6" />
+    <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
+    <PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.4.0-ci94" />
+    <PackageReference Include="ReactiveUI" Version="17.1.17" />
+    <PackageReference Include="ReactiveUI.WPF" Version="17.1.17" />
+    <PackageReference Include="Sentry.Serilog" Version="3.15.0" />
+    <PackageReference Include="Serilog" Version="2.11.0-dev-01380" />
+    <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.1-dev-00947" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Menagerie.Application\Menagerie.Application.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="assets\sounds" />
+    <Folder Include="data" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="data\item-categories.json" />
+    <Content Include="data\item-categories.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="assets\chaosRecipe\amulet.png" />
+    <Content Include="assets\chaosRecipe\amulet.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="assets\chaosRecipe\helmet.png" />
+    <Content Include="assets\chaosRecipe\helmet.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="assets\chaosRecipe\belt.png" />
+    <Content Include="assets\chaosRecipe\belt.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="assets\chaosRecipe\ring.png" />
+    <Content Include="assets\chaosRecipe\ring.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="assets\chaosRecipe\hand.png" />
+    <None Remove="assets\chaosRecipe\body-armour.png" />
+    <Content Include="assets\chaosRecipe\body-armour.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="assets\chaosRecipe\gloves.png" />
+    <Content Include="assets\chaosRecipe\gloves.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="assets\chaosRecipe\boots.png" />
+    <Content Include="assets\chaosRecipe\boots.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="assets\chaosRecipe\weapon.png" />
+    <Content Include="assets\chaosRecipe\weapon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="assets\menagerie-logo.ico" />
+    <Content Include="assets\menagerie-logo.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="assets\menagerie-logo-splash.png" />
+    <Content Include="assets\menagerie-logo-splash.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="assets\sounds\click.wav" />
+    <Content Include="assets\sounds\click.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="assets\sounds\playerJoin.wav" />
+    <Content Include="assets\sounds\playerJoin.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="assets\sounds\newOffer.wav" />
+    <Content Include="assets\sounds\newOffer.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="data\items.json" />
+    <Content Include="data\items.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+</Project>

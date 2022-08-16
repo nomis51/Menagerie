@@ -1,0 +1,331 @@
+﻿<reactiveui:ReactiveUserControl x:Class="Menagerie.Views.OutgoingOfferView"
+                                x:TypeArguments="viewModels:OutgoingOfferViewModel"
+                                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                                xmlns:reactiveui="http://reactiveui.net"
+                                xmlns:viewModels="clr-namespace:Menagerie.ViewModels"
+                                xmlns:fa5="http://schemas.fontawesome.com/icons/"
+                                xmlns:effects="clr-namespace:Menagerie.Effects"
+                                mc:Ignorable="d"
+                                Background="Transparent"
+                                Width="280"
+                                Height="120"
+                                Margin="2">
+    <Border x:Name="BorderContent"
+            CornerRadius="8"
+            BorderThickness="4"
+            BorderBrush="{StaticResource DarkBackground}"
+            Background="{StaticResource Background}">
+        <effects:RippleEffect HighlightBackground="{StaticResource Primary}">
+            <Grid x:Name="GridContent"
+                  MouseDown="GridContent_OnMouseDown"
+                  Cursor="Hand">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="22" />
+                    <RowDefinition Height="2*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0"
+                       Grid.Column="0"
+                       Grid.ColumnSpan="4"
+                       Margin="0"
+                       Padding="0"
+                       Background="{StaticResource DarkBackground}"
+                       HorizontalAlignment="Stretch"
+                       VerticalAlignment="Stretch"
+                       HorizontalContentAlignment="Center"
+                       VerticalContentAlignment="Center"
+                       Content="PlayerName"
+                       FontWeight="Bold"
+                       x:Name="LabelPlayerName">
+                    <Label.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius"
+                                    Value="4,4,0,0" />
+                        </Style>
+                    </Label.Resources>
+                    <Label.ToolTip>
+                        <StackPanel Background="{StaticResource Background}"
+                                    Opacity="0.9">
+                            <DockPanel Background="Transparent"
+                                       Margin="5,5,5,0">
+                                <Label Content="Time:"
+                                       Style="{StaticResource TooltipLabel}"
+                                       Background="Transparent"
+                                       Foreground="{StaticResource Primary}"
+                                       FontWeight="Bold">
+                                </Label>
+                                <Label x:Name="LabelTooltipTime"
+                                       Style="{StaticResource TooltipLabel}"
+                                       Background="Transparent"
+                                       Foreground="{StaticResource Primary}"
+                                       Content="00 Jan 0000 00:00:00">
+                                </Label>
+                                <Label x:Name="LabelTooltipElapsedTime"
+                                       Style="{StaticResource TooltipLabel}"
+                                       Background="Transparent"
+                                       Foreground="{StaticResource Primary}"
+                                       Content="(0 seconds ago)">
+                                </Label>
+                            </DockPanel>
+                            <DockPanel Background="Transparent"
+                                       Margin="5,0,5,0">
+                                <Label Content="Player:"
+                                       Style="{StaticResource TooltipLabel}"
+                                       Background="Transparent"
+                                       Foreground="{StaticResource Primary}"
+                                       FontWeight="Bold">
+                                </Label>
+                                <Label x:Name="LabelTooltipPlayer"
+                                       Style="{StaticResource TooltipLabel}"
+                                       Background="Transparent"
+                                       Foreground="{StaticResource Primary}"
+                                       Content="PlayerName">
+                                </Label>
+                            </DockPanel>
+                            <DockPanel Background="Transparent"
+                                       Margin="5,0,5,0">
+                                <Label Content="Item:"
+                                       Style="{StaticResource TooltipLabel}"
+                                       Background="Transparent"
+                                       Foreground="{StaticResource Primary}"
+                                       FontWeight="Bold">
+                                </Label>
+                                <Label x:Name="LabelTooltipItemName"
+                                       Style="{StaticResource TooltipLabel}"
+                                       Background="Transparent"
+                                       Foreground="{StaticResource Primary}"
+                                       Content="ItemName">
+                                </Label>
+                            </DockPanel>
+                            <DockPanel Background="Transparent"
+                                       Margin="5,0,5,0">
+                                <Label Content="Price:"
+                                       Style="{StaticResource TooltipLabel}"
+                                       Background="Transparent"
+                                       Foreground="{StaticResource Primary}"
+                                       FontWeight="Bold">
+                                </Label>
+                                <Label x:Name="LabelTooltipPrice"
+                                       Style="{StaticResource TooltipLabel}"
+                                       Background="Transparent"
+                                       Foreground="{StaticResource Primary}"
+                                       Content="0 chaos">
+                                </Label>
+                            </DockPanel>
+                            <DockPanel Background="Transparent"
+                                       Margin="5,0,5,0">
+                                <Label Content="League:"
+                                       Style="{StaticResource TooltipLabel}"
+                                       Background="Transparent"
+                                       Foreground="{StaticResource Primary}"
+                                       FontWeight="Bold">
+                                </Label>
+                                <Label x:Name="LabelTooltipLeague"
+                                       Style="{StaticResource TooltipLabel}"
+                                       Background="Transparent"
+                                       Foreground="{StaticResource Primary}"
+                                       Content="Standard">
+                                </Label>
+                            </DockPanel>
+                            <DockPanel Background="Transparent"
+                                       Margin="5,0,5,0"
+                                       x:Name="DockTooltipPriceConversions">
+                                <Label Content="Price conversions:"
+                                       Style="{StaticResource TooltipLabel}"
+                                       Background="Transparent"
+                                       Foreground="{StaticResource Primary}"
+                                       FontWeight="Bold">
+                                </Label>
+                                <Label x:Name="LabelTooltipPriceConversions"
+                                       Style="{StaticResource TooltipLabel}"
+                                       Background="Transparent"
+                                       Foreground="{StaticResource Primary}"
+                                       Content="0 chaos | 0.0 exalts | 0 exalts + 0 chaos">
+                                </Label>
+                            </DockPanel>
+                        </StackPanel>
+                    </Label.ToolTip>
+                </Label>
+
+                <Label FontSize="16"
+                       FontWeight="Bold"
+                       Content="You pay"
+                       Padding="0"
+                       Grid.Row="1"
+                       Grid.Column="0"
+                       Grid.ColumnSpan="2"
+                       VerticalAlignment="Top"
+                       HorizontalAlignment="Center" />
+
+                <Label FontSize="16"
+                       FontWeight="Bold"
+                       Content="You get"
+                       Padding="0"
+                       Grid.Row="1"
+                       Grid.Column="2"
+                       Grid.ColumnSpan="2"
+                       VerticalAlignment="Top"
+                       HorizontalAlignment="Center" />
+
+                <DockPanel LastChildFill="False"
+                           Grid.Row="2"
+                           Grid.Column="0"
+                           Grid.ColumnSpan="2"
+                           HorizontalAlignment="Center">
+                    <Label FontWeight="Bold"
+                           Padding="0"
+                           FontSize="22px"
+                           Margin="0,0,10,0"
+                           HorizontalContentAlignment="Center"
+                           VerticalAlignment="Center"
+                           Content="10"
+                           x:Name="LabelPrice">
+                    </Label>
+
+                    <Image x:Name="ImageCurrency"
+                           MaxHeight="50"
+                           Source="https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyRerollMagic.png?v=6d9520174f6643e502da336e76b730d3" />
+                </DockPanel>
+
+                <fa5:ImageAwesome Grid.Row="2"
+                                  Grid.Column="1"
+                                  Grid.ColumnSpan="2"
+                                  Width="25"
+                                  Icon="Solid_ArrowRight"
+                                  Foreground="{StaticResource Primary}"
+                                  HorizontalAlignment="Center" />
+
+                <!-- TODO: uncomment when bulk trade display ready -->
+                <!--<DockPanel LastChildFill="False" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" HorizontalAlignment="Center">
+                    <Label 
+                       FontWeight="Bold"
+                       FontSize="18px"
+                       HorizontalContentAlignment="Center"
+                       VerticalAlignment="Center"
+                       Content="10x"
+                       x:Name="LabelTargetPrice">
+                    </Label>
+
+                    <Image x:Name="ImageTargetCurrency"
+                           MaxHeight="50"
+                           Source="https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyRerollMagic.png?v=6d9520174f6643e502da336e76b730d3"
+                      />
+                </DockPanel>-->
+
+                <Image x:Name="ItemImage"
+                           MaxHeight="50"
+                           Grid.Row="2"
+                       Grid.Column="2"
+                       Grid.ColumnSpan="2"
+                           Source="https://web.poecdn.com/gen/image/WzI1LDE0LHsiZiI6IjJESXRlbXMvQmVsdHMvSW5qZWN0b3JCZWx0IiwidyI6MiwiaCI6MSwic2NhbGUiOjF9XQ/21ec0269de/InjectorBelt.png" />
+                <Label 
+                        Visibility="Hidden"
+                       Padding="0"
+                       Margin="0"
+                          Grid.Row="2"
+                       Grid.Column="2"
+                       Grid.ColumnSpan="2"
+                       FontWeight="Bold"
+                       HorizontalContentAlignment="Center"
+                       VerticalAlignment="Center"
+                       Content="ItemName"
+                       x:Name="LabelItemName"/>
+
+                <Button x:Name="ButtonJoinHideout"
+                        Grid.Row="3"
+                        Grid.Column="0"
+                        Click="BtnJoinHideout_OnClick"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        Style="{StaticResource OfferButtonGreen}"
+                        Cursor="Hand"
+                        BorderThickness="0">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius"
+                                    Value="0,0,0,5" />
+                        </Style>
+                    </Button.Resources>
+                    <Button.Content>
+                        <fa5:ImageAwesome Width="15"
+                                          Height="15"
+                                          Icon="Solid_Home"
+                                          Foreground="{StaticResource Primary}"
+                                          HorizontalAlignment="Center" />
+                    </Button.Content>
+                </Button>
+
+                <Button x:Name="ButtonWhisper"
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        Click="BtnWhisper_OnClick"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        Style="{StaticResource OfferButtonPurple}"
+                        Cursor="Hand"
+                        BorderThickness="0">
+                    <Button.Content>
+                        <fa5:ImageAwesome Width="15"
+                                          Height="15"
+                                          Icon="Solid_Comment"
+                                          Foreground="{StaticResource Primary}"
+                                          HorizontalAlignment="Center" />
+                    </Button.Content>
+                </Button>
+
+                <Button x:Name="ButtonTrade"
+                        Grid.Row="3"
+                        Grid.Column="2"
+                        Click="BtnTrade_OnClick"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        Style="{StaticResource OfferButtonOrange}"
+                        Cursor="Hand"
+                        BorderThickness="0">
+                    <Button.Content>
+                        <fa5:ImageAwesome Width="15"
+                                          Height="15"
+                                          Icon="Solid_DollarSign"
+                                          Foreground="{StaticResource Primary}"
+                                          HorizontalAlignment="Center" />
+                    </Button.Content>
+                </Button>
+
+                <Button x:Name="BtnRemove"
+                        Grid.Row="3"
+                        Grid.Column="3"
+                        Click="BtnRemove_OnClick"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        Style="{StaticResource OfferButtonRed}"
+                        Cursor="Hand"
+                        BorderThickness="0">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius"
+                                    Value="0,0,5,0" />
+                        </Style>
+                    </Button.Resources>
+                    <Button.Content>
+                        <fa5:ImageAwesome Width="15"
+                                          Height="15"
+                                          Icon="Solid_TimesCircle"
+                                          Foreground="{StaticResource Primary}"
+                                          HorizontalAlignment="Center" />
+                    </Button.Content>
+                </Button>
+            </Grid>
+        </effects:RippleEffect>
+    </Border>
+</reactiveui:ReactiveUserControl>

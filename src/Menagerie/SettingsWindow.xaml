@@ -1,0 +1,348 @@
+﻿<reactiveui:ReactiveWindow x:Class="Menagerie.SettingsWindow"
+                           x:TypeArguments="viewModels:SettingsViewModel"
+                           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                           xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                           xmlns:local="clr-namespace:Menagerie"
+                           xmlns:reactiveui="http://reactiveui.net"
+                           xmlns:fa5="http://schemas.fontawesome.com/icons/"
+                           xmlns:viewModels="clr-namespace:Menagerie.ViewModels"
+                           mc:Ignorable="d"
+                           Title="SettingsWindow"
+                           WindowStartupLocation="CenterScreen"
+                           Background="Transparent"
+                           WindowStyle="None"
+                           AllowsTransparency="True"
+                           Topmost="True"
+                           Height="550"
+                           Width="800">
+    <Border CornerRadius="10"
+            BorderBrush="{StaticResource Background}"
+            Background="{StaticResource Background}"
+            BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Top bar -->
+            <Label x:Name="LabelAppVersion" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"
+                   Content="AppVersion: 1.2.3 (Build 123)" />
+            <DockPanel Grid.Row="0"
+                       Grid.Column="0"
+                       Grid.ColumnSpan="2"
+                       LastChildFill="False"
+                       HorizontalAlignment="Right"
+                       VerticalAlignment="Top">
+                <Button x:Name="ButtonTopBarClose"
+                        Click="ButtonTopBarClose_OnClick"
+                        Margin="5"
+                        Style="{StaticResource  MaterialDesignFloatingActionLightButton}"
+                        Height="20"
+                        Width="20"
+                        BorderThickness="0"
+                        BorderBrush="{StaticResource Red}"
+                        Background="{StaticResource Red}"
+                        Foreground="{StaticResource Red}">
+                    <Button.Content>
+                        <fa5:ImageAwesome Width="8"
+                                          Height="8"
+                                          Margin="5"
+                                          Icon="Solid_Times"
+                                          Foreground="{StaticResource Primary}"
+                                          HorizontalAlignment="Center" />
+                    </Button.Content>
+                </Button>
+
+            </DockPanel>
+
+            <!-- Navigation -->
+            <Border Grid.Row="1"
+                    Grid.Column="0"
+                    CornerRadius="0, 0, 0, 10"
+                    BorderThickness="1"
+                    Background="{StaticResource DarkBackground}"
+                    BorderBrush="{StaticResource DarkBackground}">
+                <ListBox x:Name="ListBoxNavigation"
+                         Background="Transparent"
+                         SelectionChanged="ListBoxNavigation_OnSelectionChanged">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Label x:Name="LabelNavigationItem"
+                                   Content="{Binding}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
+            </Border>
+
+            <!-- General -->
+            <StackPanel Grid.Row="1"
+                        Grid.Column="1"
+                        Visibility="Hidden"
+                        x:Name="StackPanelGeneral">
+                <ComboBox x:Name="ComboBoxLeague"
+                          DisplayMemberPath="."
+                          Margin="8, 8, 8, 4"
+                          Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                          materialDesign:ComboBoxAssist.ShowSelectedItem="True"
+                          materialDesign:HintAssist.Hint="League"
+                          materialDesign:HintAssist.Background="{StaticResource Background}"
+                          materialDesign:HintAssist.Foreground="{StaticResource Primary}"
+                          Foreground="{StaticResource Primary}" />
+                <TextBox Margin="8,4,8, 4"
+                         x:Name="TextBoxAccountName"
+                         materialDesign:TextFieldAssist.LeadingIcon="User"
+                         materialDesign:TextFieldAssist.HasClearButton="True"
+                         materialDesign:HintAssist.Hint="Account name"
+                         materialDesign:HintAssist.Background="{StaticResource Background}"
+                         materialDesign:HintAssist.Foreground="{StaticResource Primary}"
+                         Foreground="{StaticResource Primary}"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}" />
+                <PasswordBox Margin="8,4,8, 4"
+                             x:Name="TextBoxPoesessid"
+                             materialDesign:TextFieldAssist.LeadingIcon="User"
+                             materialDesign:TextFieldAssist.HasClearButton="True"
+                             materialDesign:HintAssist.Hint="POESESSID"
+                             materialDesign:HintAssist.Background="{StaticResource Background}"
+                             materialDesign:HintAssist.Foreground="{StaticResource Primary}"
+                             Foreground="{StaticResource Primary}"
+                             PasswordChanged="TextBoxPoesessid_OnPasswordChanged"
+                             Style="{StaticResource MaterialDesignOutlinedPasswordBox}" />
+                
+                <DockPanel Margin="8,4,8,4">
+                    <Label Content="Enable death replays and replays" />
+                    <ToggleButton x:Name="ButtonEnableRecording"
+                                  HorizontalAlignment="Left"
+                                  Background="{StaticResource Red}"
+                                  Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+                </DockPanel>
+            </StackPanel>
+
+            <!-- Incoming trades -->
+            <StackPanel Grid.Row="1"
+                        Grid.Column="1"
+                        Visibility="Hidden"
+                        x:Name="StackPanelIncomingTrades">
+                <TextBox Margin="8,4,8, 4"
+                         x:Name="TextBoxBusyWhisperIncomingTrades"
+                         materialDesign:TextFieldAssist.LeadingIcon="User"
+                         materialDesign:TextFieldAssist.HasClearButton="True"
+                         materialDesign:HintAssist.Hint="Busy whisper"
+                         materialDesign:HintAssist.Background="{StaticResource Background}"
+                         materialDesign:HintAssist.Foreground="{StaticResource Primary}"
+                         Foreground="{StaticResource Primary}"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}" />
+
+                <TextBox Margin="8,4,8, 4"
+                         x:Name="TextBoxSoldWhisperIncomingTrades"
+                         materialDesign:TextFieldAssist.LeadingIcon="User"
+                         materialDesign:TextFieldAssist.HasClearButton="True"
+                         materialDesign:HintAssist.Hint="Sold whisper"
+                         materialDesign:HintAssist.Background="{StaticResource Background}"
+                         materialDesign:HintAssist.Foreground="{StaticResource Primary}"
+                         Foreground="{StaticResource Primary}"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}" />
+
+                <TextBox Margin="8,4,8, 4"
+                         x:Name="TextBoxStillInterestedWhisperIncomingTrades"
+                         materialDesign:TextFieldAssist.LeadingIcon="User"
+                         materialDesign:TextFieldAssist.HasClearButton="True"
+                         materialDesign:HintAssist.Hint="Still interested whisper"
+                         materialDesign:HintAssist.Background="{StaticResource Background}"
+                         materialDesign:HintAssist.Foreground="{StaticResource Primary}"
+                         Foreground="{StaticResource Primary}"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}" />
+
+                <TextBox Margin="8,4,8, 4"
+                         x:Name="TextBoxThanksWhisperIncomingTrades"
+                         materialDesign:TextFieldAssist.LeadingIcon="User"
+                         materialDesign:TextFieldAssist.HasClearButton="True"
+                         materialDesign:HintAssist.Hint="Thanks whisper"
+                         materialDesign:HintAssist.Background="{StaticResource Background}"
+                         materialDesign:HintAssist.Foreground="{StaticResource Primary}"
+                         Foreground="{StaticResource Primary}"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}" />
+
+                <TextBox Margin="8,4,8, 4"
+                         x:Name="TextBoxInviteWhisperIncomingtrades"
+                         materialDesign:TextFieldAssist.LeadingIcon="User"
+                         materialDesign:TextFieldAssist.HasClearButton="True"
+                         materialDesign:HintAssist.Hint="Invite whisper (blank to disable)"
+                         materialDesign:HintAssist.Background="{StaticResource Background}"
+                         materialDesign:HintAssist.Foreground="{StaticResource Primary}"
+                         Foreground="{StaticResource Primary}"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}" />
+
+                <DockPanel Margin="8,4,8,4">
+                    <Label Content="Say thanks when trade is completed" />
+                    <ToggleButton x:Name="ButtonAutoThanksIncomingTrades"
+                                  HorizontalAlignment="Left"
+                                   Background="{StaticResource Red}"
+                                  Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+                </DockPanel>
+
+                <DockPanel Margin="8,4,8,4">
+                    <Label Content="Kick player when trade is completed" />
+                    <ToggleButton x:Name="ButtonAutoKickIncomingTrades"
+                                  HorizontalAlignment="Left"
+                                   Background="{StaticResource Red}"
+                                  Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+                </DockPanel>
+
+                <DockPanel Margin="8,4,8,4">
+                    <Label Content="Ignore sold items" />
+                    <ToggleButton x:Name="ButtonIgnoreSoldIncomingTrades"
+                                  HorizontalAlignment="Left"
+                                   Background="{StaticResource Red}"
+                                  Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+                </DockPanel>
+
+                <DockPanel Margin="8,4,8,4">
+                    <Label Content="Ignore items out of current league" />
+                    <ToggleButton x:Name="ButtonIgnoreOutOfLeagueIncomingTrades"
+                                  HorizontalAlignment="Left"
+                                  Background="{StaticResource Red}"
+                                  Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+                </DockPanel>
+                
+                <DockPanel Margin="8,4,8,4">
+                    <Label Content="Verify offer's price with Trade API (scam / outdated infos)" />
+                    <ToggleButton x:Name="ButtonVerifyPriceIncomingTrades"
+                                  HorizontalAlignment="Left"
+                                  Background="{StaticResource Red}"
+                                  Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+                </DockPanel>
+                
+                <DockPanel Margin="8,4,8,4">
+                    <Label Content="Highlight items with the overlay grid" />
+                    <ToggleButton x:Name="ButtonHighlightWithGridIncomingTrades"
+                                  HorizontalAlignment="Left"
+                                  Background="{StaticResource Red}"
+                                  Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+                </DockPanel>
+            </StackPanel>
+
+            <!-- Outgoing trades -->
+            <StackPanel Grid.Row="1"
+                        Grid.Column="1"
+                        Visibility="Hidden"
+                        x:Name="StackPanelOutgoingTrades">
+                <TextBox Margin="8,4,8, 4"
+                         x:Name="TextBoxThanksWhisperOutgoingTrades"
+                         materialDesign:TextFieldAssist.LeadingIcon="User"
+                         materialDesign:TextFieldAssist.HasClearButton="True"
+                         materialDesign:HintAssist.Hint="Thanks whisper"
+                         materialDesign:HintAssist.Background="{StaticResource Background}"
+                         materialDesign:HintAssist.Foreground="{StaticResource Primary}"
+                         Foreground="{StaticResource Primary}"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}" />
+
+                <DockPanel Margin="8,4,8,4">
+                    <Label Content="Say thanks when trade is completed" />
+                    <ToggleButton x:Name="ButtonAutoThanksOutgoingTrades"
+                                  HorizontalAlignment="Left"
+                                   Background="{StaticResource Red}"
+                                  Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+                </DockPanel>
+
+                <DockPanel Margin="8,4,8,4">
+                    <Label Content="Leave party when trade is completed" />
+                    <ToggleButton x:Name="ButtonAutoLeaveOutgoingTrades"
+                                  HorizontalAlignment="Left"
+                                   Background="{StaticResource Red}"
+                                  Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+                </DockPanel>
+            </StackPanel>
+
+            <!-- Chaos recipe -->
+            <StackPanel Grid.Row="1"
+                        Grid.Column="1"
+                        Visibility="Hidden"
+                        x:Name="StackPanelChaosRecipe">
+                <DockPanel Margin="8,4,8,4">
+                    <Label Content="Enabled" />
+                    <ToggleButton x:Name="ButtonEnableChaosRecipe"
+                                  HorizontalAlignment="Left"
+                                   Background="{StaticResource Red}"
+                                  Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+                </DockPanel>
+
+                <TextBox Margin="8,4,8, 4"
+                         x:Name="TextBoxStashTabIndexChaosRecipe"
+                         materialDesign:TextFieldAssist.LeadingIcon="User"
+                         materialDesign:TextFieldAssist.HasClearButton="True"
+                         materialDesign:HintAssist.Hint="Stash tab index"
+                         materialDesign:HintAssist.Background="{StaticResource Background}"
+                         materialDesign:HintAssist.Foreground="{StaticResource Primary}"
+                         Foreground="{StaticResource Primary}"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}" />
+
+                <TextBox Margin="8,4,8, 4"
+                         x:Name="TextBoxRefreshRateChaosRecipe"
+                         materialDesign:TextFieldAssist.LeadingIcon="User"
+                         materialDesign:TextFieldAssist.HasClearButton="True"
+                         materialDesign:TextFieldAssist.SuffixText="minute(s)"
+                         materialDesign:HintAssist.Hint="Refresh rate"
+                         materialDesign:HintAssist.Background="{StaticResource Background}"
+                         materialDesign:HintAssist.Foreground="{StaticResource Primary}"
+                         Foreground="{StaticResource Primary}"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}" />
+
+            </StackPanel>
+            
+            <!-- Chat scan -->
+            <StackPanel Grid.Row="1"
+                        Grid.Column="1"
+                        Visibility="Hidden"
+                        x:Name="StackPanelChatScan">
+                <DockPanel Margin="8,4,8,4">
+                    <Label Content="Enabled" />
+                    <ToggleButton x:Name="ButtonEnableChatScan"
+                                  HorizontalAlignment="Left"
+                                  Background="{StaticResource Red}"
+                                  Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+                </DockPanel>
+                
+                <TextBox Margin="8,4,8, 4"
+                         x:Name="TextBoxWordsChatScan"
+                         materialDesign:TextFieldAssist.LeadingIcon="User"
+                         materialDesign:TextFieldAssist.HasClearButton="True"
+                         materialDesign:HintAssist.Hint="Words"
+                         materialDesign:HintAssist.Background="{StaticResource Background}"
+                         materialDesign:HintAssist.Foreground="{StaticResource Primary}"
+                         Foreground="{StaticResource Primary}"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}" />
+                
+                <DockPanel Margin="8,4,8,4">
+                    <Label Content="Auto remove message after a delay" />
+                    <ToggleButton x:Name="ButtonEnableAutoRemoveMessageChatScan"
+                                  HorizontalAlignment="Left"
+                                  Background="{StaticResource Red}"
+                                  Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" />
+                </DockPanel>
+                
+                <TextBox Margin="8,4,8, 4"
+                         x:Name="TextBoxAutoRemoveDelayChatScan"
+                         materialDesign:TextFieldAssist.LeadingIcon="User"
+                         materialDesign:TextFieldAssist.HasClearButton="True"
+                         materialDesign:HintAssist.Hint="Auto remove delay (in seconds)"
+                         materialDesign:HintAssist.Background="{StaticResource Background}"
+                         materialDesign:HintAssist.Foreground="{StaticResource Primary}"
+                         Foreground="{StaticResource Primary}"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}" />
+                </StackPanel>
+        </Grid>
+    </Border>
+</reactiveui:ReactiveWindow>

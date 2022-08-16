@@ -1,0 +1,86 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>Menagerie.Data</AssemblyName>
+    <RootNamespace>Menagerie.Data</RootNamespace>
+    <PackageId>Menagerie.Data</PackageId>
+    <Authors>Menagerie.Data</Authors>
+    <Company>Menagerie.Data</Company>
+    <Product>Menagerie.Data</Product>
+    <PackageVersion>2.0.0.0</PackageVersion>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="AhoCorasick" Version="2.0.46" />
+    <PackageReference Include="LiteDB" Version="5.0.12" />
+    <PackageReference Include="MediaToolkit" Version="1.1.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="ReactiveUI" Version="17.1.17" />
+    <PackageReference Include="Sentry.Serilog" Version="3.15.0" />
+    <PackageReference Include="Serilog" Version="2.11.0-dev-01380" />
+    <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.1-dev-00947" />
+    <PackageReference Include="Winook" Version="1.3.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Menagerie.Shared\Menagerie.Shared.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="tools\ffmpeg\avcodec-59.dll" />
+    <Content Include="tools\ffmpeg\avcodec-59.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="tools\ffmpeg\avutil-57.dll" />
+    <Content Include="tools\ffmpeg\avutil-57.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="tools\ffmpeg\postproc-56.dll" />
+    <Content Include="tools\ffmpeg\postproc-56.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="tools\ffmpeg\ffmpeg.exe" />
+    <None Remove="tools\ffmpeg\ffplay.exe" />
+    <Content Include="tools\ffmpeg\ffplay.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="tools\ffmpeg\avformat-59.dll" />
+    <Content Include="tools\ffmpeg\avformat-59.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="tools\ffmpeg\swresample-4.dll" />
+    <Content Include="tools\ffmpeg\swresample-4.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="tools\ffmpeg\ffprobe.exe" />
+    <Content Include="tools\ffmpeg\ffprobe.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="tools\ffmpeg\avfilter-8.dll" />
+    <Content Include="tools\ffmpeg\avfilter-8.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="tools\ffmpeg\swscale-6.dll" />
+    <Content Include="tools\ffmpeg\swscale-6.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="tools\ffmpeg\avdevice-59.dll" />
+    <Content Include="tools\ffmpeg\avdevice-59.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="tools\ffmpeg\readme.txt" />
+    <Content Include="tools\ffmpeg\readme.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="tools\ffmpeg\LICENSE.txt" />
+    <Content Include="tools\ffmpeg\LICENSE.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="tools\ffmpeg\menagerie-ffmpeg.exe" />
+    <Content Include="tools\ffmpeg\menagerie-ffmpeg.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+</Project>
