@@ -43,7 +43,7 @@ A Path of Exile trade manger to simplify and speed up your trading experience.
 - [Chaos recipe overlay](https://github.com/nomis51/Menagerie/blob/master/docs/features/feature-chaos-recipe-overlay.md)
 - [Death replays / replays](https://github.com/nomis51/Menagerie/blob/master/docs/features/death-replay-replay.md)
 - [Statistics](https://github.com/nomis51/Menagerie/blob/master/docs/features/feature-stats.md)
-- [Message translator](https://github.com/nomis51/Menagerie/blob/master/docs/feature/feature-translator.md)
+- [Message translator](https://github.com/nomis51/Menagerie/blob/master/docs/features/feature-translator.md)
 - [Chat scanning](https://github.com/nomis51/Menagerie/blob/master/docs/features/feature-chat-scan.md)
 - [Anti-scam / Anti-outdated-informations](https://github.com/nomis51/Menagerie/blob/master/docs/features/feature-anti-scam.md)
 
