@@ -1,6 +1,6 @@
 # Menagerie
 ![logo](https://user-images.githubusercontent.com/25111613/103430530-0f114d80-4b93-11eb-9937-884259718529.png)
-A Path of Exile trade manager to simplify and speed up your trading experience.
+A Path of Exile trade manager to simplify and speed up your trading experience, and much more!
 
 ## Version 2.0.0 now out! See the release for more informations
 
