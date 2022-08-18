@@ -2,6 +2,7 @@
 
 public class Settings
 {
+    public string Id { get; set; } = Guid.NewGuid().ToString();
     public AppSettings App { get; set; }
     public GeneralSettings General { get; set; }
     public IncomingTradesSettings IncomingTrades { get; set; }

@@ -2,6 +2,7 @@
 using Menagerie.Shared.Abstractions;
 using Menagerie.Shared.Models.Setting;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace Menagerie.Data.Services;
 
@@ -27,7 +28,7 @@ public class SettingsService : IService
     {
         var path = Environment.ExpandEnvironmentVariables(SettingsFolder);
         if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-        
+
         _settingsFilePath = Path.Join(path, SettingsFile);
     }
 
@@ -62,11 +63,11 @@ public class SettingsService : IService
                 }
             }
         }
-
     }
 
     public Task Start()
     {
+        Log.Warning("Application starting {Id}", _settings.Id);
         return Task.CompletedTask;
     }
 

@@ -80,7 +80,8 @@ public static class HttpProvider
         }
         else
         {
-            Log.Error("Errored response content: \n{}", response.Content.ReadAsStringAsync().Result);
+            var message = response.Content.ReadAsStringAsync().Result;
+            Log.Error("Errored response content: {Message}", message);
         }
 
         return default;

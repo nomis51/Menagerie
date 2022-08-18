@@ -30,6 +30,10 @@ public class NavigationViewModel : ReactiveObject
     public delegate void ToggleTranslatorViewEvent();
 
     public event ToggleTranslatorViewEvent OnToggleTranslatorView;
+    
+    public delegate void ToggleBulkTradeViewEvent();
+
+    public event ToggleBulkTradeViewEvent OnToggleBulkTradeView;
 
     #endregion
 
@@ -118,6 +122,24 @@ public class NavigationViewModel : ReactiveObject
                 Height = IconHeight,
                 Foreground = primary,
                 Icon = EFontAwesomeIcon.Solid_SignOutAlt,
+                Margin = _iconMargin
+            }
+        }));
+        _navigationItems.Add(new NavigationItemViewModel(new NavigationItemConfig
+        {
+            Width = ButtonWidth,
+            Height = ButtonHeight,
+            Margin = _buttonMargin,
+            Background = orange,
+            BorderBrush = orange,
+            Style = materialDesignFloatingButtonStyle,
+            OnClickFn = ButtonBulkTrade_Click,
+            IconConfig = new NavigationItemIconConfig
+            {
+                Width = IconWidth,
+                Height = IconHeight,
+                Foreground = primary,
+                Icon = EFontAwesomeIcon.Solid_ExchangeAlt,
                 Margin = _iconMargin
             }
         }));
@@ -223,6 +245,14 @@ public class NavigationViewModel : ReactiveObject
         AppService.Instance.SaveLastClip();
     }
 
+    public void ButtonBulkTrade_Click(object? sender, RoutedEventArgs e)
+    {
+        AppService.Instance.PlayClickSoundEffect();
+
+        ToggleBulkTrade();
+        ToggleToolsButtons();
+    }
+
     private void ButtonQuit_Click(object? sender, RoutedEventArgs e)
     {
         ExitApp();
@@ -267,6 +297,11 @@ public class NavigationViewModel : ReactiveObject
         AppService.Instance.PlayClickSoundEffect();
         ToggleToolsButtons();
         System.Windows.Application.Current.Shutdown();
+    }
+
+    public void ToggleBulkTrade()
+    {
+        OnToggleBulkTradeView?.Invoke();
     }
 
     private void ToggleStats()

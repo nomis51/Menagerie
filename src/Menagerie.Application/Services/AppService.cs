@@ -3,6 +3,7 @@ using Menagerie.Application.Events;
 using Menagerie.Data.Events;
 using Menagerie.Data.Services;
 using Menagerie.Shared.Abstractions;
+using Menagerie.Shared.Helpers;
 using Menagerie.Shared.Models.Chat;
 using Menagerie.Shared.Models.Poe.Stash;
 using Menagerie.Shared.Models.Setting;
@@ -77,7 +78,18 @@ public class AppService : IService
         await _gameChatService.Start();
         await _audioService.Start();
 
-        _ = UpdateApp();
+        _ = UpdateHelper.UpdateApp();
+    }
+    
+    public List<string> GetCurrencies()
+    {
+        return AppDataService.Instance.GetCurrencies();
+    }
+
+    public async Task<IEnumerable<BulkTradeItemDto>> SearchBulkTrade(string have, string want, int minWant = 1)
+    {
+        var response = await AppDataService.Instance.SearchBulkTrade(have, want, minWant);
+        return response is null ? Enumerable.Empty<BulkTradeItemDto>() : AppMapper.Instance.MapBulkTradeResponse(response, minWant);
     }
 
     public void ToggleItemHighlight(bool isVisible)
@@ -114,7 +126,6 @@ public class AppService : IService
     {
         AppDataService.Instance.SetSettings(AppMapper.Instance.Map<Settings>(settings));
     }
-
 
     public bool EnsureGameFocused()
     {
@@ -200,6 +211,11 @@ public class AppService : IService
     public void SendChatMessage(string message)
     {
         _gameChatService.Send(message);
+    }
+
+    public void InjectToClipboard(string text)
+    {
+        ClipboardHelper.SetClipboard(text);
     }
 
     public void SendHideoutCommand(string player = "")
@@ -317,28 +333,6 @@ public class AppService : IService
     private void OnNewIncomingOffer(IncomingOffer offer)
     {
         AppEvents.NewIncomingOfferEventInvoke(AppMapper.Instance.Map<IncomingOfferDto>(offer));
-    }
-
-    private Task UpdateApp()
-    {
-        return Task.Run(async () =>
-        {
-            try
-            {
-                using var updateManager = await UpdateManager.GitHubUpdateManager("https://github.com/nomis51/Menagerie");
-                var infos = await updateManager.CheckForUpdate();
-
-                if (!infos.ReleasesToApply.Any()) return;
-
-                Log.Information("New update available {version}. Installing...", infos.ReleasesToApply.First().Version);
-                await updateManager.UpdateApp();
-                Log.Information("Version {version} installed", infos.ReleasesToApply.First().Version);
-            }
-            catch (Exception e)
-            {
-                Log.Warning("Unable to check for updates / update the app: {Message}", e.Message);
-            }
-        });
     }
 
     #endregion

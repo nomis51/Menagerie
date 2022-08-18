@@ -15,10 +15,11 @@ public class AppViewModel : ReactiveObject
 
     public event OverlayVisibilityChangeEvent OnOverlayVisibilityChange;
 
-    public delegate void StashGridVisibilityChangeEvent(bool isVisible, int width, int height, int left, int top, int leftSize = 1, int topSize = 1, string stashTab = "", bool hasFolderOffset = false);
+    public delegate void StashGridVisibilityChangeEvent(bool isVisible, int width, int height, int left, int top, int leftSize = 1, int topSize = 1, string stashTab = "",
+        bool hasFolderOffset = false);
 
     public event StashGridVisibilityChangeEvent OnStashGridVisibilityChange;
-    
+
     public delegate void TranslatorVisibleEvent();
 
     public event TranslatorVisibleEvent OnTranslatorVisible;
@@ -31,6 +32,7 @@ public class AppViewModel : ReactiveObject
     private bool _isStatsVisible;
     private bool _isTranslationToolVisible;
     private bool _isChaosRecipeVisible;
+    private bool _isBulkTradeVisible;
 
     #endregion
 
@@ -42,6 +44,12 @@ public class AppViewModel : ReactiveObject
     {
         get => _isChaosRecipeVisible;
         private set => this.RaiseAndSetIfChanged(ref _isChaosRecipeVisible, value);
+    }
+
+    public bool IsBulkTradeVisible
+    {
+        get => _isBulkTradeVisible;
+        private set => this.RaiseAndSetIfChanged(ref _isBulkTradeVisible, value);
     }
 
     public bool IsStatsVisible
@@ -67,6 +75,7 @@ public class AppViewModel : ReactiveObject
         NavigationViewModel.OnToggleStatisticsView += Navigation_OnToggleStatisticsView;
         NavigationViewModel.OnToggleTranslatorView += Navigation_OnToggleTranslatorView;
         NavigationViewModel.OnToggleChaosRecipeView += Navigation_OnToggleChaosRecipeView;
+        NavigationViewModel.OnToggleBulkTradeView += Navigation_OnToggleBulkTradeView;
 
         var settings = AppService.Instance.GetSettings();
         IsChaosRecipeVisible = settings.ChaosRecipe.Enabled;
@@ -82,6 +91,11 @@ public class AppViewModel : ReactiveObject
     public void ToggleStatistics()
     {
         IsStatsVisible = !IsStatsVisible;
+    }
+
+    public void ToggleBulkTrade()
+    {
+        IsBulkTradeVisible = !IsBulkTradeVisible;
     }
 
     public void ToggleTranslator()
@@ -107,6 +121,11 @@ public class AppViewModel : ReactiveObject
     #endregion
 
     #region Private methods
+
+    private void Navigation_OnToggleBulkTradeView()
+    {
+        ToggleBulkTrade();
+    }
 
     private void ToggleSettings()
     {
@@ -158,7 +177,8 @@ public class AppViewModel : ReactiveObject
         var settings = AppService.Instance.GetSettings();
         var gridSettings = settings.StashTabGrid.TabsGridSettings.Find(t => t.StashTab == stashTab);
 
-        OnStashGridVisibilityChange?.Invoke(isVisible,  gridSettings?.Width ?? 12,  gridSettings?.Height ?? 12, left, top, leftSize, topSize, stashTab, gridSettings?.HasFolderOffset ?? false);
+        OnStashGridVisibilityChange?.Invoke(isVisible, gridSettings?.Width ?? 12, gridSettings?.Height ?? 12, left, top, leftSize, topSize, stashTab,
+            gridSettings?.HasFolderOffset ?? false);
     }
 
 

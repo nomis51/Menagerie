@@ -10,6 +10,18 @@ public static class CurrencyHelper
     private static readonly Dictionary<string, string> CurrencyToImageLink = new()
     {
         {
+            "chaos",
+            "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyRerollRare.png?v=c60aa876dd6bab31174df91b1da1b4f9"
+        },
+        {
+            "divine",
+            "https://web.poecdn.com/gen/image/WzI1LDE0LHsiZiI6IjJESXRlbXMvQ3VycmVuY3kvQ3VycmVuY3lNb2RWYWx1ZXMiLCJzY2FsZSI6MX1d/ec48896769/CurrencyModValues.png"
+        },
+        {
+            "exalted",
+            "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyAddModToRare.png?v=1745ebafbd533b6f91bccf588ab5efc5"
+        },
+        {
             "alt",
             "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyRerollMagic.png?v=6d9520174f6643e502da336e76b730d3"
         },
@@ -22,16 +34,8 @@ public static class CurrencyHelper
             "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyUpgradeToRare.png?v=89c110be97333995522c7b2c29cae728"
         },
         {
-            "chaos",
-            "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyRerollRare.png?v=c60aa876dd6bab31174df91b1da1b4f9"
-        },
-        {
             "gcp",
             "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyGemQuality.png?v=f11792b6dbd2f5f869351151bc3a4539"
-        },
-        {
-            "exalted",
-            "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyAddModToRare.png?v=1745ebafbd533b6f91bccf588ab5efc5"
         },
         {
             "chrome",
@@ -86,6 +90,10 @@ public static class CurrencyHelper
             "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyConvertToNormal.png?v=15e3ef97f04a39ae284359309697ef7d"
         },
         {
+            "whetstone",
+            "https://web.poecdn.com/gen/image/WzI1LDE0LHsiZiI6IjJESXRlbXMvQ3VycmVuY3kvQ3VycmVuY3lXZWFwb25RdWFsaXR5Iiwic2NhbGUiOjF9XQ/c9cd72719e/CurrencyWeaponQuality.png"
+        },
+        {
             "regret",
             "https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyPassiveSkillRefund.png?v=1de687952ce56385b74ac450f97fcc33"
         },
@@ -134,10 +142,13 @@ public static class CurrencyHelper
             "https://web.poecdn.com/image/Art/2DItems/Currency/HorizonOrb.png?v=f3b3343dc61c60e667003bbdbbdb2374"
         },
         { "ex shard", "https://web.poecdn.com/gen/image/WzI1LDE0LHsiZiI6IjJESXRlbXMvQ3VycmVuY3kvRXhhbHRlZFNoYXJkIiwic2NhbGUiOjF9XQ/b9e4013af5/ExaltedShard.png" },
-        {
-            "divine",
-            "https://web.poecdn.com/gen/image/WzI1LDE0LHsiZiI6IjJESXRlbXMvQ3VycmVuY3kvQ3VycmVuY3lNb2RWYWx1ZXMiLCJzY2FsZSI6MX1d/ec48896769/CurrencyModValues.png"
-        }
+    };
+
+    private static readonly IEnumerable<string> TopCurrencies = new[]
+    {
+        "Exalted Orb",
+        "Divine Orb",
+        "Chaos Orb",
     };
 
     private const string ImagesFolder = "./assets/cache/";
@@ -146,6 +157,21 @@ public static class CurrencyHelper
     #endregion
 
     #region Public methods
+
+    public static List<string> GetRealCurrencyNames()
+    {
+        var result = CurrencyToImageLink.Keys.Select(GetRealName)
+            .Where(e => !TopCurrencies.Contains(e))
+            .OrderBy(e => e)
+            .ToList();
+
+        foreach (var topCurrency in TopCurrencies)
+        {
+            result.Insert(0, topCurrency);
+        }
+
+        return result;
+    }
 
     public static string GetCurrencyImageLink(string currencyName)
     {
@@ -195,6 +221,7 @@ public static class CurrencyHelper
             "Scroll of Wisdom" => "scroll",
             "Harbinger's Orb" => "harbinger",
             "Orb of Horizon" or "Orb of Horizons" => "horizon",
+            "Blacksmith's Whetstone" => "whetstone",
             _ => text
         };
     }
@@ -235,6 +262,7 @@ public static class CurrencyHelper
             "scroll" => "Scroll of Wisdom",
             "harbinger" => "Harbinger's Orb",
             "horizon" => "Orb of Horizon",
+            "whetstone" => "Blacksmith's Whetstone",
             _ => text
         };
     }

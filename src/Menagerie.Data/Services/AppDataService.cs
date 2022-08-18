@@ -4,6 +4,7 @@ using Menagerie.Shared.Abstractions;
 using Menagerie.Shared.Helpers;
 using Menagerie.Shared.Models;
 using Menagerie.Shared.Models.Chat;
+using Menagerie.Shared.Models.Poe.BulkTrade;
 using Menagerie.Shared.Models.Poe.Stash;
 using Menagerie.Shared.Models.Setting;
 using Menagerie.Shared.Models.Trading;
@@ -130,7 +131,39 @@ public class AppDataService : IService
         _ = _chaosRecipeService.Start();
         _ = _recordingService.Start();
 
+        // TODO: remove test
+        //   var result = _poeApiService.FetchBulkTrade(new BulkTradeRequest
+        //   {
+        //       Query = new BulkTradeQuery
+        //       {
+        //           Have = new[] { "chaos" },
+        //           Want = new[] { "divine" },
+        //           Minimum = 1
+        //       }
+        //   }).Result;
+        //
+        // var chaosToPay =  result.Result.First().Value.Listing.CalculateWantExchange(5);
+        // var divineToGet = result.Result.First().Value.Listing.CalculateHaveExchange(204);
+
         return Task.CompletedTask;
+    }
+
+    public List<string> GetCurrencies()
+    {
+        return CurrencyHelper.GetRealCurrencyNames();
+    }
+
+    public async Task<BulkTradeResponse?> SearchBulkTrade(string have, string want, int minimum = 1)
+    {
+        return await _poeApiService.FetchBulkTrade(new BulkTradeRequest
+        {
+            Query = new BulkTradeQuery
+            {
+                Have = new[] { CurrencyHelper.NormalizeCurrency(have) },
+                Want = new[] { CurrencyHelper.NormalizeCurrency(want) },
+                Minimum = minimum
+            }
+        });
     }
 
     public Settings GetSettings()

@@ -25,7 +25,7 @@ public static class ProcessHelper
 
     public static Process SpawnProcess(ProcessStartInfo startInfo, string stdoutLogFilePath = "")
     {
-        Log.Information("Spawning process {Name} {Args}", startInfo.FileName, startInfo.Arguments);
+        Log.Debug("Spawning process {Name} {Args}", startInfo.FileName, startInfo.Arguments);
 
         var process = new Process();
         process.StartInfo = startInfo;

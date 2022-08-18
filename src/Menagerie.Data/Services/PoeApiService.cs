@@ -4,6 +4,7 @@ using Menagerie.Data.Providers;
 using Menagerie.Shared.Abstractions;
 using Menagerie.Shared.Extensions;
 using Menagerie.Shared.Models.Poe;
+using Menagerie.Shared.Models.Poe.BulkTrade;
 using Menagerie.Shared.Models.Poe.Stash;
 using Menagerie.Shared.Models.Poe.Trade;
 using Newtonsoft.Json;
@@ -23,6 +24,7 @@ public class PoeApiService : IService
     private const int RefreshStashTabsThrottleTimeout = 10;
     private const int FetchStashTabsThrottleTimeout = 30 * 1000;
     private const string LeaguesUrl = "leagues?compact=1";
+    private const string BulkTradeUrl = "api/trade/exchange/{0}";
 
     private const string CharactersUrl =
         "character-window/get-stash-items?league={0}&tabs={1}&tabIndex={2}&accountName={3}";
@@ -58,6 +60,33 @@ public class PoeApiService : IService
     {
         AutoFetchStashTabs();
         return Task.CompletedTask;
+    }
+
+    public async Task<BulkTradeResponse?> FetchBulkTrade(BulkTradeRequest request)
+    {
+        try
+        {
+            var json = JsonConvert.SerializeObject(request,
+                new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                });
+            var settings = AppDataService.Instance.GetSettings();
+            var response = await HttpProvider.PoeWebsite!.Client.PostAsync(
+                string.Format(BulkTradeUrl, settings.General.League),
+                new StringContent(json, Encoding.UTF8, "application/json")
+            ).ConfigureAwait(false);
+            var result = await HttpProvider.ReadResponse<BulkTradeResponse>(response);
+
+            if (result is null) throw new Exception("Unable to parse response");
+            return result;
+        }
+        catch (Exception e)
+        {
+            Log.Error("Unable to fetch leagues {}", e.Message);
+        }
+
+        return null;
     }
 
     public string GetItemImageLink(string itemName)
