@@ -5,7 +5,6 @@
                            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                            xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-                           xmlns:local="clr-namespace:Menagerie"
                            xmlns:reactiveui="http://reactiveui.net"
                            xmlns:fa5="http://schemas.fontawesome.com/icons/"
                            xmlns:viewModels="clr-namespace:Menagerie.ViewModels"
