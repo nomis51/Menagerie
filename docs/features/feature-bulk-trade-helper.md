@@ -1,6 +1,8 @@
 # Feature : Bulk trade helper
 Speed up your bulk trades by pre-adjusting whisper with the amount you need.
 
+**Supports basic currency only for now (chaos, divine, ancient orb, etc.) other stackables coming soon (fossils, catalysts, etc.)**
+
 ## How it works
 Open it with the button on the overlay
 
