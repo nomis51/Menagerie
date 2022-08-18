@@ -130,7 +130,7 @@ public class AppDataService : IService
         _ = _translationService.Start();
         _ = _chaosRecipeService.Start();
         _ = _recordingService.Start();
-
+        
         // TODO: remove test
         //   var result = _poeApiService.FetchBulkTrade(new BulkTradeRequest
         //   {
