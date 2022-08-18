@@ -3,9 +3,9 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <PackageVersion>2.0.1.9</PackageVersion>
-    <AssemblyVersion>2.0.1.9</AssemblyVersion>
-    <FileVersion>2.0.1.9</FileVersion>
+    <PackageVersion>2.1.0.14</PackageVersion>
+    <AssemblyVersion>2.1.0.14</AssemblyVersion>
+    <FileVersion>2.1.0.14</FileVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Desktop.Robot" Version="1.3.1" />
