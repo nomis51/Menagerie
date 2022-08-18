@@ -19,12 +19,11 @@ Copy-Item -Path ../src/Menagerie/bin/Release/net6.0-windows/* -Destination ../bu
 
 echo Editing nuspec...
 $content = Get-Content nuget-template.nuspec -Raw
-$safeVersion = $version.Substring(0, $version.lastIndexOf("."))
-$content = $content.Replace("#{version}", $safeVersion)
-Set-Content ../build/Menagerie-$safeVersion.nuspec -Value $content
+$content = $content.Replace("#{version}", $version)
+Set-Content ../build/Menagerie-$version.nuspec -Value $content
 
 echo Packaging...
-C:/Tools/nuget/nuget.exe pack ../build/Menagerie-$safeVersion.nuspec -OutputDirectory ../build
+C:/Tools/nuget/nuget.exe pack ../build/Menagerie-$version.nuspec -OutputDirectory ../build
 # $nuVersion = $version.substring(0, $version.lastIndexOf("."))
 # Rename-Item -Path "../build/Menagerie.$nuVersion.nupkg" -NewName "Menagerie-$version.nupkg"
 
