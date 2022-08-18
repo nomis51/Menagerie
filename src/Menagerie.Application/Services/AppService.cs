@@ -9,8 +9,6 @@ using Menagerie.Shared.Models.Poe.Stash;
 using Menagerie.Shared.Models.Setting;
 using Menagerie.Shared.Models.Trading;
 using Menagerie.Shared.Models.Translation;
-using Serilog;
-using Squirrel;
 
 namespace Menagerie.Application.Services;
 

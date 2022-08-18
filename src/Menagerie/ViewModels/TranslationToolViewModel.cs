@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Menagerie.Application.Services;
-using NuGet;
 using ReactiveUI;
 
 namespace Menagerie.ViewModels;

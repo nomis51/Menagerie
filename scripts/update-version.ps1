@@ -13,33 +13,31 @@ $csprojFilePaths = @(
     '../src/Menagerie.Application/Menagerie.Application.csproj'
 )
 
-Write-Output "Retrieving commits..."
-[xml]$appXmlDoc = Get-Content $csprojFilePaths[0]
-$lastVersion = $appXmlDoc.Project.PropertyGroup.AssemblyVersion
+# Write-Output "Retrieving commits..."
+# [xml]$appXmlDoc = Get-Content $csprojFilePaths[0]
+# $lastVersion = $appXmlDoc.Project.PropertyGroup.AssemblyVersion
 
-$range = "v$lastVersion..HEAD"
-$nbCommits = git rev-list $range --count 
+# $range = "v$lastVersion..HEAD"
+# $nbCommits = git rev-list $range --count 
 
-if ($nbCommits -eq $null -or $nbCommits -eq "") {
-    $buildVersion = $version + ".0"
-} else {
-    $buildVersion = $version + "." + $nbCommits
-}
+# if ($nbCommits -eq $null -or $nbCommits -eq "") {
+#     $buildVersion = $version + ".0"
+# } else {
+#     $buildVersion = $version + "." + $nbCommits
+# }
 
-Write-Output $buildVersion
-
-Write-Output "Updating version to $buildVersion..."
+Write-Output "Updating version"
 foreach ($csprojFilePath in $csprojFilePaths) {
     $path = resolve-path $csprojFilePath
     [xml]$xmlDoc = Get-Content $path
-    $xmlDoc.Project.PropertyGroup.PackageVersion = $buildVersion
-    $xmlDoc.Project.PropertyGroup.AssemblyVersion = $buildVersion
-    $xmlDoc.Project.PropertyGroup.FileVersion = $buildVersion
+    $xmlDoc.Project.PropertyGroup.PackageVersion = $version
+    $xmlDoc.Project.PropertyGroup.AssemblyVersion = $version
+    $xmlDoc.Project.PropertyGroup.FileVersion = $version
     $xmlDoc.Save($path)
 }
 
 cd ..
 git add .
-$msg = "Version update $buildVersion"
+$msg = "Version update $version"
 git commit -m $msg
 cd scripts
