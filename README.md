@@ -36,6 +36,7 @@ A Path of Exile trade manager to simplify and speed up your trading experience, 
 - Price verification to avoid scam and outdated whispers
 - Message translator
 - Chat scanning
+- Bulk trade helper
 
 ## Table of contents 📜
 - [General informations](https://github.com/nomis51/Menagerie/blob/master/docs/general.md)
@@ -49,6 +50,7 @@ A Path of Exile trade manager to simplify and speed up your trading experience, 
 - [Message translator](https://github.com/nomis51/Menagerie/blob/master/docs/features/feature-translator.md)
 - [Chat scanning](https://github.com/nomis51/Menagerie/blob/master/docs/features/feature-chat-scan.md)
 - [Anti-scam / Anti-outdated-informations](https://github.com/nomis51/Menagerie/blob/master/docs/features/feature-anti-scam.md)
+- [Bulk trade helper](https://github.com/nomis51/Menagerie/blob/master/docs/features/feature-bulk-trade-helper.md)
 
 ## Thanks to 👏
 - [Desktop.Robot](https://github.com/lucassklp/Desktop.Robot) for the keyboard and mouse interactions
