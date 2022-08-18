@@ -5,6 +5,7 @@ using Menagerie.Shared.Helpers;
 using Menagerie.Shared.Models;
 using Menagerie.Shared.Models.Chat;
 using Menagerie.Shared.Models.Poe;
+using Menagerie.Shared.Models.Poe.BulkTrade;
 using Menagerie.Shared.Models.Poe.Stash;
 using Menagerie.Shared.Models.Setting;
 using Menagerie.Shared.Models.Trading;
@@ -79,31 +80,6 @@ public class AppMapper
         config.CreateMap<T2, T1>();
     }
 
-    #endregion
-
-    #region Public methods
-
-    public TDestination Map<TDestination>(object obj) where TDestination : class
-    {
-        if (typeof(TDestination) == typeof(List<ChaosRecipeItemDto>))
-            return (TDestination)MapChaosRecipe(obj as ChaosRecipe);
-
-        try
-        {
-            return _mapper.Map<TDestination>(obj);
-        }
-        catch (Exception e)
-        {
-            Log.Error("Unable to map {} to {}: {}. {}", obj.GetType().ToString(), typeof(TDestination).ToString(),
-                e.Message, e.StackTrace);
-            throw;
-        }
-    }
-
-    #endregion
-
-    #region Private methods
-
     private static IEnumerable<ChaosRecipeItemDto> MapChaosRecipe(ChaosRecipe? input)
     {
         return input is null
@@ -120,6 +96,58 @@ public class AppMapper
                 new("Weapons", input.NbWeaponSets, ItemHelper.GetItemCategoryImageLink("weapon")),
                 new("Sets", input.NbSets),
             };
+    }
+
+    #endregion
+
+    #region Public methods
+
+    public IEnumerable<BulkTradeItemDto> MapBulkTradeResponse(BulkTradeResponse input, int minWant)
+    {
+        var output = new List<BulkTradeItemDto>();
+
+        foreach (var (_, result) in input.Result)
+        {
+            var offer = result.Listing.Offers.FirstOrDefault();
+            if (offer is null) continue;
+
+            var payAmount = result.Listing.CalculateWantExchange(minWant);
+
+            var item = new BulkTradeItemDto
+            {
+                PayCurrency = offer.Exchange.Currency,
+                PayAmount = payAmount,
+                PayCurrencyImage = new Uri(Path.GetFullPath(CurrencyHelper.GetCurrencyImageLink(offer.Exchange.Currency)), UriKind.Absolute),
+                PayNativeWhisperTemplate = offer.Exchange.Whisper,
+                GetCurrency = offer.Item.Currency,
+                GetAmount = minWant,
+                GetCurrencyImage = new Uri(Path.GetFullPath(CurrencyHelper.GetCurrencyImageLink(offer.Item.Currency)), UriKind.Absolute),
+                GetNativeWhisperTemplate = offer.Item.Whisper,
+                Player = result.Listing.Account.Name,
+                LastCharacterName = result.Listing.Account.LastCharacterName,
+                WhisperTemplate =  result.Listing.Whisper,
+            };
+            output.Add(item);
+        }
+
+        return output;
+    }
+
+    public TDestination Map<TDestination>(object obj) where TDestination : class
+    {
+        if (typeof(TDestination) == typeof(List<ChaosRecipeItemDto>))
+            return (TDestination)MapChaosRecipe(obj as ChaosRecipe);
+
+        try
+        {
+            return _mapper.Map<TDestination>(obj);
+        }
+        catch (Exception e)
+        {
+            Log.Error("Unable to map {} to {}: {}. {}", obj.GetType().ToString(), typeof(TDestination).ToString(),
+                e.Message, e.StackTrace);
+            throw;
+        }
     }
 
     #endregion

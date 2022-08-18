@@ -130,7 +130,7 @@ public class AppDataService : IService
         _ = _translationService.Start();
         _ = _chaosRecipeService.Start();
         _ = _recordingService.Start();
-        
+
         // TODO: remove test
         //   var result = _poeApiService.FetchBulkTrade(new BulkTradeRequest
         //   {
@@ -146,6 +146,24 @@ public class AppDataService : IService
         // var divineToGet = result.Result.First().Value.Listing.CalculateHaveExchange(204);
 
         return Task.CompletedTask;
+    }
+
+    public List<string> GetCurrencies()
+    {
+        return CurrencyHelper.GetRealCurrencyNames();
+    }
+
+    public async Task<BulkTradeResponse?> SearchBulkTrade(string have, string want, int minimum = 1)
+    {
+        return await _poeApiService.FetchBulkTrade(new BulkTradeRequest
+        {
+            Query = new BulkTradeQuery
+            {
+                Have = new[] { CurrencyHelper.NormalizeCurrency(have) },
+                Want = new[] { CurrencyHelper.NormalizeCurrency(want) },
+                Minimum = minimum
+            }
+        });
     }
 
     public Settings GetSettings()
