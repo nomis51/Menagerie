@@ -54,7 +54,7 @@ public partial class BulkTradeOfferView
                 .DisposeWith(disposableRegistration);
 
             this.OneWayBind(ViewModel,
-                    x => x.Player,
+                    x => x.PlayerNameDisplay,
                     x => x.TextBlockPlayer.Text)
                 .DisposeWith(disposableRegistration);
         });
