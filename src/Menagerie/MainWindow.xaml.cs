@@ -48,6 +48,12 @@ public partial class MainWindow
                     x => x.TranslationTool.Visibility,
                     x => x ? Visibility.Visible : Visibility.Hidden)
                 .DisposeWith(disposableRegistration);
+            
+            this.OneWayBind(ViewModel,
+                    x => x.IsBulkTradeVisible,
+                    x => x.BulkTradeContainerView.Visibility,
+                    x => x ? Visibility.Visible : Visibility.Hidden)
+                .DisposeWith(disposableRegistration);
 
 
             ViewModel.OnOverlayVisibilityChange += ViewModel_OnOverlayVisibilityChange;
@@ -56,9 +62,15 @@ public partial class MainWindow
 
             TradesStatisticsView.OnClose += TradesStatisticsView_OnClose;
             TranslationTool.OnClose += TranslationTool_OnClose;
+            BulkTradeContainerView.OnClose += BulkTradeContainerView_OnClose;
         });
 
         Loaded += MainWindow_Loaded;
+    }
+
+    private void BulkTradeContainerView_OnClose()
+    {
+        ViewModel?.ToggleBulkTrade();
     }
 
     private void MainWindow_Loaded(object sender, RoutedEventArgs e)

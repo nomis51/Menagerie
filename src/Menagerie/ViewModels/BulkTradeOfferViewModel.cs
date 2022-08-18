@@ -8,6 +8,11 @@ namespace Menagerie.ViewModels;
 
 public class BulkTradeOfferViewModel : ReactiveObject
 {
+    #region Constants
+
+    private const int MaxNameLength = 9;
+    #endregion
+    
     #region Members
 
     private readonly BulkTradeItemDto _bulkTradeItem;
@@ -15,6 +20,7 @@ public class BulkTradeOfferViewModel : ReactiveObject
     #endregion
 
     #region Props
+
     public bool Whispered { get; private set; }
 
     public string PayCurrency => _bulkTradeItem.PayCurrency;
@@ -25,7 +31,10 @@ public class BulkTradeOfferViewModel : ReactiveObject
     public string GetAmount => $"{Math.Round(_bulkTradeItem.GetAmount, 1)}x";
     public Uri GetCurrentImage => _bulkTradeItem.GetCurrencyImage;
 
-    public string Player => _bulkTradeItem.Player.Length > 15 ? _bulkTradeItem.Player[..15] : _bulkTradeItem.Player;
+    private string Player => _bulkTradeItem.Player.Length > MaxNameLength ? $"{_bulkTradeItem.Player[..MaxNameLength]}..." : _bulkTradeItem.Player;
+    private string LastCharacterName => _bulkTradeItem.LastCharacterName.Length > MaxNameLength ? $"{_bulkTradeItem.LastCharacterName[..MaxNameLength]}..." : _bulkTradeItem.LastCharacterName;
+
+    public string PlayerNameDisplay => $"{LastCharacterName} ({Player})";
 
     #endregion
 
@@ -43,15 +52,14 @@ public class BulkTradeOfferViewModel : ReactiveObject
     public void SendWhisper()
     {
         AppService.Instance.PlayClickSoundEffect();
-        AppService.Instance.SendChatMessage(_bulkTradeItem.Whisper);
-        AppService.Instance.EnsureOverlayFocused();
+        AppService.Instance.InjectToClipboard(_bulkTradeItem.Whisper);
         Whispered = true;
     }
 
     public void WhisperPlayer()
     {
         AppService.Instance.PlayClickSoundEffect();
-        AppService.Instance.PrepareToSendWhisper(_bulkTradeItem.Player);
+        AppService.Instance.PrepareToSendWhisper(_bulkTradeItem.LastCharacterName);
     }
 
     #endregion
