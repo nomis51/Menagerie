@@ -12,6 +12,9 @@ A Path of Exile trade manager to simplify and speed up your trading experience, 
 - Download and execute ``Setup.exe`` to install Menagerie
 - Future updates will be automatically downloaded and installed by the app itself.
 
+## Discord 💬
+- https://discord.gg/yAqNKpGZ2j
+
 ## Features 📝
 - Handles incoming trade offers workflow (From the moment someone whisper you until the trade is completed)
 - Handles outgoing trade offers workflow (From the moment you whisper someone until the trade is completed)
