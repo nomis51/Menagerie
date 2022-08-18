@@ -19,5 +19,6 @@
     <file src="..\src\Menagerie\bin\Release\net6.0-windows\data\**" target="lib\net45\data" />
     <file src="..\src\Menagerie\bin\Release\net6.0-windows\tools\**" target="lib\net45\tools" />
     <file src="..\src\Menagerie\bin\Release\net6.0-windows\runtimes\win\lib\**" target="lib\net45\runtimes\win\lib" />
+    <file src="..\src\Menagerie\bin\Release\net6.0-windows\winook.support\**" target="lib\net45\winook.support" />
   </files>
 </package>
