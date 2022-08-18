@@ -68,7 +68,8 @@ public class Settings
             ClipSaveDelay = 2,
             ClipSavePadding = 1,
             NbClipsToKeep = 5,
-            OutputPath = "%USERPROFILE%/Documents/My Games/Menagerie/replays/"
+            OutputPath = "%USERPROFILE%/Documents/My Games/Menagerie/replays/",
+            Threads = "auto"
         };
         DeathReplay = new DeathReplaySettings
         {

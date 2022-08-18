@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using MediaToolkit;
 using Menagerie.Data.Events;
+using Menagerie.Data.Services;
 using Menagerie.Shared.Helpers;
 using Menagerie.Shared.Models.Setting;
 using Serilog;
@@ -186,9 +187,9 @@ public class FfmpegProvider : IDisposable
             .OrderBy(e => e)
             .ToList();
         if (!filesIds.Any()) return;
-        
+
         Log.Information("Removing old {Count} clips", filesIds.Count);
-        
+
         for (var i = 0; i < filesIds.Count; ++i)
         {
             if (i <= _options.NbClipsToKeep) break;
@@ -273,6 +274,8 @@ public class FfmpegProvider : IDisposable
                 {
                     if (_recordingProcess is not null && !_recordingProcess!.HasExited) _recordingProcess.Kill();
 
+                    var cores = FindNbCores();
+
                     _recordingProcess = ProcessHelper.SpawnProcess(new ProcessStartInfo
                     {
                         WindowStyle = ProcessWindowStyle.Hidden,
@@ -282,7 +285,7 @@ public class FfmpegProvider : IDisposable
                         RedirectStandardOutput = true,
                         CreateNoWindow = true,
                         Arguments =
-                            $"-f gdigrab -i title=\"{_windowTitle}\" -r {_options.FrameRate} -y -draw_mouse 0 -rtbufsize 100M -probesize 10M -preset ultrafast -tune zerolatency -c:v libx264 -crf {_options.Crf} -pix_fmt yuv420p -f segment -segment_time {_options.ClipDuration} -force_key_frames \"expr:not(mod(n,{_options.ClipDuration}))\" -t 02:00:00 -reset_timestamps 1 {FramesFolder}/{RecordFileName}"
+                            $"-f gdigrab -i title=\"{_windowTitle}\" -r {_options.FrameRate} -y -draw_mouse 0 -threads {cores} -rtbufsize 100M -probesize 10M -preset ultrafast -tune zerolatency -c:v libx264 -crf {_options.Crf} -pix_fmt yuv420p -f segment -segment_time {_options.ClipDuration} -force_key_frames \"expr:not(mod(n,{_options.ClipDuration}))\" -t 02:00:00 -reset_timestamps 1 {FramesFolder}/{RecordFileName}"
                     }, _ffmpegLogFilePath);
                 }
 
@@ -292,6 +295,16 @@ public class FfmpegProvider : IDisposable
         {
             IsBackground = true
         }.Start();
+    }
+
+    private int FindNbCores()
+    {
+        var settings = AppDataService.Instance.GetSettings();
+        if (int.TryParse(settings.Recording.Threads, out var intValue) && intValue <= Environment.ProcessorCount && intValue > 0) return intValue;
+
+        var cores = Math.Floor(Environment.ProcessorCount / 4.0d);
+        if (cores == 0) return 1;
+        return (int)cores;
     }
 
     private void OnAppExit()

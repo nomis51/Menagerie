@@ -11,4 +11,5 @@ public class RecordingSettings
     public int NbClipsToKeep { get; set; }
     public int CleanupTimeout { get; set; }
     public string OutputPath { get; set; }
+    public string Threads { get; set; }
 }
