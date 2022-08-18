@@ -339,6 +339,8 @@ public class AppService : IService
     {
         return Task.Run(async () =>
         {
+            if (Environment.GetEnvironmentVariable("ENV") == "PoE" || Environment.GetEnvironmentVariable("ENV") == "dev") return;
+            
             try
             {
                 using var updateManager = await UpdateManager.GitHubUpdateManager("https://github.com/nomis51/Menagerie");
