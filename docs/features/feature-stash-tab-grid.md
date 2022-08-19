@@ -4,9 +4,7 @@ You have two behaviors that you can choose from in the `Settings` :
 
 Highlight with the in-game search bar : 
 
-(Simple, but not 100% accurate, because items with the same name e.g. a normal rarity *Large Cluster Jewel* will then all be highlighted)
-
-![image](https://user-images.githubusercontent.com/25111613/184911756-7b6994f4-760d-402a-a7ff-b83145fae79b.png)
+![image](https://user-images.githubusercontent.com/25111613/185618065-a5a94511-1c48-4d3f-9b99-837d6b97e063.png)
 
 Highlight using the overlay grid  :
 
@@ -31,3 +29,7 @@ Highlight using the overlay grid  :
 
 5) Allow you to enable or disable the `shadow` effect on the tab content (which prevent you from misclicking and emphasis the item that you need to pick up)
 6) Allow you to close the grid. The grid will also automatically close itself when you interact with the offer (e.g. send a trade request, invite the player, say it's sold, etc.)
+
+If for some reason there's no `stash tab "My tab"; position: left 1, top 1` text at the end of the whisper, meaning no location, then the application will search using the item name (the old way)
+
+![image](https://user-images.githubusercontent.com/25111613/184911756-7b6994f4-760d-402a-a7ff-b83145fae79b.png)
