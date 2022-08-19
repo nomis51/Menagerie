@@ -4,9 +4,9 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <PackageVersion>2.1.1</PackageVersion>
-    <AssemblyVersion>2.1.1</AssemblyVersion>
-    <FileVersion>2.1.1</FileVersion>
+    <PackageVersion>2.1.2</PackageVersion>
+    <AssemblyVersion>2.1.2</AssemblyVersion>
+    <FileVersion>2.1.2</FileVersion>
     <ApplicationIcon>assets\menagerie-logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
