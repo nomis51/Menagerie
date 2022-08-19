@@ -78,7 +78,7 @@ public class AppService : IService
 
         _ = UpdateHelper.UpdateApp();
     }
-    
+
     public List<string> GetCurrencies()
     {
         return AppDataService.Instance.GetCurrencies();
@@ -173,15 +173,24 @@ public class AppService : IService
 
     public void SendFindItemInStash(IncomingOfferDto offer)
     {
-        var settings = GetSettings();
-        if (!settings.IncomingTrades.HighlightWithGrid || (offer.Left == 0 && offer.Top == 0))
+        var hasPosition = offer.Left != 0 && offer.Top != 0;
+
+        if (hasPosition)
         {
-            _gameChatService.SendFindItemInStash(offer.ItemNameNormalized);
+            var settings = GetSettings();
+            if (!settings.IncomingTrades.HighlightWithGrid)
+            {
+                _gameChatService.SendFindItemInStash($"pos:{offer.Left},{offer.Top}");
+            }
+            else
+            {
+                SaveStashTabGridSettings(offer.StashTab, 12, 12, false, true);
+                AppEvents.HighlightItemEventInvoke(true, offer.Left, offer.Top, offer.Width, offer.Height, offer.StashTab);
+            }
         }
         else
         {
-            SaveStashTabGridSettings(offer.StashTab, 12, 12, false, true);
-            AppEvents.HighlightItemEventInvoke(true, offer.Left, offer.Top, offer.Width, offer.Height, offer.StashTab);
+            _gameChatService.SendFindItemInStash(offer.ItemNameNormalized);
         }
     }
 

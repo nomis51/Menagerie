@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Reflection;
+using System.Text;
 using Menagerie.Shared.Abstractions;
 using Menagerie.Shared.Models.Setting;
 using Newtonsoft.Json;
@@ -67,7 +68,7 @@ public class SettingsService : IService
 
     public Task Start()
     {
-        Log.Warning("Application starting {Id}", _settings.Id);
+        Log.Warning("Application starting {Version} {Id}", GetVersion(), _settings.Id);
         return Task.CompletedTask;
     }
 
@@ -90,6 +91,22 @@ public class SettingsService : IService
     {
         var settingsData = JsonConvert.SerializeObject(_settings);
         File.WriteAllText(_settingsFilePath, settingsData, Encoding.UTF8);
+    }
+
+    private string GetVersion()
+    {
+        try
+        {
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            return version is null
+                ? string.Empty
+                : $"Application Version: {version.Major}.{version.Minor}.{version.Build} (Build {version.MinorRevision})";
+        }
+        catch (Exception)
+        {
+            Log.Warning("Unable to retrieve app version");
+            return string.Empty;
+        }
     }
 
     private void CreateDefaultSettings()
