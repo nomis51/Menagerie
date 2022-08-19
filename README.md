@@ -3,6 +3,7 @@
 A Path of Exile trade manager to simplify and speed up your trading experience, and much more!
 
 ## Version 2 now out! See the release for more informations
+Version 2.0.0 and 2.0.1 had an issue with the auto-update, make sure to upgrade manually to the latest version to fix that.
 
 ## Requirements ⚙️
 - [.NET 6](https://dotnet.microsoft.com/en-us/download/dotnet/6.0/runtime) (See the [documentation](https://github.com/nomis51/Menagerie/blob/master/docs/installation.md))
