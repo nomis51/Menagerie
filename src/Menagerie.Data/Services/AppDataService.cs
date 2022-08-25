@@ -1,4 +1,5 @@
-﻿using Menagerie.Data.Events;
+﻿using System.Net;
+using Menagerie.Data.Events;
 using Menagerie.Data.Providers;
 using Menagerie.Data.WinApi;
 using Menagerie.Shared.Abstractions;
@@ -458,7 +459,8 @@ public class AppDataService : IService
 
     private async Task CheckForDevMessage()
     {
-        var message = await HttpProvider.GitHub.Client.GetStringAsync("/message.txt");
+        using var web = new WebClient();
+        var message = web.DownloadString(new Uri("https://raw.githubusercontent.com/nomis51/Menagerie/master/docs/.dev/message.txt"));
         if (string.IsNullOrEmpty(message)) return;
 
         var settings = GetSettings();
@@ -467,7 +469,7 @@ public class AppDataService : IService
         settings.App.LatestDevMessage = message;
         _settingsService.SetSettings(settings);
 
-        User32.MessageBox(IntPtr.Zero, message, "Menagerie", 0);
+        User32.MessageBox(IntPtr.Zero, $"Dev message: {message}", "Menagerie", 0);
     }
 
     #endregion
