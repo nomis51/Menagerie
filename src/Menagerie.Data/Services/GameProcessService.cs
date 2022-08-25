@@ -91,10 +91,18 @@ public class GameProcessService : IService
         {
             while (true)
             {
-                var process = Process.GetProcessById(_processId);
-                if (process.HasExited) break;
+                try
+                {
+                    var process = Process.GetProcessById(_processId);
+                    if (process.HasExited) break;
 
-                Thread.Sleep(5000);
+                    Thread.Sleep(5000);
+                }
+                catch (Exception e)
+                {
+                    Log.Information("Game process not running or exited: {Message}", e.Message);
+                    break;
+                }
             }
 
             Task.Run(FindProcess);

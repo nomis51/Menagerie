@@ -36,7 +36,7 @@ public class ClientFileService : IService
 
     private void WatchFile()
     {
-        var thread = new Thread(async () =>
+        var thread = new Thread(() =>
         {
             while (true)
             {
@@ -46,11 +46,11 @@ public class ClientFileService : IService
                 {
                     try
                     {
-                        await Task.Delay(500);
+                        Thread.Sleep(500);
 
                         newLines = ReadNewLines();
                     }
-                    catch
+                    catch (Exception)
                     {
                         // ignored
                     }

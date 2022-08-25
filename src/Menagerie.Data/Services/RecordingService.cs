@@ -57,17 +57,17 @@ public class RecordingService : IService
 
     public void Record()
     {
-        _ffmpegProvider.Record();
+        _ffmpegProvider?.Record();
     }
 
     public void Stop()
     {
-        _ffmpegProvider.Stop();
+        _ffmpegProvider?.Stop();
     }
 
     public void Save(string filename, int duration, string outputPath = "")
     {
-        _ffmpegProvider.Save(filename, duration, outputPath);
+        _ffmpegProvider?.Save(filename, duration, outputPath);
     }
 
     #endregion
