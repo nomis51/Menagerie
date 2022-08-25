@@ -62,7 +62,7 @@ public class Settings
         {
             Enabled = true,
             FrameRate = 30,
-            Crf = 25,
+            Crf =15,
             ClipDuration = 5 * 60,
             CleanupTimeout = 30 * 60,
             ClipSaveDelay = 2,
