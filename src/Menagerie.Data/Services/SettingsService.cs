@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using System.Text;
+using Menagerie.Data.WinApi;
 using Menagerie.Shared.Abstractions;
+using Menagerie.Shared.Helpers;
 using Menagerie.Shared.Models.Setting;
 using Newtonsoft.Json;
 using Serilog;
@@ -80,17 +82,34 @@ public class SettingsService : IService
     public void SetSettings(Settings settings)
     {
         _settings = settings;
-        _ = Task.Run(WriteSettings);
+        _ = Task.Run(() => WriteSettings());
     }
 
     #endregion
 
     #region Private methods
 
-    private void WriteSettings()
+    private void WriteSettings(int count = 0)
     {
-        var settingsData = JsonConvert.SerializeObject(_settings);
-        File.WriteAllText(_settingsFilePath, settingsData, Encoding.UTF8);
+        try
+        {
+            var settingsData = JsonConvert.SerializeObject(_settings);
+            File.WriteAllText(_settingsFilePath, settingsData, Encoding.UTF8);
+        }
+        catch (Exception e)
+        {
+            Log.Warning("Unable to write settings {Message}: ", e.Message);
+
+            if (count == 1)
+            {
+                User32.MessageBox(IntPtr.Zero, $"Unable to save settings: {e.Message}", "Menagerie", 0x00000030 | 0x00000000); // warning icon + ok button
+                return;
+            }
+
+            Thread.Sleep(3000);
+            ProcessHelper.CleanUnexpectedProcesses().Wait();
+            WriteSettings(1);
+        }
     }
 
     private string GetVersion()
@@ -100,7 +119,7 @@ public class SettingsService : IService
             var version = Assembly.GetExecutingAssembly().GetName().Version;
             return version is null
                 ? string.Empty
-                : $"Application Version: {version.Major}.{version.Minor}.{version.Build} (Build {version.MinorRevision})";
+                : $"Application Version: {version.Major}.{version.Minor}.{version.Build}";
         }
         catch (Exception)
         {

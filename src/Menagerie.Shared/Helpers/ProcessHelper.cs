@@ -39,9 +39,9 @@ public static class ProcessHelper
         return process;
     }
 
-    public static void CleanUnexpectedProcesses()
+    public static Task CleanUnexpectedProcesses()
     {
-        Task.Run(() =>
+        return Task.Run(() =>
         {
             var processes = Process.GetProcesses();
             var current = Process.GetCurrentProcess();

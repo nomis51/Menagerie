@@ -25,5 +25,5 @@ public static class User32
     public const int WS_EX_TOOLWINDOW = 0x00000080;
     
     [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-    public static extern int MessageBox(IntPtr handle, string message, string title, int type);
+    public static extern int MessageBox(IntPtr handle, string message, string title, long type);
 }
