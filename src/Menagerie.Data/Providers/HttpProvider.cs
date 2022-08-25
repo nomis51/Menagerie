@@ -14,7 +14,7 @@ public static class HttpProvider
 
     public static readonly HttpService PoeNinja = new(new Uri("https://poe.ninja"));
     public static readonly HttpService AnonymousPoeApi = new(new Uri("http://api.pathofexile.com"));
-    public static readonly HttpService GitHub = new HttpService(new Uri("https://github.com/nomis51/Menagerie/tree/master/docs/"));
+    public static readonly HttpService GitHub = new HttpService(new Uri("https://github.com/nomis51/Menagerie/tree/master/docs/.dev"));
     private static HttpService? _poeWebsite;
     private static HttpService? _poeApi;
 
