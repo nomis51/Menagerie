@@ -29,6 +29,7 @@ public class GameWindowService : IService
 
     public Task Start()
     {
+        AutoHideOverlay();
         return Task.CompletedTask;
     }
 
@@ -117,8 +118,34 @@ public class GameWindowService : IService
 
     #region Private methods
 
+    private void AutoHideOverlay()
+    {
+        new Thread(() =>
+            {
+                while (true)
+                {
+                    Thread.Sleep(500);
+
+                    if (IsGameWindowFocused() || IsOverlayFocused())
+                    {
+                        ShowOverlay();
+                    }
+                    else
+                    {
+                        HideOverlay();
+                    }
+                }
+            })
+            {
+                IsBackground = true
+            }
+            .Start();
+    }
+
     private void ShowOverlay()
     {
+        if (_isOverlayVisible) return;
+
         lock (ShowHideLock)
         {
             AppDataService.Instance.ShowOverlay();
@@ -128,6 +155,8 @@ public class GameWindowService : IService
 
     private void HideOverlay()
     {
+        if (!_isOverlayVisible) return;
+
         lock (ShowHideLock)
         {
             AppDataService.Instance.HideOverlay();
