@@ -1,4 +1,6 @@
-﻿using Menagerie.Shared.Abstractions;
+﻿using Menagerie.Data.WinApi;
+using Menagerie.Shared.Abstractions;
+using Serilog;
 using Winook;
 
 namespace Menagerie.Data.Services;
@@ -30,7 +32,15 @@ public class WindowHookService : IService
         _keyboardHook.AddHandler(KeyCode.F3, Keyboard_OnToggleOverlay);
         _keyboardHook.AddHandler(KeyCode.F6, Keyboard_OnSaveClip);
         _keyboardHook.AddHandler(KeyCode.F, Modifiers.Control, KeyboardHook_OnSearchItemInStash);
-        _ = _keyboardHook.InstallAsync();
+
+        try
+        {
+            _ = _keyboardHook.InstallAsync();
+        }
+        catch (Exception e)
+        {
+            Log.Warning("Winook error: {Message}", e.Message);
+        }
 
         // _mouseHook = new MouseHook(processId);
         // _mouseHook.MessageReceived += MouseHookOnMessageReceived;

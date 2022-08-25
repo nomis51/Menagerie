@@ -31,11 +31,6 @@ public class StatisticsService : IService
         DatabaseProvider.Insert(TradesCollection, offer);
     }
 
-    public void WriteIncomingTradeStatistic(OutgoingOffer offer)
-    {
-        DatabaseProvider.Insert(TradesCollection, offer);
-    }
-
     public TradeStats CalculateStats()
     {
         try
