@@ -1,5 +1,6 @@
 ﻿using Menagerie.Data.Events;
 using Menagerie.Data.Providers;
+using Menagerie.Data.WinApi;
 using Menagerie.Shared.Abstractions;
 using Menagerie.Shared.Helpers;
 using Menagerie.Shared.Models;
@@ -131,19 +132,7 @@ public class AppDataService : IService
         _ = _chaosRecipeService.Start();
         _ = _recordingService.Start();
 
-        // TODO: remove test
-        //   var result = _poeApiService.FetchBulkTrade(new BulkTradeRequest
-        //   {
-        //       Query = new BulkTradeQuery
-        //       {
-        //           Have = new[] { "chaos" },
-        //           Want = new[] { "divine" },
-        //           Minimum = 1
-        //       }
-        //   }).Result;
-        //
-        // var chaosToPay =  result.Result.First().Value.Listing.CalculateWantExchange(5);
-        // var divineToGet = result.Result.First().Value.Listing.CalculateHaveExchange(204);
+        CheckForDevMessage();
 
         return Task.CompletedTask;
     }
@@ -465,6 +454,20 @@ public class AppDataService : IService
     private void InitializeDatabaseProvider()
     {
         DatabaseProvider.Initialize();
+    }
+
+    private async Task CheckForDevMessage()
+    {
+        var message = await HttpProvider.GitHub.Client.GetStringAsync("/message.txt");
+        if (string.IsNullOrEmpty(message)) return;
+
+        var settings = GetSettings();
+        if (message == settings.App.LatestDevMessage) return;
+
+        settings.App.LatestDevMessage = message;
+        _settingsService.SetSettings(settings);
+
+        User32.MessageBox(IntPtr.Zero, message, "Menagerie", 0);
     }
 
     #endregion
