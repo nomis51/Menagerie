@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Menagerie.Shared.Models.Poe.Stash;
 using Serilog;
 
 namespace Menagerie.Shared.Helpers;
@@ -50,9 +51,16 @@ public static class ProcessHelper
 
             foreach (var process in processes)
             {
-                if (!UnexpectedProcessesName.Contains(process.ProcessName.ToLower()) || process.Id == current.Id || currentProcesses.Contains(process.Id)) continue;
-                Log.Information("Unexpected process cleaned PID {pid} {Name}", process.Id, process.MainModule?.FileName ?? string.Empty);
-                process.Kill();
+                try
+                {
+                    if (!UnexpectedProcessesName.Contains(process.ProcessName.ToLower()) || process.Id == current.Id || currentProcesses.Contains(process.Id)) continue;
+                    Log.Information("Unexpected process cleaned PID {pid} {Name}", process.Id, process.MainModule?.FileName ?? "Unknown file name");
+                    process.Kill();
+                }
+                catch (Exception e)
+                {
+                    Log.Warning("Unable to clear process {Id} {Name} properly: {Message}", process.Id, process.MainModule?.FileName ?? "Unknown file name", e.Message);
+                }
             }
         });
     }
