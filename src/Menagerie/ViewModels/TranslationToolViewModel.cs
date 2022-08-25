@@ -79,6 +79,12 @@ public class TranslationToolViewModel : ReactiveObject
 
             System.Windows.Application.Current.Dispatcher.Invoke(delegate
             {
+                if (string.IsNullOrEmpty(translatedMessage))
+                {
+                    TranslatedMessage = "** Unable to translate the message **";
+                    return;
+                }
+
                 TranslatedMessage = isWhisper ? $"@{_message[1..spaceIndex]} {translatedMessage}" : hasChatTag ? $"{_message[0]}{translatedMessage}" : translatedMessage;
             });
         });
