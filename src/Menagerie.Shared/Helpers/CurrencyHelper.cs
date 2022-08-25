@@ -7,6 +7,8 @@ public static class CurrencyHelper
 {
     #region Constants
 
+    private static object _cacheLock = new();
+
     private static readonly Dictionary<string, string> CurrencyToImageLink = new()
     {
         {
@@ -273,16 +275,19 @@ public static class CurrencyHelper
 
     private static string GetLocalCacheUri(string currencyName, string link)
     {
-        if (!Directory.Exists(ImagesFolder)) Directory.CreateDirectory(ImagesFolder);
+        lock (_cacheLock)
+        {
+            if (!Directory.Exists(ImagesFolder)) Directory.CreateDirectory(ImagesFolder);
 
-        var path = $"{ImagesFolder}{currencyName}.png";
-        if (File.Exists(path)) return path;
+            var path = $"{ImagesFolder}{currencyName}.png";
+            if (File.Exists(path)) return path;
 
-        Log.Information("Image {Currency} doesn't exists, downloading it from {Link}...", currencyName, link);
-        using WebClient client = new();
-        client.DownloadFile(new Uri(link, UriKind.Absolute), path);
+            Log.Information("Image {Currency} doesn't exists, downloading it from {Link}...", currencyName, link);
+            using WebClient client = new();
+            client.DownloadFile(new Uri(link, UriKind.Absolute), path);
 
-        return path;
+            return path;
+        }
     }
 
     #endregion
