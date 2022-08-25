@@ -9,9 +9,9 @@
     <Authors>Menagerie.Data</Authors>
     <Company>Menagerie.Data</Company>
     <Product>Menagerie.Data</Product>
-    <PackageVersion>2.1.2</PackageVersion>
-    <AssemblyVersion>2.1.2</AssemblyVersion>
-    <FileVersion>2.1.2</FileVersion>
+    <PackageVersion>2.1.3</PackageVersion>
+    <AssemblyVersion>2.1.3</AssemblyVersion>
+    <FileVersion>2.1.3</FileVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AhoCorasick" Version="2.0.46" />
