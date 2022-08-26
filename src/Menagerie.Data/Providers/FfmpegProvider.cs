@@ -79,6 +79,8 @@ public class FfmpegProvider : IDisposable
 
             var latestClipFilePath = $"{FramesFolder}/{RecordFileName.Replace("%d", filesIds.First().ToString())}";
             var latestClipDuration = GetFileDuration(latestClipFilePath);
+            if (latestClipDuration == TimeSpan.Zero) return;
+            
             var latestClipDiff = (int)Math.Round(latestClipDuration.TotalSeconds - paddedDuration);
 
             if (latestClipDiff < 0 && filesIds.Count > 1)
@@ -160,7 +162,11 @@ public class FfmpegProvider : IDisposable
         SpawnMergeProcess(fileName1, fileName2, mergedFilePath).Wait();
 
         var clipDuration1 = GetFileDuration($"{FramesFolder}/{fileName1}");
+        if (clipDuration1 == TimeSpan.Zero) return;
+        
         var clipDuration2 = GetFileDuration($"{FramesFolder}/{fileName2}");
+        if (clipDuration2 == TimeSpan.Zero) return;
+        
         var trimStartTime = clipDuration2.TotalSeconds + clipDuration1.TotalSeconds - duration;
         SpawnTrimProcess(trimStartTime <= 0 ? 0 : (int)trimStartTime, duration, mergedFilePath, outputFilePath).Wait();
         File.Delete(mergedFilePath);
@@ -215,10 +221,18 @@ public class FfmpegProvider : IDisposable
 
     private TimeSpan GetFileDuration(string filePath)
     {
-        var inputFile = new MediaToolkit.Model.MediaFile { Filename = filePath };
-        using var engine = new Engine();
-        engine.GetMetadata(inputFile);
-        return inputFile.Metadata.Duration;
+        try
+        {
+            var inputFile = new MediaToolkit.Model.MediaFile { Filename = filePath };
+            using var engine = new Engine();
+            engine.GetMetadata(inputFile);
+            return inputFile.Metadata.Duration;
+        }
+        catch (Exception e)
+        {
+            Log.Error("Unable to find clip duration {Message}", e.Message);
+            return TimeSpan.Zero;
+        }
     }
 
     private Task SpawnMergeProcess(string filePath1, string filePath2, string outputFilePath)
