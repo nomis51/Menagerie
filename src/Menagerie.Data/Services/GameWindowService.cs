@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Menagerie.Data.WinApi;
 using Menagerie.Shared.Abstractions;
+using Serilog;
 
 namespace Menagerie.Data.Services;
 
@@ -126,13 +127,20 @@ public class GameWindowService : IService
                 {
                     Thread.Sleep(500);
 
-                    if (IsGameWindowFocused() || IsOverlayFocused())
+                    try
                     {
-                        ShowOverlay();
+                        if (IsGameWindowFocused() || IsOverlayFocused())
+                        {
+                            ShowOverlay();
+                        }
+                        else
+                        {
+                            HideOverlay();
+                        }
                     }
-                    else
+                    catch (Exception e)
                     {
-                        HideOverlay();
+                        Log.Warning("Unable to show/hide overlay: {Message} {Callstack}", e.Message, e.StackTrace);
                     }
                 }
             })
