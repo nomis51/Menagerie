@@ -29,12 +29,16 @@
         </Style>
     </UserControl.Styles>
 
-    <Border CornerRadius="4"
+    <Border x:Name="Border"
+            CornerRadius="4"
             Background="{StaticResource Background1}"
-            BorderBrush="{StaticResource Background0}"
+            BorderBrush="{Binding BorderBrush}"
             BorderThickness="3"
+            Cursor="Hand"
             ToolTip.Placement="Top"
-            ToolTip.VerticalOffset="-5">
+            ToolTip.VerticalOffset="-5"
+            ToolTip.ShowDelay="1000"
+            PointerReleased="Border_OnPointerReleased">
         <ToolTip.Tip>
             <ItemsRepeater ItemsSource="{Binding TooltipLines}">
                 <ItemsRepeater.Layout>
@@ -89,16 +93,29 @@
                    VerticalAlignment="Center"
                    HorizontalAlignment="Center" />
 
-            <Button Grid.Row="2"
+            <Button x:Name="ButtonBusy"
+                    IsVisible="{Binding CanSayBusy}"
+                    Grid.Row="2"
                     Grid.Column="0"
-                    Classes="hoverAccent actionButton">
+                    Classes="hoverAccent actionButton"
+                    Click="ButtonBusy_OnClick">
                 <Button.Content>
                     <icons:MaterialIcon Kind="Clock" />
                 </Button.Content>
             </Button>
-            <Button Grid.Row="2"
+            <Button x:Name="ButtonReInvitePlayer"
+                    IsVisible="{Binding !CanSayBusy}"
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Classes="hoverSuccess actionButton"
+                    Click="ButtonReInvitePlayer_OnClick">
+                <Button.Content>
+                    <icons:MaterialIcon Kind="UserAdd" />
+                </Button.Content>
+            </Button>
+            <Button x:Name="ButtonDenyOffer" Grid.Row="2"
                     Grid.Column="1"
-                    Classes="hoverError actionButton">
+                    Classes="hoverError actionButton" Click="ButtonDenyOffer_OnClick">
                 <Button.Content>
                     <icons:MaterialIcon Kind="CloseCircle" />
                 </Button.Content>

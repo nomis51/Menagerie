@@ -15,7 +15,7 @@
         Focusable="False"
         Topmost="True"
         IsTabStop="False"
-        Background="CornflowerBlue"
+        Background="Transparent"
         Padding="2"
         x:DataType="viewModels:IncomingOffersPanelWindowViewModel">
     <Grid>

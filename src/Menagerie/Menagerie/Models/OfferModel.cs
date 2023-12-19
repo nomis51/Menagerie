@@ -1,4 +1,5 @@
 ﻿using System;
+using Menagerie.Enums;
 
 namespace Menagerie.Models;
 
@@ -12,4 +13,5 @@ public class OfferModel
     public PriceModel Price { get; set; }
     public string League { get; set; }
     public ItemLocationModel Location { get; set; }
+    public OfferState State { get; set; } = OfferState.Initial;
 }
