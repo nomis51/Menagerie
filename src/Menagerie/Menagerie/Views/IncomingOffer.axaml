@@ -1,0 +1,108 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:Menagerie.ViewModels"
+             xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d"
+             d:DesignWidth="800"
+             d:DesignHeight="450"
+             x:Class="Menagerie.Views.IncomingOffer"
+             x:DataType="viewModels:IncomingOfferViewModel"
+             Background="Transparent">
+    <UserControl.Styles>
+        <Style Selector="Button.actionButton">
+            <Setter Property="Height"
+                    Value="20" />
+            <Setter Property="MaxHeight"
+                    Value="20" />
+            <Setter Property="HorizontalAlignment"
+                    Value="Stretch" />
+            <Setter Property="VerticalAlignment"
+                    Value="Bottom" />
+        </Style>
+        <Style Selector="TextBlock.tooltip">
+            <Setter Property="Foreground"
+                    Value="{StaticResource TextColor}" />
+            <Setter Property="FontSize"
+                    Value="12" />
+        </Style>
+    </UserControl.Styles>
+
+    <Border CornerRadius="4"
+            Background="{StaticResource Background1}"
+            BorderBrush="{StaticResource Background0}"
+            BorderThickness="3"
+            ToolTip.Placement="Top"
+            ToolTip.VerticalOffset="-5">
+        <ToolTip.Tip>
+            <ItemsRepeater ItemsSource="{Binding TooltipLines}">
+                <ItemsRepeater.Layout>
+                    <StackLayout Orientation="Vertical"
+                                 Spacing="2" />
+                </ItemsRepeater.Layout>
+                <ItemsRepeater.ItemTemplate>
+                    <DataTemplate>
+                        <DockPanel>
+                            <TextBlock Text="{Binding Item1}"
+                                       Classes="tooltip"
+                                       VerticalAlignment="Center"
+                                       FontWeight="Bold" />
+                            <TextBlock Classes="tooltip"
+                                       Text="{Binding Item2}" />
+                        </DockPanel>
+                    </DataTemplate>
+                </ItemsRepeater.ItemTemplate>
+            </ItemsRepeater>
+        </ToolTip.Tip>
+
+        <Grid RowDefinitions="Auto,*,Auto"
+              ColumnDefinitions="*,*">
+            <Border Grid.Row="0"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    CornerRadius="0,0,0,0"
+                    BorderBrush="{StaticResource Background0}"
+                    BorderThickness="1"
+                    Background="{StaticResource Background0}"
+                    HorizontalAlignment="Stretch">
+                <TextBlock Foreground="{StaticResource TextColor}"
+                           TextAlignment="Center"
+                           VerticalAlignment="Center"
+                           TextWrapping="NoWrap"
+                           TextTrimming="CharacterEllipsis"
+                           Text="{Binding Offer.Item}" />
+            </Border>
+
+            <TextBlock Grid.Row="1"
+                       Grid.Column="0"
+                       Text="{Binding Offer.Price.Quantity}"
+                       FontSize="{Binding PriceQuantityFontSize}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       RenderTransform="{Binding PriceQuantityTransform}"
+                       Foreground="{StaticResource TextColor}" />
+            <Image Grid.Row="1"
+                   Grid.Column="1"
+                   Source="{Binding Offer.Price.CurrencyImage}"
+                   Stretch="Uniform"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center" />
+
+            <Button Grid.Row="2"
+                    Grid.Column="0"
+                    Classes="hoverAccent actionButton">
+                <Button.Content>
+                    <icons:MaterialIcon Kind="Clock" />
+                </Button.Content>
+            </Button>
+            <Button Grid.Row="2"
+                    Grid.Column="1"
+                    Classes="hoverError actionButton">
+                <Button.Content>
+                    <icons:MaterialIcon Kind="CloseCircle" />
+                </Button.Content>
+            </Button>
+        </Grid>
+    </Border>
+</UserControl>

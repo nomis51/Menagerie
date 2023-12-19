@@ -1,0 +1,76 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <!-- Add Controls for Previewer Here -->
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="Button.hoverError">
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="Foreground"
+                Value="{DynamicResource TextColor}" />
+        <Setter Property="Cursor"
+                Value="Hand" />
+    </Style>
+    <Style Selector="Button.hoverError:pointerover /template/ ContentPresenter">
+        <Setter Property="Background"
+                Value="{StaticResource ErrorColor}" />
+        <Setter Property="Foreground"
+                Value="{DynamicResource TextColor}" />
+        <Setter Property="Cursor"
+                Value="Hand" />
+    </Style>
+
+    <Style Selector="Button.hoverWarning">
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="Foreground"
+                Value="{DynamicResource TextColor}" />
+        <Setter Property="Cursor"
+                Value="Hand" />
+    </Style>
+    <Style Selector="Button.hoverWarning:pointerover /template/ ContentPresenter">
+        <Setter Property="Background"
+                Value="{StaticResource WarningColor}" />
+        <Setter Property="Foreground"
+                Value="{DynamicResource TextColor}" />
+        <Setter Property="Cursor"
+                Value="Hand" />
+    </Style>
+
+    <Style Selector="Button.hoverSuccess">
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="Foreground"
+                Value="{DynamicResource TextColor}" />
+        <Setter Property="Cursor"
+                Value="Hand" />
+    </Style>
+    <Style Selector="Button.hoverSuccess:pointerover /template/ ContentPresenter">
+        <Setter Property="Background"
+                Value="{StaticResource SuccessColor}" />
+        <Setter Property="Foreground"
+                Value="{DynamicResource TextColor}" />
+        <Setter Property="Cursor"
+                Value="Hand" />
+    </Style>
+
+    <Style Selector="Button.hoverAccent">
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="Foreground"
+                Value="{DynamicResource TextColor}" />
+        <Setter Property="Cursor"
+                Value="Hand" />
+    </Style>
+    <Style Selector="Button.hoverAccent:pointerover /template/ ContentPresenter">
+        <Setter Property="Background"
+                Value="{StaticResource AccentColor}" />
+        <Setter Property="Foreground"
+                Value="{DynamicResource TextColor}" />
+        <Setter Property="Cursor"
+                Value="Hand" />
+    </Style>
+</Styles>

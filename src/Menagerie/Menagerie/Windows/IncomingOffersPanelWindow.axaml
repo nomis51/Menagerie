@@ -1,0 +1,42 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:Menagerie.ViewModels"
+        xmlns:views="clr-namespace:Menagerie.Views"
+        mc:Ignorable="d"
+        d:DesignWidth="800"
+        d:DesignHeight="450"
+        Width="500"
+        Height="80"
+        x:Class="Menagerie.Windows.IncomingOffersPanelWindow"
+        Title="IncomingOffersPanelWindow"
+        SystemDecorations="None"
+        Focusable="False"
+        Topmost="True"
+        IsTabStop="False"
+        Background="CornflowerBlue"
+        Padding="2"
+        x:DataType="viewModels:IncomingOffersPanelWindowViewModel">
+    <Grid>
+        <Panel HorizontalAlignment="Stretch"
+               VerticalAlignment="Stretch">
+            <ScrollViewer x:Name="ScrollViewer"
+                          VerticalScrollBarVisibility="Disabled"
+                          HorizontalScrollBarVisibility="Hidden"
+                          PointerWheelChanged="ScrollViewer_OnPointerWheelChanged">
+                <ItemsRepeater ItemsSource="{Binding Offers}">
+                    <ItemsRepeater.Layout>
+                        <StackLayout Orientation="Horizontal"
+                                     Spacing="5" />
+                    </ItemsRepeater.Layout>
+                    <ItemsRepeater.ItemTemplate>
+                        <DataTemplate x:DataType="viewModels:IncomingOfferViewModel">
+                            <views:IncomingOffer Content="{Binding .}" />
+                        </DataTemplate>
+                    </ItemsRepeater.ItemTemplate>
+                </ItemsRepeater>
+            </ScrollViewer>
+        </Panel>
+    </Grid>
+</Window>
