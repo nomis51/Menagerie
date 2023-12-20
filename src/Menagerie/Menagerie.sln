@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menagerie", "Menagerie\Mena
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menagerie.Core", "Menagerie.Core\Menagerie.Core.csproj", "{ECE07661-3A07-417B-9B72-1280F678C160}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menagerie.Shared", "Menagerie.Shared\Menagerie.Shared.csproj", "{4366CAB3-3B4F-436C-874B-8985FF6D4DC4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{ECE07661-3A07-417B-9B72-1280F678C160}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ECE07661-3A07-417B-9B72-1280F678C160}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ECE07661-3A07-417B-9B72-1280F678C160}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4366CAB3-3B4F-436C-874B-8985FF6D4DC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4366CAB3-3B4F-436C-874B-8985FF6D4DC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4366CAB3-3B4F-436C-874B-8985FF6D4DC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4366CAB3-3B4F-436C-874B-8985FF6D4DC4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

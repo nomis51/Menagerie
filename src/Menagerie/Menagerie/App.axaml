@@ -3,7 +3,9 @@
              x:Class="Menagerie.App"
              xmlns:local="using:Menagerie"
              xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-             RequestedThemeVariant="Dark">
+             xmlns:viewModels="clr-namespace:Menagerie.ViewModels"
+             RequestedThemeVariant="Dark"
+             x:DataType="viewModels:AppViewModel">
     <Application.Resources>
         <ResourceDictionary>
             <Color x:Key="TextColor">#e5eaf0</Color>
@@ -23,6 +25,39 @@
         <local:ViewLocator />
     </Application.DataTemplates>
 
+    <TrayIcon.Icons>
+        <TrayIcons>
+            <TrayIcon Icon="/Assets/logo.ico"
+                      ToolTipText="Menagerie">
+                <TrayIcon.Menu>
+                    <NativeMenu>
+                        <NativeMenuItem Header="About">
+                            <NativeMenu>
+                                <NativeMenuItem Header="{Binding VersionText}" />
+                                <NativeMenuItemSeparator />
+                                <NativeMenuItem Header="Check for updates"
+                                                Click="MenuItemCheckForUpdates_OnClick" />
+                                <NativeMenuItem Header="Open application website"
+                                                Click="MenuItemOpenGitHub_OnClick" />
+                                <NativeMenuItem Header="Report a bug"
+                                                Click="MenuItemOpenGitHubIssue_OnClick" />
+                            </NativeMenu>
+                        </NativeMenuItem>
+                        <NativeMenuItem Header="Resources">
+                            <NativeMenu>
+                                <NativeMenuItem Header="Open logs folder"
+                                                Click="MenuItemOpenLogs_OnClick" />
+                            </NativeMenu>
+                        </NativeMenuItem>
+                        <NativeMenuItemSeparator />
+                        <NativeMenuItem Header="Quit"
+                                        Click="MenuItemQuit_OnClick" />
+                    </NativeMenu>
+                </TrayIcon.Menu>
+            </TrayIcon>
+        </TrayIcons>
+    </TrayIcon.Icons>
+
     <Application.Styles>
         <icons:MaterialIconStyles />
 
@@ -36,7 +71,7 @@
         </FluentTheme>
 
         <StyleInclude Source="avares://AvaloniaProgressRing/Styles/ProgressRing.xaml" />
-        
+
         <StyleInclude Source="Styles/Button.axaml" />
     </Application.Styles>
 </Application>

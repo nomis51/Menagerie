@@ -22,6 +22,7 @@
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.6"/>
         <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.6"/>
+        <PackageReference Include="Clowd.Squirrel" Version="2.11.1" />
         <PackageReference Include="Deadpikle.AvaloniaProgressRing" Version="0.10.3" />
         <PackageReference Include="Material.Icons.Avalonia" Version="2.1.0" />
     </ItemGroup>
@@ -32,5 +33,11 @@
         <DependentUpon>MainWindow.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <ProjectReference Include="..\Menagerie.Core\Menagerie.Core.csproj" />
+      <ProjectReference Include="..\Menagerie.Shared\Menagerie.Shared.csproj" />
     </ItemGroup>
 </Project>
