@@ -4,6 +4,8 @@ using System.Globalization;
 using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Transformation;
+using Menagerie.Core;
+using Menagerie.Core.Services;
 using Menagerie.Enums;
 using Menagerie.Models;
 using ReactiveUI;
@@ -45,6 +47,7 @@ public class IncomingOfferViewModel : ViewModelBase
     {
         get
         {
+            if (Offer.State.HasFlag(OfferState.Done)) return new SolidColorBrush((Color)Application.Current!.Resources["ErrorColor"]!);
             if (Offer.State.HasFlag(OfferState.Trading)) return new SolidColorBrush((Color)Application.Current!.Resources["WarningColor"]!);
             if (Offer.State.HasFlag(OfferState.PlayerInvited)) return new SolidColorBrush((Color)Application.Current!.Resources["SuccessColor"]!);
             if (Offer.State.HasFlag(OfferState.Busy)) return new SolidColorBrush((Color)Application.Current!.Resources["AccentColor"]!);
@@ -56,6 +59,14 @@ public class IncomingOfferViewModel : ViewModelBase
     public ObservableCollection<Tuple<string, string>> TooltipLines { get; private set; } = [];
     public bool CanSayBusy => !Offer.State.HasFlag(OfferState.PlayerInvited);
 
+    private bool _isPlayerInTheArea = true;
+
+    public bool IsPlayerInTheArea
+    {
+        get => _isPlayerInTheArea;
+        set => this.RaiseAndSetIfChanged(ref _isPlayerInTheArea, value);
+    }
+
     #endregion
 
     #region Constructors
@@ -66,6 +77,10 @@ public class IncomingOfferViewModel : ViewModelBase
         Width = width;
 
         GenerateTooltip();
+
+        Events.PlayerJoined += Events_OnPlayerJoined;
+        Events.TradeAccepted += Events_OnTradeAccepted;
+        Events.TradeCancelled += Events_OnTradeCancelled;
     }
 
     #endregion
@@ -76,70 +91,108 @@ public class IncomingOfferViewModel : ViewModelBase
     {
         if (!Offer.State.HasFlag(OfferState.PlayerInvited))
         {
-            Offer.State = OfferState.PlayerInvited;
-            this.RaisePropertyChanged(nameof(BorderBrush));
+            InvitePlayer();
             this.RaisePropertyChanged(nameof(CanSayBusy));
         }
         else if (!Offer.State.HasFlag(OfferState.Trading))
         {
-            Offer.State = OfferState.Trading | OfferState.PlayerInvited;
-            this.RaisePropertyChanged(nameof(BorderBrush));
+            Trade();
             this.RaisePropertyChanged(nameof(CanSayBusy));
         }
     }
 
     public void SayBusy()
     {
-        Offer.State = OfferState.Busy;
+        Offer.State &= ~OfferState.Initial;
+        Offer.State |= OfferState.Busy;
         this.RaisePropertyChanged(nameof(BorderBrush));
+
+        AppService.Instance.SendBusyWhisper(Offer.Player, Offer.Item);
+    }
+
+    public void Whisper()
+    {
+        AppService.Instance.PrepareToSendWhisper(Offer.Player);
+    }
+
+    public void SaySold()
+    {
+        AppService.Instance.SendSoldWhisper(Offer.Player, Offer.Item);
+        DenyOffer();
     }
 
     public void AskStillInterested()
     {
-        if (Offer.State.HasFlag(OfferState.PlayerInvited))
-        {
-            Offer.State |= OfferState.StillInterested;
-            this.RaisePropertyChanged(nameof(BorderBrush));
-        }
-        else
-        {
-            Offer.State = OfferState.StillInterested;
-            this.RaisePropertyChanged(nameof(BorderBrush));
-        }
+        Offer.State &= ~OfferState.Initial;
+        Offer.State |= OfferState.StillInterested;
+        this.RaisePropertyChanged(nameof(BorderBrush));
+
+        AppService.Instance.SendStillInterestedWhisper(Offer.Player, Offer.Item, $"{Offer.Price.Quantity} {Offer.Price.Currency}");
     }
 
     public void InvitePlayer()
     {
-        if (Offer.State.HasFlag(OfferState.PlayerInvited))
+        Offer.State &= ~OfferState.Initial;
+        
+        if (!Offer.State.HasFlag(OfferState.PlayerInvited))
         {
-            // re-invite
+            Offer.State |= OfferState.PlayerInvited;
+            this.RaisePropertyChanged(nameof(BorderBrush));
+
+            AppService.Instance.SendInviteCommand(Offer.Player, Offer.Item, $"{Offer.Price.Quantity} {Offer.Price.Currency}");
         }
         else
         {
-            // invite
+            AppService.Instance.SendReInvitecommand(Offer.Player);
         }
-
-        Offer.State = OfferState.PlayerInvited;
-        this.RaisePropertyChanged(nameof(BorderBrush));
     }
 
     public void DenyOffer()
     {
-        // kick
         Offer.State = OfferState.Done;
         this.RaisePropertyChanged(nameof(BorderBrush));
-    }
 
-    public void Trade()
-    {
-        // trade
-        Offer.State = OfferState.Trading;
-        this.RaisePropertyChanged(nameof(BorderBrush));
+        AppService.Instance.SendKickCommand(Offer.Player);
     }
 
     #endregion
 
     #region Private methdos
+
+    private void Trade()
+    {
+        Offer.State &= ~OfferState.StillInterested;
+        Offer.State |= OfferState.Trading;
+        this.RaisePropertyChanged(nameof(BorderBrush));
+
+        AppService.Instance.SendTradeRequestCommand(Offer.Player);
+    }
+
+    private void Events_OnTradeCancelled()
+    {
+        if (!Offer.State.HasFlag(OfferState.Trading)) return;
+
+        Offer.State &= ~OfferState.Trading;
+        this.RaisePropertyChanged(nameof(BorderBrush));
+    }
+
+    private void Events_OnTradeAccepted()
+    {
+        if (!Offer.State.HasFlag(OfferState.Trading)) return;
+
+        AppService.Instance.SendThanksWhisper(Offer.Player);
+        DenyOffer();
+    }
+
+    private void Events_OnPlayerJoined(string player)
+    {
+        if (IsPlayerInTheArea) return;
+        if (Offer.Player != player || Offer.State.HasFlag(OfferState.PlayerJoined)) return;
+        
+        Offer.State &= ~OfferState.StillInterested;
+        Offer.State |= OfferState.PlayerJoined;
+        this.RaisePropertyChanged(nameof(BorderBrush));
+    }
 
     private void GenerateTooltip()
     {

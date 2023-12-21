@@ -38,7 +38,9 @@
             ToolTip.Placement="Top"
             ToolTip.VerticalOffset="-5"
             ToolTip.ShowDelay="1000"
-            PointerReleased="Border_OnPointerReleased">
+            PointerReleased="Border_OnPointerReleased"
+            KeyDown="Border_OnKeyDown"
+            KeyUp="Border_OnKeyUp">
         <ToolTip.Tip>
             <ItemsRepeater ItemsSource="{Binding TooltipLines}">
                 <ItemsRepeater.Layout>
@@ -122,6 +124,14 @@
                     <icons:MaterialIcon Kind="CloseCircle" />
                 </Button.Content>
             </Button>
+
+            <icons:MaterialIcon Grid.Row="1"
+                                Grid.Column="1"
+                                IsVisible="{Binding IsPlayerInTheArea}"
+                                Kind="UserCircle"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom"
+                                Foreground="{StaticResource WarningColor}" />
         </Grid>
     </Border>
 </UserControl>

@@ -17,9 +17,6 @@ public class Settings
         General = new GeneralSettings
         {
             League = "Standard",
-            Poesessid = "",
-            AccountName = "",
-            EnableSentry = true
         };
         IncomingTrades = new IncomingTradesSettings
         {

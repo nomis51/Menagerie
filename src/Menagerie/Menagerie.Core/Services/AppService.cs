@@ -161,6 +161,58 @@ public class AppService : IAppService
     {
         _textParserService.ParseClientTxtLine(line);
     }
+    
+    public void SendReInvitecommand(string player)
+    {
+        _gameChatService.SendKick(player);
+        _gameChatService.SendInvite(player);
+    }
+
+    public void SendTradeRequestCommand(string player)
+    {
+        _gameChatService.SendTradeRequest(player);
+    }
+
+    public void SendThanksWhisper(string player)
+    {
+        _gameChatService.SendThanksWhisper(player);
+    }
+
+    public void SendChatMessage(string message)
+    {
+        _gameChatService.Send(message);
+    }
+    
+    public void SendBusyWhisper(string player, string itemName)
+    {
+        _gameChatService.SendBusyWhisper(player, itemName);
+    }
+
+    public void SendSoldWhisper(string player, string itemName)
+    {
+        _gameChatService.SendSoldWhisper(player, itemName);
+    }
+
+    public void SendStillInterestedWhisper(string player, string itemName, string price)
+    {
+        _gameChatService.SendStillInterestedWhisper(player, itemName, price);
+    }
+
+    public void SendInviteCommand(string player, string itemName, string price)
+    {
+        _gameChatService.SendInvite(player);
+        _gameChatService.SendInviteWhisper(player, itemName, price);
+    }
+
+    public void SendKickCommand(string player)
+    {
+        _gameChatService.SendKick(player);
+    }
+    
+    public void PrepareToSendWhisper(string player)
+    {
+        _gameChatService.PrepareToSendWhisper(player);
+    }
 
     public void Initialize()
     {
@@ -174,6 +226,14 @@ public class AppService : IAppService
         _textParserService = new TextParserService();
         _settingsService = new SettingsService();
         _gameChatService = new GameChatService();
+        
+        _clientFileService.Initialize();
+        _clipboardService.Initialize();    
+        _gameProcessService.Initialize();
+        _gameWindowService.Initialize();    
+        _textParserService.Initialize();
+        _settingsService.Initialize();    
+        _gameChatService.Initialize();
 
         _gameProcessService.FindProcess();
         _gameWindowService.AutoHideOverlay();
