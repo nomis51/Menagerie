@@ -13,6 +13,8 @@
         Title="IncomingOffersPanelWindow"
         SystemDecorations="None"
         Focusable="False"
+        ShowActivated="False"
+        ShowInTaskbar="False"
         Topmost="True"
         IsTabStop="False"
         Background="Transparent"

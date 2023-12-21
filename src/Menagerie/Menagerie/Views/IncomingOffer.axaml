@@ -80,10 +80,10 @@
 
             <TextBlock Grid.Row="1"
                        Grid.Column="0"
-                       Text="{Binding Offer.Price.Quantity}"
-                       FontSize="{Binding PriceQuantityFontSize}"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
+                       Text="{Binding Offer.Price.Quantity}"
+                       FontSize="{Binding PriceQuantityFontSize}"
                        RenderTransform="{Binding PriceQuantityTransform}"
                        Foreground="{StaticResource TextColor}" />
             <Image Grid.Row="1"
@@ -113,9 +113,11 @@
                     <icons:MaterialIcon Kind="UserAdd" />
                 </Button.Content>
             </Button>
-            <Button x:Name="ButtonDenyOffer" Grid.Row="2"
+            <Button x:Name="ButtonDenyOffer"
+                    Grid.Row="2"
                     Grid.Column="1"
-                    Classes="hoverError actionButton" Click="ButtonDenyOffer_OnClick">
+                    Classes="hoverError actionButton"
+                    Click="ButtonDenyOffer_OnClick">
                 <Button.Content>
                     <icons:MaterialIcon Kind="CloseCircle" />
                 </Button.Content>

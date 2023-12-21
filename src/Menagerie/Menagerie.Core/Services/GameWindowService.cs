@@ -50,7 +50,6 @@ public class GameWindowService : IGameWindowService
 
             if (IsGameWindowFocused()) return true;
 
-
             var noTry = 0;
             while (!(User32.ShowWindow(process.MainWindowHandle, 5) &&
                      User32.SetForegroundWindow(process.MainWindowHandle) &&
@@ -67,13 +66,6 @@ public class GameWindowService : IGameWindowService
         }
     }
 
-    public bool IsOverlayFocused(int delay = 50)
-    {
-        Thread.Sleep(delay);
-        var current = User32.GetForegroundWindow();
-        return current == _overlayHandle;
-    }
-
     public bool IsGameWindowFocused(int delay = 50)
     {
         var process = Process.GetProcessById(_processId);
@@ -84,27 +76,23 @@ public class GameWindowService : IGameWindowService
         return current == process.MainWindowHandle;
     }
 
-    #endregion
-
-    #region Private methods
-
-    private void AutoHideOverlay()
+    public void AutoHideOverlay()
     {
         new Thread(() =>
             {
                 while (true)
                 {
-                    Thread.Sleep(500);
+                    Thread.Sleep(100);
 
                     try
                     {
-                        if (IsGameWindowFocused() || IsOverlayFocused())
+                        if (IsGameWindowFocused())
                         {
-                            ShowOverlay();
+                            AppService.Instance.ShowOverlay();
                         }
                         else
                         {
-                            HideOverlay();
+                            AppService.Instance.HideOverlay();
                         }
                     }
                     catch (Exception e)
@@ -117,28 +105,6 @@ public class GameWindowService : IGameWindowService
                 IsBackground = true
             }
             .Start();
-    }
-
-    private void ShowOverlay()
-    {
-        if (_isOverlayVisible) return;
-
-        lock (ShowHideLock)
-        {
-            AppService.Instance.ShowOverlay();
-            _isOverlayVisible = true;
-        }
-    }
-
-    private void HideOverlay()
-    {
-        if (!_isOverlayVisible) return;
-
-        lock (ShowHideLock)
-        {
-            AppService.Instance.HideOverlay();
-            _isOverlayVisible = false;
-        }
     }
 
     #endregion

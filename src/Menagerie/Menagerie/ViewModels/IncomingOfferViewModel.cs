@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Transformation;
@@ -16,17 +17,29 @@ public class IncomingOfferViewModel : ViewModelBase
     public OfferModel Offer { get; set; }
     public int Width { get; set; }
 
-    public int PriceQuantityFontSize => Offer.Price.Quantity switch
+    public int PriceQuantityFontSize
     {
-        < 10 => 22,
-        < 100 => 20,
-        < 1000 => 16,
-        < 10000 => 13,
-        < 100000 => 12,
-        _ => 0
-    };
+        get
+        {
+            var str = Offer.Price.Quantity.ToString(CultureInfo.InvariantCulture);
+            var hasDot = str.Contains('.', StringComparison.Ordinal);
+            str = str.Replace(".", string.Empty);
 
-    public ITransform? PriceQuantityTransform => Offer.Price.Quantity >= 10000 ? TransformOperations.Parse("rotate(-35deg)") : null;
+            return str.Length switch
+            {
+                1 => 24,
+                2 when !hasDot => 22,
+                2 => 21,
+                3 when !hasDot => 18,
+                3 => 17,
+                4 when !hasDot => 15,
+                4 => 13,
+                _ => 1
+            };
+        }
+    }
+
+    public ITransform? PriceQuantityTransform => PriceQuantityFontSize <= 13 ? TransformOperations.Parse("rotate(-35deg)") : null;
 
     public IBrush BorderBrush
     {

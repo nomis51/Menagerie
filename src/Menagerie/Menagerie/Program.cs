@@ -1,23 +1,50 @@
 ﻿using Avalonia;
 using Avalonia.ReactiveUI;
 using System;
+using Menagerie.Core.Services;
+using Menagerie.Helpers;
+using Serilog;
 
 namespace Menagerie;
 
 sealed class Program
 {
-    // Initialization code. Don't use any Avalonia, third-party APIs or any
-    // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
-    // yet and stuff might break.
-    [STAThread]
-    public static void Main(string[] args) => BuildAvaloniaApp()
-        .StartWithClassicDesktopLifetime(args);
+    #region Public methods
 
-    // Avalonia configuration, don't remove; also used by visual designer.
-    public static AppBuilder BuildAvaloniaApp()
-        => AppBuilder.Configure<App>()
+    [STAThread]
+    public static void Main(string[] args)
+    {
+        UpdateHelper.HookSquirrel();
+        InitializeServices();
+
+        try
+        {
+            BuildAvaloniaApp()
+                .StartWithClassicDesktopLifetime(args);
+        }
+        catch (Exception e)
+        {
+            Log.Error("Unhandled exception: {Message} {StackTrace}", e.Message, e.StackTrace);
+        }
+    }
+
+    #endregion
+
+    #region Private methods
+
+    private static void InitializeServices()
+    {
+        AppService.Instance.Initialize();
+    }
+
+    private static AppBuilder BuildAvaloniaApp()
+    {
+        return AppBuilder.Configure<App>()
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace()
             .UseReactiveUI();
+    }
+
+    #endregion
 }

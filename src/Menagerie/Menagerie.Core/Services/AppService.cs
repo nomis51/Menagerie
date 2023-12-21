@@ -105,8 +105,7 @@ public class AppService : IAppService
     public void NewIncomingOffer(IncomingOffer offer)
     {
         offer.Time = DateTime.Now;
-        offer.CurrencyImageUri = new Uri(Path.GetFullPath(CurrencyHelper.GetCurrencyImageLink(offer.Currency)),
-            UriKind.Absolute);
+        offer.CurrencyImageUri = new Uri(CurrencyHelper.GetCurrencyImageLink(offer.Currency), UriKind.Absolute);
 
         Events.NewIncomingOfferEventInvoke(offer);
     }
@@ -114,8 +113,7 @@ public class AppService : IAppService
     public void NewOutgoingOffer(OutgoingOffer offer)
     {
         offer.Time = DateTime.Now;
-        offer.CurrencyImageUri = new Uri(Path.GetFullPath(CurrencyHelper.GetCurrencyImageLink(offer.Currency)),
-            UriKind.Absolute);
+        offer.CurrencyImageUri = new Uri(CurrencyHelper.GetCurrencyImageLink(offer.Currency), UriKind.Absolute);
 
         Events.NewOutgoingOfferEventInvoke(offer);
     }
@@ -178,6 +176,7 @@ public class AppService : IAppService
         _gameChatService = new GameChatService();
 
         _gameProcessService.FindProcess();
+        _gameWindowService.AutoHideOverlay();
         _clipboardService.Listen();
     }
 

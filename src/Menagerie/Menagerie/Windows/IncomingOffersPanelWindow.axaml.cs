@@ -3,6 +3,8 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
+using Menagerie.Core;
+using Menagerie.Core.Services;
 using Menagerie.ViewModels;
 
 namespace Menagerie.Windows;
@@ -15,11 +17,23 @@ public partial class IncomingOffersPanelWindow : WindowBase<IncomingOffersPanelW
     {
         InitializeComponent();
         Loaded += OnLoaded;
+        Events.HideOverlay += OnHideOverlay;
+        Events.ShowOverlay += OnShowOverlay;
     }
 
     #endregion
 
     #region Private methods
+
+    private void OnShowOverlay()
+    {
+        InvokeUi(Show);
+    }
+
+    private void OnHideOverlay()
+    {
+        InvokeUi(Hide);
+    }
 
     private void OnLoaded(object? sender, EventArgs e)
     {
@@ -51,7 +65,7 @@ public partial class IncomingOffersPanelWindow : WindowBase<IncomingOffersPanelW
             case > 0:
                 ScrollViewer.PageLeft();
                 break;
-            
+
             case < 0:
                 ScrollViewer.PageRight();
                 break;

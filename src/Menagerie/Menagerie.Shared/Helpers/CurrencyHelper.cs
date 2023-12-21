@@ -1,13 +1,8 @@
-﻿using System.Net;
-using Serilog;
-
-namespace Menagerie.Shared.Helpers;
+﻿namespace Menagerie.Shared.Helpers;
 
 public static class CurrencyHelper
 {
     #region Constants
-
-    private static object _cacheLock = new();
 
     private static readonly Dictionary<string, string> CurrencyToImageLink = new()
     {
@@ -144,17 +139,14 @@ public static class CurrencyHelper
             "https://web.poecdn.com/image/Art/2DItems/Currency/HorizonOrb.png?v=f3b3343dc61c60e667003bbdbbdb2374"
         },
         { "ex shard", "https://web.poecdn.com/gen/image/WzI1LDE0LHsiZiI6IjJESXRlbXMvQ3VycmVuY3kvRXhhbHRlZFNoYXJkIiwic2NhbGUiOjF9XQ/b9e4013af5/ExaltedShard.png" },
+        {"", "https://web.poecdn.com/gen/image/WzI1LDE0LHsiZiI6IjJESXRlbXMvQ3VycmVuY3kvUnV0aGxlc3MvQ29pblBpbGVUaWVyMiIsInNjYWxlIjoxfV0/48edfd8be7/CoinPileTier2.png"}
     };
 
     private static readonly IEnumerable<string> TopCurrencies = new[]
     {
-        "Exalted Orb",
         "Divine Orb",
         "Chaos Orb",
     };
-
-    private const string ImagesFolder = "./assets/cache/";
-    private const string DefaultIcon = "https://web.poecdn.com/protected/image/trade/layout/logo.png?key=aifr8Q9qj0FYhhu8_rrfhw";
 
     #endregion
 
@@ -177,14 +169,11 @@ public static class CurrencyHelper
 
     public static string GetCurrencyImageLink(string currencyName)
     {
-        if (CurrencyToImageLink.ContainsKey(currencyName))
-        {
-            return GetLocalCacheUri(currencyName, CurrencyToImageLink[currencyName]);
-        }
+        if (CurrencyToImageLink.TryGetValue(currencyName, out var uri)) return uri;
 
         var norm = NormalizeCurrency(currencyName);
 
-        return !CurrencyToImageLink.ContainsKey(norm) ? GetLocalCacheUri("poeLogo", DefaultIcon) : GetLocalCacheUri(norm, CurrencyToImageLink[norm]);
+        return !CurrencyToImageLink.TryGetValue(norm, out var url) ? CurrencyToImageLink[""] : url;
     }
 
     public static string NormalizeCurrency(string text)
@@ -267,27 +256,6 @@ public static class CurrencyHelper
             "whetstone" => "Blacksmith's Whetstone",
             _ => text
         };
-    }
-
-    #endregion
-
-    #region Private methods
-
-    private static string GetLocalCacheUri(string currencyName, string link)
-    {
-        lock (_cacheLock)
-        {
-            if (!Directory.Exists(ImagesFolder)) Directory.CreateDirectory(ImagesFolder);
-
-            var path = $"{ImagesFolder}{currencyName}.png";
-            if (File.Exists(path)) return path;
-
-            Log.Information("Image {Currency} doesn't exists, downloading it from {Link}...", currencyName, link);
-            using WebClient client = new();
-            client.DownloadFile(new Uri(link, UriKind.Absolute), path);
-
-            return path;
-        }
     }
 
     #endregion

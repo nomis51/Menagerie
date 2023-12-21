@@ -69,7 +69,7 @@ public class GameProcessService : IGameProcessService
             }
         });
     }
-    
+
     #endregion
 
     #region Private methods
@@ -94,7 +94,7 @@ public class GameProcessService : IGameProcessService
                 }
             }
 
-            Task.Run(FindProcess);
+            FindProcess();
         });
     }
 
