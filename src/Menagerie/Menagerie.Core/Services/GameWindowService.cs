@@ -39,37 +39,6 @@ public class GameWindowService : IGameWindowService
         _processId = processId;
     }
 
-    public void SetOverlayHandle(IntPtr handle)
-    {
-        _overlayHandle = handle;
-
-        User32.SetWindowLong(
-            _overlayHandle,
-            User32.GWL_EX_STYLE,
-            (User32.GetWindowLong(_overlayHandle, User32.GWL_EX_STYLE) | User32.WS_EX_TOOLWINDOW) & ~User32.WS_EX_APPWINDOW
-        );
-    }
-
-    public void ToggleOverlay()
-    {
-        if (_isOverlayVisible)
-        {
-            HideOverlay();
-        }
-        else
-        {
-            ShowOverlay();
-        }
-    }
-
-    public bool FocusOverlay()
-    {
-        if (_overlayHandle == IntPtr.Zero) return false;
-
-        User32.SetForegroundWindow(_overlayHandle);
-        return true;
-    }
-
     public bool FocusGameWindow()
     {
         if (_processId == 0) return false;

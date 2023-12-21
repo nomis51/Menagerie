@@ -2,4 +2,5 @@
 
 public interface IClientFileService : IService
 {
+    void SetClientFilePath(string filePath);
 }

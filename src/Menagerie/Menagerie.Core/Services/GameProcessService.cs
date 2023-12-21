@@ -40,48 +40,39 @@ public class GameProcessService : IGameProcessService
     {
     }
 
-    public Task Start()
+    public void FindProcess()
     {
-        return Task.Run(FindProcess);
-    }
+        Task.Run(() =>
+        {
+            while (true)
+            {
+                foreach (var process in from poeProcess in _poeProcesses
+                         select Process.GetProcessesByName(poeProcess)
+                         into processes
+                         where processes.Length != 0
+                         select processes.FirstOrDefault()
+                         into process
+                         where process is not null && !process.HasExited
+                         select process)
+                {
+                    if (!FindLogFile(process)) continue;
 
-    public bool IsGameWindow(IntPtr hwnd)
-    {
-        if (_gameWindowHandle == IntPtr.Zero) return false;
-        return _gameWindowHandle == hwnd;
-    }
+                    _processId = process.Id;
+                    _gameWindowHandle = process.MainWindowHandle;
+                    WatchProcess();
+                    AppService.Instance.GameProcessFound(_processId);
 
+                    return;
+                }
+
+                Task.Delay(5000).Wait();
+            }
+        });
+    }
+    
     #endregion
 
     #region Private methods
-
-    private void FindProcess()
-    {
-        while (true)
-        {
-            foreach (var process in from poeProcess in _poeProcesses
-                     select Process.GetProcessesByName(poeProcess)
-                     into processes
-                     where processes.Length != 0
-                     select processes.FirstOrDefault()
-                     into process
-                     where process is not null && !process.HasExited
-                     select process)
-            {
-                if (!FindLogFile(process)) continue;
-
-                _processId = process.Id;
-                _gameWindowHandle = process.MainWindowHandle;
-                WatchProcess();
-                AppService.Instance.GameProcessFound(_processId);
-                AppService.Instance.IoHookProcess(_processId);
-
-                return;
-            }
-
-            Task.Delay(5000).Wait();
-        }
-    }
 
     private Task WatchProcess()
     {

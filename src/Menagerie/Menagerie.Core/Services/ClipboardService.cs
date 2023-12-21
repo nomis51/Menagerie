@@ -25,17 +25,7 @@ public class ClipboardService : IClipboardService
     {
     }
 
-    public Task Start()
-    {
-        Listen();
-        return Task.CompletedTask;
-    }
-
-    #endregion
-
-    #region Private methods
-
-    private void Listen()
+    public void Listen()
     {
         var thread = new Thread(() =>
         {

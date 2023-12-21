@@ -2,5 +2,5 @@
 
 public interface IGameProcessService : IService
 {
-    
+    void FindProcess();
 }

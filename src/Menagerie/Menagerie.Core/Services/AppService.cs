@@ -1,6 +1,8 @@
 ﻿using Menagerie.Core.Services.Abstractions;
 using Menagerie.Shared.Helpers;
+using Menagerie.Shared.Models.Setting;
 using Menagerie.Shared.Models.Trading;
+using Serilog;
 
 namespace Menagerie.Core.Services;
 
@@ -31,64 +33,82 @@ public class AppService : IAppService
 
     #region Services
 
-    private IClientFileService _clientFileService;
-    private IClipboardService _clipboardService;
-    private IGameProcessService _gameProcessService;
-    private IGameWindowService _gameWindowService;
-    private ITextParserService _textParserService;
-    private IWindowHookService _windowHookService;
+    private IClientFileService _clientFileService = null!;
+    private IClipboardService _clipboardService = null!;
+    private IGameProcessService _gameProcessService = null!;
+    private IGameWindowService _gameWindowService = null!;
+    private ITextParserService _textParserService = null!;
+    private ISettingsService _settingsService = null!;
+    private IGameChatService _gameChatService = null!;
+
+    #endregion
+
+    #region Props
+
+    public string CurrentLocation { get; private set; } = string.Empty;
 
     #endregion
 
     #region Public methods
 
+    public Settings GetSettings()
+    {
+        return _settingsService.GetSettings();
+    }
+
+    public void SetSettings(Settings settings)
+    {
+        _settingsService.SetSettings(settings);
+    }
+
+
+    public bool EnsureGameFocused()
+    {
+        return _gameWindowService.FocusGameWindow();
+    }
+
     public void ShowOverlay()
     {
-        // DataEvents.OverlayVisibilityChangeEventInvoke(true);
+        Events.ShowOverlayEventInvoke();
     }
 
     public void HideOverlay()
     {
-        // DataEvents.OverlayVisibilityChangeEventInvoke(false);
+        Events.HideOverlayEventInvoke();
     }
-    
+
     public void ClientFileFound(string filePath)
     {
         _clientFileService.SetClientFilePath(filePath);
     }
-    
-    public void IoHookProcess(int processId)
-    {
-        _windowHookService.IoHook(processId);
-    }
-    
+
     public void GameProcessFound(int processId)
     {
         _gameWindowService.SetProcessId(processId);
     }
-    
+
     public void TradeAccepted()
     {
-        // DataEvents.TradeAcceptedEventInvoke();
+        Events.TradeAcceptedEventInvoke();
     }
 
     public void TradeCancelled()
     {
-        // DataEvents.TradeCancelledEventInvoke();
+        Events.TradeCancelledEventInvoke();
     }
 
     public void PlayerJoined(string player)
     {
-        // DataEvents.PlayerJoinedEventInvoke(player);
+        Events.PlayerJoinedEventInvoke(player);
     }
-    
+
     public void NewIncomingOffer(IncomingOffer offer)
     {
         offer.Time = DateTime.Now;
         offer.CurrencyImageUri = new Uri(Path.GetFullPath(CurrencyHelper.GetCurrencyImageLink(offer.Currency)),
             UriKind.Absolute);
 
-        // DataEvents.NewIncomingOfferEventInvoke(offer);
+        Events.NewIncomingOfferEventInvoke(offer);
     }
 
     public void NewOutgoingOffer(OutgoingOffer offer)
@@ -97,46 +117,46 @@ public class AppService : IAppService
         offer.CurrencyImageUri = new Uri(Path.GetFullPath(CurrencyHelper.GetCurrencyImageLink(offer.Currency)),
             UriKind.Absolute);
 
-        // DataEvents.NewOutgoingOfferEventInvoke(offer);
+        Events.NewOutgoingOfferEventInvoke(offer);
     }
-    
+
     public void OnLocationUpdated(string location)
     {
-        // DataEvents.LocationUpdatedEventInvoke(location);
+        Events.LocationUpdatedEventInvoke(location);
     }
-    
-     public void NewClipboardLine(string line)
+
+    public void NewClipboardLine(string line)
     {
         if (_textParserService.CanParseKoreanOutgoingOffer(line))
         {
             _textParserService.ParseKoreanOutgoingOffer(line);
-            // DataEvents.NewWhisperToSendEventInvoke(line);
+            _gameChatService.Send(line);
             return;
         }
 
         if (_textParserService.CanParseRussianOutgoingOffer(line))
         {
             _textParserService.ParseRussianOutgoingOffer(line);
-            // DataEvents.NewWhisperToSendEventInvoke(line);
+            _gameChatService.Send(line);
             return;
         }
 
         if (_textParserService.CanParseFrenchOutgoingOffer(line))
         {
             _textParserService.ParseFrenchOutgoingOffer(line);
-            // DataEvents.NewWhisperToSendEventInvoke(line);
+            _gameChatService.Send(line);
             return;
         }
 
         if (_textParserService.CanParseGermanOutgoingOffer(line))
         {
             _textParserService.ParseGermanOutgoingOffer(line);
-            // DataEvents.NewWhisperToSendEventInvoke(line);
+            _gameChatService.Send(line);
             return;
         }
 
         if (!_textParserService.CanParseOutgoingOffer(line)) return;
-        // DataEvents.NewWhisperToSendEventInvoke(line);
+        _gameChatService.Send(line);
     }
 
     public void NewClientFileLine(string line)
@@ -144,19 +164,21 @@ public class AppService : IAppService
         _textParserService.ParseClientTxtLine(line);
     }
 
-    public string GetLogsLocation()
-    {
-        return string.Empty;
-    }
-
     public void Initialize()
     {
+        LogsHelper.Initialize();
+        ProcessHelper.CleanUnexpectedProcesses();
+
         _clientFileService = new ClientFileService();
         _clipboardService = new ClipboardService();
         _gameProcessService = new GameProcessService();
         _gameWindowService = new GameWindowService();
         _textParserService = new TextParserService();
-        _windowHookService = new WindowHookService();
+        _settingsService = new SettingsService();
+        _gameChatService = new GameChatService();
+
+        _gameProcessService.FindProcess();
+        _clipboardService.Listen();
     }
 
     #endregion

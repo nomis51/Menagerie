@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Menagerie.Core.Services;
+using Menagerie.Shared.Helpers;
 using Menagerie.ViewModels;
 using Serilog;
 using MainWindow = Menagerie.Windows.MainWindow;
@@ -20,7 +21,7 @@ public partial class App : Application
     private const string GitHubIssuePageUrl = $"{GitHubPageUrl}/issues";
 
     #endregion
-    
+
     #region Public methods
 
     public override void Initialize()
@@ -86,7 +87,7 @@ public partial class App : Application
 
     private void MenuItemOpenLogs_OnClick(object? sender, EventArgs e)
     {
-        var folder = AppService.Instance.GetLogsLocation().Replace("/", "\\");
+        var folder = LogsHelper.Location.Replace("/", "\\");
 
         try
         {
