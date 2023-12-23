@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using Menagerie.Core.Services.Abstractions;
-using Menagerie.Data.WinApi;
+using Menagerie.Core.WinApi;
 using Serilog;
 
 namespace Menagerie.Core.Services;
@@ -26,12 +26,6 @@ public class GameWindowService : IGameWindowService
 
     public void Initialize()
     {
-    }
-
-    public Task Start()
-    {
-        AutoHideOverlay();
-        return Task.CompletedTask;
     }
 
     public void SetProcessId(int processId)
@@ -82,7 +76,7 @@ public class GameWindowService : IGameWindowService
             {
                 while (true)
                 {
-                    Thread.Sleep(500);
+                    Thread.Sleep(1000);
 
                     try
                     {

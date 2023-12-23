@@ -25,7 +25,6 @@ public class IncomingOfferViewModel : ViewModelBase
     #region Props
 
     public OfferModel Offer { get; set; }
-    public int Width { get; set; }
 
     public int PriceQuantityFontSize
     {
@@ -75,14 +74,16 @@ public class IncomingOfferViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _isPlayerInTheArea, value);
     }
 
+    public int OfferSize;
+
     #endregion
 
     #region Constructors
 
-    public IncomingOfferViewModel(OfferModel offer, int width = 50)
+    public IncomingOfferViewModel(OfferModel offer, int size)
     {
         Offer = offer;
-        Width = width;
+        OfferSize = size;
 
         GenerateTooltip();
 

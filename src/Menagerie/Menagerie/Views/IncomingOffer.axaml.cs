@@ -29,7 +29,7 @@ public partial class IncomingOffer : ViewBase<IncomingOfferViewModel>
 
     private void OnInitialized(object? sender, EventArgs e)
     {
-        Width = ViewModel!.Width;
+        Width = ViewModel!.OfferSize;
     }
 
     private void Border_OnPointerReleased(object? sender, PointerReleasedEventArgs e)

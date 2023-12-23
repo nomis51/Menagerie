@@ -6,6 +6,8 @@
         mc:Ignorable="d"
         d:DesignWidth="800"
         d:DesignHeight="450"
+        Height="10"
+        Width="10"
         x:Class="Menagerie.Windows.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/logo.ico"
@@ -14,8 +16,4 @@
         ShowInTaskbar="False"
         Focusable="False"
         WindowState="Minimized"
-        SystemDecorations="None">
-    <TextBlock Text="{Binding Greeting}"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Center" />
-</Window>
+        SystemDecorations="None" />

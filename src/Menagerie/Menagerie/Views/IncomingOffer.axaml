@@ -37,7 +37,7 @@
             Cursor="Hand"
             ToolTip.Placement="Top"
             ToolTip.VerticalOffset="-5"
-            ToolTip.ShowDelay="1000"
+            ToolTip.ShowDelay="100"
             PointerReleased="Border_OnPointerReleased"
             KeyDown="Border_OnKeyDown"
             KeyUp="Border_OnKeyUp">

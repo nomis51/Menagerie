@@ -2,6 +2,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Menagerie.Core;
 using Menagerie.ViewModels;
 
@@ -49,10 +50,12 @@ public partial class IncomingOffersPanelWindow : WindowBase<IncomingOffersPanelW
             // which gives about 7.5% of the screen height space for the panel
 
             var size = desktop.MainWindow!.Screens.Primary!.Bounds.Size;
-            Position = new PixelPoint((int)(size.Width * .293), (int)(size.Height * .976 - Height));
-            Width = (int)(size.Width * .4155);
-            Height = (int)(size.Height * .075);
-            ViewModel!.SetOffersWidth((int)(Height - (2 * Padding.Left)));
+            Position = new PixelPoint((int)(size.Width * .278), (int)(size.Height * .962 - Height));
+            Height = (int)(size.Height * .092);
+            Width = 25; //(int)(size.Width * .444);
+            MaxWidth = (int)(size.Width *.444);
+            ViewModel?.SetOfferSize((int)(size.Height * .092 - ButtonRemoveAllOffers.Height));
+            Panel.Width = 0;
         }
     }
 
@@ -70,10 +73,9 @@ public partial class IncomingOffersPanelWindow : WindowBase<IncomingOffersPanelW
         }
     }
 
-    private void IncomingOffer_OnRemoved(string id)
+    private void ButtonRemoveAllOffers_OnClick(object? sender, RoutedEventArgs e)
     {
-        ViewModel?.RemoveOffer(id);
+        Dispatch(vm=>vm?.RemoveAllOffers());
     }
-
     #endregion
 }

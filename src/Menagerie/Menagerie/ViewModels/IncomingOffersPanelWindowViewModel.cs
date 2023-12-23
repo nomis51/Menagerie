@@ -1,7 +1,10 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using DynamicData;
 using Menagerie.Core;
+using Menagerie.Core.Services;
+using Menagerie.Enums;
 using Menagerie.Models;
 using Menagerie.Shared.Models.Trading;
 using ReactiveUI;
@@ -13,7 +16,7 @@ public class IncomingOffersPanelWindowViewModel : ViewModelBase
     #region Props
 
     public ObservableCollection<IncomingOfferViewModel> Offers { get; set; } = [];
-    private int _offersWidth = 50;
+    private int _offerSize = 99;
 
     #endregion
 
@@ -28,6 +31,11 @@ public class IncomingOffersPanelWindowViewModel : ViewModelBase
 
     #region Public methods
 
+    public void SetOfferSize(int size)
+    {
+        _offerSize = size;
+    }
+
     public void RemoveOffer(string id)
     {
         var index = Offers.Select(o => o.Offer.Id).IndexOf(id);
@@ -38,9 +46,17 @@ public class IncomingOffersPanelWindowViewModel : ViewModelBase
         this.RaisePropertyChanged(nameof(Offers));
     }
 
-    public void SetOffersWidth(int width)
+    public void RemoveAllOffers()
     {
-        _offersWidth = width;
+        foreach (var vm in Offers)
+        {
+            if (!vm.Offer.State.HasFlag(OfferState.PlayerInvited)) continue;
+
+            AppService.Instance.SendKickCommand(vm.Offer.Player);
+        }
+
+        Offers.Clear();
+        this.RaisePropertyChanged(nameof(Offers));
     }
 
     #endregion
@@ -49,7 +65,7 @@ public class IncomingOffersPanelWindowViewModel : ViewModelBase
 
     private void Events_OnNewIncomingOffer(IncomingOffer offer)
     {
-        var vm = new IncomingOfferViewModel(new OfferModel(offer), _offersWidth);
+        var vm = new IncomingOfferViewModel(new OfferModel(offer), _offerSize);
         Offers.Add(vm);
         vm.Removed += RemoveOffer;
 

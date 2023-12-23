@@ -161,7 +161,7 @@ public class AppService : IAppService
     {
         _textParserService.ParseClientTxtLine(line);
     }
-    
+
     public void SendReInvitecommand(string player)
     {
         _gameChatService.SendKick(player);
@@ -182,7 +182,7 @@ public class AppService : IAppService
     {
         _gameChatService.Send(message);
     }
-    
+
     public void SendBusyWhisper(string player, string itemName)
     {
         _gameChatService.SendBusyWhisper(player, itemName);
@@ -208,7 +208,7 @@ public class AppService : IAppService
     {
         _gameChatService.SendKick(player);
     }
-    
+
     public void PrepareToSendWhisper(string player)
     {
         _gameChatService.PrepareToSendWhisper(player);
@@ -226,13 +226,13 @@ public class AppService : IAppService
         _textParserService = new TextParserService();
         _settingsService = new SettingsService();
         _gameChatService = new GameChatService();
-        
+
         _clientFileService.Initialize();
-        _clipboardService.Initialize();    
+        _clipboardService.Initialize();
         _gameProcessService.Initialize();
-        _gameWindowService.Initialize();    
+        _gameWindowService.Initialize();
         _textParserService.Initialize();
-        _settingsService.Initialize();    
+        _settingsService.Initialize();
         _gameChatService.Initialize();
 
         _gameProcessService.FindProcess();

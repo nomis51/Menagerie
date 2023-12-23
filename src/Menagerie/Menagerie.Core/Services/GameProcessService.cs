@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Text;
 using Menagerie.Core.Services.Abstractions;
-using Menagerie.Data.WinApi;
+using Menagerie.Core.WinApi;
 using Serilog;
 
 namespace Menagerie.Core.Services;

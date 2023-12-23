@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Menagerie.Data.WinApi;
+namespace Menagerie.Core.WinApi;
 
 public static class Kernel32
 {

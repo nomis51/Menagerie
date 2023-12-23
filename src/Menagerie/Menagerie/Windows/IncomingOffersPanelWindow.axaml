@@ -4,11 +4,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:Menagerie.ViewModels"
         xmlns:views="clr-namespace:Menagerie.Views"
+        xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
         mc:Ignorable="d"
         d:DesignWidth="800"
         d:DesignHeight="450"
         Width="500"
         Height="80"
+        SizeToContent="Width"
         x:Class="Menagerie.Windows.IncomingOffersPanelWindow"
         Title="IncomingOffersPanelWindow"
         SystemDecorations="None"
@@ -16,14 +18,30 @@
         ShowActivated="False"
         ShowInTaskbar="False"
         Topmost="True"
-        IsTabStop="False"
         Background="Transparent"
-        Padding="2"
         x:DataType="viewModels:IncomingOffersPanelWindowViewModel">
-    <Grid>
-        <Panel HorizontalAlignment="Stretch"
+    <Grid ColumnDefinitions="Auto,*"
+          RowDefinitions="Auto,*" Background="CornflowerBlue">
+        <Button Grid.Row="0"
+                Grid.Column="0"
+                x:Name="ButtonRemoveAllOffers"
+                Click="ButtonRemoveAllOffers_OnClick"
+                Height="25"
+                Width="25"
+                Classes="hoverError">
+            <Button.Content>
+                <icons:MaterialIcon Kind="Trash"
+                                    Foreground="{StaticResource TextColor}" />
+            </Button.Content>
+        </Button>
+        <Panel Grid.Row="1"
+               Grid.Column="1"
+               x:Name="Panel"
+               Background="Red"
+               HorizontalAlignment="Stretch"
                VerticalAlignment="Stretch">
             <ScrollViewer x:Name="ScrollViewer"
+                          HorizontalAlignment="Stretch"
                           VerticalScrollBarVisibility="Disabled"
                           HorizontalScrollBarVisibility="Hidden"
                           PointerWheelChanged="ScrollViewer_OnPointerWheelChanged">

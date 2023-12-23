@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using Menagerie.Core.Services.Abstractions;
-using Menagerie.Data.WinApi;
+using Menagerie.Core.WinApi;
 using Menagerie.Shared.Helpers;
 using Menagerie.Shared.Models.Setting;
 using Serilog;

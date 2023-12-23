@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Menagerie.Data.WinApi;
+namespace Menagerie.Core.WinApi;
 
 public static class User32
 {
@@ -23,7 +23,8 @@ public static class User32
     public const int GWL_EX_STYLE = -20;
     public const int WS_EX_APPWINDOW = 0x00040000;
     public const int WS_EX_TOOLWINDOW = 0x00000080;
-    
+    public const int WS_EX_TRANSPARENT = 0x00000020;
+
     [DllImport("user32.dll", CharSet = CharSet.Unicode)]
     public static extern int MessageBox(IntPtr handle, string message, string title, long type);
 }
