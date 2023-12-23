@@ -14,6 +14,14 @@ namespace Menagerie.ViewModels;
 
 public class IncomingOfferViewModel : ViewModelBase
 {
+    #region Events
+
+    public delegate void RemovedEvent(string id);
+
+    public event RemovedEvent? Removed;
+
+    #endregion
+
     #region Props
 
     public OfferModel Offer { get; set; }
@@ -59,7 +67,7 @@ public class IncomingOfferViewModel : ViewModelBase
     public ObservableCollection<Tuple<string, string>> TooltipLines { get; private set; } = [];
     public bool CanSayBusy => !Offer.State.HasFlag(OfferState.PlayerInvited);
 
-    private bool _isPlayerInTheArea = true;
+    private bool _isPlayerInTheArea;
 
     public bool IsPlayerInTheArea
     {
@@ -133,7 +141,7 @@ public class IncomingOfferViewModel : ViewModelBase
     public void InvitePlayer()
     {
         Offer.State &= ~OfferState.Initial;
-        
+
         if (!Offer.State.HasFlag(OfferState.PlayerInvited))
         {
             Offer.State |= OfferState.PlayerInvited;
@@ -152,7 +160,12 @@ public class IncomingOfferViewModel : ViewModelBase
         Offer.State = OfferState.Done;
         this.RaisePropertyChanged(nameof(BorderBrush));
 
-        AppService.Instance.SendKickCommand(Offer.Player);
+        if (Offer.State.HasFlag(OfferState.PlayerInvited))
+        {
+            AppService.Instance.SendKickCommand(Offer.Player);
+        }
+
+        Removed?.Invoke(Offer.Id);
     }
 
     #endregion
@@ -188,7 +201,7 @@ public class IncomingOfferViewModel : ViewModelBase
     {
         if (IsPlayerInTheArea) return;
         if (Offer.Player != player || Offer.State.HasFlag(OfferState.PlayerJoined)) return;
-        
+
         Offer.State &= ~OfferState.StillInterested;
         Offer.State |= OfferState.PlayerJoined;
         this.RaisePropertyChanged(nameof(BorderBrush));

@@ -1,4 +1,6 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
+using DynamicData;
 using Menagerie.Core;
 using Menagerie.Models;
 using Menagerie.Shared.Models.Trading;
@@ -23,8 +25,18 @@ public class IncomingOffersPanelWindowViewModel : ViewModelBase
     }
 
     #endregion
-    
+
     #region Public methods
+
+    public void RemoveOffer(string id)
+    {
+        var index = Offers.Select(o => o.Offer.Id).IndexOf(id);
+        if (index == -1) return;
+
+        Offers[index].Removed -= RemoveOffer;
+        Offers.RemoveAt(index);
+        this.RaisePropertyChanged(nameof(Offers));
+    }
 
     public void SetOffersWidth(int width)
     {
@@ -37,7 +49,10 @@ public class IncomingOffersPanelWindowViewModel : ViewModelBase
 
     private void Events_OnNewIncomingOffer(IncomingOffer offer)
     {
-        Offers.Add(new IncomingOfferViewModel(new OfferModel(offer), _offersWidth));
+        var vm = new IncomingOfferViewModel(new OfferModel(offer), _offersWidth);
+        Offers.Add(vm);
+        vm.Removed += RemoveOffer;
+
         this.RaisePropertyChanged(nameof(Offers));
     }
 

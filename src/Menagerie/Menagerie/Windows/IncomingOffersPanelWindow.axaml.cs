@@ -1,10 +1,8 @@
 ﻿using System;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Menagerie.Core;
-using Menagerie.Core.Services;
 using Menagerie.ViewModels;
 
 namespace Menagerie.Windows;
@@ -70,6 +68,11 @@ public partial class IncomingOffersPanelWindow : WindowBase<IncomingOffersPanelW
                 ScrollViewer.PageRight();
                 break;
         }
+    }
+
+    private void IncomingOffer_OnRemoved(string id)
+    {
+        ViewModel?.RemoveOffer(id);
     }
 
     #endregion
