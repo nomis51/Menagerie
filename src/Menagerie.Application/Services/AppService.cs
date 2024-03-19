@@ -76,7 +76,7 @@ public class AppService : IService
         await _gameChatService.Start();
         await _audioService.Start();
 
-        _ = UpdateHelper.UpdateApp();
+        UpdateHelper.HookSquirrel();
     }
 
     public List<string> GetCurrencies()
