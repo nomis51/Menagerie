@@ -1,13 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <PackageVersion>2.1.4</PackageVersion>
     <AssemblyVersion>2.1.4</AssemblyVersion>
     <FileVersion>2.1.4</FileVersion>
     <ApplicationIcon>assets\menagerie-logo.ico</ApplicationIcon>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="FontAwesome5" Version="2.1.6" />
