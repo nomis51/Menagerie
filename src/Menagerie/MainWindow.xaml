@@ -44,21 +44,6 @@
                                            VerticalAlignment="Bottom"
                                            HorizontalAlignment="Center" />
 
-        <!-- Chaos recipe -->
-        <views:ChaosRecipeContainerView Grid.Row="0"
-                                        Grid.Column="1"
-                                        x:Name="ChaosRecipeContainerView"
-                                        VerticalAlignment="Top"
-                                        HorizontalAlignment="Center" />
-
-        <!-- Translation tool -->
-        <views:TranslationToolView Grid.Row="0"
-                                   Grid.Column="0"
-                                   Grid.ColumnSpan="3"
-                                   Grid.RowSpan="3"
-                                   Visibility="Hidden"
-                                   x:Name="TranslationTool" />
-
         <!-- Tools buttons -->
         <views:NavigationView Grid.Row="0"
                               Grid.Column="0"
@@ -68,32 +53,6 @@
                               x:Name="NavigationView"
                               HorizontalAlignment="Left"
                               VerticalAlignment="Bottom" />
-
-        <!-- Chat scan messages -->
-        <views:ChatScanContainerView Grid.Row="0"
-                                     Grid.Column="2"
-                                     Grid.RowSpan="3"
-                                     x:Name="ChatScanContainerView"
-                                     HorizontalAlignment="Right"
-                                     VerticalAlignment="Top" />
-
-        <!-- Statistics -->
-        <views:TradesStatisticsView Grid.Row="0"
-                                    Grid.Column="0"
-                                    Grid.ColumnSpan="3"
-                                    Grid.RowSpan="3"
-                                    x:Name="TradesStatisticsView"
-                                    Visibility="Hidden"
-                                    Margin="100" />
-
-        <!-- Stash tab grid -->
-        <views:StashTabGridView x:Name="StashTabGridView"
-                                Grid.Row="0"
-                                Grid.Column="0"
-                                Grid.RowSpan="3"
-                                Grid.ColumnSpan="3"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Center" />
 
         <!-- Bulk trade -->
         <views:BulkTradeContainerView x:Name="BulkTradeContainerView"

@@ -101,8 +101,6 @@ public class IncomingOffersContainerViewModel : ReactiveObject
                 AppService.Instance.SendThanksWhisper(offerViewModel.Player);
             }
 
-            AppService.Instance.SaveTradeStatistic(offerViewModel.Offer);
-
             RemoveIncomingOffer(offerViewModel);
             break;
         }

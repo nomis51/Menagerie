@@ -1,7 +1,5 @@
-﻿using System.Net;
-using Menagerie.Data.Events;
+﻿using Menagerie.Data.Events;
 using Menagerie.Data.Providers;
-using Menagerie.Data.WinApi;
 using Menagerie.Shared.Abstractions;
 using Menagerie.Shared.Helpers;
 using Menagerie.Shared.Models;
@@ -53,13 +51,8 @@ public class AppDataService : IService
     private readonly PoeNinjaService _poeNinjaService;
     private readonly ClipboardService _clipboardService;
     private readonly PoeApiService _poeApiService;
-    private readonly ChatScanService _chatScanService;
-    private readonly StatisticsService _statisticsService;
     private readonly WindowHookService _windowHookService;
     private readonly TranslationService _translationService;
-    private readonly StashService _stashService;
-    private readonly ChaosRecipeService _chaosRecipeService;
-    private readonly RecordingService _recordingService;
 
     #endregion
 
@@ -75,13 +68,8 @@ public class AppDataService : IService
         _poeNinjaService = new PoeNinjaService();
         _clipboardService = new ClipboardService();
         _poeApiService = new PoeApiService();
-        _chatScanService = new ChatScanService();
-        _statisticsService = new StatisticsService();
         _windowHookService = new WindowHookService();
         _translationService = new TranslationService();
-        _stashService = new StashService();
-        _chaosRecipeService = new ChaosRecipeService();
-        _recordingService = new RecordingService();
     }
 
     #endregion
@@ -103,14 +91,9 @@ public class AppDataService : IService
         _textParserService.Initialize();
         _poeNinjaService.Initialize();
         _clipboardService.Initialize();
-        _stashService.Initialize();
         _poeApiService.Initialize();
-        _chatScanService.Initialize();
-        _statisticsService.Initialize();
         _windowHookService.Initialize();
         _translationService.Initialize();
-        _chaosRecipeService.Initialize();
-        _recordingService.Initialize();
     }
 
     public Task Start()
@@ -124,16 +107,9 @@ public class AppDataService : IService
         _ = _textParserService.Start();
         _ = _poeNinjaService.Start();
         _ = _clipboardService.Start();
-        _ = _stashService.Start(); // Need to be ideally before PoeApi
         _ = _poeApiService.Start();
-        _ = _chatScanService.Start();
-        _ = _statisticsService.Start();
         _ = _windowHookService.Start();
         _ = _translationService.Start();
-        _ = _chaosRecipeService.Start();
-        _ = _recordingService.Start();
-
-        CheckForDevMessage();
 
         return Task.CompletedTask;
     }
@@ -208,21 +184,6 @@ public class AppDataService : IService
     public void GameProcessFound(int processId)
     {
         _gameWindowService.SetProcessId(processId);
-    }
-
-    public StashTab? GetStashTab(int index)
-    {
-        return _stashService.GetStashTab(index);
-    }
-
-    public void PlayerDied(string character)
-    {
-        _recordingService.SaveDeathClip(character, CurrentLocation);
-    }
-
-    public void SaveLastClip()
-    {
-        _recordingService.SaveClip();
     }
 
     public void ClientFileFound(string filePath)
@@ -354,15 +315,6 @@ public class AppDataService : IService
         DataEvents.NewOutgoingOfferEventInvoke(offer);
     }
 
-    public void NewChatMessage(ChatMessage message)
-    {
-        var settings = GetSettings();
-        if (!settings.ChatScan.Enabled) return;
-
-        message.Time = DateTime.Now;
-        _chatScanService.Analyse(message);
-    }
-
     public void TradeAccepted()
     {
         DataEvents.TradeAcceptedEventInvoke();
@@ -418,11 +370,6 @@ public class AppDataService : IService
         return _poeApiService.FetchLeagues();
     }
 
-    public void SaveTradeStatistic(IncomingOffer offer)
-    {
-        _statisticsService.WriteIncomingTradeStatistic(offer);
-    }
-
     public double GetChaosValueOf(double value, string currency)
     {
         return _poeNinjaService.CalculateChaosValue(value, currency);
@@ -431,11 +378,6 @@ public class AppDataService : IService
     public double GetExaltedValue(double chaosValue)
     {
         return _poeNinjaService.CalculateExaltedValue(chaosValue);
-    }
-
-    public TradeStats GetTradesStatistics()
-    {
-        return _statisticsService.CalculateStats();
     }
 
     #endregion
@@ -455,21 +397,6 @@ public class AppDataService : IService
     private void InitializeDatabaseProvider()
     {
         DatabaseProvider.Initialize();
-    }
-
-    private async Task CheckForDevMessage()
-    {
-        using var web = new WebClient();
-        var message = web.DownloadString(new Uri("https://raw.githubusercontent.com/nomis51/Menagerie/master/docs/.dev/message.txt"));
-        if (string.IsNullOrEmpty(message)) return;
-
-        var settings = GetSettings();
-        if (message == settings.App.LatestDevMessage) return;
-
-        settings.App.LatestDevMessage = message;
-        _settingsService.SetSettings(settings);
-
-        User32.MessageBox(IntPtr.Zero, $"Dev message: {message}", "Menagerie", 0);
     }
 
     #endregion

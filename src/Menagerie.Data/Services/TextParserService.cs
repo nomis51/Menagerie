@@ -1,11 +1,7 @@
-﻿using System.Diagnostics;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using Menagerie.Data.Parsers;
-using Menagerie.Data.Parsers.Abstractions;
 using Menagerie.Shared.Abstractions;
-using Menagerie.Shared.Models;
 using Menagerie.Shared.Models.Chat;
-using Menagerie.Shared.Models.Trading;
 using Menagerie.Shared.Models.Translation;
 
 namespace Menagerie.Data.Services;
@@ -14,7 +10,7 @@ public class TextParserService : IService
 {
     #region Members
 
-    private readonly Regex RegOutgoingWhisper = new(
+    private readonly Regex _regOutgoingWhisper = new(
         "@.+ Hi, (I would|I'd) like to buy your .+ (listed for|for my) [0-9\\.]+ .+ in .+",
         RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
@@ -29,14 +25,11 @@ public class TextParserService : IService
     private readonly TradeAcceptedParser _tradeAcceptedParser;
     private readonly TradeCancelledParser _tradeCancelledParser;
     private readonly PlayerJoinedParser _playerJoinedParser;
-    private readonly TradeChatParser _tradeChatParser;
-    private readonly GlobalChatParser _globalChatParser;
     private readonly RussianOutgoingOfferParser _russianOutgoingOfferParser;
     private readonly KoreanOutgoingOfferParser _koreanOutgoingOfferParser;
     private readonly FrenchOutgoingOfferParser _frenchOutgoingOfferParser;
     private readonly GermanOutgoingOfferParser _germanOutgoingOfferParser;
     private readonly LocationParser _locationParser;
-    private readonly DeathParser _deathParser;
 
     #endregion
 
@@ -49,14 +42,11 @@ public class TextParserService : IService
         _tradeAcceptedParser = new TradeAcceptedParser();
         _tradeCancelledParser = new TradeCancelledParser();
         _playerJoinedParser = new PlayerJoinedParser();
-        _tradeChatParser = new TradeChatParser();
-        _globalChatParser = new GlobalChatParser();
         _russianOutgoingOfferParser = new RussianOutgoingOfferParser();
         _koreanOutgoingOfferParser = new KoreanOutgoingOfferParser();
         _frenchOutgoingOfferParser = new FrenchOutgoingOfferParser();
         _germanOutgoingOfferParser = new GermanOutgoingOfferParser();
         _locationParser = new LocationParser();
-        _deathParser = new DeathParser();
     }
 
     #endregion
@@ -131,36 +121,11 @@ public class TextParserService : IService
             if (playerJoinedEvent is null) return;
             AppDataService.Instance.PlayerJoined(playerJoinedEvent.Player);
         }
-
-        if (_deathParser.CanParse(text))
-        {
-            var deathEvent = _deathParser.Parse(text);
-            if (deathEvent is null) return;
-            AppDataService.Instance.PlayerDied(deathEvent.CharacterName);
-        }
-
-        if (_tradeChatParser.CanParse(text))
-        {
-            var chatMessage = _tradeChatParser.Parse(text);
-            if (chatMessage is null) return;
-
-            chatMessage.Type = ChatMessage.TradeMessageType;
-            AppDataService.Instance.NewChatMessage(chatMessage);
-        }
-
-        if (_globalChatParser.CanParse(text))
-        {
-            var chatMessage = _globalChatParser.Parse(text);
-            if (chatMessage is null) return;
-
-            chatMessage.Type = ChatMessage.GlobalMessageType;
-            AppDataService.Instance.NewChatMessage(chatMessage);
-        }
     }
 
     public bool CanParseOutgoingOffer(string text)
     {
-        var match = RegOutgoingWhisper.Match(text);
+        var match = _regOutgoingWhisper.Match(text);
         return match is not null && match.Success && match.Length == text.Length;
     }
     

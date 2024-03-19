@@ -151,7 +151,6 @@ public class NavigationViewModel : ReactiveObject
             Background = yellow,
             BorderBrush = yellow,
             Style = materialDesignFloatingButtonStyle,
-            OnClickFn = ButtonSaveClip_Click,
             IconConfig = new NavigationItemIconConfig
             {
                 Width = IconWidth,
@@ -233,16 +232,6 @@ public class NavigationViewModel : ReactiveObject
                 Margin = _iconMargin
             }
         }));
-    }
-
-    private void ButtonSaveClip_Click(object sender, RoutedEventArgs e)
-    {
-        AppService.Instance.PlayClickSoundEffect();
-        AppService.Instance.EnsureGameFocused();
-        
-        ToggleToolsButtons();
-        
-        AppService.Instance.SaveLastClip();
     }
 
     public void ButtonBulkTrade_Click(object? sender, RoutedEventArgs e)

@@ -30,7 +30,6 @@ public class WindowHookService : IService
         _keyboardHook = new KeyboardHook(processId);
         _keyboardHook.AddHandler(KeyCode.F4, KeyboardHook_OnSearchOutgoingOffer);
         _keyboardHook.AddHandler(KeyCode.F3, Keyboard_OnToggleOverlay);
-        _keyboardHook.AddHandler(KeyCode.F6, Keyboard_OnSaveClip);
         _keyboardHook.AddHandler(KeyCode.F, Modifiers.Control, KeyboardHook_OnSearchItemInStash);
 
         try
@@ -41,20 +40,11 @@ public class WindowHookService : IService
         {
             Log.Warning("Winook error: {Message}", e.Message);
         }
-
-        // _mouseHook = new MouseHook(processId);
-        // _mouseHook.MessageReceived += MouseHookOnMessageReceived;
-        // _ = _mouseHook.InstallAsync();
     }
 
     #endregion
 
     #region Private methods
-
-    private static void Keyboard_OnSaveClip(object? sender, KeyboardMessageEventArgs e)
-    {
-        AppDataService.Instance.SaveLastClip();
-    }
 
     private static void Keyboard_OnToggleOverlay(object? sender, KeyboardMessageEventArgs e)
     {

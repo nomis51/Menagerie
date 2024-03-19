@@ -31,57 +31,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="tools\ffmpeg\avcodec-59.dll" />
-    <Content Include="tools\ffmpeg\avcodec-59.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Remove="tools\ffmpeg\avutil-57.dll" />
-    <Content Include="tools\ffmpeg\avutil-57.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Remove="tools\ffmpeg\postproc-56.dll" />
-    <Content Include="tools\ffmpeg\postproc-56.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Remove="tools\ffmpeg\ffmpeg.exe" />
     <None Remove="tools\ffmpeg\ffplay.exe" />
-    <Content Include="tools\ffmpeg\ffplay.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Remove="tools\ffmpeg\avformat-59.dll" />
-    <Content Include="tools\ffmpeg\avformat-59.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Remove="tools\ffmpeg\swresample-4.dll" />
-    <Content Include="tools\ffmpeg\swresample-4.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Remove="tools\ffmpeg\ffprobe.exe" />
-    <Content Include="tools\ffmpeg\ffprobe.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Remove="tools\ffmpeg\avfilter-8.dll" />
-    <Content Include="tools\ffmpeg\avfilter-8.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Remove="tools\ffmpeg\swscale-6.dll" />
-    <Content Include="tools\ffmpeg\swscale-6.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Remove="tools\ffmpeg\avdevice-59.dll" />
-    <Content Include="tools\ffmpeg\avdevice-59.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Remove="tools\ffmpeg\readme.txt" />
-    <Content Include="tools\ffmpeg\readme.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Remove="tools\ffmpeg\LICENSE.txt" />
-    <Content Include="tools\ffmpeg\LICENSE.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Remove="tools\ffmpeg\menagerie-ffmpeg.exe" />
-    <Content Include="tools\ffmpeg\menagerie-ffmpeg.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 </Project>

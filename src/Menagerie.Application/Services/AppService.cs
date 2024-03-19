@@ -95,11 +95,6 @@ public class AppService : IService
         AppEvents.HighlightItemEventInvoke(isVisible, 0, 0, 0, 0, string.Empty);
     }
 
-    public void SaveLastClip()
-    {
-        AppDataService.Instance.SaveLastClip();
-    }
-
     public void PlayNewOfferSoundEffect()
     {
         _audioService.PlayNewOfferSoundEffect();
@@ -246,11 +241,6 @@ public class AppService : IService
         return AppDataService.Instance.GetLeagues();
     }
 
-    public void SaveTradeStatistic(IncomingOfferDto offer)
-    {
-        AppDataService.Instance.SaveTradeStatistic(AppMapper.Instance.Map<IncomingOffer>(offer));
-    }
-
     public Task<string?> Translate(string text, string sourceLanguage, string targetLanguage)
     {
         var sourceLanguageCode = AppDataService.Instance.GetLanguageCode(sourceLanguage);
@@ -260,11 +250,6 @@ public class AppService : IService
             FromLanguage = sourceLanguageCode,
             ToLanguage = targetLanguageCode
         });
-    }
-
-    public TradeStatsDto GetTradesStatistics()
-    {
-        return AppMapper.Instance.Map<TradeStatsDto>(AppDataService.Instance.GetTradesStatistics());
     }
 
     public IEnumerable<string> GetLanguages()
