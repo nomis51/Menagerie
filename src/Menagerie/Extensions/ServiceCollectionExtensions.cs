@@ -1,3 +1,5 @@
+using Menagerie.Core.Services;
+using Menagerie.Core.Services.Abstractions;
 using Menagerie.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -35,10 +37,12 @@ public static class ServiceCollectionExtensions
     private static void AddViews(IServiceCollection services)
     {
         services.AddTransient<MainWindowViewModel>();
+        services.AddTransient<IncomingTradesWindowViewModel>();
     }
 
     private static void AddHelpers(IServiceCollection services)
     {
+        services.AddSingleton<IKeyboardService, KeyboardService>();
     }
 
     #endregion

@@ -6,15 +6,16 @@
         mc:Ignorable="d"
         x:Class="Menagerie.Windows.MainWindow"
         x:DataType="vm:MainWindowViewModel"
+        Width="10"
+        Height="10"
+        MaxWidth="10"
+        MaxHeight="10"
+        IsVisible="False"
+        ShowInTaskbar="False"
+        ShowActivated="False"
+        Background="Transparent"
+        SystemDecorations="None"
+        Loaded="OnLoaded"
         Icon="/Assets/avalonia-logo.ico"
         Title="Menagerie">
-
-    <Design.DataContext>
-        <vm:MainWindowViewModel />
-    </Design.DataContext>
-
-    <TextBlock Text="{Binding Greeting}"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Center" />
-
 </Window>

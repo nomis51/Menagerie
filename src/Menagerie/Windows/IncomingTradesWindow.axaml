@@ -1,0 +1,70 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:Menagerie.ViewModels"
+        xmlns:views="clr-namespace:Menagerie.Views"
+        xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        mc:Ignorable="d"
+        x:Class="Menagerie.Windows.IncomingTradesWindow"
+        x:DataType="viewModels:IncomingTradesWindowViewModel"
+        Background="Transparent"
+        ShowActivated="False"
+        ShowInTaskbar="False"
+        Focusable="False"
+        Topmost="True"
+        SystemDecorations="None"
+        Width="500"
+        Height="80"
+        SizeToContent="Width"
+        Title="IncomingTradesWindow"
+        Loaded="OnLoaded">
+    <Grid RowDefinitions="*"
+          ColumnDefinitions="*,*"
+          HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch">
+        <Button x:Name="ButtonRemoveAllTrades"
+                Grid.Row="0"
+                Grid.Column="0"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Left"
+                Height="25"
+                Width="25"
+                Classes="hoverError"
+                Click="ButtonRemoveAllTrades_OnClick">
+            <Button.Content>
+                <icons:MaterialIcon Kind="Trash"
+                                    Foreground="{StaticResource TextColor}" />
+            </Button.Content>
+        </Button>
+
+        <Panel x:Name="TradesPanel"
+               Grid.Row="0"
+               Grid.Column="1"
+               HorizontalAlignment="Stretch"
+               VerticalAlignment="Stretch">
+            <ScrollViewer x:Name="ScrollViewer"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch"
+                          VerticalScrollBarVisibility="Disabled"
+                          HorizontalScrollBarVisibility="Hidden"
+                          PointerWheelChanged="ScrollViewer_OnPointerWheelChanged">
+                <ItemsControl ItemsSource="{Binding Trades}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Spacing="3"
+                                        Orientation="Horizontal"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Bottom" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="viewModels:IncomingTradeViewModel">
+                            <views:IncomingTradeView Content="{Binding .}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Panel>
+    </Grid>
+</Window>
