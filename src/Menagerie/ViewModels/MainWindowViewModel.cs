@@ -1,4 +1,6 @@
-﻿namespace Menagerie.ViewModels;
+﻿using Menagerie.ViewModels.Abstractions;
+
+namespace Menagerie.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
