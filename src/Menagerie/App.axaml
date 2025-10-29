@@ -2,12 +2,31 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="Menagerie.App"
              xmlns:local="using:Menagerie"
+             xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              RequestedThemeVariant="Dark">
+    <Application.Resources>
+        <ResourceDictionary>
+            <Color x:Key="TextColor">#e5eaf0</Color>
+            <Color x:Key="AccentColor">#097fbf</Color>
+            <Color x:Key="SuccessColor">#599e5e</Color>
+            <Color x:Key="SuccessLowColor">#438544</Color>
+            <Color x:Key="ErrorColor">#c94f4f</Color>
+            <Color x:Key="ErrorLowColor">#AC5050</Color>
+            <Color x:Key="WarningColor">Orange</Color>
+            <Color x:Key="WarningLowColor">DarkOrange</Color>
+            <Color x:Key="Background0">#2e3440</Color>
+            <Color x:Key="Background1">#434b5e</Color>
+        </ResourceDictionary>
+    </Application.Resources>
+
     <Application.DataTemplates>
-        <local:ViewLocator/>
+        <local:ViewLocator />
     </Application.DataTemplates>
-  
+
     <Application.Styles>
         <FluentTheme />
+        <icons:MaterialIconStyles />
+
+        <StyleInclude Source="Styles/Button.axaml" />
     </Application.Styles>
 </Application>
