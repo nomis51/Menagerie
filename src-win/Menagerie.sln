@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menagerie", "Menagerie\Menagerie.csproj", "{0D937CF1-6F5D-493B-9D1E-831A132DEDE9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menagerie.Data", "Menagerie.Data\Menagerie.Data.csproj", "{D349E6B4-1E47-4812-BA3A-B42B2FF6676F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menagerie.Shared", "Menagerie.Shared\Menagerie.Shared.csproj", "{BD58A7E5-34DD-47A6-9F1D-7BC86E7A6EBC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menagerie.Application", "Menagerie.Application\Menagerie.Application.csproj", "{81E329D7-22CC-41F1-9490-0530D4E0073A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0D937CF1-6F5D-493B-9D1E-831A132DEDE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D937CF1-6F5D-493B-9D1E-831A132DEDE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D937CF1-6F5D-493B-9D1E-831A132DEDE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D937CF1-6F5D-493B-9D1E-831A132DEDE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D349E6B4-1E47-4812-BA3A-B42B2FF6676F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D349E6B4-1E47-4812-BA3A-B42B2FF6676F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D349E6B4-1E47-4812-BA3A-B42B2FF6676F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D349E6B4-1E47-4812-BA3A-B42B2FF6676F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD58A7E5-34DD-47A6-9F1D-7BC86E7A6EBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD58A7E5-34DD-47A6-9F1D-7BC86E7A6EBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD58A7E5-34DD-47A6-9F1D-7BC86E7A6EBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD58A7E5-34DD-47A6-9F1D-7BC86E7A6EBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81E329D7-22CC-41F1-9490-0530D4E0073A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81E329D7-22CC-41F1-9490-0530D4E0073A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81E329D7-22CC-41F1-9490-0530D4E0073A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81E329D7-22CC-41F1-9490-0530D4E0073A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
