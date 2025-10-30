@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Menagerie.Core.OS.Linux.Abstractions;
 using Menagerie.Core.Services.Abstractions;
 
@@ -22,9 +23,9 @@ public class WindowService : IWindowService
 
     #region Public methods
 
-    public Task<bool> FocusWindowAsync(IntPtr hwnd)
+    public Task<bool> FocusWindowAsync(Process process)
     {
-        return _linuxLibs.FocusWindowAsync(hwnd);
+        return _linuxLibs.FocusWindowAsync(process);
     }
 
     #endregion

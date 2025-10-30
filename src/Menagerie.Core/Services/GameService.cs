@@ -116,7 +116,7 @@ public class GameService : IGameService
 
         try
         {
-            return await _windowService.FocusWindowAsync(_gameProcess!.MainWindowHandle);
+            return await _windowService.FocusWindowAsync(_gameProcess!);
         }
         catch (Exception e)
         {

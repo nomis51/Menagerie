@@ -12,6 +12,7 @@ public class GameAppConfiguration
         "PathOfExile_x64",
         "PathOfExile_x64Steam",
         "PathOfExileSteam",
+        "PathOfExileStea", // NOT a typo
     ];
 
     [JsonPropertyName("waitTimeIfNotFound")]

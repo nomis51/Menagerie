@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Menagerie.Core.OS.Linux.Abstractions;
 using Menagerie.Core.OS.Linux.Wayland;
 using Menagerie.Core.OS.Linux.X11;
@@ -22,13 +23,13 @@ public class LinuxLibs : ILinuxLibs
 
     #region Public methods
 
-    public async Task<bool> FocusWindowAsync(IntPtr hwnd)
+    public async Task<bool> FocusWindowAsync(Process process)
     {
         var sessionType = GetSessionType();
         return sessionType switch
         {
-            X11SessionType => _x11Lib.FocusWindow(hwnd),
-            WaylandSessionType => await _waylandLib.FocusWindowAsync(hwnd),
+            X11SessionType => _x11Lib.FocusWindow(process.MainWindowHandle),
+            WaylandSessionType => await _waylandLib.FocusWindowAsync(process),
             _ => false
         };
     }

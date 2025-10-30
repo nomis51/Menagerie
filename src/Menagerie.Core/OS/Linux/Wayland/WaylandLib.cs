@@ -13,15 +13,15 @@ public class WaylandLib
 
     #region Public methods
 
-    public async Task<bool> FocusWindowAsync(IntPtr hwnd)
+    public async Task<bool> FocusWindowAsync(Process process)
     {
         await EnsureCompositorFound();
 
         return _compositorName switch
         {
-            CompositorName.Hyprland => await FocusWindowHyprlandAsync(hwnd),
-            CompositorName.Kde => await FocusWindowKdeAsync(hwnd),
-            CompositorName.Xdotool => await FocusWindowFallbackAsync(hwnd),
+            CompositorName.Hyprland => await FocusWindowHyprlandAsync(process.Id),
+            CompositorName.Kde => await FocusWindowKdeAsync(process.MainWindowHandle),
+            CompositorName.Xdotool => await FocusWindowFallbackAsync(process.MainWindowHandle),
             _ => false
         };
     }
@@ -48,9 +48,9 @@ public class WaylandLib
         }
     }
 
-    private static async Task<bool> FocusWindowHyprlandAsync(IntPtr hwnd)
+    private static async Task<bool> FocusWindowHyprlandAsync(int pid)
     {
-        var process = Process.Start("hyprctl", $"dispatch focuswindow address:{hwnd}");
+        var process = Process.Start("hyprctl", $"dispatch focuswindow pid:{pid}");
         await process.WaitForExitAsync();
         return process.ExitCode == 0;
     }
