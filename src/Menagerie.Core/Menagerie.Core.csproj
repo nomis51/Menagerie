@@ -15,4 +15,8 @@
         <PackageReference Include="Serilog.Sinks.File" Version="7.0.0"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <Folder Include="Models\Trading\Parsing\"/>
+    </ItemGroup>
+
 </Project>

@@ -1,4 +1,6 @@
 using Menagerie.Core.Enums;
+using Menagerie.Core.Enums.Trading;
+using Menagerie.Core.Models.Trading;
 using Menagerie.Core.Services.Abstractions;
 using Menagerie.ViewModels.Abstractions;
 
@@ -11,7 +13,7 @@ public class IncomingTradeViewModel : ViewModelBase
     public IKeyboardService KeyboardService { get; }
     public IAudioService AudioService { get; }
     public int TileSize { get; }
-    
+    public Trade Trade { get; }
 
     #endregion
 
