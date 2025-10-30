@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:Menagerie.ViewModels"
+             xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d"
              d:DesignHeight="450"
              x:Class="Menagerie.Views.IncomingTradeView"
@@ -36,105 +37,105 @@
             ToolTip.VerticalOffset="-5"
             ToolTip.ShowDelay="100"
             PointerReleased="Border_OnPointerReleased">
-        <ToolTip.Tip>
-            <ItemsRepeater ItemsSource="{Binding TooltipLines}">
-                <ItemsRepeater.Layout>
-                    <StackLayout Orientation="Vertical"
-                                 Spacing="2" />
-                </ItemsRepeater.Layout>
-                <ItemsRepeater.ItemTemplate>
-                    <DataTemplate DataType="incomingTradeViewModels:TooltipLine">
-                        <DockPanel>
-                            <TextBlock Text="{Binding Label}"
-                                       Classes="tooltip"
-                                       VerticalAlignment="Center"
-                                       FontWeight="Bold" />
-                            <TextBlock Classes="tooltip"
-                                       Text="{Binding Value}" />
-                        </DockPanel>
-                    </DataTemplate>
-                </ItemsRepeater.ItemTemplate>
-            </ItemsRepeater>
-        </ToolTip.Tip>
+        <!-- <ToolTip.Tip> -->
+        <!--     <ItemsRepeater ItemsSource="{Binding TooltipLines}"> -->
+        <!--         <ItemsRepeater.Layout> -->
+        <!--             <StackLayout Orientation="Vertical" -->
+        <!--                          Spacing="2" /> -->
+        <!--         </ItemsRepeater.Layout> -->
+        <!--         <ItemsRepeater.ItemTemplate> -->
+        <!--             <DataTemplate DataType="incomingTradeViewModels:TooltipLine"> -->
+        <!--                 <DockPanel> -->
+        <!--                     <TextBlock Text="{Binding Label}" -->
+        <!--                                Classes="tooltip" -->
+        <!--                                VerticalAlignment="Center" -->
+        <!--                                FontWeight="Bold" /> -->
+        <!--                     <TextBlock Classes="tooltip" -->
+        <!--                                Text="{Binding Value}" /> -->
+        <!--                 </DockPanel> -->
+        <!--             </DataTemplate> -->
+        <!--         </ItemsRepeater.ItemTemplate> -->
+        <!--     </ItemsRepeater> -->
+        <!-- </ToolTip.Tip> -->
 
-        <effects:RippleEffect RippleFill="{StaticResource TextColor}">
-            <effects:RippleEffect.Template>
-                <ControlTemplate>
-                    <Grid RowDefinitions="Auto,*,Auto"
-                          ColumnDefinitions="*,*">
-                        <Border Grid.Row="0"
+        <!-- <effects:RippleEffect RippleFill="{StaticResource TextColor}"> -->
+        <!--     <effects:RippleEffect.Template> -->
+        <!--         <ControlTemplate> -->
+        <Grid RowDefinitions="Auto,*,Auto"
+              ColumnDefinitions="*,*">
+            <Border Grid.Row="0"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    CornerRadius="0,0,0,0"
+                    BorderBrush="{StaticResource Background0}"
+                    BorderThickness="1"
+                    Background="{StaticResource Background0}"
+                    HorizontalAlignment="Stretch">
+                <TextBlock Foreground="{StaticResource TextColor}"
+                           FontSize="12"
+                           TextAlignment="Center"
+                           VerticalAlignment="Center"
+                           TextWrapping="NoWrap"
+                           TextTrimming="CharacterEllipsis"
+                           Text="{Binding Trade.ItemName}" />
+            </Border>
+
+            <Image Grid.Row="1"
+                   Grid.Column="0"
+                   Source="{Binding CurrencyImage^}"
+                   Stretch="Uniform"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center" />
+            <TextBlock Grid.Row="1"
+                       Grid.Column="{Binding PriceQuantityColumn}"
+                       Grid.ColumnSpan="{Binding PriceQuantityColspan}"
+                       HorizontalAlignment="{Binding PriceQuantityHorizontalAlignment}"
+                       VerticalAlignment="Center"
+                       Text="{Binding Trade.Price}"
+                       FontSize="{Binding PriceQuantityFontSize}"
+                       Foreground="{StaticResource TextColor}" />
+
+            <Button x:Name="ButtonBusy"
+                    IsVisible="{Binding CanSayBusy}"
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Classes="hoverAccent actionButton"
+                    Click="ButtonBusy_OnClick">
+                <Button.Content>
+                    <icons:MaterialIcon Kind="Clock" />
+                </Button.Content>
+            </Button>
+            <Button x:Name="ButtonReInvitePlayer"
+                    IsVisible="{Binding !CanSayBusy}"
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Classes="hoverSuccess actionButton"
+                    Click="ButtonReInvitePlayer_OnClick">
+                <Button.Content>
+                    <icons:MaterialIcon Kind="UserAdd" />
+                </Button.Content>
+            </Button>
+            <Button x:Name="ButtonDenyOffer"
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Classes="hoverError actionButton"
+                    Click="ButtonDenyOffer_OnClick">
+                <Button.Content>
+                    <icons:MaterialIcon Kind="CloseCircle" />
+                </Button.Content>
+            </Button>
+
+            <icons:MaterialIcon Grid.Row="1"
                                 Grid.Column="0"
                                 Grid.ColumnSpan="2"
-                                CornerRadius="0,0,0,0"
-                                BorderBrush="{StaticResource Background0}"
-                                BorderThickness="1"
-                                Background="{StaticResource Background0}"
-                                HorizontalAlignment="Stretch">
-                            <TextBlock Foreground="{StaticResource TextColor}"
-                                       FontSize="12"
-                                       TextAlignment="Center"
-                                       VerticalAlignment="Center"
-                                       TextWrapping="NoWrap"
-                                       TextTrimming="CharacterEllipsis"
-                                       Text="{Binding Trade.Item}" />
-                        </Border>
-
-                        <Image Grid.Row="1"
-                               Grid.Column="0"
-                               Source="{Binding CurrencyImage^}"
-                               Stretch="Uniform"
-                               VerticalAlignment="Center"
-                               HorizontalAlignment="Center" />
-                        <TextBlock Grid.Row="1"
-                                   Grid.Column="{Binding PriceQuantityColumn}"
-                                   Grid.ColumnSpan="{Binding PriceQuantityColspan}"
-                                   HorizontalAlignment="{Binding PriceQuantityHorizontalAlignment}"
-                                   VerticalAlignment="Center"
-                                   Text="{Binding Trade.Price.Value}"
-                                   FontSize="{Binding PriceQuantityFontSize}"
-                                   Foreground="{StaticResource TextColor}" />
-
-                        <Button x:Name="ButtonBusy"
-                                IsVisible="{Binding CanSayBusy}"
-                                Grid.Row="2"
-                                Grid.Column="0"
-                                Classes="hoverAccent actionButton"
-                                Click="ButtonBusy_OnClick">
-                            <Button.Content>
-                                <icons:MaterialIcon Kind="Clock" />
-                            </Button.Content>
-                        </Button>
-                        <Button x:Name="ButtonReInvitePlayer"
-                                IsVisible="{Binding !CanSayBusy}"
-                                Grid.Row="2"
-                                Grid.Column="0"
-                                Classes="hoverSuccess actionButton"
-                                Click="ButtonReInvitePlayer_OnClick">
-                            <Button.Content>
-                                <icons:MaterialIcon Kind="UserAdd" />
-                            </Button.Content>
-                        </Button>
-                        <Button x:Name="ButtonDenyOffer"
-                                Grid.Row="2"
-                                Grid.Column="1"
-                                Classes="hoverError actionButton"
-                                Click="ButtonDenyOffer_OnClick">
-                            <Button.Content>
-                                <icons:MaterialIcon Kind="CloseCircle" />
-                            </Button.Content>
-                        </Button>
-
-                        <icons:MaterialIcon Grid.Row="1"
-                                            Grid.Column="0"
-                                            Grid.ColumnSpan="2"
-                                            IsVisible="{Binding IsPlayerInTheArea}"
-                                            Kind="UserCircle"
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Bottom"
-                                            Foreground="{StaticResource WarningColor}" />
-                    </Grid>
-                </ControlTemplate>
-            </effects:RippleEffect.Template>
-        </effects:RippleEffect>
+                                IsVisible="{Binding IsPlayerInTheArea}"
+                                Kind="UserCircle"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Bottom"
+                                Foreground="{StaticResource WarningColor}" />
+        </Grid>
+        <!--         </ControlTemplate> -->
+        <!--     </effects:RippleEffect.Template> -->
+        <!-- </effects:RippleEffect> -->
     </Border>
 </UserControl>

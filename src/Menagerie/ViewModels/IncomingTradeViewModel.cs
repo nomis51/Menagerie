@@ -1,3 +1,10 @@
+using System;
+using System.Globalization;
+using System.Threading.Tasks;
+using Avalonia;
+using Avalonia.Layout;
+using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using Menagerie.Core.Enums;
 using Menagerie.Core.Enums.Trading;
 using Menagerie.Core.Models.Trading;
@@ -8,113 +15,199 @@ namespace Menagerie.ViewModels;
 
 public class IncomingTradeViewModel : ViewModelBase
 {
-    #region Props
+    #region Events
 
-    public IKeyboardService KeyboardService { get; }
-    public IAudioService AudioService { get; }
+    public EventHandler<object?>? Removed { get; set; }
+
+    #endregion
+
+    #region Members
+
+    private IAudioService AudioService { get; }
+    private IGameChatService GameChatService { get; }
+
+
     public int TileSize { get; }
     public Trade Trade { get; }
 
     #endregion
 
+    #region Props
+
+    public bool CanSayBusy => !Trade.State.HasFlag(TradeState.PlayerInvited);
+
+    public IBrush BorderBrush
+    {
+        get
+        {
+            if (Trade.State.HasFlag(TradeState.Done))
+                return new SolidColorBrush((Color)Application.Current!.Resources["ErrorColor"]!);
+            if (Trade.State.HasFlag(TradeState.Trading))
+                return new SolidColorBrush((Color)Application.Current!.Resources["WarningColor"]!);
+            if (Trade.State.HasFlag(TradeState.PlayerInvited))
+                return new SolidColorBrush((Color)Application.Current!.Resources["SuccessColor"]!);
+            if (Trade.State.HasFlag(TradeState.Busy))
+                return new SolidColorBrush((Color)Application.Current!.Resources["AccentColor"]!);
+
+            return new SolidColorBrush((Color)Application.Current!.Resources["Background0"]!);
+        }
+    }
+
+    public Task<Bitmap?> CurrencyImage => Task.FromResult<Bitmap?>(null);
+
+    public int PriceQuantityFontSize
+    {
+        get
+        {
+            var str = Trade.Price.ToString(CultureInfo.InvariantCulture);
+            var hasDot = str.Contains('.', StringComparison.Ordinal);
+            str = str.Replace(".", string.Empty);
+
+            return str.Length switch
+            {
+                1 => 28,
+                2 when !hasDot => 22,
+                2 => 21,
+                3 when !hasDot => 17,
+                3 => 16,
+                4 when !hasDot => 15,
+                4 => 13,
+                _ => 1
+            };
+        }
+    }
+
+    public int PriceQuantityColspan => PriceQuantityFontSize <= 15 ? 2 : 1;
+    public int PriceQuantityColumn => PriceQuantityFontSize <= 15 ? 0 : 1;
+
+    public HorizontalAlignment PriceQuantityHorizontalAlignment =>
+        PriceQuantityFontSize <= 15 ? HorizontalAlignment.Right : HorizontalAlignment.Center;
+
+    private bool _isPlayerInTheArea;
+
+    public bool IsPlayerInTheArea
+    {
+        get => _isPlayerInTheArea;
+        set
+        {
+            _isPlayerInTheArea = value;
+            OnPropertyChanged();
+        }
+    }
+
+    #endregion
+
     #region Constructors
 
-    public IncomingTradeViewModel(IKeyboardService keyboardService, int tileSize, IAudioService audioService)
+    public IncomingTradeViewModel(
+        int tileSize,
+        IAudioService audioService,
+        IGameChatService gameChatService
+    )
     {
-        KeyboardService = keyboardService;
         TileSize = tileSize;
         AudioService = audioService;
+        GameChatService = gameChatService;
     }
 
     #endregion
 
     #region Public methods
 
-    public void DoNextAction()
+    public async Task DoNextAction()
     {
-        AudioService.PlayEffectAsync(AudioEffect.Click);
+        await AudioService.PlayEffectAsync(AudioEffect.Click);
 
         if (!Trade.State.HasFlag(TradeState.PlayerInvited))
         {
-            SendInvitePlayer();
-            this.RaisePropertyChanged(nameof(CanSayBusy));
+            await SendInvitePlayer();
+            OnPropertyChanged(nameof(CanSayBusy));
         }
         else if (!Trade.State.HasFlag(TradeState.Trading))
         {
-            SendTrade();
-            this.RaisePropertyChanged(nameof(CanSayBusy));
+            await SendTrade();
+            OnPropertyChanged(nameof(CanSayBusy));
         }
     }
 
-    public void SayBusy()
+    public async Task SayBusy()
     {
-        AudioService.PlayEffectAsync(AudioEffect.Click);
+        await AudioService.PlayEffectAsync(AudioEffect.Click);
 
         Trade.State &= ~TradeState.Initial;
         Trade.State |= TradeState.Busy;
-        this.RaisePropertyChanged(nameof(BorderBrush));
+        OnPropertyChanged(nameof(BorderBrush));
 
-        AppService.Instance.SendBusyWhisper(Trade);
+        await GameChatService.SendBusyWhisper(Trade);
     }
 
-    public void Whisper()
+    public async Task Whisper()
     {
-        AudioService.PlayEffectAsync(AudioEffect.Click);
+        await AudioService.PlayEffectAsync(AudioEffect.Click);
 
-        AppService.Instance.PrepareToSendWhisper(Trade);
+        await GameChatService.PrepareToSendWhisper(Trade);
     }
 
-    public void SaySold()
+    public async Task SaySold()
     {
-        AudioService.PlayEffectAsync(AudioEffect.Click);
+        await AudioService.PlayEffectAsync(AudioEffect.Click);
 
-        AppService.Instance.SendSoldWhisper(Trade);
-        SendDenyOffer();
+        await GameChatService.SendSoldWhisper(Trade);
+        await SendDenyOffer();
     }
 
-    public void AskStillInterested()
+    public async Task AskStillInterested()
     {
-        AudioService.PlayEffectAsync(AudioEffect.Click);
+        await AudioService.PlayEffectAsync(AudioEffect.Click);
 
         Trade.State &= ~TradeState.Initial;
         Trade.State |= TradeState.StillInterested;
-        this.RaisePropertyChanged(nameof(BorderBrush));
+        OnPropertyChanged(nameof(BorderBrush));
 
-        AppService.Instance.SendStillInterestedWhisper(Trade);
+        await GameChatService.SendStillInterestedWhisper(Trade);
     }
 
-    public void SendInvitePlayer()
+    public async Task SendInvitePlayer()
     {
-        AudioService.PlayEffectAsync(AudioEffect.Click);
+        await AudioService.PlayEffectAsync(AudioEffect.Click);
 
         Trade.State &= ~TradeState.Initial;
 
         if (!Trade.State.HasFlag(TradeState.PlayerInvited))
         {
             Trade.State |= TradeState.PlayerInvited;
-            this.RaisePropertyChanged(nameof(BorderBrush));
+            OnPropertyChanged(nameof(BorderBrush));
+        }
 
-            AppService.Instance.SendInviteCommand(Trade);
-        }
-        else
-        {
-            AppService.Instance.SendReInviteCommand(Trade);
-        }
+        await GameChatService.SendInviteCommand(Trade);
     }
 
-    public void SendDenyOffer()
+    public async Task SendDenyOffer()
     {
-        AudioService.PlayEffectAsync(AudioEffect.Click);
+        await AudioService.PlayEffectAsync(AudioEffect.Click);
 
         if (Trade.State.HasFlag(TradeState.PlayerInvited))
         {
-            AppService.Instance.SendKickCommand(Trade);
+            await GameChatService.SendKickCommand(Trade);
         }
 
         Trade.State = TradeState.Done;
-        this.RaisePropertyChanged(nameof(BorderBrush));
+        OnPropertyChanged(nameof(BorderBrush));
 
-        OnRemoved?.Invoke(Trade.Id);
+        Removed?.Invoke(this, null);
+    }
+
+    #endregion
+
+    #region Private methods
+
+    private async Task SendTrade()
+    {
+        Trade.State &= ~TradeState.StillInterested;
+        Trade.State |= TradeState.Trading;
+        OnPropertyChanged(nameof(BorderBrush));
+
+        await GameChatService.SendTradeRequestCommand(Trade);
     }
 
     #endregion
