@@ -1,3 +1,4 @@
+using System.Net.Security;
 using Menagerie.Core.Services;
 using Menagerie.Core.Services.Abstractions;
 using Menagerie.ViewModels;
@@ -24,6 +25,8 @@ public static class ServiceCollectionExtensions
 
     private static void AddLogging(IServiceCollection services)
     {
+        services.AddLogging();
+
         var config = new LoggerConfiguration()
             .WriteTo.File("./logs/.txt", rollingInterval: RollingInterval.Day);
 
@@ -43,6 +46,11 @@ public static class ServiceCollectionExtensions
     private static void AddHelpers(IServiceCollection services)
     {
         services.AddSingleton<IKeyboardService, KeyboardService>();
+        services.AddSingleton<IAudioService, AudioService>();
+        services.AddSingleton<IClientLogService, ClientLogService>();
+        services.AddSingleton<IGameService, GameService>();
+        services.AddSingleton<IAppConfigurationService, AppConfigurationService>();
+        services.AddSingleton<IWindowService, WindowService>();
     }
 
     #endregion
