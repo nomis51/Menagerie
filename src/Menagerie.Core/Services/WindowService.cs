@@ -1,5 +1,7 @@
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Menagerie.Core.OS.Linux.Abstractions;
+using Menagerie.Core.OS.Win32;
 using Menagerie.Core.Services.Abstractions;
 
 namespace Menagerie.Core.Services;
@@ -23,9 +25,19 @@ public class WindowService : IWindowService
 
     #region Public methods
 
-    public Task<bool> FocusWindowAsync(Process process)
+    public async Task<bool> FocusWindowAsync(Process process)
     {
-        return _linuxLibs.FocusWindowAsync(process);
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return User32.SetForegroundWindow(process.MainWindowHandle);
+        }
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            return await _linuxLibs.FocusWindowAsync(process);
+        }
+
+        return false;
     }
 
     #endregion

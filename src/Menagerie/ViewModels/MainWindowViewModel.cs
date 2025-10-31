@@ -1,4 +1,5 @@
 ﻿using System;
+using Menagerie.Core.Services.Abstractions;
 using Menagerie.ViewModels.Abstractions;
 using Menagerie.Windows;
 
@@ -24,8 +25,9 @@ public partial class MainWindowViewModel : ViewModelBase
 
     #region Constructors
 
-    public MainWindowViewModel(IncomingTradesWindowViewModel incomingTradesWindowViewModel)
+    public MainWindowViewModel(IncomingTradesWindowViewModel incomingTradesWindowViewModel, IGameService gameService)
     {
+        gameService.InitializeAsync();
         IncomingTradesWindow = new IncomingTradesWindow
         {
             DataContext = incomingTradesWindowViewModel

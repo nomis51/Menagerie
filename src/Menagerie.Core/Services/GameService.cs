@@ -59,6 +59,11 @@ public class GameService : IGameService
 
     #region Public methods
 
+    public Task InitializeAsync()
+    {
+        return FindGameProcessAsync();
+    }
+
     public string? GetGameClientLogFilePathAsync()
     {
         try
@@ -88,14 +93,11 @@ public class GameService : IGameService
 
     public async Task<bool> FocusOverlayAsync()
     {
-        if (!HasGameProcess) return false;
-
         await _focusLock.WaitAsync();
 
         try
         {
-            // TODO:
-            return false;
+            return await _windowService.FocusWindowAsync(Process.GetCurrentProcess());
         }
         catch (Exception e)
         {
@@ -120,7 +122,7 @@ public class GameService : IGameService
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error while focusing overlay");
+            _logger.LogError(e, "Error while focusing the game");
             return false;
         }
         finally
@@ -133,12 +135,7 @@ public class GameService : IGameService
 
     #region Private methods
 
-    private void Initialize()
-    {
-        Task.Run(FindGameProcess);
-    }
-
-    private async Task FindGameProcess()
+    private async Task FindGameProcessAsync()
     {
         if (!await _gameProcessLock.WaitAsync(0)) return;
 
@@ -158,7 +155,7 @@ public class GameService : IGameService
                         if (process.HasExited) continue;
 
                         _gameProcess = process;
-                        _gameProcess.Exited += (_, _) => Initialize();
+                        _gameProcess.Exited += (_, _) => InitializeAsync();
 
                         _logger.LogDebug(
                             "Game process found: {ProcessName} ({ProcessId})",

@@ -1,4 +1,6 @@
 using System.Net.Security;
+using Menagerie.Core.OS.Linux;
+using Menagerie.Core.OS.Linux.Abstractions;
 using Menagerie.Core.Services;
 using Menagerie.Core.Services.Abstractions;
 using Menagerie.ViewModels;
@@ -14,6 +16,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddAppServices(this IServiceCollection services)
     {
         AddLogging(services);
+        AddServices(services);
         AddHelpers(services);
         AddViews(services);
         return services;
@@ -22,6 +25,11 @@ public static class ServiceCollectionExtensions
     #endregion
 
     #region Private methods
+
+    private static void AddHelpers(IServiceCollection services)
+    {
+        services.AddSingleton<ILinuxLibs, LinuxLibs>();
+    }
 
     private static void AddLogging(IServiceCollection services)
     {
@@ -43,7 +51,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IncomingTradesWindowViewModel>();
     }
 
-    private static void AddHelpers(IServiceCollection services)
+    private static void AddServices(IServiceCollection services)
     {
         services.AddSingleton<IKeyboardService, KeyboardService>();
         services.AddSingleton<IAudioService, AudioService>();
