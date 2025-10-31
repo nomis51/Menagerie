@@ -11,8 +11,8 @@ public class EnglishIncomingTradeWhisperParser : ITradeWhisperParser
 
     private static readonly Regex RegParse =
         new(
-            """/(?<time>[0-9]{4}\/[0-9]{2}\/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}) .* \[[a-z]+ Client [0-9]+\] @From (?<player_name>.+?): Hi, I would like to buy your (?<item_name>.+?) listed for (?:(?<price>\d+(?:\.\d+)?)\s*)?(?<currency>.+?) in (?<league>.+?) \(stash tab "(?<stash_tab_name>.+?)"; position: left (?<stash_tab_left>[0-9]+), top (?<stash_tab_top>[0-9]+)\)/""",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.NonBacktracking
+            @"(?<time>[0-9]{4}\/[0-9]{2}\/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}) .* \[[a-z]+ Client [0-9]+\] @From (?<player_name>.+?): Hi, I would like to buy your (?<item_name>.+?) listed for (?:(?<price>\d+(?:\.\d+)?)\s*)?(?<currency>(?![\d.]).+?) in (?<league>.+?) \(stash tab ""(?<stash_tab_name>.+?)""; position: left (?<stash_tab_left>[0-9]+), top (?<stash_tab_top>[0-9]+)\)(\\n|\n)*",
+            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline
         );
 
     #endregion
@@ -21,7 +21,6 @@ public class EnglishIncomingTradeWhisperParser : ITradeWhisperParser
 
     public Trade? Parse(string line)
     {
-        // 2025/10/29 16:34:47 1726297 cff945b9 [INFO Client 312] @From EsquentaPraVinteSete: Hi, I would like to buy your Betrayal's Sting, Steel Ring listed for 1 divine in Standard (stash tab "Tabarnak"; position: left 7, top 8)
         var match = RegParse.Match(line);
         if (!match.Success) return null;
         if (!match.Groups.ContainsKey("time") ||
