@@ -59,6 +59,9 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IGameService, GameService>();
         services.AddSingleton<IAppConfigurationService, AppConfigurationService>();
         services.AddSingleton<IWindowService, WindowService>();
+        services.AddSingleton<ITextParsingService, TextParsingService>();
+        services.AddSingleton<IGameChatService, GameChatService>();
+        services.AddSingleton<IClipboardService, ClipboardService>();
     }
 
     #endregion
