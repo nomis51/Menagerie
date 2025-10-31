@@ -1,7 +1,10 @@
+using Menagerie.Core.Models.Trading;
+
 namespace Menagerie.Core.Services.Abstractions;
 
 public interface ITextParsingService
 {
-    Task ParseIncomingTradeAsync(string line);
-    Task ParseOutgoingTradeAsync(string line);
+    EventHandler<Trade>? NewIncomingTrade { get; set; }
+    void ParseIncomingTrade(string line);
+    void ParseOutgoingTrade(string line);
 }

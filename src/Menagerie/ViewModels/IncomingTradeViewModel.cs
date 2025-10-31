@@ -26,7 +26,6 @@ public class IncomingTradeViewModel : ViewModelBase
     private IAudioService AudioService { get; }
     private IGameChatService GameChatService { get; }
 
-
     public int TileSize { get; }
     public Trade Trade { get; }
 
@@ -102,12 +101,14 @@ public class IncomingTradeViewModel : ViewModelBase
     public IncomingTradeViewModel(
         int tileSize,
         IAudioService audioService,
-        IGameChatService gameChatService
+        IGameChatService gameChatService,
+        Trade trade
     )
     {
         TileSize = tileSize;
         AudioService = audioService;
         GameChatService = gameChatService;
+        Trade = trade;
     }
 
     #endregion

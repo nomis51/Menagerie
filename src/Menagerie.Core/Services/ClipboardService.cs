@@ -94,7 +94,7 @@ public class ClipboardService : IClipboardService, IAsyncDisposable
 
                     if (value != lastValue)
                     {
-                        await _textParsingService.ParseIncomingTradeAsync(value);
+                        _textParsingService.ParseOutgoingTrade(value);
                     }
 
                     while (exclusionQueue.Count > appConfiguration.Clipboard.ExclusionQueueLength)

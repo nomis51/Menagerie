@@ -63,7 +63,7 @@ public class ClientLogService : IClientLogService, IAsyncDisposable
             {
                 foreach (var line in File.ReadLines(_clientLogFilePath!))
                 {
-                    await _textParsingService.ParseIncomingTradeAsync(line);
+                    _textParsingService.ParseIncomingTrade(line);
                 }
             }
 
