@@ -9,11 +9,10 @@ public class EnglishIncomingTradeWhisperParser : ITradeWhisperParser
 {
     #region Constants
 
-    private static readonly Regex RegParse =
-        new(
-            @"(?<time>[0-9]{4}\/[0-9]{2}\/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}) .* \[[a-z]+ Client [0-9]+\] @From (?<player_name>.+?): Hi, I would like to buy your (?<item_name>.+?) listed for (?:(?<price>\d+(?:\.\d+)?)\s*)?(?<currency>(?![\d.]).+?) in (?<league>.+?) \(stash tab ""(?<stash_tab_name>.+?)""; position: left (?<stash_tab_left>[0-9]+), top (?<stash_tab_top>[0-9]+)\)(\\n|\n)*",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline
-        );
+    private static readonly Regex RegParse = new(
+        @"(?<time>[0-9]{4}\/[0-9]{2}\/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}) .* \[[a-z]+ Client [0-9]+\] @From (?<player_name>.+?): Hi, I would like to buy your (?<item_name>.+?) listed for (?:(?<price>\d+(?:\.\d+)?)\s*)?(?<currency>(?![\d.]).+?) in (?<league>.+?) \(stash tab ""(?<stash_tab_name>.+?)""; position: left (?<stash_tab_left>[0-9]+), top (?<stash_tab_top>[0-9]+)\)(\\n|\n)*",
+        RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline
+    );
 
     #endregion
 
