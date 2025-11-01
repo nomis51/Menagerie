@@ -10,7 +10,7 @@ public class EnglishIncomingTradeWhisperParser : ITradeWhisperParser
     #region Constants
 
     private static readonly Regex RegParse = new(
-        @"(?<time>[0-9]{4}\/[0-9]{2}\/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}) .* \[[a-z]+ Client [0-9]+\] @From (?<player_name>.+?): Hi, I would like to buy your (?<item_name>.+?) listed for (?:(?<price>\d+(?:\.\d+)?)\s*)?(?<currency>(?![\d.]).+?) in (?<league>.+?) \(stash tab ""(?<stash_tab_name>.+?)""; position: left (?<stash_tab_left>[0-9]+), top (?<stash_tab_top>[0-9]+)\)(\\n|\n)*",
+        @"(?<time>[0-9]{4}\/[0-9]{2}\/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}) .* \[[a-zA-Z]+ Client [0-9]+\] @From (?<player_name>.+?): Hi, I would like to buy your (?<item_name>.+?) listed for (?:(?<price>\d+(?:\.\d+)?)\s+){0,1}(?<currency>.+?) in (?<league>.+?)(?: \(stash tab ""(?<stash_tab_name>.+?)""; position: left (?<stash_tab_left>[0-9]+), top (?<stash_tab_top>[0-9]+)\))?(\\n|\n)*",
         RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline
     );
 
@@ -29,13 +29,36 @@ public class EnglishIncomingTradeWhisperParser : ITradeWhisperParser
             !match.Groups["player_name"].Success) return null;
         if (!match.Groups.ContainsKey("item_name") ||
             !match.Groups["item_name"].Success) return null;
-        if (!match.Groups.ContainsKey("price") ||
-            !match.Groups["price"].Success ||
-            !float.TryParse(match.Groups["price"].Value, out var price)) return null;
+
+        var price = 0f;
+        if (match.Groups["price"].Success &&
+            !float.TryParse(match.Groups["price"].Value, out price)) return null;
         if (!match.Groups.ContainsKey("currency") ||
             !match.Groups["currency"].Success) return null;
         if (!match.Groups.ContainsKey("league") ||
-            !match.Groups["league"].Success) return null;
+            !match.Groups["league"].Success ||
+            match.Groups["league"].Value.Contains('(')) return null;
+
+        string? stashTab = null;
+        if (match.Groups.ContainsKey("stash_tab_name") &&
+            match.Groups["stash_tab_name"].Success)
+        {
+            stashTab = match.Groups["stash_tab_name"].Value;
+        }
+
+        var left = -1;
+        if (match.Groups.ContainsKey("stash_tab_left") &&
+            match.Groups["stash_tab_left"].Success &&
+            int.TryParse(match.Groups["stash_tab_left"].Value, out left))
+        {
+        }
+
+        var top = -1;
+        if (match.Groups.ContainsKey("stash_tab_top") &&
+            match.Groups["stash_tab_top"].Success &&
+            int.TryParse(match.Groups["stash_tab_top"].Value, out top))
+        {
+        }
 
         return new Trade
         {
@@ -50,20 +73,9 @@ public class EnglishIncomingTradeWhisperParser : ITradeWhisperParser
             Currency = match.Groups["currency"].Value,
             StashTab = new StashTabLocation
             {
-                Name = !match.Groups.ContainsKey("stash_tab_name") ||
-                       !match.Groups["stash_tab_name"].Success
-                    ? null
-                    : match.Groups["stash_tab_name"].Value,
-                Left = !match.Groups.ContainsKey("stash_tab_left") ||
-                       !match.Groups["stash_tab_left"].Success ||
-                       !int.TryParse(match.Groups["stash_tab_left"].Value, out var left)
-                    ? 0
-                    : left,
-                Top = !match.Groups.ContainsKey("stash_tab_top") ||
-                      !match.Groups["stash_tab_top"].Success ||
-                      !int.TryParse(match.Groups["stash_tab_top"].Value, out var top)
-                    ? 0
-                    : top,
+                Name = stashTab,
+                Left = left,
+                Top = top
             }
         };
     }

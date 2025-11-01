@@ -43,6 +43,7 @@ public class EnglishIncomingTradeWhisperParserTests
     public void Parse_ShouldReturnTrade(string input)
     {
         // Arrange
+        _output.WriteLine($"Testing input: {input}");
 
         // Act
         var result = _sut.Parse(input);
