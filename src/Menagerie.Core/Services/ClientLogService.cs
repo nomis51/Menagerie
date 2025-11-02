@@ -1,3 +1,4 @@
+using System.IO.Abstractions;
 using Menagerie.Core.Services.Abstractions;
 
 namespace Menagerie.Core.Services;
@@ -9,6 +10,7 @@ public class ClientLogService : IClientLogService, IAsyncDisposable
     private readonly IGameService _gameService;
     private readonly IAppConfigurationService _appConfigurationService;
     private readonly ITextParsingService _textParsingService;
+    private readonly IFileSystem _fileSystem;
 
     private Thread? _pollingThread;
     private readonly CancellationTokenSource _pollingThreadCts = new();
@@ -22,12 +24,14 @@ public class ClientLogService : IClientLogService, IAsyncDisposable
     public ClientLogService(
         IGameService gameService,
         IAppConfigurationService appConfigurationService,
-        ITextParsingService textParsingService
+        ITextParsingService textParsingService,
+        IFileSystem fileSystem
     )
     {
         _gameService = gameService;
         _appConfigurationService = appConfigurationService;
         _textParsingService = textParsingService;
+        _fileSystem = fileSystem;
         _gameService.GameProcessChanged += GameProcessChanged;
     }
 
@@ -61,7 +65,7 @@ public class ClientLogService : IClientLogService, IAsyncDisposable
             var eofPosition = await GetEofPosition();
             if (eofPosition != _eofPosition)
             {
-                foreach (var line in File.ReadLines(_clientLogFilePath!))
+                foreach (var line in _fileSystem.File.ReadLines(_clientLogFilePath!))
                 {
                     _textParsingService.ParseIncomingTrade(line);
                 }
@@ -98,7 +102,8 @@ public class ClientLogService : IClientLogService, IAsyncDisposable
     {
         if (_clientLogFilePath is null) return 0;
 
-        await using var file = File.Open(_clientLogFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        await using var file = _fileSystem.File
+            .Open(_clientLogFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
         return file.Length - 1;
     }
 

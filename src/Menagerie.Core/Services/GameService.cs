@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO.Abstractions;
 using Menagerie.Core.Services.Abstractions;
 using Microsoft.Extensions.Logging;
 
@@ -24,6 +25,7 @@ public class GameService : IGameService
     private readonly ILogger<GameService> _logger;
     private readonly IAppConfigurationService _appConfigurationService;
     private readonly IWindowService _windowService;
+    private readonly IFileSystem _fileSystem;
 
     private Process? _gameProcess;
     private readonly SemaphoreSlim _gameProcessLock = new(1, 1);
@@ -47,12 +49,14 @@ public class GameService : IGameService
     public GameService(
         ILogger<GameService> logger,
         IAppConfigurationService appConfigurationService,
-        IWindowService windowService
+        IWindowService windowService,
+        IFileSystem fileSystem
     )
     {
         _logger = logger;
         _appConfigurationService = appConfigurationService;
         _windowService = windowService;
+        _fileSystem = fileSystem;
     }
 
     #endregion
@@ -77,7 +81,7 @@ public class GameService : IGameService
                 "logs",
                 GameClientLogFileName
             );
-            return !File.Exists(filePath) ? null : filePath;
+            return !_fileSystem.File.Exists(filePath) ? null : filePath;
         }
         catch (Win32Exception)
         {

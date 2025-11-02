@@ -61,7 +61,7 @@ public partial class IncomingTradesWindow : WindowBase<IncomingTradesWindowViewM
             // which gives about 7.5% of the screen height space for the panel
 
             var size = desktop.MainWindow!.Screens.Primary is null
-                ? desktop.MainWindow!.Screens.ScreenFromWindow(this).Bounds.Size
+                ? desktop.MainWindow!.Screens.ScreenFromWindow(this)!.Bounds.Size
                 : desktop.MainWindow!.Screens.Primary.Bounds.Size;
             Position = new PixelPoint((int)(size.Width * .278), (int)(size.Height * .962 - Height));
             Height = (int)(size.Height * .092);

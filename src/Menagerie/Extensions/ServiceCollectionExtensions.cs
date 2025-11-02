@@ -1,3 +1,4 @@
+using System.IO.Abstractions;
 using Menagerie.Core;
 using Menagerie.Core.Linux.Extensions;
 using Menagerie.Core.Services;
@@ -36,6 +37,7 @@ public static class ServiceCollectionExtensions
     private static void AddHelpers(IServiceCollection services)
     {
         services.AddSingleton<PlatformCapabilities>();
+        services.AddScoped<IFileSystem, FileSystem>();
     }
 
     private static void AddLogging(IServiceCollection services)
