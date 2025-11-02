@@ -1,10 +1,10 @@
 using System.Runtime.InteropServices;
 
-namespace Menagerie.Core.OS.Win32;
+namespace Menagerie.Core.Windows.Win32;
 
-public class User32
+public static class User32
 {
-    #region Public methods
+    #region Imports
 
     [DllImport("user32.dll")]
     public static extern bool SetForegroundWindow(IntPtr hwnd);

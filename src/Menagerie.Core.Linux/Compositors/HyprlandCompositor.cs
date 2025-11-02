@@ -1,9 +1,9 @@
 using System.Diagnostics;
-using Menagerie.Core.OS.Linux.Abstractions;
+using Menagerie.Core.Linux.Compositors.Abstractions;
 
-namespace Menagerie.Core.OS.Linux.Wayland.Compositors;
+namespace Menagerie.Core.Linux.Compositors;
 
-public class Hyprland : ICompositor
+public class HyprlandCompositor : ILinuxCompositor
 {
     #region Public methods
 

@@ -1,8 +1,7 @@
-using System.Net.Security;
-using Menagerie.Core.OS.Linux;
-using Menagerie.Core.OS.Linux.Abstractions;
+using Menagerie.Core;
 using Menagerie.Core.Services;
 using Menagerie.Core.Services.Abstractions;
+using Menagerie.Core.Windows.Extensions;
 using Menagerie.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -26,9 +25,14 @@ public static class ServiceCollectionExtensions
 
     #region Private methods
 
+    private static void AddPlatformCapabilities(IServiceCollection services)
+    {
+        services.AddWindowsPlatformCapabilities();
+    }
+
     private static void AddHelpers(IServiceCollection services)
     {
-        services.AddSingleton<ILinuxLibs, LinuxLibs>();
+        services.AddSingleton<PlatformCapabilities>();
     }
 
     private static void AddLogging(IServiceCollection services)

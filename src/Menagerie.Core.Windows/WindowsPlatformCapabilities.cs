@@ -1,0 +1,51 @@
+using System.Diagnostics;
+using Menagerie.Core.Shared.Abstractions;
+using Menagerie.Core.Windows.Helpers.Abstractions;
+using Menagerie.Core.Windows.Win32;
+using Microsoft.Extensions.Logging;
+
+namespace Menagerie.Core.Windows;
+
+public class WindowsPlatformCapabilities : IPlatformCapabilities
+{
+    #region Members
+
+    private readonly ILogger<WindowsPlatformCapabilities> _logger;
+    private readonly IClipboardHelper _clipboardHelper;
+
+    #endregion
+
+    #region Constructors
+
+    public WindowsPlatformCapabilities(WindowsPlatformDependencyResolver dependencyResolver)
+    {
+        _logger = dependencyResolver.Logger;
+        _clipboardHelper = dependencyResolver.ClipboardHelper;
+    }
+
+    #endregion
+
+    #region Public methods
+
+    public Task<bool> FocusWindowAsync(Process process)
+    {
+        return Task.FromResult(User32.SetForegroundWindow(process.MainWindowHandle));
+    }
+
+    public Task<bool> SetClipboardTextAsync(string text)
+    {
+        return _clipboardHelper.SetClipboardTextAsync(text);
+    }
+
+    public Task<string?> GetClipboardTextAsync()
+    {
+        return _clipboardHelper.GetClipboardTextAsync();
+    }
+
+    public Task<bool> ResetClipboardTextAsync()
+    {
+        return _clipboardHelper.ResetClipboardTextAsync();
+    }
+
+    #endregion
+}

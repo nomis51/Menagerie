@@ -1,8 +1,6 @@
-﻿using System.Diagnostics;
-using Menagerie.Core.OS.Linux;
-using Menagerie.Core.Services;
+﻿using TextCopy;
 
-var windowService = new WindowService(new LinuxLibs());
-var processes = Process.GetProcesses();
-var process = Process.GetProcessesByName("PathOfExileStea")[0];
-await windowService.FocusWindowAsync(process);
+var c = new Clipboard();
+await c.SetTextAsync("hello world");
+var text = await c.GetTextAsync();
+var g = 0;
