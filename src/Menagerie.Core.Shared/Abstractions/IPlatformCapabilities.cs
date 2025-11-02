@@ -8,4 +8,5 @@ public interface IPlatformCapabilities
     Task<bool> SetClipboardTextAsync(string text);
     Task<string?> GetClipboardTextAsync();
     Task<bool> ResetClipboardTextAsync();
+    string? GetGameFolder(Process gameProcess);
 }

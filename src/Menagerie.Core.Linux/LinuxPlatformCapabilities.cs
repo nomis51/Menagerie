@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.IO.Abstractions;
 using Menagerie.Core.Linux.Platforms;
 using Menagerie.Core.Shared.Abstractions;
 
@@ -9,6 +10,7 @@ public class LinuxPlatformCapabilities : IPlatformCapabilities
     #region Members
 
     private readonly IPlatformCapabilities _platformCapabilities;
+    private readonly IFileSystem _fileSystem;
 
     #endregion
 
@@ -16,6 +18,7 @@ public class LinuxPlatformCapabilities : IPlatformCapabilities
 
     public LinuxPlatformCapabilities(LinuxPlatformDependencyResolver dependencyResolver)
     {
+        _fileSystem = dependencyResolver.FileSystem;
         _platformCapabilities = GetPlatformCapabilities(dependencyResolver);
     }
 
@@ -41,6 +44,22 @@ public class LinuxPlatformCapabilities : IPlatformCapabilities
     public Task<bool> ResetClipboardTextAsync()
     {
         return _platformCapabilities.ResetClipboardTextAsync();
+    }
+
+    public string? GetGameFolder(Process gameProcess)
+    {
+        // We assume it's Steam. Most likely running under Proton or Proton-GE.
+        // So we can't do like on Windows and look at the process main module, since it's wine
+        var folderPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+            ".local",
+            "share",
+            "Steam",
+            "steamapps",
+            "common",
+            "Path of Exile"
+        );
+        return _fileSystem.Directory.Exists(folderPath) ? folderPath : null;
     }
 
     #endregion

@@ -53,6 +53,11 @@ public class PlatformCapabilities : IPlatformCapabilities
         return _platformCapabilities.ResetClipboardTextAsync();
     }
 
+    public string? GetGameFolder(Process gameProcess)
+    {
+        return _platformCapabilities.GetGameFolder(gameProcess);
+    }
+
     #endregion
 
     #region Private methods

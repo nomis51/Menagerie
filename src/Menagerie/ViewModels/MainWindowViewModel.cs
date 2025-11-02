@@ -25,9 +25,15 @@ public partial class MainWindowViewModel : ViewModelBase
 
     #region Constructors
 
-    public MainWindowViewModel(IncomingTradesWindowViewModel incomingTradesWindowViewModel, IGameService gameService)
+    public MainWindowViewModel(
+        IncomingTradesWindowViewModel incomingTradesWindowViewModel,
+        IGameService gameService,
+        IClientLogService clientLogService,
+        IClipboardService clipboardService
+    )
     {
         gameService.InitializeAsync();
+
         IncomingTradesWindow = new IncomingTradesWindow
         {
             DataContext = incomingTradesWindowViewModel

@@ -27,5 +27,10 @@ public class X11PlatformCapabilities : IPlatformCapabilities
         throw new NotImplementedException();
     }
 
+    public string? GetGameFolder(Process gameProcess)
+    {
+        throw new NotSupportedException();
+    }
+
     #endregion
 }

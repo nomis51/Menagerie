@@ -10,5 +10,6 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.10"/>
         <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.10"/>
+        <PackageReference Include="TestableIO.System.IO.Abstractions.Wrappers" Version="22.0.16"/>
     </ItemGroup>
 </Project>

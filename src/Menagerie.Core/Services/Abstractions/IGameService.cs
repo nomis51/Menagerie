@@ -2,7 +2,7 @@ namespace Menagerie.Core.Services.Abstractions;
 
 public interface IGameService
 {
-    EventHandler<int>? GameProcessChanged { get; set; }
+    EventHandler? GameProcessChanged { get; set; }
     int GameProcessId { get; }
     Task InitializeAsync();
     string? GetGameClientLogFilePathAsync();

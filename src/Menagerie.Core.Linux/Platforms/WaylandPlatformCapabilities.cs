@@ -46,6 +46,11 @@ public class WaylandPlatformCapabilities : IPlatformCapabilities
         return _clipboardHelper.ResetClipboardTextAsync();
     }
 
+    public string? GetGameFolder(Process gameProcess)
+    {
+        throw new NotSupportedException();
+    }
+
     #endregion
 
     #region Private methods

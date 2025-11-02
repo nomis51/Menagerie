@@ -47,5 +47,10 @@ public class WindowsPlatformCapabilities : IPlatformCapabilities
         return _clipboardHelper.ResetClipboardTextAsync();
     }
 
+    public string? GetGameFolder(Process gameProcess)
+    {
+        return gameProcess.MainModule is null ? null : Path.GetDirectoryName(gameProcess.MainModule.FileName);
+    }
+
     #endregion
 }

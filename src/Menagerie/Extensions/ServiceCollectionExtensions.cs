@@ -1,8 +1,12 @@
 using System.IO.Abstractions;
 using Menagerie.Core;
+using Menagerie.Core.Linux;
 using Menagerie.Core.Linux.Extensions;
+using Menagerie.Core.Linux.Platforms;
 using Menagerie.Core.Services;
 using Menagerie.Core.Services.Abstractions;
+using Menagerie.Core.Shared.Abstractions;
+using Menagerie.Core.Windows;
 using Menagerie.Core.Windows.Extensions;
 using Menagerie.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +25,7 @@ public static class ServiceCollectionExtensions
         AddHelpers(services);
         AddViews(services);
         AddPlatformCapabilities(services);
+        AddDependencyResolvers(services);
         return services;
     }
 
@@ -36,8 +41,15 @@ public static class ServiceCollectionExtensions
 
     private static void AddHelpers(IServiceCollection services)
     {
-        services.AddSingleton<PlatformCapabilities>();
+        services.AddSingleton<IPlatformCapabilities, PlatformCapabilities>();
         services.AddScoped<IFileSystem, FileSystem>();
+    }
+
+    private static void AddDependencyResolvers(IServiceCollection services)
+    {
+        services.AddSingleton<WindowsPlatformDependencyResolver>();
+        services.AddSingleton<LinuxPlatformDependencyResolver>();
+        services.AddSingleton<WaylandPlatformDependencyResolver>();
     }
 
     private static void AddLogging(IServiceCollection services)

@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO.Abstractions;
 using Menagerie.Core.Services.Abstractions;
+using Menagerie.Core.Shared.Abstractions;
 using Microsoft.Extensions.Logging;
 
 namespace Menagerie.Core.Services;
@@ -16,7 +17,7 @@ public class GameService : IGameService
 
     #region Events
 
-    public EventHandler<int>? GameProcessChanged { get; set; }
+    public EventHandler? GameProcessChanged { get; set; }
 
     #endregion
 
@@ -26,6 +27,7 @@ public class GameService : IGameService
     private readonly IAppConfigurationService _appConfigurationService;
     private readonly IWindowService _windowService;
     private readonly IFileSystem _fileSystem;
+    private readonly IPlatformCapabilities _platformCapabilities;
 
     private Process? _gameProcess;
     private readonly SemaphoreSlim _gameProcessLock = new(1, 1);
@@ -39,8 +41,7 @@ public class GameService : IGameService
     public int GameProcessId => _gameProcess?.Id ?? 0;
 
     private bool HasGameProcess => _gameProcess is not null &&
-                                   !_gameProcess.HasExited &&
-                                   _gameProcess.MainWindowHandle != IntPtr.Zero;
+                                   !_gameProcess.HasExited;
 
     #endregion
 
@@ -50,13 +51,15 @@ public class GameService : IGameService
         ILogger<GameService> logger,
         IAppConfigurationService appConfigurationService,
         IWindowService windowService,
-        IFileSystem fileSystem
+        IFileSystem fileSystem,
+        IPlatformCapabilities platformCapabilities
     )
     {
         _logger = logger;
         _appConfigurationService = appConfigurationService;
         _windowService = windowService;
         _fileSystem = fileSystem;
+        _platformCapabilities = platformCapabilities;
     }
 
     #endregion
@@ -72,12 +75,14 @@ public class GameService : IGameService
     {
         try
         {
-            if (!HasGameProcess ||
-                _gameProcess!.MainModule is null ||
-                string.IsNullOrEmpty(_gameProcess.MainModule.FileName)) return null;
+            if (!HasGameProcess) return null;
+
+            var gameFolderPath = _platformCapabilities.GetGameFolder(_gameProcess!);
+            if (string.IsNullOrEmpty(gameFolderPath) ||
+                !_fileSystem.Directory.Exists(gameFolderPath)) return null;
 
             var filePath = Path.Join(
-                Path.GetDirectoryName(_gameProcess.MainModule.FileName),
+                gameFolderPath,
                 "logs",
                 GameClientLogFileName
             );
@@ -167,6 +172,7 @@ public class GameService : IGameService
                             process.Id
                         );
                         processFound = true;
+                        GameProcessChanged?.Invoke(this, EventArgs.Empty);
                         break;
                     }
 

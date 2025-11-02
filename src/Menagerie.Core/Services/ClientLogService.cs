@@ -13,7 +13,7 @@ public class ClientLogService : IClientLogService, IAsyncDisposable
     private readonly IFileSystem _fileSystem;
 
     private Thread? _pollingThread;
-    private readonly CancellationTokenSource _pollingThreadCts = new();
+    private CancellationTokenSource? _pollingThreadCts = null;
     private string? _clientLogFilePath;
     private long _eofPosition;
 
@@ -46,10 +46,13 @@ public class ClientLogService : IClientLogService, IAsyncDisposable
 
     #region Events
 
-    private void GameProcessChanged(object? sender, int e)
+    private void GameProcessChanged(object? sender, EventArgs e)
     {
-        StopPollingThread().Wait();
-        Initialize().Wait();
+        Task.Run(async () =>
+        {
+            await StopPollingThread();
+            await Initialize();
+        });
     }
 
     #endregion
@@ -58,20 +61,35 @@ public class ClientLogService : IClientLogService, IAsyncDisposable
 
     private async Task PollClientLogs()
     {
-        while (!_pollingThreadCts.IsCancellationRequested)
+        while (!_pollingThreadCts?.IsCancellationRequested ?? false)
         {
             var appConfiguration = await _appConfigurationService.GetConfigurationAsync();
 
-            var eofPosition = await GetEofPosition();
-            if (eofPosition != _eofPosition)
+            var currentPosition = await GetEofPosition();
+            if (currentPosition != _eofPosition)
             {
-                foreach (var line in _fileSystem.File.ReadLines(_clientLogFilePath!))
+                await using var fs = _fileSystem.File.Open(
+                    _clientLogFilePath!,
+                    FileMode.Open,
+                    FileAccess.Read,
+                    FileShare.ReadWrite
+                );
+                if (fs.CanSeek)
                 {
-                    _textParsingService.ParseIncomingTrade(line);
-                }
-            }
+                    fs.Position = _eofPosition;
+                    using var reader = new StreamReader(fs);
 
-            _eofPosition = eofPosition;
+                    while (!reader.EndOfStream)
+                    {
+                        var line = await reader.ReadLineAsync();
+                        if (string.IsNullOrEmpty(line)) continue;
+
+                        _textParsingService.ParseIncomingTrade(line);
+                    }
+                }
+
+                _eofPosition = currentPosition;
+            }
 
             await Task.Delay(appConfiguration.ClientLog.PollingRate);
         }
@@ -79,9 +97,21 @@ public class ClientLogService : IClientLogService, IAsyncDisposable
 
     private async Task StopPollingThread()
     {
-        await _pollingThreadCts.CancelAsync();
+        if (_pollingThreadCts is not null)
+        {
+            await _pollingThreadCts.CancelAsync();
+        }
+
         var appConfiguration = await _appConfigurationService.GetConfigurationAsync();
-        await Task.Delay(2 * appConfiguration.ClientLog.PollingRate);
+        await Task.Delay(appConfiguration.ClientLog.PollingRate);
+
+        while (_pollingThread is not null && _pollingThread.IsAlive)
+        {
+            await Task.Delay(50);
+        }
+
+        _pollingThread = null;
+        _pollingThreadCts = null;
     }
 
     private async Task Initialize()
@@ -91,6 +121,7 @@ public class ClientLogService : IClientLogService, IAsyncDisposable
 
         _eofPosition = await GetEofPosition();
 
+        _pollingThreadCts = new CancellationTokenSource();
         _pollingThread = new Thread(() => PollClientLogs().Wait())
         {
             IsBackground = true

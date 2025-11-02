@@ -12,7 +12,6 @@
         <PackageReference Include="Serilog" Version="4.3.0"/>
         <PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0"/>
         <PackageReference Include="Serilog.Sinks.File" Version="7.0.0"/>
-        <PackageReference Include="TestableIO.System.IO.Abstractions.Wrappers" Version="22.0.16"/>
     </ItemGroup>
 
     <ItemGroup>
