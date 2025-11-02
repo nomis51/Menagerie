@@ -1,4 +1,5 @@
 using Menagerie.Core;
+using Menagerie.Core.Linux.Extensions;
 using Menagerie.Core.Services;
 using Menagerie.Core.Services.Abstractions;
 using Menagerie.Core.Windows.Extensions;
@@ -18,6 +19,7 @@ public static class ServiceCollectionExtensions
         AddServices(services);
         AddHelpers(services);
         AddViews(services);
+        AddPlatformCapabilities(services);
         return services;
     }
 
@@ -28,6 +30,7 @@ public static class ServiceCollectionExtensions
     private static void AddPlatformCapabilities(IServiceCollection services)
     {
         services.AddWindowsPlatformCapabilities();
+        services.AddLinuxPlatformCapabilities();
     }
 
     private static void AddHelpers(IServiceCollection services)

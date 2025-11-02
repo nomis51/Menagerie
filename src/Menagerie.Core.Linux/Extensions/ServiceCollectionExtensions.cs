@@ -8,7 +8,7 @@ public static class ServiceCollectionExtensions
 {
     #region Public methods
 
-    public static IServiceCollection AddWindowsPlatformCapabilities(this IServiceCollection services)
+    public static IServiceCollection AddLinuxPlatformCapabilities(this IServiceCollection services)
     {
         services.AddSingleton<IClipboardHelper, ClipboardHelper>();
         return services;
