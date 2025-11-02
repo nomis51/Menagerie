@@ -21,6 +21,15 @@ public class ClientLogValidIncomingTradeLines : IEnumerable<TheoryDataRow<string
         "2025/09/12 09:09:12 1234567 abc123a1 [INFO Client 123] @From BugCatcherJohn: Hi, I would like to buy your Betrayal's Sting, Steel Ring listed for 1 divine in Standard (stash tab \"~1 divine\"; position: left 1, top 999)\n",
     ];
 
+    public static readonly string[] ValidPlayerNames = ["BugCatcherJohn", "DivinePåBordet"];
+    public static readonly string[] ValidCurrencies = ["divine"];
+    public static readonly string[] ValidLeagues = ["Standard", "NOT STANDARD LEAGUE"];
+
+    public static readonly string[] ValidItemNames =
+        ["Betrayal's Sting, Steel Ring", "OK", "Something That Is Not A REAL Item 02, Steel Ring"];
+
+    public static readonly float[] ValidPrices = [1, 1.2f];
+
     public IEnumerator<TheoryDataRow<string>> GetEnumerator()
     {
         return Values.Select(e => new TheoryDataRow<string>(e))

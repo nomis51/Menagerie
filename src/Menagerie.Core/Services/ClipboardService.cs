@@ -47,10 +47,10 @@ public class ClipboardService : IClipboardService, IAsyncDisposable
 
     #region Events
 
-    private void GameProcessChanged(object? sender, int e)
+    private void GameProcessChanged(object? sender, EventArgs e)
     {
-        StopPollingThread().Wait();
-        Initialize();
+        // StopPollingThread().Wait();
+        // Initialize();
     }
 
     #endregion
