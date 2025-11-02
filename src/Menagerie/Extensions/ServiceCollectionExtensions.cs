@@ -44,11 +44,12 @@ public static class ServiceCollectionExtensions
     {
         services.AddLogging();
 
-        var config = new LoggerConfiguration()
-            .WriteTo.File("./logs/.txt", rollingInterval: RollingInterval.Day);
+        var config = new LoggerConfiguration();
 
 #if DEBUG
         config = config.WriteTo.Debug();
+#else
+        config = config.WriteTo.File("./logs/.txt", rollingInterval: RollingInterval.Day);
 #endif
 
         Log.Logger = config.CreateLogger();
