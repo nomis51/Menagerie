@@ -9,8 +9,13 @@ public class EnglishIncomingTradeWhisperParser : ITradeWhisperParser
 {
     #region Constants
 
-    private static readonly Regex RegParse = new(
-        @"(?<time>[0-9]{4}\/[0-9]{2}\/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}) .* \[[a-zA-Z]+ Client [0-9]+\] @From (?<player_name>.+?): Hi, I would like to buy your (?<item_name>.+?) listed for (?:(?<price>\d+(?:\.\d+)?)\s+){0,1}(?<currency>.+?) in (?<league>.+?)(?: \(stash tab ""(?<stash_tab_name>.+?)""; position: left (?<stash_tab_left>[0-9]+), top (?<stash_tab_top>[0-9]+)\))?(\\n|\n)*",
+    private static readonly Regex RegWithStashTab = new(
+        @"(?<time>[0-9]{4}\/[0-9]{2}\/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}) .* \[[a-zA-Z]+ Client [0-9]+\] @From (?<player_name>.+?): Hi, I would like to buy your (?<item_name>.+?) listed for (?:(?<price>\d+(?:\.\d+)?)\s+){0,1}(?<currency>.+?) in (?<league>.+?) \(stash tab ""(?<stash_tab_name>.+?)""; position: left (?<stash_tab_left>[0-9]+), top (?<stash_tab_top>[0-9]+)\)(?:\r?\n)*",
+        RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline
+    );
+
+    private static readonly Regex RegWithoutStashTab = new(
+        @"(?<time>[0-9]{4}\/[0-9]{2}\/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}) .* \[[a-zA-Z]+ Client [0-9]+\] @From (?<player_name>.+?): Hi, I would like to buy your (?<item_name>.+?) listed for (?:(?<price>\d+(?:\.\d+)?)\s+){0,1}(?<currency>.+?) in (?<league>.+?)(?:\r?\n)*",
         RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline
     );
 
@@ -20,7 +25,12 @@ public class EnglishIncomingTradeWhisperParser : ITradeWhisperParser
 
     public Trade? Parse(string line)
     {
-        var match = RegParse.Match(line);
+        var match = MatchWithStashTab(line);
+        if (!match.Success)
+        {
+            match = MatchWithoutStashTab(line);
+        }
+
         if (!match.Success) return null;
         if (!match.Groups.ContainsKey("time") ||
             !match.Groups["time"].Success ||
@@ -64,7 +74,7 @@ public class EnglishIncomingTradeWhisperParser : ITradeWhisperParser
         {
             Id = 0,
             Type = TradeType.Incoming,
-            Whisper = line,
+            Whisper = line.Split("@From", StringSplitOptions.TrimEntries).Last(),
             ItemName = match.Groups["item_name"].Value,
             League = match.Groups["league"].Value,
             PlayerName = match.Groups["player_name"].Value,
@@ -78,6 +88,20 @@ public class EnglishIncomingTradeWhisperParser : ITradeWhisperParser
                 Top = top
             }
         };
+    }
+
+    #endregion
+
+    #region Private methods
+
+    private static Match MatchWithStashTab(string line)
+    {
+        return RegWithStashTab.Match(line);
+    }
+
+    private static Match MatchWithoutStashTab(string line)
+    {
+        return RegWithoutStashTab.Match(line);
     }
 
     #endregion
