@@ -15,7 +15,7 @@ public class EnglishIncomingTradeWhisperParser : ITradeWhisperParser
     );
 
     private static readonly Regex RegWithoutStashTab = new(
-        @"(?<time>[0-9]{4}\/[0-9]{2}\/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}) .* \[[a-zA-Z]+ Client [0-9]+\] @From (?<player_name>.+?): Hi, I would like to buy your (?<item_name>.+?) listed for (?:(?<price>\d+(?:\.\d+)?)\s+){0,1}(?<currency>.+?) in (?<league>.+?)(?:\r?\n)*",
+        @"(?<time>[0-9]{4}\/[0-9]{2}\/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}) .* \[[a-zA-Z]+ Client [0-9]+\] @From (?<player_name>.+?): Hi, I would like to buy your (?<item_name>.+?) listed for (?:(?<price>\d+(?:\.\d+)?)\s+){0,1}(?<currency>.+?) in (?<league>.+)(?:\r?\n)*",
         RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline
     );
 

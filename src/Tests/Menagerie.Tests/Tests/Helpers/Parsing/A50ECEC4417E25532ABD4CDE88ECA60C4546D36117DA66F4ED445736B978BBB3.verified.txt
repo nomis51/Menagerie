@@ -1,0 +1,19 @@
+﻿{
+  input: 2025/09/12 09:09:12 1234567 abc123a1 [INFO Client 123] @From BugCatcherJohn: Hi, I would like to buy your Betrayal's Sting, Steel Ring listed for 1 divine in NOT STANDARD LEAGUE (stash tab "~1 divine"; position: left 1, top 2),
+  result:
+Id: 0
+Time: 2025-09-12 09:09:12
+ItemName: Betrayal's Sting, Steel Ring
+PlayerName: BugCatcherJohn
+League: NOT STANDARD LEAGUE
+Price: 1
+Currency: divine
+StashTab: Name: ~1 divine
+Left: 1
+Top: 2
+
+State: Initial
+Type: Incoming
+Whisper: BugCatcherJohn: Hi, I would like to buy your Betrayal's Sting, Steel Ring listed for 1 divine in NOT STANDARD LEAGUE (stash tab "~1 divine"; position: left 1, top 2)
+
+}
