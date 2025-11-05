@@ -154,7 +154,7 @@ public class ClipboardService : IClipboardService, IAsyncDisposable
             {
                 await TextCopy.ClipboardService.SetTextAsync(value);
                 await Task.Delay(appConfiguration.Clipboard.InternalDelay);
-                if (await GetClipboardValueAsync() == value) return true;
+                if (await GetClipboardValueAsync(false) == value) return true;
             }
         }
         catch (Exception e)
