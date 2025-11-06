@@ -1,5 +1,6 @@
 using Desktop.Robot;
 using Menagerie.Core.Services.Abstractions;
+using Menagerie.Core.Shared.Abstractions;
 
 namespace Menagerie.Core.Services;
 
@@ -8,7 +9,7 @@ public class KeyboardService : IKeyboardService
     #region Members
 
     // private  KeyboardHook? _hook;
-    private readonly Robot _robot = new();
+    private readonly IPlatformCapabilities _platformCapabilities;
 
     #endregion
 
@@ -18,30 +19,20 @@ public class KeyboardService : IKeyboardService
 
     #endregion
 
+    #region Constructors
+
+    public KeyboardService(IPlatformCapabilities platformCapabilities)
+    {
+        _platformCapabilities = platformCapabilities;
+    }
+
+    #endregion
+
     #region Public methods
 
-    public void ClearModifiers()
+    public Task<bool> PasteAsync()
     {
-        _robot.KeyUp(Key.Shift);
-        _robot.KeyUp(Key.Control);
-        _robot.KeyUp(Key.Alt);
-    }
-
-    public void ClearKey(Key key)
-    {
-        _robot.KeyUp(key);
-    }
-
-    public void SendKey(Key key)
-    {
-        _robot.KeyPress(key);
-    }
-
-    public void SendKey(Key key, Key modifier)
-    {
-        _robot.KeyDown(modifier);
-        SendKey(key);
-        _robot.KeyUp(modifier);
+        return _platformCapabilities.SendKeyboardPasteAsync();
     }
 
     #endregion

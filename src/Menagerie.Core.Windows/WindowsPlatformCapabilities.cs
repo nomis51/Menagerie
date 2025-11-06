@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Desktop.Robot;
 using Menagerie.Core.Shared.Abstractions;
 using Menagerie.Core.Windows.Helpers.Abstractions;
 using Menagerie.Core.Windows.Win32;
@@ -12,6 +13,7 @@ public class WindowsPlatformCapabilities : IPlatformCapabilities
 
     private readonly ILogger<WindowsPlatformCapabilities> _logger;
     private readonly IClipboardHelper _clipboardHelper;
+    private readonly Robot _robot = new();
 
     #endregion
 
@@ -50,6 +52,14 @@ public class WindowsPlatformCapabilities : IPlatformCapabilities
     public string? GetGameFolder(Process gameProcess)
     {
         return gameProcess.MainModule is null ? null : Path.GetDirectoryName(gameProcess.MainModule.FileName);
+    }
+
+    public Task<bool> SendKeyboardPasteAsync()
+    {
+        _robot.KeyDown(Key.Control);
+        _robot.KeyPress(Key.V);
+        _robot.KeyUp(Key.Control);
+        return Task.FromResult(true);
     }
 
     #endregion

@@ -58,6 +58,11 @@ public class PlatformCapabilities : IPlatformCapabilities
         return _platformCapabilities.GetGameFolder(gameProcess);
     }
 
+    public Task<bool> SendKeyboardPasteAsync()
+    {
+        return _platformCapabilities.SendKeyboardPasteAsync();
+    }
+
     #endregion
 
     #region Private methods

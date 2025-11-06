@@ -9,7 +9,8 @@ public class AudioService : IAudioService
 
     public Task PlayEffectAsync(AudioEffect effect)
     {
-        throw new NotImplementedException();
+        // TODO: implement
+        return Task.CompletedTask;
     }
 
     #endregion

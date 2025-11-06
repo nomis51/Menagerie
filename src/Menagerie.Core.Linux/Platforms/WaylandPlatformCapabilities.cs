@@ -51,6 +51,16 @@ public class WaylandPlatformCapabilities : IPlatformCapabilities
         throw new NotSupportedException();
     }
 
+    public Task<bool> SendKeyboardPasteAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> SendKeyboardEnterAsync()
+    {
+        throw new NotImplementedException();
+    }
+
     #endregion
 
     #region Private methods

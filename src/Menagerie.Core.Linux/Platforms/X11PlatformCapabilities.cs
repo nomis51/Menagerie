@@ -1,10 +1,17 @@
 using System.Diagnostics;
+using Desktop.Robot;
 using Menagerie.Core.Shared.Abstractions;
 
 namespace Menagerie.Core.Linux.Platforms;
 
 public class X11PlatformCapabilities : IPlatformCapabilities
 {
+    #region Members
+
+    private readonly Robot _robot = new();
+
+    #endregion
+
     #region Public methods
 
     public Task<bool> FocusWindowAsync(Process process)
@@ -30,6 +37,16 @@ public class X11PlatformCapabilities : IPlatformCapabilities
     public string? GetGameFolder(Process gameProcess)
     {
         throw new NotSupportedException();
+    }
+
+    public Task<bool> SendKeyboardPasteAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> SendKeyboardEnterAsync()
+    {
+        throw new NotImplementedException();
     }
 
     #endregion

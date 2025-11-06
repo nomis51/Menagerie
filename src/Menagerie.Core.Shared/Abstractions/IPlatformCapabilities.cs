@@ -9,4 +9,6 @@ public interface IPlatformCapabilities
     Task<string?> GetClipboardTextAsync();
     Task<bool> ResetClipboardTextAsync();
     string? GetGameFolder(Process gameProcess);
+    Task<bool> SendKeyboardPasteAsync();
+    Task<bool> SendKeyboardEnterAsync();
 }

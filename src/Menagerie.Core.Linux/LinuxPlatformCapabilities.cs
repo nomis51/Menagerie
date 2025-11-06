@@ -62,6 +62,16 @@ public class LinuxPlatformCapabilities : IPlatformCapabilities
         return _fileSystem.Directory.Exists(folderPath) ? folderPath : null;
     }
 
+    public Task<bool> SendKeyboardPasteAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> SendKeyboardEnterAsync()
+    {
+        throw new NotImplementedException();
+    }
+
     #endregion
 
     #region Private methods
